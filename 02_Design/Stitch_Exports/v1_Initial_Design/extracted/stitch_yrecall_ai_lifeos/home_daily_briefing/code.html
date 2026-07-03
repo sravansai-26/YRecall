@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>YRecall - Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#76d6d5",
+                    "surface": "#fff8f1",
+                    "surface-bright": "#fff8f1",
+                    "on-secondary-fixed": "#002020",
+                    "tertiary-fixed": "#a3f69c",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container": "#f4ede5",
+                    "on-error": "#ffffff",
+                    "on-secondary-fixed-variant": "#004f4f",
+                    "tertiary-fixed-dim": "#88d982",
+                    "surface-container-highest": "#e8e1da",
+                    "tertiary": "#002504",
+                    "primary-container": "#003366",
+                    "secondary-fixed": "#93f2f2",
+                    "tertiary-container": "#003d0b",
+                    "error": "#ba1a1a",
+                    "on-tertiary-fixed-variant": "#005312",
+                    "on-primary-fixed-variant": "#1f477b",
+                    "error-container": "#ffdad6",
+                    "on-secondary-container": "#006e6e",
+                    "surface-dim": "#e0d9d1",
+                    "primary": "#001e40",
+                    "surface-container-high": "#eee7df",
+                    "primary-fixed": "#d5e3ff",
+                    "on-background": "#1e1b17",
+                    "on-tertiary-container": "#5ead5c",
+                    "surface-container-low": "#faf3eb",
+                    "outline": "#737780",
+                    "on-surface": "#1e1b17",
+                    "primary-fixed-dim": "#a7c8ff",
+                    "background": "#fff8f1",
+                    "secondary": "#006a6a",
+                    "surface-variant": "#e8e1da",
+                    "on-secondary": "#ffffff",
+                    "surface-tint": "#3a5f94",
+                    "on-primary-container": "#799dd6",
+                    "on-tertiary-fixed": "#002204",
+                    "inverse-on-surface": "#f7f0e8",
+                    "outline-variant": "#c3c6d1",
+                    "secondary-container": "#90efef",
+                    "inverse-primary": "#a7c8ff",
+                    "on-surface-variant": "#43474f",
+                    "inverse-surface": "#33302b",
+                    "on-primary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "on-primary-fixed": "#001b3c"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "lg": "24px",
+                    "gutter": "16px",
+                    "base": "8px",
+                    "xxl": "48px",
+                    "margin-mobile": "20px",
+                    "sm": "8px",
+                    "xl": "32px",
+                    "xs": "4px",
+                    "margin-desktop": "40px",
+                    "md": "16px"
+            },
+            "fontFamily": {
+                    "title-sm": ["Public Sans"],
+                    "body-md": ["Public Sans"],
+                    "label-xs": ["Public Sans"],
+                    "display-lg": ["Public Sans"],
+                    "headline-md": ["Public Sans"],
+                    "caption-sm": ["Public Sans"]
+            },
+            "fontSize": {
+                    "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "label-xs-mobile": ["10px", {"lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="bg-surface sticky top-0 z-40">
+<div class="flex justify-between items-center w-full px-margin-mobile h-16 max-w-7xl mx-auto">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed overflow-hidden flex items-center justify-center border-2 border-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="A high-quality, professional headshot of a friendly young woman with a warm smile, set against a minimalist studio background with soft cinematic lighting. The style is clean and premium, reflecting a high-end AI lifestyle application aesthetic. Soft neutral tones dominate the palette, harmonizing with a warm beige and off-white environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEnhXBWd0qqzbnb_ldiIW77CoZN4Q3AlvYe5ByFUY7Wl6lPL6Nj3pqGY1xql1WMJ5aeRJQ277JE9uDv5FRNKnVM2FFPDIBGfakgBFMpt8-NLLZdH4l81klIMY8kYmdwmpbcRhWGMW_ZQL1P3Z3VtLeYNFBr5IUq_tsWNHHrDKTa29ADQ2QAxSOy7osg_fUWHHkPdwUKCF39JFgnXnhn21DaFaFyqteXVOx516Vu1kXu_AkbFixFMuCuTah8OXmghlELdDprVrqsF4"/>
+</div>
+<div class="flex flex-col">
+<span class="font-label-xs text-label-xs text-on-surface-variant">Good Morning,</span>
+<span class="font-title-sm text-[16px] font-bold text-primary">Julianne</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</button>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-margin-mobile space-y-xl mt-4">
+<!-- AI Summary Section (Briefing) -->
+<section>
+<div class="bg-surface-dim p-lg rounded-[24px] shadow-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-20 pointer-events-none">
+<span class="material-symbols-outlined text-[80px]">auto_awesome</span>
+</div>
+<div class="relative z-10">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-secondary text-[20px]" style="font-variation-settings: 'FILL' 1;">spark</span>
+<h2 class="font-headline-md text-[20px] text-primary">Today's Briefing</h2>
+</div>
+<p class="font-body-md text-on-surface-variant leading-relaxed">
+                        You have a design review at 10 AM. Key takeaways from yesterday: the client preferred the minimalist layout and mentioned a need for a darker "Deep Recall" mode. Remember to mention the new bento grid pattern.
+                    </p>
+</div>
+</div>
+</section>
+<!-- Quick Actions -->
+<section>
+<div class="flex overflow-x-auto no-scrollbar gap-sm -mx-margin-mobile px-margin-mobile">
+<button class="flex items-center gap-2 px-lg py-3 bg-primary text-white rounded-full whitespace-nowrap shadow-sm hover:brightness-110 transition-all active:scale-95">
+<span class="material-symbols-outlined text-[20px]">chat_bubble</span>
+<span class="font-label-xs text-[14px]">Ask Anything</span>
+</button>
+<button class="flex items-center gap-2 px-lg py-3 bg-surface-container-low border border-outline-variant text-on-surface rounded-full whitespace-nowrap hover:bg-surface-container transition-all active:scale-95">
+<span class="material-symbols-outlined text-[20px]">document_scanner</span>
+<span class="font-label-xs text-[14px]">Scan Doc</span>
+</button>
+<button class="flex items-center gap-2 px-lg py-3 bg-surface-container-low border border-outline-variant text-on-surface rounded-full whitespace-nowrap hover:bg-surface-container transition-all active:scale-95">
+<span class="material-symbols-outlined text-[20px]">mic</span>
+<span class="font-label-xs text-[14px]">Voice Note</span>
+</button>
+<button class="flex items-center gap-2 px-lg py-3 bg-surface-container-low border border-outline-variant text-on-surface rounded-full whitespace-nowrap hover:bg-surface-container transition-all active:scale-95">
+<span class="material-symbols-outlined text-[20px]">photo_camera</span>
+<span class="font-label-xs text-[14px]">Snap Photo</span>
+</button>
+</div>
+</section>
+<!-- Recent Memories (Grid) -->
+<section>
+<div class="flex justify-between items-end mb-md">
+<h2 class="font-title-sm text-primary">Recent Memories</h2>
+<button class="text-secondary font-label-xs text-[13px] hover:underline">See All</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- Memory: Photo Card -->
+<div class="bg-white rounded-[24px] shadow-sm overflow-hidden flex flex-col group transition-transform hover:-translate-y-1">
+<div class="h-48 relative overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A serene landscape of a modern coastal retreat at dusk. The architecture is sharp and minimalist, with large floor-to-ceiling windows glowing warmly from within. The sky is a soft gradient of indigo and orange. The overall mood is peaceful and high-end, using a sophisticated color palette of deep blues and warm ambers." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMIulbXGpOiFoJxpfgJyQtTVFxzzxvp73c0OpYm8qV4x0J2MEJL54bwSxmcRKQ-qXHTVFHFfwI6djhePHSo_bp7VwnWINYuJLAxipsW5099lVhEExtMxjJ5TQGWyO1xdcTcst6u10HJ-HwFv22K6Ytc34R5HNvWtwifBON3zSRes4lKhKYMb5CRZEyFJOw-q8vDtJY2axvREK4f0mOZhzb5WhedVAnAmfn7zKSS-TVfOinT4bx1ss3Wh21Sfod51Et-YKuvPfjQd0"/>
+<div class="absolute top-4 right-4 bg-white/80 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary" style="font-variation-settings: 'FILL' 1;">image</span>
+<span class="font-label-xs text-[10px] text-primary">Captured 2h ago</span>
+</div>
+</div>
+<div class="p-lg">
+<p class="font-body-md text-on-surface mb-2 font-medium">Architecture Inspo</p>
+<p class="font-caption-sm text-on-surface-variant line-clamp-2">Saved from your walk through the Venice District. The light on these facades is perfect for the upcoming project.</p>
+</div>
+</div>
+<!-- Memory: Link Summary -->
+<div class="bg-white rounded-[24px] shadow-sm p-lg border border-transparent hover:border-secondary-container transition-all flex flex-col">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 bg-secondary-container flex items-center justify-center rounded-xl">
+<span class="material-symbols-outlined text-on-secondary-container">link</span>
+</div>
+<div>
+<p class="font-label-xs text-[10px] text-on-surface-variant uppercase tracking-wider">Article Summary</p>
+<p class="font-body-md font-bold text-primary">The Future of AI Interfaces</p>
+</div>
+</div>
+<p class="font-body-md text-on-surface-variant mb-4 flex-grow">A deep dive into how large action models will replace traditional app navigation. Focuses on intent-based UI.</p>
+<div class="flex flex-wrap gap-2">
+<span class="bg-tertiary/10 text-on-tertiary-fixed-variant px-3 py-1 rounded-full font-label-xs text-[10px]">#TechTrends</span>
+<span class="bg-tertiary/10 text-on-tertiary-fixed-variant px-3 py-1 rounded-full font-label-xs text-[10px]">#Design</span>
+</div>
+</div>
+<!-- Memory: Quote Card -->
+<div class="bg-primary p-lg rounded-[24px] shadow-sm flex flex-col justify-between md:col-span-2">
+<div>
+<span class="material-symbols-outlined text-primary-fixed-dim text-[32px] mb-2 opacity-50">format_quote</span>
+<p class="font-title-sm italic text-primary-fixed leading-relaxed">"The best way to predict the future is to create it. Memory is just the raw material for that creation."</p>
+</div>
+<div class="mt-lg flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container border border-primary-fixed/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-fixed text-[16px]">menu_book</span>
+</div>
+<p class="font-label-xs text-primary-fixed-dim">From "Digital Sovereignty" by Alan Kay</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Pinned Section -->
+<section class="pb-10">
+<h2 class="font-title-sm text-primary mb-md">Ongoing Projects</h2>
+<div class="space-y-sm">
+<div class="bg-surface-container-low hover:bg-surface-container transition-colors rounded-xl p-md flex items-center justify-between group cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-primary">folder_open</span>
+</div>
+<div>
+<h3 class="font-body-md font-bold text-primary">Redesign Project: Q3</h3>
+<p class="font-caption-sm text-on-surface-variant">12 related memories • Active now</p>
+</div>
+</div>
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-surface-container-low bg-surface-dim"></div>
+<div class="w-8 h-8 rounded-full border-2 border-surface-container-low bg-primary-fixed"></div>
+<div class="w-8 h-8 rounded-full border-2 border-surface-container-low bg-secondary-container flex items-center justify-center text-[10px] font-bold">+3</div>
+</div>
+</div>
+<div class="bg-surface-container-low hover:bg-surface-container transition-colors rounded-xl p-md flex items-center justify-between group cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-primary">person_search</span>
+</div>
+<div>
+<h3 class="font-body-md font-bold text-primary">Mentorship Log</h3>
+<p class="font-caption-sm text-on-surface-variant">Last entry: Tuesday</p>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:text-primary">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 px-4 pb-safe bg-surface-container-low shadow-sm rounded-t-xl">
+<!-- Home (Active) -->
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined active-icon">home</span>
+<span class="font-label-xs text-label-xs-mobile">Home</span>
+</a>
+<!-- Ask -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span class="font-label-xs text-label-xs-mobile">Ask</span>
+</a>
+<!-- Capture -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined text-[32px]">add_circle</span>
+<span class="font-label-xs text-label-xs-mobile">Capture</span>
+</a>
+<!-- Timeline -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined">timeline</span>
+<span class="font-label-xs text-label-xs-mobile">Timeline</span>
+</a>
+<!-- Profile -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-xs text-label-xs-mobile">Profile</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions for hover effects and scrolls
+        document.querySelectorAll('button, a').forEach(elem => {
+            elem.addEventListener('touchstart', () => {
+                elem.classList.add('scale-95');
+            });
+            elem.addEventListener('touchend', () => {
+                elem.classList.remove('scale-95');
+            });
+        });
+
+        // Simple scroll listener to change TopBar opacity or shadow
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 20) {
+                header.classList.add('shadow-md');
+                header.classList.remove('bg-surface');
+                header.classList.add('bg-surface/90', 'backdrop-blur-md');
+            } else {
+                header.classList.remove('shadow-md', 'bg-surface/90', 'backdrop-blur-md');
+                header.classList.add('bg-surface');
+            }
+        });
+    </script>
+</body></html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YRecall - Connection Status</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        @keyframes drift {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(1deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        .animate-drift {
+            animation: drift 6s ease-in-out infinite;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#90efef",
+                        "on-tertiary-fixed": "#002204",
+                        "on-secondary": "#ffffff",
+                        "surface-tint": "#3a5f94",
+                        "tertiary": "#002504",
+                        "surface-container-low": "#faf3eb",
+                        "tertiary-container": "#003d0b",
+                        "background": "#fff8f1",
+                        "on-primary-fixed-variant": "#1f477b",
+                        "surface-dim": "#e0d9d1",
+                        "on-tertiary-fixed-variant": "#005312",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed-dim": "#a7c8ff",
+                        "primary-fixed": "#d5e3ff",
+                        "on-secondary-fixed": "#002020",
+                        "surface-container": "#f4ede5",
+                        "on-primary-fixed": "#001b3c",
+                        "secondary": "#006a6a",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#76d6d5",
+                        "on-surface": "#1e1b17",
+                        "on-secondary-fixed-variant": "#004f4f",
+                        "tertiary-fixed-dim": "#88d982",
+                        "primary": "#001e40",
+                        "inverse-primary": "#a7c8ff",
+                        "surface": "#fff8f1",
+                        "primary-container": "#003366",
+                        "on-secondary-container": "#006e6e",
+                        "surface-variant": "#e8e1da",
+                        "outline-variant": "#c3c6d1",
+                        "tertiary-fixed": "#a3f69c",
+                        "inverse-surface": "#33302b",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "surface-container-highest": "#e8e1da",
+                        "secondary-fixed": "#93f2f2",
+                        "on-primary-container": "#799dd6",
+                        "on-error": "#ffffff",
+                        "on-background": "#1e1b17",
+                        "outline": "#737780",
+                        "inverse-on-surface": "#f7f0e8",
+                        "surface-container-high": "#eee7df",
+                        "on-surface-variant": "#43474f",
+                        "on-tertiary-container": "#5ead5c",
+                        "surface-bright": "#fff8f1"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "xxl": "48px",
+                        "base": "8px",
+                        "xs": "4px",
+                        "margin-desktop": "40px",
+                        "xl": "32px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "lg": "24px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "label-xs": ["Public Sans"],
+                        "headline-md": ["Public Sans"],
+                        "display-lg-mobile": ["Public Sans"],
+                        "display-lg": ["Public Sans"],
+                        "title-sm": ["Public Sans"],
+                        "body-md": ["Public Sans"],
+                        "caption-sm": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col">
+<!-- Top Navigation Bar (Manual recreation based on JSON for Shell suppression logic) -->
+<!-- The TopAppBar is suppressed here to prioritize the focused 'Offline' state content canvas -->
+<main class="flex-grow flex flex-col items-center justify-center px-margin-mobile md:px-margin-desktop py-xxl relative overflow-hidden">
+<!-- Atmospheric Background Element -->
+<div class="absolute top-0 left-0 w-full h-full -z-10 opacity-30">
+
+</div>
+<div class="max-w-4xl w-full flex flex-col items-center text-center">
+<!-- Hero Illustration Area -->
+<div class="mb-lg animate-drift">
+<div class="w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden shadow-xl border-4 border-white/50 relative">
+<img class="w-full h-full object-cover" data-alt="A serene and minimalist 3D digital illustration of a floating, translucent cloud inside a clean glass terrarium. The scene is lit with soft, warm golden hour sunlight, creating a calm and peaceful atmosphere. The background is a soft beige, matching a light-mode UI palette. The aesthetic is tactile and high-end, evoking a sense of quiet waiting rather than frustration. Soft shadows and high-key lighting emphasize a premium, editorial design feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuADfV5_FUir986dfzeuO_8h4xu5_rinJV0EMG3SOAMm1WU5_bFqFYW_JpTtLItC8nf8-RPuyqb8cskpSLh4JQslrmcahjMnQwLNGJrGgKyi-aZvjgL7xpljjs5keC1ld90uUj1MGAI9wUS-aLidlR2RniM7t8ZceVBwh5AXJHF3_0et2mcyW7_8hbJhQvf25eq1xfeHziPFv3ANB4B7Ry26EvUnRHFuH5T_-r0YOPpRZITI1IydwLmZGY0fKk9Bd2PkSrpexPxcj4o"/>
+<!-- Subtle AI 'Processing' Glow (Inner Stroke) -->
+<div class="absolute inset-0 rounded-full border border-secondary/30 pointer-events-none"></div>
+</div>
+</div>
+<!-- Error Messaging -->
+<div class="mb-xl">
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-primary mb-md">
+                    Moments of Stillness
+                </h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xl mx-auto leading-relaxed">
+                    YRecall is currently having trouble reaching the cloud. While we re-establish a secure connection, your local intelligence layer is still active.
+                </p>
+</div>
+<!-- Bento-style Feature Grid for Offline Capabilities -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md w-full mb-xl">
+<!-- Local Search Card -->
+<div class="glass-card p-lg rounded-[24px] shadow-sm flex flex-col items-start text-left border border-white/40">
+<div class="w-12 h-12 bg-secondary-container text-on-secondary-container rounded-xl flex items-center justify-center mb-md">
+<span class="material-symbols-outlined">database</span>
+</div>
+<h3 class="font-title-sm text-title-sm text-primary mb-xs">Local Memory</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        Search your last 30 days of captures directly from your device's cache.
+                    </p>
+<button class="mt-md text-secondary font-semibold hover:underline flex items-center gap-xs">
+                        Open Local Search <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+<!-- Capture Card -->
+<div class="glass-card p-lg rounded-[24px] shadow-sm flex flex-col items-start text-left border border-white/40">
+<div class="w-12 h-12 bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-xl flex items-center justify-center mb-md">
+<span class="material-symbols-outlined">edit_note</span>
+</div>
+<h3 class="font-title-sm text-title-sm text-primary mb-xs">Instant Capture</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        Keep recording your thoughts. We'll sync them automatically once you're back online.
+                    </p>
+<button class="mt-md text-secondary font-semibold hover:underline flex items-center gap-xs">
+                        Start Note <span class="material-symbols-outlined text-[18px]">add</span>
+</button>
+</div>
+</div>
+<!-- Primary Action -->
+<div class="flex flex-col items-center gap-md">
+<button class="bg-primary text-on-primary h-[56px] px-xl rounded-[16px] font-semibold flex items-center justify-center gap-sm shadow-md hover:scale-[1.02] active:scale-95 transition-all w-full md:w-auto" id="retryButton" onclick="handleRetry()">
+<span class="material-symbols-outlined" id="retryIcon">refresh</span>
+<span id="retryText">Retry Connection</span>
+</button>
+<div class="flex items-center gap-sm">
+<span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
+<span class="text-caption-sm font-caption-sm text-outline">Offline Mode Active</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Instructional Overlay (Hidden by default) -->
+<div class="fixed bottom-margin-mobile left-1/2 -translate-x-1/2 glass-card px-lg py-md rounded-full shadow-lg border border-outline-variant opacity-0 transition-opacity pointer-events-none z-50" id="toast">
+<p class="text-body-md font-body-md text-primary flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary">info</span>
+            Sync will resume automatically.
+        </p>
+</div>
+<script>
+        function handleRetry() {
+            const btn = document.getElementById('retryButton');
+            const icon = document.getElementById('retryIcon');
+            const text = document.getElementById('retryText');
+            const toast = document.getElementById('toast');
+
+            // Visual feedback for interaction
+            btn.classList.add('opacity-80');
+            icon.classList.add('animate-spin');
+            text.innerText = 'Checking...';
+
+            setTimeout(() => {
+                // Simulate failure for demo purposes
+                btn.classList.remove('opacity-80');
+                icon.classList.remove('animate-spin');
+                text.innerText = 'Retry Connection';
+                
+                // Show toast
+                toast.classList.remove('opacity-0');
+                setTimeout(() => {
+                    toast.classList.add('opacity-0');
+                }, 3000);
+            }, 1500);
+        }
+
+        // Handle navigation visibility logic (per requirements)
+        // Since this is a task-focused 'Error' page, we suppress the global nav.
+    </script>
+</body></html>

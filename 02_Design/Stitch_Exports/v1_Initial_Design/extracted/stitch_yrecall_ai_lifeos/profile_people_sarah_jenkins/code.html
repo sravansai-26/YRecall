@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sarah Jenkins - Entity Profile | YRecall</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline-variant": "#c3c6d1",
+                    "surface-tint": "#3a5f94",
+                    "secondary-fixed-dim": "#76d6d5",
+                    "inverse-primary": "#a7c8ff",
+                    "error-container": "#ffdad6",
+                    "error": "#ba1a1a",
+                    "secondary-fixed": "#93f2f2",
+                    "tertiary-fixed-dim": "#88d982",
+                    "on-surface": "#1e1b17",
+                    "surface-container-highest": "#e8e1da",
+                    "on-surface-variant": "#43474f",
+                    "on-secondary-fixed-variant": "#004f4f",
+                    "primary": "#001e40",
+                    "on-primary-fixed-variant": "#1f477b",
+                    "surface-container-low": "#faf3eb",
+                    "outline": "#737780",
+                    "secondary-container": "#90efef",
+                    "primary-fixed-dim": "#a7c8ff",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "surface": "#fff8f1",
+                    "on-tertiary-fixed": "#002204",
+                    "surface-variant": "#e8e1da",
+                    "on-primary-container": "#799dd6",
+                    "on-secondary-fixed": "#002020",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-high": "#eee7df",
+                    "surface-container": "#f4ede5",
+                    "on-background": "#1e1b17",
+                    "on-primary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "secondary": "#006a6a",
+                    "tertiary-container": "#003d0b",
+                    "primary-container": "#003366",
+                    "on-secondary-container": "#006e6e",
+                    "tertiary": "#002504",
+                    "on-tertiary-fixed-variant": "#005312",
+                    "on-error": "#ffffff",
+                    "inverse-on-surface": "#f7f0e8",
+                    "inverse-surface": "#33302b",
+                    "tertiary-fixed": "#a3f69c",
+                    "primary-fixed": "#d5e3ff",
+                    "on-tertiary-container": "#5ead5c",
+                    "surface-bright": "#fff8f1",
+                    "surface-dim": "#e0d9d1",
+                    "on-primary-fixed": "#001b3c",
+                    "background": "#fff8f1"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "xl": "32px",
+                    "gutter": "16px",
+                    "sm": "8px",
+                    "xs": "4px",
+                    "lg": "24px",
+                    "margin-mobile": "20px",
+                    "md": "16px",
+                    "margin-desktop": "40px",
+                    "xxl": "48px"
+            },
+            "fontFamily": {
+                    "title-sm": ["Public Sans"],
+                    "display-lg": ["Public Sans"],
+                    "body-md": ["Public Sans"],
+                    "headline-md": ["Public Sans"],
+                    "caption-sm": ["Public Sans"],
+                    "display-lg-mobile": ["Public Sans"],
+                    "label-xs": ["Public Sans"]
+            },
+            "fontSize": {
+                    "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #FCFAF7;
+            font-family: 'Public Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .ai-inner-stroke {
+            position: relative;
+        }
+        .ai-inner-stroke::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 1px solid transparent;
+            border-radius: inherit;
+            background: linear-gradient(135deg, #76d6d5 0%, #c3c6d1 100%) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-surface">
+<!-- Top Navigation -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md h-20 flex justify-between items-center px-margin-mobile md:px-margin-desktop">
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high active:scale-95 transition-all">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<span class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary tracking-tight">YRecall</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex gap-6 mr-6">
+<span class="font-bold text-primary">Home</span>
+<span class="text-on-surface-variant hover:text-primary cursor-pointer transition-colors">Search</span>
+<span class="text-on-surface-variant hover:text-primary cursor-pointer transition-colors">Connections</span>
+</div>
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden border border-outline-variant/30">
+<img class="w-full h-full object-cover" data-alt="A professional close-up portrait of a user profile avatar with a friendly expression. The lighting is soft and natural, coming from a large window. The background is a clean, minimalist design studio with soft focus wooden accents and warm neutrals. The overall aesthetic is calm, high-end, and professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuADTphHkBXybpYdB6hPikIFaRCJcmj2nEsmFTmwJfWiVyltzt-zScryXLTHdi3W1bikRmk5df00YrXEJuuoXWFpVzEhtaWUGRgasBBNyOaXxrn0zx7LFR0VqPOSgU0bYasEj6Up0lMK3lP5RBNLsy9mxB6U2QQqJduB3W2p6HSF2AsQXoTSPjRU_cLav6-YVWIEybbWHNUQsWwZBgKKrD-xFbGe97rktdDpPh_N01T5B0p9wqkZns6SvPzur5LwimMykO3_fxMINHA"/>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-32 max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
+<!-- Hero Header -->
+<section class="mt-lg md:mt-xl flex flex-col md:flex-row items-center md:items-end gap-lg mb-xxl">
+<div class="relative group">
+<div class="w-32 h-32 md:w-48 md:h-48 rounded-[32px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.1)] transition-transform duration-500 group-hover:scale-[1.02]">
+<img class="w-full h-full object-cover" data-alt="A high-quality editorial style portrait of Sarah Jenkins, a woman with a confident and creative demeanor. She is in her early 30s with stylish glasses. The photograph uses a shallow depth of field, set against an airy, modern office background with soft pastel tones. The lighting is bright and clean, characteristic of premium modern lifestyle photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAd5GNs-FDoPtNPeDp0uB7PAGbo5_pH0WYDIFlJsvihl-8NwcftLFnosG6RnGBGdmDd6EgRiH-idb1kbbMsAlb8jJ5K2XNr65PaWJafuuUIU62Oqhc0RGHbf0b_oi-IFlQMIdAMFcNJbdNU0uKbX63rwqOdq-M2okvvSOog19pgPEt-8IP6LKsC6Zy0S2YYHClxjQI71rMRHkYsZloqTeAOSJrhcjEgL1k0ZjYIqrhD3nVKzIw3yjU3qoVUzPbhntDO34ylt1pjuI"/>
+</div>
+<div class="absolute -bottom-2 -right-2 bg-secondary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg border-4 border-surface">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="flex-1 text-center md:text-left">
+<h1 class="font-headline-md text-headline-md-mobile md:text-headline-md text-primary mb-1">Sarah Jenkins</h1>
+<p class="text-on-surface-variant font-body-md flex items-center justify-center md:justify-start gap-2">
+<span class="material-symbols-outlined text-[18px]">work</span>
+                    Lead Designer
+                </p>
+<div class="mt-lg flex flex-wrap justify-center md:justify-start gap-sm">
+<button class="bg-primary text-white h-14 px-8 rounded-xl font-bold flex items-center gap-2 shadow-[0_4px_20px_rgba(0,30,64,0.15)] hover:shadow-[0_8px_25px_rgba(0,30,64,0.2)] active:scale-95 transition-all">
+<span class="material-symbols-outlined">mail</span>
+                        Contact
+                    </button>
+<button class="ai-inner-stroke bg-white text-on-surface h-14 px-8 rounded-xl font-medium flex items-center gap-2 shadow-[0_4px_15px_rgba(0,0,0,0.05)] hover:bg-surface-container-low active:scale-95 transition-all">
+<span class="material-symbols-outlined text-secondary">chat_spark</span>
+                        Ask AI about Sarah
+                    </button>
+</div>
+</div>
+</section>
+<!-- Bento Grid Content -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-lg">
+<!-- Key Context Card -->
+<div class="md:col-span-4 bg-white rounded-3xl p-lg shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-surface-container-highest">
+<div class="flex items-center gap-3 mb-xl">
+<div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined">lightbulb</span>
+</div>
+<h3 class="font-title-sm text-title-sm text-primary">Context</h3>
+</div>
+<div class="space-y-xl">
+<div class="group">
+<p class="text-label-xs font-label-xs uppercase tracking-widest text-on-surface-variant mb-2">Current Focus</p>
+<p class="font-body-md text-on-surface">Collaborating on <span class="font-bold text-secondary">Q3 Redesign</span> across all platforms.</p>
+</div>
+<div class="group">
+<p class="text-label-xs font-label-xs uppercase tracking-widest text-on-surface-variant mb-2">Last Met</p>
+<div class="flex items-center gap-2">
+<span class="font-body-md text-on-surface">2 days ago</span>
+<span class="text-xs bg-surface-container px-2 py-0.5 rounded-full text-outline">Virtual</span>
+</div>
+</div>
+<div class="p-md bg-surface-container-low rounded-2xl border border-outline-variant/20">
+<p class="text-sm italic text-on-surface-variant">"Mentioned she wants to simplify the navigation shell by removing top borders."</p>
+</div>
+</div>
+</div>
+<!-- Relationships Card -->
+<div class="md:col-span-8 bg-white rounded-3xl p-lg shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-surface-container-highest">
+<div class="flex justify-between items-center mb-xl">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined">hub</span>
+</div>
+<h3 class="font-title-sm text-title-sm text-primary">Relationships</h3>
+</div>
+<button class="text-secondary text-sm font-semibold hover:underline">View All</button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
+<!-- Relation Item -->
+<div class="flex items-center gap-4 p-md rounded-2xl hover:bg-surface-container transition-colors cursor-pointer group">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary">domain</span>
+</div>
+<div>
+<p class="font-bold text-on-surface">Design Studio</p>
+<p class="text-caption-sm text-caption-sm text-on-surface-variant">Company</p>
+</div>
+</div>
+<!-- Relation Item -->
+<div class="flex items-center gap-4 p-md rounded-2xl hover:bg-surface-container transition-colors cursor-pointer group">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary">rocket_launch</span>
+</div>
+<div>
+<p class="font-bold text-on-surface">Q3 Redesign</p>
+<p class="text-caption-sm text-caption-sm text-on-surface-variant">Project Lead</p>
+</div>
+</div>
+<!-- Relation Item -->
+<div class="flex items-center gap-4 p-md rounded-2xl hover:bg-surface-container transition-colors cursor-pointer group">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary">groups</span>
+</div>
+<div>
+<p class="font-bold text-on-surface">Core UI Team</p>
+<p class="text-caption-sm text-caption-sm text-on-surface-variant">Engineering</p>
+</div>
+</div>
+<!-- Relation Item -->
+<div class="flex items-center gap-4 p-md rounded-2xl hover:bg-surface-container transition-colors cursor-pointer group">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary">location_on</span>
+</div>
+<div>
+<p class="font-bold text-on-surface">London, UK</p>
+<p class="text-caption-sm text-caption-sm text-on-surface-variant">Primary Office</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Connected Memories Timeline -->
+<div class="md:col-span-12 bg-white rounded-3xl p-lg shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-surface-container-highest mt-lg">
+<div class="flex items-center gap-3 mb-xl">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined">history</span>
+</div>
+<h3 class="font-title-sm text-title-sm text-primary">Connected Memories</h3>
+</div>
+<div class="relative">
+<!-- Vertical Timeline Line -->
+<div class="absolute left-6 top-0 bottom-0 w-px bg-outline-variant/30"></div>
+<div class="space-y-xl relative">
+<!-- Timeline Item -->
+<div class="flex gap-lg items-start relative pl-12 md:pl-0">
+<div class="hidden md:block w-32 text-right pt-2">
+<p class="text-label-xs font-label-xs text-on-surface-variant uppercase">Nov 24</p>
+<p class="text-caption-sm text-caption-sm text-outline">2 days ago</p>
+</div>
+<div class="absolute left-4 md:static w-4 h-4 rounded-full bg-secondary border-4 border-surface ring-4 ring-white z-10 mt-3 md:mt-4"></div>
+<div class="flex-1 bg-surface-container-low p-md rounded-2xl hover:bg-surface-container transition-all group cursor-pointer">
+<div class="flex justify-between mb-1">
+<h4 class="font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">groups</span>
+                                        Bi-weekly Design Sync
+                                    </h4>
+<span class="material-symbols-outlined text-outline opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</div>
+<p class="text-body-md text-on-surface-variant">Reviewed the mobile bottom bar transitions. Sarah emphasized the "Calm" principle for the active state.</p>
+<div class="mt-md flex gap-2">
+<span class="bg-white/60 px-3 py-1 rounded-full text-xs text-on-surface-variant border border-outline-variant/20">Zoom Recording</span>
+<span class="bg-white/60 px-3 py-1 rounded-full text-xs text-on-surface-variant border border-outline-variant/20">3 Participants</span>
+</div>
+</div>
+</div>
+<!-- Timeline Item -->
+<div class="flex gap-lg items-start relative pl-12 md:pl-0">
+<div class="hidden md:block w-32 text-right pt-2">
+<p class="text-label-xs font-label-xs text-on-surface-variant uppercase">Nov 22</p>
+<p class="text-caption-sm text-caption-sm text-outline">4 days ago</p>
+</div>
+<div class="absolute left-4 md:static w-4 h-4 rounded-full bg-outline-variant border-4 border-surface ring-4 ring-white z-10 mt-3 md:mt-4"></div>
+<div class="flex-1 bg-white p-md rounded-2xl border border-surface-container-highest hover:bg-surface-container transition-all group cursor-pointer shadow-sm">
+<div class="flex justify-between mb-1">
+<h4 class="font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">mail</span>
+                                        Re: Figma Comments - Core Navigation
+                                    </h4>
+<span class="material-symbols-outlined text-outline opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</div>
+<p class="text-body-md text-on-surface-variant">Thread regarding the 8px grid system vs the fluid 12-column grid for tablet breakpoints.</p>
+</div>
+</div>
+<!-- Timeline Item -->
+<div class="flex gap-lg items-start relative pl-12 md:pl-0">
+<div class="hidden md:block w-32 text-right pt-2">
+<p class="text-label-xs font-label-xs text-on-surface-variant uppercase">Nov 18</p>
+<p class="text-caption-sm text-caption-sm text-outline">Last week</p>
+</div>
+<div class="absolute left-4 md:static w-4 h-4 rounded-full bg-secondary-fixed-dim border-4 border-surface ring-4 ring-white z-10 mt-3 md:mt-4"></div>
+<div class="flex-1 bg-white p-md rounded-2xl border border-surface-container-highest hover:bg-surface-container transition-all group cursor-pointer shadow-sm">
+<div class="flex justify-between mb-1">
+<h4 class="font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">chat</span>
+                                        Slack Conversation
+                                    </h4>
+<span class="material-symbols-outlined text-outline opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</div>
+<p class="text-body-md text-on-surface-variant">Discussion on accessibility requirements for the new primary blue contrast ratios.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 bg-surface dark:bg-surface-container rounded-t-xl shadow-[0_-4px_20px_rgba(0,0,0,0.05)] border-t border-outline-variant/30 flex justify-around items-center h-20 px-2 pb-safe">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1.5 hover:bg-surface-container-highest rounded-full transition-all" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-xs text-label-xs">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1.5 hover:bg-surface-container-highest rounded-full transition-all" href="#">
+<span class="material-symbols-outlined">chat_spark</span>
+<span class="font-label-xs text-label-xs">Ask</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1.5 hover:bg-surface-container-highest rounded-full transition-all" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-label-xs text-label-xs">Capture</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1.5 hover:bg-surface-container-highest rounded-full transition-all" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-xs text-label-xs">Timeline</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1.5 transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-xs text-label-xs">Profile</span>
+</a>
+</nav>
+<!-- Floating Action Button (FAB) - Contextual -->
+<div class="fixed bottom-24 right-6 md:bottom-10 md:right-10 z-40">
+<button class="w-16 h-16 bg-primary text-white rounded-2xl shadow-[0_12px_40px_rgba(0,30,64,0.3)] flex items-center justify-center group active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[28px] group-hover:rotate-12 transition-transform">add</span>
+</button>
+</div>
+<!-- Micro-interaction Scripts -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Scroll reveal logic for timeline
+            const observerOptions = {
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('opacity-100', 'translate-y-0');
+                        entry.target.classList.remove('opacity-0', 'translate-y-4');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.flex-1.bg-surface-container-low, .flex-1.bg-white').forEach(card => {
+                card.classList.add('transition-all', 'duration-700', 'opacity-0', 'translate-y-4');
+                observer.observe(card);
+            });
+        });
+    </script>
+</body></html>

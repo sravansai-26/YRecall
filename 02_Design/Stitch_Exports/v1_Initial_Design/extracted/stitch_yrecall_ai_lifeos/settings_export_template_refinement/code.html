@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Refine Export Template | YRecall</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "tertiary-fixed-dim": "#88d982",
+                "secondary-container": "#90efef",
+                "on-secondary": "#ffffff",
+                "primary-fixed-dim": "#a7c8ff",
+                "on-primary-container": "#799dd6",
+                "on-surface": "#1e1b17",
+                "surface-container-high": "#eee7df",
+                "on-tertiary-fixed-variant": "#005312",
+                "on-primary-fixed-variant": "#1f477b",
+                "background": "#fff8f1",
+                "primary-fixed": "#d5e3ff",
+                "inverse-on-surface": "#f7f0e8",
+                "tertiary-fixed": "#a3f69c",
+                "on-tertiary-fixed": "#002204",
+                "error-container": "#ffdad6",
+                "surface-tint": "#3a5f94",
+                "surface-bright": "#fff8f1",
+                "surface-container": "#f4ede5",
+                "outline-variant": "#c3c6d1",
+                "surface-container-lowest": "#ffffff",
+                "on-primary": "#ffffff",
+                "surface": "#fff8f1",
+                "inverse-surface": "#33302b",
+                "surface-dim": "#e0d9d1",
+                "outline": "#737780",
+                "primary": "#001e40",
+                "on-primary-fixed": "#001b3c",
+                "secondary": "#006a6a",
+                "on-background": "#1e1b17",
+                "surface-container-highest": "#e8e1da",
+                "on-secondary-fixed-variant": "#004f4f",
+                "tertiary-container": "#003d0b",
+                "surface-variant": "#e8e1da",
+                "on-tertiary-container": "#5ead5c",
+                "on-error": "#ffffff",
+                "secondary-fixed": "#93f2f2",
+                "primary-container": "#003366",
+                "secondary-fixed-dim": "#76d6d5",
+                "on-secondary-container": "#006e6e",
+                "on-tertiary": "#ffffff",
+                "surface-container-low": "#faf3eb",
+                "on-surface-variant": "#43474f",
+                "on-error-container": "#93000a",
+                "tertiary": "#002504",
+                "error": "#ba1a1a",
+                "on-secondary-fixed": "#002020",
+                "inverse-primary": "#a7c8ff"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "base": "8px",
+                "margin-desktop": "40px",
+                "xxl": "48px",
+                "xl": "32px",
+                "xs": "4px",
+                "lg": "24px",
+                "margin-mobile": "20px",
+                "sm": "8px",
+                "md": "16px",
+                "gutter": "16px"
+            },
+            "fontFamily": {
+                "body-md": ["Public Sans"],
+                "headline-md": ["Public Sans"],
+                "label-xs": ["Public Sans"],
+                "caption-sm": ["Public Sans"],
+                "title-sm": ["Public Sans"],
+                "display-lg": ["Public Sans"],
+                "display-lg-mobile": ["Public Sans"]
+            },
+            "fontSize": {
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        
+        .book-shadow {
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1), 0 20px 60px -10px rgba(0, 0, 0, 0.05);
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .page-curl::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 0 40px 40px;
+            border-color: transparent transparent #e0d9d1 transparent;
+            filter: drop-shadow(-2px -2px 2px rgba(0,0,0,0.05));
+        }
+
+        .active-ring {
+            box-shadow: 0 0 0 2px #001e40;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md min-h-screen">
+<!-- Top Navigation Anchor (Shared Component Mapping) -->
+<header class="w-full sticky top-0 z-50 bg-surface dark:bg-surface-dim flex items-center justify-between px-margin-mobile h-16 w-full">
+<div class="flex items-center gap-4">
+<button class="hover:bg-surface-variant/50 transition-colors p-2 rounded-full Active: opacity-80 scale-95 transition-all">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed">arrow_back</span>
+</button>
+<h1 class="font-title-sm text-title-sm text-primary dark:text-primary-fixed">Settings</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="hover:bg-surface-variant/50 transition-colors p-2 rounded-full Active: opacity-80 scale-95 transition-all">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed">search</span>
+</button>
+</div>
+</header>
+<main class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-desktop py-lg grid grid-cols-1 lg:grid-cols-12 gap-xl">
+<!-- Sidebar: Style Controls -->
+<aside class="lg:col-span-3 flex flex-col gap-lg">
+<div>
+<h2 class="font-headline-md text-headline-md text-primary mb-md">Refine Export Template</h2>
+<p class="text-on-surface-variant body-md opacity-80">Design your life's retrospective. Your YRecall data is typeset into a professional editorial volume.</p>
+</div>
+<!-- Style Selector -->
+<div class="flex flex-col gap-md">
+<label class="font-title-sm text-sm uppercase tracking-wider text-on-surface-variant/60">Choose Aesthetic</label>
+<div class="space-y-sm">
+<button class="w-full flex flex-col items-start p-md rounded-xl bg-surface-container-high active-ring transition-all group" id="style-classic">
+<div class="flex items-center justify-between w-full mb-xs">
+<span class="font-bold text-primary">Classic Editorial</span>
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<span class="text-xs text-on-surface-variant">Serif headlines, high contrast, two-column layouts.</span>
+</button>
+<button class="w-full flex flex-col items-start p-md rounded-xl bg-surface-container border border-outline-variant/30 hover:bg-surface-container-high transition-all" id="style-modern">
+<div class="flex items-center justify-between w-full mb-xs">
+<span class="font-medium text-on-surface">Modern Minimal</span>
+</div>
+<span class="text-xs text-on-surface-variant text-left">Asymmetric spacing, thin lines, and heavy whitespace.</span>
+</button>
+<button class="w-full flex flex-col items-start p-md rounded-xl bg-surface-container border border-outline-variant/30 hover:bg-surface-container-high transition-all" id="style-tech">
+<div class="flex items-center justify-between w-full mb-xs">
+<span class="font-medium text-on-surface">Deep Tech</span>
+</div>
+<span class="text-xs text-on-surface-variant text-left">Monospace accents, data visualization focus, dark accents.</span>
+</button>
+</div>
+</div>
+<div class="border-t border-outline-variant/30 pt-lg mt-sm">
+<label class="font-title-sm text-sm uppercase tracking-wider text-on-surface-variant/60 mb-md block">Export Details</label>
+<div class="space-y-md">
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant">Estimated Pages</span>
+<span class="font-bold text-primary">142</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant">Word Count</span>
+<span class="font-bold text-primary">24,500</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant">Image Count</span>
+<span class="font-bold text-primary">89</span>
+</div>
+</div>
+</div>
+<button class="w-full h-14 bg-primary text-on-primary rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity mt-auto">
+<span class="material-symbols-outlined">auto_stories</span>
+                Generate PDF
+            </button>
+</aside>
+<!-- Preview Area: Magazine Layout -->
+<section class="lg:col-span-9 flex flex-col gap-lg">
+<div class="bg-surface-container-low rounded-xxl p-lg md:p-xxl flex flex-col items-center">
+<!-- Layout Preview Navigation -->
+<div class="flex gap-md mb-xl">
+<button class="px-md py-xs rounded-full bg-primary-container text-on-primary-container font-medium text-sm">Cover Page</button>
+<button class="px-md py-xs rounded-full hover:bg-surface-variant/40 text-on-surface-variant font-medium text-sm">Table of Contents</button>
+<button class="px-md py-xs rounded-full hover:bg-surface-variant/40 text-on-surface-variant font-medium text-sm">Sample Spread</button>
+</div>
+<!-- The "Book" Preview Container -->
+<div class="relative w-full max-w-[700px] aspect-[1/1.4] bg-white book-shadow rounded-sm overflow-hidden flex flex-col animate-fade-in group cursor-zoom-in">
+<!-- Cover Page Rendering -->
+<div class="absolute inset-0 flex flex-col p-12 md:p-20 z-10">
+<!-- Branding -->
+<div class="flex justify-between items-start w-full">
+<span class="font-headline-md text-headline-md text-primary tracking-tighter">YRecall</span>
+<span class="text-on-surface-variant font-label-xs uppercase tracking-[0.2em] border-b border-primary pb-1">Life OS Summary</span>
+</div>
+<!-- Main Title -->
+<div class="mt-auto mb-lg">
+<h3 class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary leading-tight">
+                                The Chronicles<br/>of a Conscious<br/>Mind
+                            </h3>
+<div class="w-16 h-1 bg-secondary mt-md"></div>
+</div>
+<!-- User Identity -->
+<div class="flex items-end justify-between">
+<div>
+<p class="text-on-surface-variant text-label-xs uppercase tracking-widest mb-1">Author</p>
+<p class="font-title-sm text-title-sm text-primary">Alex Sterling</p>
+</div>
+<div class="text-right">
+<p class="text-on-surface-variant text-label-xs uppercase tracking-widest mb-1">Timeline</p>
+<p class="font-title-sm text-title-sm text-primary">2023 - 2024</p>
+</div>
+</div>
+</div>
+<!-- Cover Image/Texture Layer -->
+<div class="absolute inset-0 z-0">
+<div class="absolute inset-0 bg-gradient-to-tr from-white via-transparent to-primary/5"></div>
+<div class="absolute inset-0 w-full h-full opacity-40 mix-blend-multiply" data-alt="A sophisticated abstract composition of ethereal light waves and subtle geometric data patterns in a soft palette of ivory, sage, and deep blue. The visual style is reminiscent of high-end editorial photography with a soft-focus depth of field. The mood is calm, intellectual, and premium, perfectly representing the essence of a digital life memory summary." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC2PibGKIRezcdy9ZOtdWy4oIeUFIydPpxxj49h8tncQqMeY_IZT25vSJ4JM2BIO8FcW1fPu1okCywITBqq66jAEZxaAXGWZNJUX3qbBTZYgQO1uyp1BbN_Oj3nlcz5kwXrh1UL-H7tsJGb0IJg-KBizKKXo9ZYqri_yZD9Lnp8RbSQe1CG0sFrTGe_13o-uOg8D19jLG7TVjsMURNbROZk6ZQTwboVV4Djl08d_pVzvFSCRh1CeI8Ujy9DSys7YcLB6cP_-fzADWs')"></div>
+</div>
+<!-- Page Edge Detail -->
+<div class="absolute right-0 top-0 bottom-0 w-2 bg-gradient-to-l from-black/5 to-transparent"></div>
+<div class="page-curl"></div>
+</div>
+<!-- TOC Preview (Hidden by default, shown via logic or hover in real app) -->
+<div class="mt-xxl w-full max-w-2xl bg-white/50 backdrop-blur-sm rounded-xl p-lg border border-outline-variant/20">
+<h4 class="font-title-sm text-primary mb-md flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">list</span>
+                        Table of Contents
+                    </h4>
+<ul class="space-y-md">
+<li class="flex justify-between items-end border-b border-dotted border-outline-variant pb-1 group cursor-pointer hover:bg-primary/5 rounded-sm transition-colors px-2">
+<div class="flex flex-col">
+<span class="font-medium text-primary">The Project Nova Saga</span>
+<span class="text-xs text-on-surface-variant">A year-long deep dive into architectural evolution.</span>
+</div>
+<span class="font-bold text-primary">04</span>
+</li>
+<li class="flex justify-between items-end border-b border-dotted border-outline-variant pb-1 group cursor-pointer hover:bg-primary/5 rounded-sm transition-colors px-2">
+<div class="flex flex-col">
+<span class="font-medium text-primary">Tahoe Memories</span>
+<span class="text-xs text-on-surface-variant">Captured moments from the High Sierra retreat.</span>
+</div>
+<span class="font-bold text-primary">28</span>
+</li>
+<li class="flex justify-between items-end border-b border-dotted border-outline-variant pb-1 group cursor-pointer hover:bg-primary/5 rounded-sm transition-colors px-2">
+<div class="flex flex-col">
+<span class="font-medium text-primary">Habit Evolution</span>
+<span class="text-xs text-on-surface-variant">Analyzing the shifts in productivity and health.</span>
+</div>
+<span class="font-bold text-primary">56</span>
+</li>
+</ul>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Shell (Shared Component Mapping) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full h-20 flex justify-around items-center px-4 pb-safe bg-surface-container-low dark:bg-surface-container-lowest z-50 rounded-t-xl shadow-sm border-t border-outline-variant/30">
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/20 transition-all p-2 rounded-lg">
+<span class="material-symbols-outlined">grain</span>
+<span class="font-label-xs text-label-xs">Memories</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/20 transition-all p-2 rounded-lg">
+<span class="material-symbols-outlined">psychology_alt</span>
+<span class="font-label-xs text-label-xs">Recall</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/20 transition-all p-2 rounded-lg">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-xs text-label-xs">Insights</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1 scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-xs text-label-xs">Settings</span>
+</div>
+</nav>
+<!-- Responsive Desktop Nav (Mapped from NavigationDrawer/BottomNavBar clusters) -->
+<div class="hidden md:flex fixed left-0 top-16 h-[calc(100vh-64px)] w-20 flex-col items-center py-lg bg-surface-container gap-lg border-r border-outline-variant/20">
+<button class="p-3 text-on-surface-variant hover:bg-surface-variant/40 rounded-xl transition-all" title="Memories">
+<span class="material-symbols-outlined">grain</span>
+</button>
+<button class="p-3 text-on-surface-variant hover:bg-surface-variant/40 rounded-xl transition-all" title="Recall">
+<span class="material-symbols-outlined">psychology_alt</span>
+</button>
+<button class="p-3 text-on-surface-variant hover:bg-surface-variant/40 rounded-xl transition-all" title="Insights">
+<span class="material-symbols-outlined">analytics</span>
+</button>
+<button class="p-3 bg-primary-container text-on-primary-container rounded-xl shadow-md" title="Settings">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+<script>
+        // Simple micro-interactions for style selection
+        const styleButtons = [
+            document.getElementById('style-classic'),
+            document.getElementById('style-modern'),
+            document.getElementById('style-tech')
+        ];
+
+        styleButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Clear active states
+                styleButtons.forEach(b => {
+                    b.classList.remove('active-ring', 'bg-surface-container-high');
+                    b.classList.add('bg-surface-container', 'border', 'border-outline-variant/30');
+                    const icon = b.querySelector('span.check_circle');
+                    if (icon) icon.remove();
+                });
+
+                // Set active state
+                btn.classList.add('active-ring', 'bg-surface-container-high');
+                btn.classList.remove('bg-surface-container', 'border', 'border-outline-variant/30');
+                
+                const titleDiv = btn.querySelector('.flex.items-center.justify-between');
+                const check = document.createElement('span');
+                check.className = 'material-symbols-outlined text-primary text-sm check_circle';
+                check.style.fontVariationSettings = "'FILL' 1";
+                check.textContent = 'check_circle';
+                titleDiv.appendChild(check);
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Team Workspace | AI Life OS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed": "#93f2f2",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed": "#a3f69c",
+                    "on-primary-fixed": "#001b3c",
+                    "inverse-on-surface": "#f7f0e8",
+                    "primary-container": "#003366",
+                    "error-container": "#ffdad6",
+                    "on-surface-variant": "#43474f",
+                    "tertiary-fixed-dim": "#88d982",
+                    "tertiary": "#002504",
+                    "error": "#ba1a1a",
+                    "on-background": "#1e1b17",
+                    "secondary": "#006a6a",
+                    "surface-container-high": "#eee7df",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-container": "#5ead5c",
+                    "background": "#fff8f1",
+                    "tertiary-container": "#003d0b",
+                    "outline-variant": "#c3c6d1",
+                    "on-tertiary-fixed": "#002204",
+                    "surface": "#fff8f1",
+                    "secondary-fixed-dim": "#76d6d5",
+                    "on-primary": "#ffffff",
+                    "surface-bright": "#fff8f1",
+                    "primary": "#001e40",
+                    "surface-container-highest": "#e8e1da",
+                    "surface-tint": "#3a5f94",
+                    "on-secondary-fixed-variant": "#004f4f",
+                    "on-secondary-fixed": "#002020",
+                    "inverse-surface": "#33302b",
+                    "surface-container-low": "#faf3eb",
+                    "secondary-container": "#90efef",
+                    "surface-variant": "#e8e1da",
+                    "on-secondary-container": "#006e6e",
+                    "inverse-primary": "#a7c8ff",
+                    "outline": "#737780",
+                    "surface-container": "#f4ede5",
+                    "on-error-container": "#93000a",
+                    "on-surface": "#1e1b17",
+                    "primary-fixed": "#d5e3ff",
+                    "on-tertiary-fixed-variant": "#005312",
+                    "on-primary-fixed-variant": "#1f477b",
+                    "on-error": "#ffffff",
+                    "on-primary-container": "#799dd6",
+                    "surface-dim": "#e0d9d1",
+                    "primary-fixed-dim": "#a7c8ff",
+                    "on-tertiary": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "20px",
+                    "lg": "24px",
+                    "gutter": "16px",
+                    "base": "8px",
+                    "xxl": "48px",
+                    "margin-desktop": "40px",
+                    "xs": "4px",
+                    "sm": "8px",
+                    "xl": "32px",
+                    "md": "16px"
+            },
+            "fontFamily": {
+                    "body-md": ["Public Sans"],
+                    "label-xs": ["Public Sans"],
+                    "caption-sm": ["Public Sans"],
+                    "display-lg-mobile": ["Public Sans"],
+                    "display-lg": ["Public Sans"],
+                    "headline-md": ["Public Sans"],
+                    "title-sm": ["Public Sans"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Public Sans', sans-serif; background-color: #FCFAF7; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        .ai-border { border: 1px solid transparent; background: linear-gradient(white, white) padding-box, linear-gradient(to right, #006a6a, #c3c6d1) border-box; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e8e1da; border-radius: 10px; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-40 flex items-center justify-between px-margin-mobile lg:px-margin-desktop h-20 bg-surface dark:bg-surface-dim shadow-sm">
+<div class="flex items-center gap-md">
+<button class="material-symbols-outlined text-primary hover:bg-surface-container-high transition-colors p-2 rounded-full">menu</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Team Workspace</h1>
+</div>
+<div class="flex items-center gap-md">
+<div class="hidden lg:flex items-center gap-base mr-md">
+<span class="font-body-md text-on-surface-variant font-medium">8 Online</span>
+<div class="w-2 h-2 rounded-full bg-secondary animate-pulse"></div>
+</div>
+<img class="w-10 h-10 rounded-full object-cover border-2 border-outline-variant" data-alt="A professional headshot of a team collaborator with a neutral expression, set against a soft blurred office background. The lighting is bright and airy, following a minimalist and clean aesthetic. High-quality editorial style photography with natural skin tones and deep blue accents in the background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuARJsIg_-b20GIQ2XjEmpOTNo_W7ixqlwohKwrGL6nMmEdBF2m1XH6Ru8IKEpFI00ItciZgB16kiCadYIW89pQc5hF4jKe2KbQX8KSamhDWMhPyyVnu6Q41TzCUnTLSPcBBqlewUJUtazcnoPn_NZ0gGvODHYlbXN615hKN2FKDxLlEJCxVC9lKNEbwOzuQwwAVSn7ULKw2fzGupgHjrIvAPo6QvQyhQ_9PAmHd-3ZLiBk-jSygMWhCZvMPHZW-EMedRY3V17szhXs"/>
+</div>
+</header>
+<main class="pt-24 pb-28 px-margin-mobile lg:px-margin-desktop max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-8 lg:grid-cols-12 gap-gutter lg:gap-lg">
+<!-- Dashboard Hero / Status -->
+<section class="col-span-1 md:col-span-8 lg:col-span-12 mb-md lg:mb-lg">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-md">
+<div>
+<h2 class="font-display-lg text-display-lg text-primary mb-xs">Good morning, Alex</h2>
+<p class="font-body-md text-on-surface-variant">The AI Life OS has indexed 12 new items since your last login.</p>
+</div>
+<div class="flex gap-sm">
+<button class="bg-primary text-on-primary font-body-md px-md py-sm rounded-xl hover:shadow-lg transition-all active:scale-95">Add Project</button>
+<button class="bg-surface-container-low text-primary border border-outline-variant font-body-md px-md py-sm rounded-xl hover:bg-surface-container-high transition-all active:scale-95">Invite Team</button>
+</div>
+</div>
+</section>
+<!-- Bento Grid Layout -->
+<!-- Activity Feed (Large Card) -->
+<div class="col-span-1 md:col-span-5 lg:col-span-7 bg-surface-container-lowest rounded-[24px] p-lg shadow-[0_4px_20px_rgba(0,0,0,0.05)] flex flex-col h-[520px]">
+<div class="flex items-center justify-between mb-lg">
+<h3 class="font-title-sm text-title-sm text-primary flex items-center gap-sm">
+<span class="material-symbols-outlined">analytics</span> Activity
+                </h3>
+<span class="text-caption-sm text-outline px-2 py-1 bg-surface-container rounded-lg">Real-time</span>
+</div>
+<div class="flex-grow overflow-y-auto custom-scrollbar space-y-md">
+<!-- Highlighted Item -->
+<div class="bg-secondary-container/30 border border-secondary/10 p-md rounded-xl">
+<div class="flex items-start gap-md">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container">edit_note</span>
+</div>
+<div class="flex-grow">
+<p class="font-body-md text-on-surface"><span class="font-bold">Marcus Chen</span> added a new project note</p>
+<p class="text-caption-sm text-on-surface-variant mt-xs">"Finalized the architectural constraints for the Q4 roadmap. Intelligence layers are now prioritized."</p>
+<span class="text-caption-sm text-outline block mt-sm">2m ago • Project Alpha</span>
+</div>
+</div>
+</div>
+<!-- Regular Items -->
+<div class="p-md hover:bg-surface-container-low transition-colors rounded-xl flex items-start gap-md">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="Close up profile of a female team member with glasses, smiling softly. Minimalist professional background with soft natural lighting and neutral warm tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDohCG7iVuymoQZc4qmXLI8PgcK3itN05wKM97MUety9qbjOWoNUBPmXEDvfAG_p2WbW4Y_eFZ8kBx0zb4W4cfIg3pYv550RoEDK4-KKtJlok6exw73fxRKJfhj2qXIL3LDiQ7hDKthPYjTiNqeK8iDlXD9jlXts2SqTe_U66wwYpvRt38v2EvfqQjKPWATqeE4egb-cP44t-HCHRaF00UgLiIY0RwE76c559bApWcBcBGEWBjvcE2jaDwG9tpZgj4HyCxuZxPTi9E"/>
+<div>
+<p class="font-body-md text-on-surface"><span class="font-bold">Elena Rodriguez</span> approved the design system tokens</p>
+<span class="text-caption-sm text-outline block mt-xs">15m ago • Brand Identity</span>
+</div>
+</div>
+<div class="p-md hover:bg-surface-container-low transition-colors rounded-xl flex items-start gap-md">
+<div class="w-10 h-10 rounded-full bg-tertiary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-container">hub</span>
+</div>
+<div>
+<p class="font-body-md text-on-surface"><span class="font-bold">System AI</span> updated the knowledge graph</p>
+<span class="text-caption-sm text-outline block mt-xs">1h ago • Knowledge Sync</span>
+</div>
+</div>
+<div class="p-md hover:bg-surface-container-low transition-colors rounded-xl flex items-start gap-md">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="A male designer working in a bright modern studio, only his hands and a tablet are visible. High-key lighting, minimalist aesthetic with teal accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWacdj2tW8GXB_6JFd4z0uFr1TA7wU87NUbzraBr5ieLw8TqA_TVCWVaZ_u2sa4Pqdz3G5sHTs89gV825ef9X5oF-3OB93hTgOul2JbHtq2kxhXJhg4_q8lg8S9p9IabDd7F8ZZvRX2yyPsktkRc3RAAZSd4iEreO2TT6efsdVG3Tok9fdgXmdl3P8DuC0L-9VidF2lowBg3IMABtEed2-ChUOLBaT48fJsp6f8BW5HzVCJgxN1bRLhOsSqosefh6zZNvVUdeNvTQ"/>
+<div>
+<p class="font-body-md text-on-surface"><span class="font-bold">Jordan Lee</span> uploaded 4 new assets</p>
+<span class="text-caption-sm text-outline block mt-xs">3h ago • Marketing Ops</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Knowledge Graph Widget -->
+<div class="col-span-1 md:col-span-3 lg:col-span-5 bg-primary-container rounded-[24px] p-lg shadow-xl relative overflow-hidden flex flex-col h-[520px]">
+<div class="relative z-10">
+<h3 class="font-title-sm text-title-sm text-on-primary-container mb-xs">Knowledge Graph</h3>
+<p class="text-caption-sm text-on-primary-container/70 mb-lg">Visualizing team connections and documentation clusters</p>
+</div>
+<div class="flex-grow relative bg-primary/20 rounded-xl border border-white/10 overflow-hidden flex items-center justify-center">
+<!-- Placeholder for actual Graph logic -->
+<div class="absolute inset-0 flex items-center justify-center">
+
+<div class="relative z-10 flex flex-col items-center gap-md">
+<div class="w-24 h-24 rounded-full border border-secondary-fixed/50 flex items-center justify-center bg-primary/40 backdrop-blur-md animate-pulse">
+<span class="material-symbols-outlined text-secondary-fixed text-4xl">share_off</span>
+</div>
+<span class="text-caption-sm text-secondary-fixed font-bold tracking-widest uppercase">Live Pulse</span>
+</div>
+</div>
+</div>
+<div class="mt-lg z-10 grid grid-cols-2 gap-sm">
+<div class="bg-white/5 p-sm rounded-lg border border-white/10">
+<span class="block text-caption-sm text-on-primary-container/60">Entities</span>
+<span class="text-title-sm font-bold text-on-primary-container">1,284</span>
+</div>
+<div class="bg-white/5 p-sm rounded-lg border border-white/10">
+<span class="block text-caption-sm text-on-primary-container/60">Clusters</span>
+<span class="text-title-sm font-bold text-on-primary-container">42</span>
+</div>
+</div>
+</div>
+<!-- Member List Card -->
+<div class="col-span-1 md:col-span-4 lg:col-span-4 bg-surface-container-lowest rounded-[24px] p-lg shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-outline-variant/30">
+<div class="flex justify-between items-center mb-md">
+<h3 class="font-title-sm text-title-sm text-primary">Members</h3>
+<span class="text-caption-sm font-bold text-secondary bg-secondary-fixed/30 px-2 py-1 rounded-full">8 online</span>
+</div>
+<div class="space-y-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-md">
+<div class="relative">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="Close up of a team member in a minimalist office setting, with soft lighting and professional attire. High contrast and clean composition." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxyjHDUAo5GJYB_WJHJNvk-wj2LaDLlT8Ea5C5up3dy7Ko5qZmP03gs5Dg_hMxpN7i5YjpdW2AfC2X9Wskyp7EJSSqB2TU-yevz9jRZC7kNHqJyihf6nAfza26_lhiyOaLiA7yxqM7OxZRbXdBUVc9H7lNM2KygXyhvDwzPA72Q5aAQzZOTOxZupbWZKJYhnWEsmAPwtyesFNT86XwpHfsU_yAQ79Iw9ZU01OxohJ3EMzJ6t-7oPDtImnvPjqnh2kxbuE59El8clM"/>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-secondary border-2 border-white rounded-full"></div>
+</div>
+<div>
+<p class="font-body-md text-on-surface font-semibold">Alex Rivers</p>
+<p class="text-caption-sm text-outline">Lead Architect</p>
+</div>
+</div>
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors">more_vert</button>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-md">
+<div class="relative">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="Professional profile picture of a woman with a friendly expression. Clean background, minimalist workspace visible behind her. Soft, natural lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuApaVO_Oszr1HoRIn5vKF48oRI2UjK1UuxcXRSMIyj6-W9IgNq67FZzY6wLXfJckHXorEbMadmtUV6e_id4Gdln6EtAfee1_yNVscx0gRagtDXI5kAH8JpjdRTYDcPNHbdVMzVrEcJgCcXSkyJAKPaiVTM4ArYECL_ErtepuA2j8i5wVtzNsQwrrPzGwz-V6hIZ5aRRdooAXjpBX6rC9OlmbuQaLLQpQnwMc981L5_jLtq2o5EYDBRtkT2u1Onws102wCrnssqNjXY"/>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-secondary border-2 border-white rounded-full"></div>
+</div>
+<div>
+<p class="font-body-md text-on-surface font-semibold">Sarah Jenkins</p>
+<p class="text-caption-sm text-outline">Product Design</p>
+</div>
+</div>
+<button class="material-symbols-outlined text-outline">more_vert</button>
+</div>
+<!-- Avatar Overlap Row -->
+<div class="pt-md mt-md border-t border-outline-variant/30">
+<p class="text-caption-sm text-outline mb-sm">Recently active</p>
+<div class="flex items-center -space-x-3">
+<img class="w-10 h-10 rounded-full border-2 border-white object-cover" data-alt="Portrait of a young male professional in a creative office. Minimalist and bright, emphasizing clarity and human connection." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDX1imuPs0zfJD7mtEtdmXETnVpWZeWXQensKwoj2Wp4-VYV4liVDb2_yD14fLfKmGcQYO9ScM9FDXZKfnf9hz795q1FRzUWged_i6qldEDeVSv9e9wQNuGhcyDvs7haieVKsELntGNbNC9q7TCdxE2cQIizUMoukp123RBYVpObpZloBUw6ckGNOsV8l44iu6fuS1eOLWjJSsuMGQjz__5KuinFvcKtIwUCF6bgiGNtCJE9wQeAKxzERyJAAMthacVfVJ1qbpYqMc"/>
+<img class="w-10 h-10 rounded-full border-2 border-white object-cover" data-alt="Portrait of a diverse woman in a professional business context. High key lighting, clean minimalist aesthetics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTz4TpaunzyyEaii9aMFrnFZerw-5kL92faLegKjFeDmDF7Tl8mMbX_Hq4PKmI81Jtji_Yam8-vF6EgviNRBLXf_cAwD3mDkWUrXZJJJ6jpxfhnwoAuPhfElq4NPKn1l_csSIqrDnHOtw3ibiPkwYMBQ6QzmHquwKGcnsM4rAwSfSO9H1FjegX3FB_iojluvD9K-QpPyxLHEDIznX1fy_aKaTxK57SCbOcgNXtHc_LivZIhpgzz48l_V7ptVTvNuKCehEMnmmPS0w"/>
+<img class="w-10 h-10 rounded-full border-2 border-white object-cover" data-alt="A smiling man in a modern office, professional and calm atmosphere. Natural light, minimalist background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNqLBN0LVPN0KZIufwwbfDfOBiSUfHJVQR51vQ-dSC1RFkbWkhIBujkSnDp2oShunLcnqv6wBKCRn2HEJYZbMyJjr0OssGGW-2_2VwN2tPC6c4oGECRUX_JofsqtTyYAMatkBfSbquI8g0DnwcLYmnThD82BL1cTWOiqkhAePhgntptjh7JQNhVWx6hOFY5gZTeAPbyMQK23Cof1763_SX8uZw7UpBv232AbFZIW270O4MsgelxURFjId2WwWhqnioAnZF1cgsPDs"/>
+<div class="w-10 h-10 rounded-full border-2 border-white bg-surface-container-highest flex items-center justify-center text-caption-sm font-bold text-on-surface-variant">+5</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Shared Collections Carousel (Horizontal Scrolling) -->
+<div class="col-span-1 md:col-span-4 lg:col-span-8 bg-surface-container-low rounded-[24px] p-lg overflow-hidden">
+<div class="flex items-center justify-between mb-lg">
+<h3 class="font-title-sm text-title-sm text-primary">Shared Collections</h3>
+<div class="flex gap-sm">
+<button class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center hover:bg-outline-variant transition-colors"><span class="material-symbols-outlined text-sm">chevron_left</span></button>
+<button class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center hover:bg-outline-variant transition-colors"><span class="material-symbols-outlined text-sm">chevron_right</span></button>
+</div>
+</div>
+<div class="flex gap-md overflow-x-auto custom-scrollbar pb-md snap-x">
+<div class="min-w-[240px] snap-start bg-surface-container-lowest p-md rounded-2xl shadow-sm border border-outline-variant/20 group cursor-pointer hover:border-primary transition-all">
+<div class="w-full h-32 bg-secondary-fixed/10 rounded-xl mb-md flex items-center justify-center overflow-hidden relative">
+<img class="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:scale-110 transition-transform duration-500" data-alt="A collection of minimalist architectural sketches on a white table. Clean lines, soft shadows, airy and professional feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSo29wJ10VePNf14Fau_WVbNK88Q1ovHobZ7QZ_cI6Bb5tU6s0QbS8mV4n-yY5a3R29CD8tdrHz2WjriAjJRFpF2DQW07Golj3Ofy8FsoN07z8CDNtuZO9zn8wwVV_B2TLuIe-GLo0b61GYkMFPB7aWmoiXMitkiFtGRErAQ4yvZfFgVWyy5sFMuKYDagyQO2uZrVffXE_pbDxKoMA4Ovxjt323rdYSlrUR8QpoI5RssV7nT7_H_o1G3PyjVE10I_7MWrhv-uyBcQ"/>
+<span class="material-symbols-outlined text-secondary text-3xl relative z-10">architecture</span>
+</div>
+<h4 class="font-body-md font-bold text-primary">Q4 Design Assets</h4>
+<p class="text-caption-sm text-outline">248 items • Updated yesterday</p>
+</div>
+<div class="min-w-[240px] snap-start bg-surface-container-lowest p-md rounded-2xl shadow-sm border border-outline-variant/20 group cursor-pointer hover:border-primary transition-all">
+<div class="w-full h-32 bg-primary-container/10 rounded-xl mb-md flex items-center justify-center overflow-hidden relative">
+<img class="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:scale-110 transition-transform duration-500" data-alt="Conceptual data visualization showing connections and network nodes in a clean digital style. Minimalist white and blue tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuChxKK-WtxrFP_q_OX9Na8Xq2H7VOJ73krMYmm8kOzP0TJWmee_4t4VULpN54pD8-JHYrsAJW7CLnmd7_8QDjP67PvZ375qHri_uXEXMT8aTmdCavoG952Sp0FYb4PgTLuRp49PMK42XQYKbvyCJyoCZ7Cz6rWX9tKYBWxhcGgy3L-SI6gUi4ZAMRSTWiEwiKloRpslxwcO-m3Jz_yBuoZ6BMjIluiPcljtUycCxu-JHFaBiIi-66Rf4p8THoluJ1vXua7GXVca-bI"/>
+<span class="material-symbols-outlined text-primary text-3xl relative z-10">folder_zip</span>
+</div>
+<h4 class="font-body-md font-bold text-primary">Client Feedback Hub</h4>
+<p class="text-caption-sm text-outline">12 folders • Updated 2h ago</p>
+</div>
+<div class="min-w-[240px] snap-start bg-surface-container-lowest p-md rounded-2xl shadow-sm border border-outline-variant/20 group cursor-pointer hover:border-primary transition-all">
+<div class="w-full h-32 bg-tertiary-fixed/10 rounded-xl mb-md flex items-center justify-center overflow-hidden relative">
+<img class="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:scale-110 transition-transform duration-500" data-alt="A minimalist tech office desk with a single laptop and some papers. Very clean, bright, and organized composition." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEdS2qULPLtdn29DEAYN6VEVtIlPn2qcOFTtJ5-LM2C1XhVbA266pTUl7ygWeQrY1usMnWdzeYc5im9zID18xgfqCfxmyf7sJgIW5UHIG5-ECtKmW8pydPEZGwT4Bm-95mbCuMvaYz0nJckCgAH_qG9ruAdzEAxlQssC1ePsFXUpr0weYrkBwRmHpOv-910NFszX5VBTBECMFIZF3owEA2vCjVhtzV1REBL0UzAerCre3jHntr6Cr9rt0lfeZ93sUT0mvT3_fB1-Y"/>
+<span class="material-symbols-outlined text-tertiary text-3xl relative z-10">description</span>
+</div>
+<h4 class="font-body-md font-bold text-primary">Technical Specs</h4>
+<p class="text-caption-sm text-outline">85 documents • New entries</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Navigation Drawer (Desktop only, subtle sidebar hint) -->
+<aside class="fixed inset-y-0 left-0 z-50 hidden lg:flex flex-col p-md bg-surface-container-low w-20 hover:w-64 transition-all duration-300 ease-in-out group border-r border-outline-variant/20 overflow-hidden">
+<div class="flex items-center gap-md px-2 py-4 mb-xl">
+<span class="material-symbols-outlined text-primary text-4xl">deployed_code</span>
+<span class="font-headline-md text-headline-md text-primary opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Life OS</span>
+</div>
+<nav class="flex-grow space-y-sm">
+<a class="flex items-center gap-md p-3 bg-secondary-container text-on-secondary-container rounded-lg group" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-body-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Activity</span>
+</a>
+<a class="flex items-center gap-md p-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">hub</span>
+<span class="font-body-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Knowledge Graph</span>
+</a>
+<a class="flex items-center gap-md p-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-body-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Members</span>
+</a>
+<a class="flex items-center gap-md p-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Settings</span>
+</a>
+</nav>
+<div class="pt-xl mt-xl border-t border-outline-variant/30 flex flex-col gap-sm">
+<div class="flex items-center gap-md p-2">
+<img class="w-8 h-8 rounded-full" data-alt="Small round user avatar with a calm expression, professional style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKfGslbduJMWD56cgCYeRDWFgMjnZxQP3zdjA8ms8o3qk_5NuuDnZTp-9TBKRwzOIRYxBc6fuEV2BQx8WcnTgRhN0ZOtYwZBmDi3110CM5j62ICT89_PMtmDR6l8_6BQMU1bK3IIAOxm70qNoHin7S29r1Mo2fcSLvME13-_n_nJVEBwhpMy0fZ_Sf4ZwQpPz8UemguURKfR4S1Og-f4kWH5VCxa0NWH52hAWCpDTEYUcYK-zdhOwgZfAHzxvG0hPrxVFDbKyXnhQ"/>
+<div class="opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap overflow-hidden">
+<p class="font-body-md font-bold text-on-surface text-sm">Alex Rivers</p>
+<p class="text-xs text-outline">Pro Tier</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- BottomNavBar (Mobile only) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 flex justify-around items-center h-20 px-4 pb-safe bg-surface border-t border-outline-variant">
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 scale-110" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-xs text-label-xs-mobile">Activity</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors" href="#">
+<span class="material-symbols-outlined">hub</span>
+<span class="font-label-xs text-label-xs-mobile">Graph</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-label-xs text-label-xs-mobile">Members</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-xs text-label-xs-mobile">Settings</span>
+</a>
+</nav>
+<!-- Floating Action Button Contextual Logic -->
+<button class="fixed bottom-24 right-margin-mobile lg:right-margin-desktop bg-primary text-on-primary w-14 h-14 rounded-full shadow-2xl flex items-center justify-center z-30 active:scale-90 transition-transform duration-200 lg:bottom-10">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+<script>
+        // Simple Micro-interaction for the graph card
+        const graphCard = document.querySelector('.lg\\:col-span-5');
+        if (graphCard) {
+            graphCard.addEventListener('mousemove', (e) => {
+                const rect = graphCard.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+                
+                graphCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+            
+            graphCard.addEventListener('mouseleave', () => {
+                graphCard.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+                graphCard.style.transition = 'transform 0.5s ease';
+            });
+            
+            graphCard.addEventListener('mouseenter', () => {
+                graphCard.style.transition = 'none';
+            });
+        }
+    </script>
+</body></html>

@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YRecall - Widget Configuration</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-pill {
+            font-variation-settings: 'FILL' 1;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .ai-border {
+            position: relative;
+        }
+        .ai-border::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            padding: 1px;
+            border-radius: 24px;
+            background: linear-gradient(to right, #006a6a, #c3c6d1);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        body {
+            background-color: #FCFAF7;
+            font-family: 'Public Sans', sans-serif;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#004f4f",
+                        "primary-fixed-dim": "#a7c8ff",
+                        "secondary": "#006a6a",
+                        "tertiary-fixed-dim": "#88d982",
+                        "surface-bright": "#fff8f1",
+                        "surface-dim": "#e0d9d1",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#eee7df",
+                        "surface-variant": "#e8e1da",
+                        "on-secondary-container": "#006e6e",
+                        "on-primary-container": "#799dd6",
+                        "on-primary-fixed-variant": "#1f477b",
+                        "secondary-fixed-dim": "#76d6d5",
+                        "on-tertiary-fixed": "#002204",
+                        "primary-fixed": "#d5e3ff",
+                        "outline": "#737780",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#faf3eb",
+                        "surface": "#fff8f1",
+                        "on-secondary-fixed": "#002020",
+                        "inverse-surface": "#33302b",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "inverse-on-surface": "#f7f0e8",
+                        "outline-variant": "#c3c6d1",
+                        "tertiary-container": "#003d0b",
+                        "primary-container": "#003366",
+                        "tertiary": "#002504",
+                        "surface-container": "#f4ede5",
+                        "tertiary-fixed": "#a3f69c",
+                        "secondary-container": "#90efef",
+                        "on-tertiary-container": "#5ead5c",
+                        "surface-tint": "#3a5f94",
+                        "on-primary-fixed": "#001b3c",
+                        "on-primary": "#ffffff",
+                        "surface-container-highest": "#e8e1da",
+                        "primary": "#001e40",
+                        "secondary-fixed": "#93f2f2",
+                        "on-tertiary-fixed-variant": "#005312",
+                        "on-surface": "#1e1b17",
+                        "on-surface-variant": "#43474f",
+                        "background": "#fff8f1",
+                        "on-background": "#1e1b17",
+                        "inverse-primary": "#a7c8ff",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "margin-desktop": "40px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "margin-mobile": "20px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "gutter": "16px",
+                        "xxl": "48px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["Public Sans"],
+                        "body-md": ["Public Sans"],
+                        "headline-md": ["Public Sans"],
+                        "label-xs": ["Public Sans"],
+                        "title-sm": ["Public Sans"],
+                        "display-lg": ["Public Sans"],
+                        "caption-sm": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                        "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-on-background shadow-sm fixed top-0 full-width z-50 flex justify-between items-center w-full px-margin-mobile h-14">
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors duration-200">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim">Widget Settings</h1>
+</div>
+<div class="w-10 h-10 rounded-full bg-surface-container-high border-2 border-primary flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a person with a serene expression, soft studio lighting, high-end editorial photography style, neutral background colors, sharp focus, minimalist aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrMkeg2gFCy_ANJ_Mh9WMDVQIGlX9cCuZvpxhCCNKAmiUoCBlDBI_DHjxQg8ZcoNce9haVqOZYQkdbRA7PwGUJQeJhjqkqYDaK8a6C9iwPITG5zXqiDrT72wHqhndd4Epflt7I57k_HgcWPXUlUXPhBNAqzkXi_BcVcaYWX72D-0vZK5OhvAxnokV41kUWR6ABIAGb5q3WOZke9VA8Bhd7LKM0Y2Iq0MNX-ZydaebB1-tkoPHTGbKmBJTzYE5njc-XcxFoGvi6a3E"/>
+</div>
+</header>
+<main class="pt-20 px-margin-mobile md:px-margin-desktop max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-lg">
+<!-- Selection & Customization Column -->
+<div class="md:col-span-7 space-y-lg">
+<!-- Section: Widget Type -->
+<section>
+<h2 class="font-title-sm text-title-sm mb-md text-on-surface">Widget Style</h2>
+<div class="grid grid-cols-2 gap-md">
+<button class="flex flex-col items-center justify-center p-lg bg-surface-container rounded-xl border-2 border-primary transition-all active:scale-95" onclick="updatePreview('compact')">
+<span class="material-symbols-outlined text-primary text-4xl mb-sm">view_compact</span>
+<span class="font-body-md text-body-md font-semibold">Compact</span>
+</button>
+<button class="flex flex-col items-center justify-center p-lg bg-surface-container-low rounded-xl border-2 border-transparent hover:border-outline-variant transition-all active:scale-95" onclick="updatePreview('expanded')">
+<span class="material-symbols-outlined text-on-surface-variant text-4xl mb-sm">view_quilt</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Expanded</span>
+</button>
+</div>
+</section>
+<!-- Section: Action Customization -->
+<section>
+<div class="flex items-center justify-between mb-md">
+<h2 class="font-title-sm text-title-sm text-on-surface">Action Customization</h2>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-[10px] uppercase font-bold tracking-wider">Main Button</span>
+</div>
+<div class="bg-white rounded-[24px] p-2 shadow-sm border border-outline-variant/30 space-y-1">
+<!-- Option 1 -->
+<label class="flex items-center justify-between p-4 hover:bg-surface-container-low rounded-xl cursor-pointer group transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined">bolt</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold">Quick Capture</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">Instant text entry with AI auto-tagging</p>
+</div>
+</div>
+<input checked="" class="w-5 h-5 text-primary border-outline-variant focus:ring-primary" name="action" type="radio" value="quick"/>
+</label>
+<!-- Option 2 -->
+<label class="flex items-center justify-between p-4 hover:bg-surface-container-low rounded-xl cursor-pointer group transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">mic</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold">Voice Memo</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">Record and transcribe instantly</p>
+</div>
+</div>
+<input class="w-5 h-5 text-primary border-outline-variant focus:ring-primary" name="action" type="radio" value="voice"/>
+</label>
+<!-- Option 3 -->
+<label class="flex items-center justify-between p-4 hover:bg-surface-container-low rounded-xl cursor-pointer group transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">camera_enhance</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold">Photo Scan</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">OCR and image intelligence capture</p>
+</div>
+</div>
+<input class="w-5 h-5 text-primary border-outline-variant focus:ring-primary" name="action" type="radio" value="photo"/>
+</label>
+<!-- Option 4 -->
+<label class="flex items-center justify-between p-4 hover:bg-surface-container-low rounded-xl cursor-pointer group transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">subject</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold">Smart Text</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">Analyze clipboard content automatically</p>
+</div>
+</div>
+<input class="w-5 h-5 text-primary border-outline-variant focus:ring-primary" name="action" type="radio" value="smart"/>
+</label>
+</div>
+</section>
+<!-- Section: Intelligence & Privacy -->
+<section class="ai-border bg-white rounded-[24px] p-lg shadow-md">
+<div class="flex items-center gap-2 mb-lg">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<h2 class="font-title-sm text-title-sm text-secondary">AI Intelligence Layer</h2>
+</div>
+<div class="space-y-lg">
+<div class="flex items-center justify-between">
+<div>
+<p class="font-body-md text-body-md font-semibold">Show AI Insights</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">Display contextual summaries in the widget</p>
+</div>
+<button class="w-12 h-6 bg-secondary rounded-full relative transition-colors" onclick="toggleSwitch(this)">
+<div class="w-5 h-5 bg-white rounded-full absolute top-0.5 right-0.5 transition-all"></div>
+</button>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<p class="font-body-md text-body-md font-semibold">Privacy Masking</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">Hide sensitive content on lockscreen</p>
+</div>
+<button class="w-12 h-6 bg-surface-container-highest rounded-full relative transition-colors" onclick="toggleSwitch(this)">
+<div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 transition-all shadow-sm"></div>
+</button>
+</div>
+</div>
+</section>
+</div>
+<!-- Preview Area Column -->
+<div class="md:col-span-5 sticky top-20 h-fit">
+<h2 class="font-title-sm text-title-sm mb-md text-on-surface">Live Preview</h2>
+<div class="relative bg-surface-dim rounded-[48px] p-6 border-[8px] border-on-surface aspect-[9/19] shadow-2xl overflow-hidden flex flex-col">
+<!-- Phone Mockup Content -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-6 bg-on-surface rounded-b-2xl"></div>
+<div class="mt-12">
+<div class="text-on-surface text-center">
+<p class="text-4xl font-bold opacity-80">09:41</p>
+<p class="text-sm font-medium opacity-60">Tuesday, Oct 24</p>
+</div>
+</div>
+<!-- The Widget Preview -->
+<div class="mt-xxl space-y-md" id="widget-container">
+<div class="glass-card rounded-[24px] p-md shadow-xl animate-pulse">
+<div class="flex items-center justify-between mb-sm">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-sm">history</span>
+</div>
+<span class="text-xs font-bold text-primary">YRecall</span>
+</div>
+<span class="text-[10px] font-medium text-on-surface-variant opacity-60">Widget</span>
+</div>
+<div class="space-y-2">
+<div class="w-full h-12 bg-primary rounded-xl flex items-center justify-center gap-2 text-white transition-all transform hover:scale-105 active:scale-95 cursor-pointer" id="preview-main-action">
+<span class="material-symbols-outlined" id="preview-icon">bolt</span>
+<span class="font-semibold text-sm" id="preview-text">Quick Capture</span>
+</div>
+<div class="p-3 bg-secondary/5 rounded-lg border border-secondary/20 transition-all" id="preview-ai-section">
+<p class="text-[10px] font-bold text-secondary uppercase tracking-tight mb-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">auto_awesome</span>
+                                    AI Insight
+                                </p>
+<p class="text-[11px] text-on-surface opacity-80 leading-snug">"You mentioned a meeting with Sarah today at 3 PM."</p>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-auto mb-4 flex justify-around opacity-40">
+<div class="w-10 h-10 rounded-xl bg-on-surface-variant"></div>
+<div class="w-10 h-10 rounded-xl bg-on-surface-variant"></div>
+<div class="w-10 h-10 rounded-xl bg-on-surface-variant"></div>
+<div class="w-10 h-10 rounded-xl bg-on-surface-variant"></div>
+</div>
+<div class="w-1/3 h-1 bg-on-surface rounded-full mx-auto mb-2 opacity-20"></div>
+</div>
+<button class="w-full mt-lg h-14 bg-primary text-white rounded-2xl font-bold shadow-lg flex items-center justify-center gap-2 hover:bg-primary-container transition-all active:scale-95">
+                Apply Widget Configuration
+            </button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center h-20 px-4 pb-2 bg-surface-container-low dark:bg-surface-container-lowest border-t border-outline-variant dark:border-outline shadow-md">
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-xs text-label-xs mt-1">Recall</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1">
+<span class="material-symbols-outlined active-pill">widgets</span>
+<span class="font-label-xs text-label-xs mt-1">Widgets</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">settings_input_component</span>
+<span class="font-label-xs text-label-xs mt-1">Actions</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">query_stats</span>
+<span class="font-label-xs text-label-xs mt-1">Insights</span>
+</div>
+</nav>
+<script>
+        function toggleSwitch(btn) {
+            const circle = btn.querySelector('div');
+            const isActive = btn.classList.contains('bg-secondary');
+            
+            if (isActive) {
+                btn.classList.remove('bg-secondary');
+                btn.classList.add('bg-surface-container-highest');
+                circle.classList.remove('right-0.5');
+                circle.classList.add('left-0.5');
+                circle.classList.remove('shadow-none');
+                circle.classList.add('shadow-sm');
+                
+                // Hide AI Preview if that's what was toggled
+                if (btn.previousElementSibling.firstElementChild.innerText === 'Show AI Insights') {
+                    document.getElementById('preview-ai-section').classList.add('opacity-0', 'scale-95', 'h-0', 'overflow-hidden');
+                }
+            } else {
+                btn.classList.add('bg-secondary');
+                btn.classList.remove('bg-surface-container-highest');
+                circle.classList.add('right-0.5');
+                circle.classList.remove('left-0.5');
+                circle.classList.add('shadow-none');
+                circle.classList.remove('shadow-sm');
+                
+                // Show AI Preview if that's what was toggled
+                if (btn.previousElementSibling.firstElementChild.innerText === 'Show AI Insights') {
+                    document.getElementById('preview-ai-section').classList.remove('opacity-0', 'scale-95', 'h-0', 'overflow-hidden');
+                }
+            }
+        }
+
+        const actionConfigs = {
+            'quick': { icon: 'bolt', text: 'Quick Capture' },
+            'voice': { icon: 'mic', text: 'Voice Memo' },
+            'photo': { icon: 'camera_enhance', text: 'Photo Scan' },
+            'smart': { icon: 'subject', text: 'Smart Text' }
+        };
+
+        document.querySelectorAll('input[name="action"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const config = actionConfigs[e.target.value];
+                document.getElementById('preview-icon').innerText = config.icon;
+                document.getElementById('preview-text').innerText = config.text;
+                
+                // Visual feedback in the mockup
+                const btn = document.getElementById('preview-main-action');
+                btn.classList.add('scale-105');
+                setTimeout(() => btn.classList.remove('scale-105'), 200);
+            });
+        });
+
+        function updatePreview(style) {
+            // UI Logic for updating widget style preview
+            const container = document.getElementById('widget-container');
+            // Mock transition effect
+            container.style.opacity = '0.5';
+            setTimeout(() => {
+                container.style.opacity = '1';
+            }, 300);
+        }
+    </script>
+</body></html>

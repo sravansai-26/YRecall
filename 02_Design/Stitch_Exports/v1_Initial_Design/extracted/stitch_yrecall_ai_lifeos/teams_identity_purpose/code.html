@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Team Creation Setup | AI Life OS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .ai-inner-border {
+            position: relative;
+        }
+        .ai-inner-border::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, #006a6a 0%, #c3c6d1 100%);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            -webkit-mask-composite: destination-out;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed": "#93f2f2",
+                      "on-secondary": "#ffffff",
+                      "tertiary-fixed": "#a3f69c",
+                      "on-primary-fixed": "#001b3c",
+                      "inverse-on-surface": "#f7f0e8",
+                      "primary-container": "#003366",
+                      "error-container": "#ffdad6",
+                      "on-surface-variant": "#43474f",
+                      "tertiary-fixed-dim": "#88d982",
+                      "tertiary": "#002504",
+                      "error": "#ba1a1a",
+                      "on-background": "#1e1b17",
+                      "secondary": "#006a6a",
+                      "surface-container-high": "#eee7df",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-container": "#5ead5c",
+                      "background": "#fff8f1",
+                      "tertiary-container": "#003d0b",
+                      "outline-variant": "#c3c6d1",
+                      "on-tertiary-fixed": "#002204",
+                      "surface": "#fff8f1",
+                      "secondary-fixed-dim": "#76d6d5",
+                      "on-primary": "#ffffff",
+                      "surface-bright": "#fff8f1",
+                      "primary": "#001e40",
+                      "surface-container-highest": "#e8e1da",
+                      "surface-tint": "#3a5f94",
+                      "on-secondary-fixed-variant": "#004f4f",
+                      "on-secondary-fixed": "#002020",
+                      "inverse-surface": "#33302b",
+                      "surface-container-low": "#faf3eb",
+                      "secondary-container": "#90efef",
+                      "surface-variant": "#e8e1da",
+                      "on-secondary-container": "#006e6e",
+                      "inverse-primary": "#a7c8ff",
+                      "outline": "#737780",
+                      "surface-container": "#f4ede5",
+                      "on-error-container": "#93000a",
+                      "on-surface": "#1e1b17",
+                      "primary-fixed": "#d5e3ff",
+                      "on-tertiary-fixed-variant": "#005312",
+                      "on-primary-fixed-variant": "#1f477b",
+                      "on-error": "#ffffff",
+                      "on-primary-container": "#799dd6",
+                      "surface-dim": "#e0d9d1",
+                      "primary-fixed-dim": "#a7c8ff",
+                      "on-tertiary": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-mobile": "20px",
+                      "lg": "24px",
+                      "gutter": "16px",
+                      "base": "8px",
+                      "xxl": "48px",
+                      "margin-desktop": "40px",
+                      "xs": "4px",
+                      "sm": "8px",
+                      "xl": "32px",
+                      "md": "16px"
+              },
+              "fontFamily": {
+                      "body-md": ["Public Sans"],
+                      "label-xs": ["Public Sans"],
+                      "caption-sm": ["Public Sans"],
+                      "display-lg-mobile": ["Public Sans"],
+                      "display-lg": ["Public Sans"],
+                      "headline-md": ["Public Sans"],
+                      "title-sm": ["Public Sans"]
+              },
+              "fontSize": {
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                      "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col">
+<!-- Top AppBar (From Shared Components) -->
+<header class="fixed top-0 left-0 w-full z-40 flex items-center justify-between px-margin-mobile lg:px-margin-desktop h-20 bg-surface dark:bg-surface-dim shadow-sm">
+<div class="flex items-center gap-4">
+<button aria-label="Menu" class="material-symbols-outlined text-primary p-2 hover:bg-surface-container-high transition-colors rounded-full">menu</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">Team Workspace</h1>
+</div>
+<div class="flex items-center gap-6">
+<nav class="hidden md:flex gap-8">
+<a class="text-on-surface-variant dark:text-outline-variant font-title-sm text-title-sm hover:text-primary transition-colors" href="#">Activity</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-title-sm text-title-sm hover:text-primary transition-colors" href="#">Graph</a>
+<a class="text-primary dark:text-primary-fixed font-bold font-title-sm text-title-sm" href="#">Setup</a>
+</nav>
+<div class="w-10 h-10 rounded-full bg-surface-container-highest border border-outline-variant overflow-hidden flex items-center justify-center">
+<img class="w-full h-full object-cover" data-alt="A professional close-up portrait of a tech-savvy executive with a friendly expression. The lighting is bright and editorial, using a high-key soft light that reflects a modern, clean light-mode aesthetic. The background is a minimalist office setting with soft blurred neutral tones. The person is wearing a stylish, charcoal-colored blazer over a crisp white shirt, embodying a high-end corporate but human identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFSGMcDQeLQsIBQqjfxUvx5-6mwxr-quETbf14p5k0OZuS13EgNU0X04r95fm4BSa7oyk3xHdGlY4jmbDa1vKPeG8OvAYojfUkGqO9i_D0rLDWpeNsAlipqxTYvoHV9l0LIFXSJ9GSxnYJmeMMH2Cc2w3i45qcA3oZIeLbp3QKVfA5a_7NXCGTkr4YJCaQk-ggtqjkthzl9f8dS_d3TcsmlW7GwIkakbCVdQHRjpKrnGAC2xDpoj1pM-9tA_06hbn4J9FFhXetE5U"/>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow pt-28 pb-xxl px-margin-mobile lg:px-margin-desktop max-w-[1440px] mx-auto w-full">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-xl">
+<!-- Left: Hero/Introduction -->
+<div class="lg:col-span-5 flex flex-col justify-center space-y-lg">
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-secondary-container/30 text-on-secondary-container text-label-xs font-label-xs w-fit">
+                    WORKSPACE INITIALIZATION
+                </span>
+<h2 class="font-display-lg-mobile lg:font-display-lg text-display-lg-mobile lg:text-display-lg text-primary leading-tight">
+                    Create your <br/><span class="text-secondary italic">collaborative</span> orbit.
+                </h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md">
+                    Set up a dedicated environment for your team's collective intelligence. Define your identity and purpose to begin syncing workflows.
+                </p>
+<!-- Decorative AI Asset -->
+<div class="relative w-full aspect-square max-w-[320px] ai-inner-border rounded-3xl overflow-hidden shadow-xl mt-md">
+
+<div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent flex items-end p-md">
+<p class="text-white text-caption-sm opacity-80">AI Core: Adaptive Workspace Generation</p>
+</div>
+</div>
+</div>
+<!-- Right: Setup Form -->
+<div class="lg:col-span-7">
+<div class="bg-white rounded-[24px] p-lg lg:p-xxl shadow-[0_4px_20px_0_rgba(0,0,0,0.1)] space-y-xl">
+<!-- Identity Section -->
+<section class="space-y-gutter">
+<h3 class="font-title-sm text-title-sm text-primary border-b border-surface-container-highest pb-sm">Team Identity</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-xl items-center">
+<!-- Logo Upload -->
+<div class="flex flex-col items-center space-y-sm">
+<p class="font-label-xs text-label-xs text-on-surface-variant self-start">TEAM LOGO</p>
+<div class="w-32 h-32 lg:w-40 lg:h-40 rounded-3xl bg-surface-container-low border-2 border-dashed border-outline-variant flex flex-col items-center justify-center cursor-pointer hover:bg-surface-container-high transition-all active:scale-95 group">
+<span class="material-symbols-outlined text-4xl text-outline group-hover:text-primary transition-colors">add_photo_alternate</span>
+<p class="text-caption-sm text-outline mt-sm font-medium">Upload Image</p>
+</div>
+</div>
+<!-- Name Input -->
+<div class="space-y-md">
+<div class="flex flex-col space-y-xs">
+<label class="font-label-xs text-label-xs text-on-surface-variant" for="team-name">TEAM NAME</label>
+<input class="w-full h-14 rounded-lg border border-outline-variant bg-surface-container-lowest px-4 focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-body-md transition-all placeholder:text-outline/50" id="team-name" placeholder="e.g., Global Innovation Lab" type="text"/>
+</div>
+<div class="flex flex-col space-y-xs">
+<label class="font-label-xs text-label-xs text-on-surface-variant" for="team-handle">WORKSPACE URL</label>
+<div class="flex items-center w-full h-14 rounded-lg border border-outline-variant bg-surface-container-lowest px-4 focus-within:ring-2 focus-within:ring-primary transition-all">
+<span class="text-outline text-body-md pr-2">os.ai/</span>
+<input class="flex-grow h-full bg-transparent outline-none text-body-md placeholder:text-outline/50" id="team-handle" placeholder="innovation-lab" type="text"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Purpose Selection -->
+<section class="space-y-gutter">
+<div class="flex justify-between items-end border-b border-surface-container-highest pb-sm">
+<h3 class="font-title-sm text-title-sm text-primary">Core Purpose</h3>
+<p class="font-caption-sm text-on-surface-variant">Select the primary focus</p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-md" id="purpose-container">
+<!-- Marketing -->
+<div class="purpose-card cursor-pointer p-md rounded-xl border border-outline-variant bg-surface-container-lowest hover:shadow-md transition-all active:scale-95 flex flex-col gap-sm" onclick="selectPurpose(this)">
+<span class="material-symbols-outlined text-secondary">campaign</span>
+<span class="font-label-xs text-label-xs text-primary font-bold">Marketing</span>
+</div>
+<!-- Engineering -->
+<div class="purpose-card cursor-pointer p-md rounded-xl border border-outline-variant bg-surface-container-lowest hover:shadow-md transition-all active:scale-95 flex flex-col gap-sm" onclick="selectPurpose(this)">
+<span class="material-symbols-outlined text-secondary">group</span>
+<span class="font-label-xs text-label-xs text-primary font-bold">Engineering</span>
+</div>
+<!-- Sales -->
+<div class="purpose-card cursor-pointer p-md rounded-xl border border-outline-variant bg-surface-container-lowest hover:shadow-md transition-all active:scale-95 flex flex-col gap-sm" onclick="selectPurpose(this)">
+<span class="material-symbols-outlined text-secondary">payments</span>
+<span class="font-label-xs text-label-xs text-primary font-bold">Sales</span>
+</div>
+<!-- Product -->
+<div class="purpose-card cursor-pointer p-md rounded-xl border border-outline-variant bg-surface-container-lowest hover:shadow-md transition-all active:scale-95 flex flex-col gap-sm" onclick="selectPurpose(this)">
+<span class="material-symbols-outlined text-secondary">inventory_2</span>
+<span class="font-label-xs text-label-xs text-primary font-bold">Product</span>
+</div>
+<!-- Design -->
+<div class="purpose-card cursor-pointer p-md rounded-xl border border-outline-variant bg-surface-container-lowest hover:shadow-md transition-all active:scale-95 flex flex-col gap-sm" onclick="selectPurpose(this)">
+<span class="material-symbols-outlined text-secondary">draw</span>
+<span class="font-label-xs text-label-xs text-primary font-bold">Design</span>
+</div>
+<!-- Executive -->
+<div class="purpose-card cursor-pointer p-md rounded-xl border border-outline-variant bg-surface-container-lowest hover:shadow-md transition-all active:scale-95 flex flex-col gap-sm" onclick="selectPurpose(this)">
+<span class="material-symbols-outlined text-secondary">stars</span>
+<span class="font-label-xs text-label-xs text-primary font-bold">Executive</span>
+</div>
+</div>
+</section>
+<!-- Footer Actions -->
+<footer class="pt-lg flex flex-col md:flex-row items-center justify-between gap-md">
+<button class="w-full md:w-auto px-lg py-4 rounded-xl font-title-sm text-title-sm text-primary hover:bg-surface-container-high transition-colors">
+                            Cancel
+                        </button>
+<button class="w-full md:w-auto px-xxl py-4 rounded-xl bg-primary text-white font-title-sm text-title-sm shadow-lg hover:shadow-xl hover:translate-y-[-2px] transition-all active:scale-95">
+                            Create Workspace
+                        </button>
+</footer>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Nav (Shared Components - Mobile only) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 flex justify-around items-center h-20 px-4 pb-safe bg-surface dark:bg-surface-dim border-t border-outline-variant dark:border-outline">
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-xs text-label-xs-mobile">Activity</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant">
+<span class="material-symbols-outlined">hub</span>
+<span class="font-label-xs text-label-xs-mobile">Graph</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-full px-4 py-1 scale-110 duration-150">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+<span class="font-label-xs text-label-xs-mobile">Setup</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-xs text-label-xs-mobile">Settings</span>
+</div>
+</nav>
+<script>
+        function selectPurpose(element) {
+            // Remove active classes from all cards
+            document.querySelectorAll('.purpose-card').forEach(card => {
+                card.classList.remove('bg-secondary-container/30', 'border-secondary', 'ring-1', 'ring-secondary');
+                card.querySelector('.material-symbols-outlined').style.fontVariationSettings = "'FILL' 0";
+            });
+            
+            // Add active classes to selected card
+            element.classList.add('bg-secondary-container/30', 'border-secondary', 'ring-1', 'ring-secondary');
+            element.querySelector('.material-symbols-outlined').style.fontVariationSettings = "'FILL' 1";
+        }
+
+        // Interaction for the input fields to trigger subtle UI response
+        const nameInput = document.getElementById('team-name');
+        nameInput.addEventListener('input', (e) => {
+            if(e.target.value.length > 0) {
+                document.getElementById('team-handle').value = e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+            }
+        });
+    </script>
+</body></html>

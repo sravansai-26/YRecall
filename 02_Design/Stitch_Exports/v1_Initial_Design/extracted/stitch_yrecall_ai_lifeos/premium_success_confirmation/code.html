@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Subscription Confirmed - YRecall Premium</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Public Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .celebration-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-20px) scale(1.02); }
+        }
+        .glow-pulse {
+            animation: pulse-glow 4s ease-in-out infinite;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { filter: drop-shadow(0 0 15px rgba(118, 214, 213, 0.3)); }
+            50% { filter: drop-shadow(0 0 40px rgba(118, 214, 213, 0.6)); }
+        }
+        .fade-in-up {
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#3a5f94",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#002504",
+                        "on-primary-container": "#799dd6",
+                        "primary": "#001e40",
+                        "primary-container": "#003366",
+                        "surface-container-low": "#faf3eb",
+                        "on-background": "#1e1b17",
+                        "primary-fixed": "#d5e3ff",
+                        "surface-dim": "#e0d9d1",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#002204",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#001b3c",
+                        "background": "#fff8f1",
+                        "surface": "#fff8f1",
+                        "on-primary-fixed-variant": "#1f477b",
+                        "inverse-surface": "#33302b",
+                        "secondary-container": "#90efef",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-high": "#eee7df",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#f4ede5",
+                        "tertiary-container": "#003d0b",
+                        "inverse-primary": "#a7c8ff",
+                        "on-surface-variant": "#43474f",
+                        "surface-bright": "#fff8f1",
+                        "secondary": "#006a6a",
+                        "outline-variant": "#c3c6d1",
+                        "on-secondary-container": "#006e6e",
+                        "on-tertiary-container": "#5ead5c",
+                        "inverse-on-surface": "#f7f0e8",
+                        "surface-container-highest": "#e8e1da",
+                        "tertiary-fixed": "#a3f69c",
+                        "outline": "#737780",
+                        "tertiary-fixed-dim": "#88d982",
+                        "on-secondary-fixed": "#002020",
+                        "surface-variant": "#e8e1da",
+                        "secondary-fixed": "#93f2f2",
+                        "on-tertiary-fixed-variant": "#005312",
+                        "secondary-fixed-dim": "#76d6d5",
+                        "on-surface": "#1e1b17",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed-dim": "#a7c8ff",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed-variant": "#004f4f",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "20px",
+                        "margin-desktop": "40px",
+                        "xxl": "48px",
+                        "md": "16px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "base": "8px",
+                        "gutter": "16px",
+                        "xs": "4px",
+                        "xl": "32px"
+                    },
+                    "fontFamily": {
+                        "label-xs": ["Public Sans"],
+                        "display-lg": ["Public Sans"],
+                        "headline-md": ["Public Sans"],
+                        "display-lg-mobile": ["Public Sans"],
+                        "caption-sm": ["Public Sans"],
+                        "body-md": ["Public Sans"],
+                        "title-sm": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col items-center selection:bg-secondary-container">
+<!-- Header (Suppressed Nav - Task Focused) -->
+<header class="w-full max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-lg flex justify-start items-center">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-3xl">auto_awesome</span>
+<span class="font-headline-md text-headline-md-mobile font-bold text-primary">YRecall</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col items-center justify-center w-full px-margin-mobile max-w-2xl text-center py-xxl">
+<!-- Celebration Illustration Wrapper -->
+<div class="relative w-full aspect-square max-w-[400px] flex items-center justify-center mb-xl celebration-float">
+<!-- Background Glow Effect -->
+<div class="absolute inset-0 bg-secondary-fixed opacity-10 blur-[80px] rounded-full glow-pulse"></div>
+<!-- Central Visual Asset -->
+<div class="relative z-10 w-64 h-64 md:w-80 md:h-80">
+<div class="w-full h-full rounded-full border border-secondary/20 flex items-center justify-center p-md bg-surface-container-lowest shadow-lg shadow-secondary/5 overflow-hidden">
+<img class="w-full h-full object-cover rounded-full" data-alt="A highly detailed digital illustration of a glowing, translucent human brain composed of delicate light filaments and soft teal neural pathways. The brain is suspended within a minimalist, zen-like glass sphere that catches the warm ambient light of a serene studio. The color palette is dominated by soft creams, warm whites, and vibrant accents of soft teal. The lighting is ethereal and high-key, creating a sense of calm intelligence and infinite digital potential." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5eJl-MbNST3gbPat20OXTTpWZgXlmWqetYzyw52s8-0K-r76t3vAC8J7esr39C7FaGYt-Ofb1bhCAR1JbDPtF76j1YhJq2RJo1-N0Rha1X5ed5obPBJ8pGW0Yd7EavgFjGMVIf8tss3uYi2_r3_U-qolzns2LyT0Z8NDuCNqxZ2zc3LH1WIEITAStHUvYpcu0x2XQdZCkpUoCYpzZIwC8WgrDl_trHoO1aOg524nC4VEYc9Kir0ygwFvwFq0e-9OA_9yHyaWdDBQ"/>
+</div>
+<!-- Floating Decorative Chips (Premium Features) -->
+<div class="absolute -top-4 -right-4 bg-primary text-on-primary px-lg py-sm rounded-full font-label-xs text-label-xs shadow-md animate-bounce [animation-delay:0.5s]">
+                    Unlimited Recall
+                </div>
+<div class="absolute bottom-12 -left-12 bg-secondary-container text-on-secondary-container px-lg py-sm rounded-full font-label-xs text-label-xs shadow-md animate-bounce [animation-delay:1.2s]">
+                    AI Insights Unlocked
+                </div>
+</div>
+</div>
+<!-- Copy Section -->
+<div class="fade-in-up [animation-delay:0.3s]">
+<h1 class="font-headline-md text-headline-md-mobile md:font-display-lg md:text-display-lg text-primary mb-md">
+                Welcome to YRecall Premium
+            </h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-lg mx-auto mb-xl leading-relaxed">
+                Your digital brain is now limitless. All premium features are unlocked and ready to use. Harness the power of complete digital memory.
+            </p>
+</div>
+<!-- Action Section -->
+<div class="fade-in-up [animation-delay:0.6s] flex flex-col gap-md w-full max-w-xs">
+<button class="bg-primary text-on-primary font-body-md text-body-md h-[56px] rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-sm">
+                Explore Premium Features
+                <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="bg-surface-container-high text-primary font-body-md text-body-md h-[56px] rounded-xl hover:bg-surface-variant transition-colors active:scale-95">
+                Back to Home
+            </button>
+</div>
+<!-- Footer Notice -->
+<footer class="fade-in-up [animation-delay:0.9s] mt-xxl">
+<div class="flex items-center justify-center gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">mail</span>
+<p class="font-caption-sm text-caption-sm">
+                    A confirmation email has been sent to <span class="font-bold text-primary">julianne.v@yrecall.ai</span>
+</p>
+</div>
+</footer>
+</main>
+<!-- Success Feedback Overlay (Micro-interaction) -->
+<div class="fixed inset-0 pointer-events-none z-50 overflow-hidden" id="confetti-container"></div>
+<script>
+        // Simple confetti effect for celebration
+        function createConfetti() {
+            const container = document.getElementById('confetti-container');
+            const colors = ['#006a6a', '#3a5f94', '#93f2f2', '#a3f69c'];
+            
+            for (let i = 0; i < 40; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'absolute';
+                confetti.style.width = Math.random() * 8 + 4 + 'px';
+                confetti.style.height = Math.random() * 8 + 4 + 'px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.borderRadius = '50%';
+                confetti.style.top = '-20px';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.opacity = Math.random();
+                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                
+                container.appendChild(confetti);
+
+                const duration = Math.random() * 3 + 2;
+                const destinationY = window.innerHeight + 20;
+                const destinationX = (Math.random() - 0.5) * 200;
+
+                confetti.animate([
+                    { transform: `translate(0, 0) rotate(0deg)`, opacity: 1 },
+                    { transform: `translate(${destinationX}px, ${destinationY}px) rotate(720deg)`, opacity: 0 }
+                ], {
+                    duration: duration * 1000,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                }).onfinish = () => confetti.remove();
+            }
+        }
+
+        // Trigger confetti on load
+        window.addEventListener('load', () => {
+            setTimeout(createConfetti, 500);
+        });
+
+        // Add hover interaction to the illustration
+        const illustration = document.querySelector('.celebration-float');
+        illustration.addEventListener('mousemove', (e) => {
+            const { left, top, width, height } = illustration.getBoundingClientRect();
+            const x = (e.clientX - left) / width - 0.5;
+            const y = (e.clientY - top) / height - 0.5;
+            illustration.style.transform = `perspective(1000px) rotateY(${x * 10}deg) rotateX(${-y * 10}deg)`;
+        });
+
+        illustration.addEventListener('mouseleave', () => {
+            illustration.style.transform = `perspective(1000px) rotateY(0deg) rotateX(0deg)`;
+        });
+    </script>
+</body></html>

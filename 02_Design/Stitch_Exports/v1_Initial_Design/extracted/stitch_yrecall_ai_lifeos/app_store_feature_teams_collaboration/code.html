@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YRecall - Collective Intelligence</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=Hanken+Grotesk:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#bec6e0",
+                    "surface-tint": "#bec6e0",
+                    "on-tertiary-container": "#85807a",
+                    "surface-container-highest": "#353436",
+                    "error-container": "#93000a",
+                    "secondary": "#adc6ff",
+                    "inverse-surface": "#e4e2e4",
+                    "on-secondary-container": "#e6ecff",
+                    "primary": "#bec6e0",
+                    "surface-container": "#1f1f21",
+                    "surface-bright": "#39393b",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "on-surface": "#e4e2e4",
+                    "outline-variant": "#45464d",
+                    "tertiary-fixed": "#e8e1db",
+                    "background": "#131315",
+                    "on-primary-fixed-variant": "#3f465c",
+                    "on-surface-variant": "#c6c6cd",
+                    "surface-container-low": "#1b1b1d",
+                    "on-background": "#e4e2e4",
+                    "secondary-fixed": "#d8e2ff",
+                    "surface": "#131315",
+                    "on-primary": "#283044",
+                    "error": "#ffb4ab",
+                    "secondary-container": "#0566d9",
+                    "inverse-on-surface": "#303032",
+                    "on-secondary-fixed-variant": "#004395",
+                    "tertiary-fixed-dim": "#cbc5bf",
+                    "tertiary": "#cbc5bf",
+                    "primary-container": "#0f172a",
+                    "outline": "#909097",
+                    "surface-dim": "#131315",
+                    "on-primary-fixed": "#131b2e",
+                    "on-secondary-fixed": "#001a42",
+                    "on-error": "#690005",
+                    "on-secondary": "#002e6a",
+                    "on-primary-container": "#798098",
+                    "primary-fixed": "#dae2fd",
+                    "surface-variant": "#353436",
+                    "inverse-primary": "#565e74",
+                    "surface-container-high": "#2a2a2b",
+                    "surface-container-lowest": "#0e0e10",
+                    "on-tertiary-fixed-variant": "#4a4641",
+                    "tertiary-container": "#191713",
+                    "on-error-container": "#ffdad6",
+                    "on-tertiary-fixed": "#1e1b17",
+                    "on-tertiary": "#33302c"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "section-gap": "128px",
+                    "unit": "8px",
+                    "margin-mobile": "20px",
+                    "gutter": "24px",
+                    "margin-desktop": "64px",
+                    "container-max": "1200px"
+            },
+            "fontFamily": {
+                    "display-lg-mobile": ["Playfair Display"],
+                    "body-sm": ["Hanken Grotesk"],
+                    "label-caps": ["JetBrains Mono"],
+                    "headline-md": ["Playfair Display"],
+                    "body-lg": ["Hanken Grotesk"],
+                    "display-lg": ["Playfair Display"]
+            },
+            "fontSize": {
+                    "display-lg-mobile": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                    "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(19, 19, 21, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(232, 225, 219, 0.1);
+        }
+        .bg-mesh {
+            background-color: #131315;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(5, 102, 217, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(190, 198, 224, 0.05) 0px, transparent 50%);
+        }
+        .cursor-trail {
+            position: absolute;
+            pointer-events: none;
+            transition: transform 0.15s ease-out;
+        }
+        .mockup-shadow {
+            box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.5), 0 30px 60px -30px rgba(5, 102, 217, 0.2);
+        }
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen overflow-x-hidden selection:bg-secondary/30 selection:text-secondary">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 backdrop-blur-xl border-b border-on-surface/10 bg-background/80 flex items-center justify-between px-margin-mobile h-16">
+<div class="flex items-center gap-2 cursor-pointer active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-primary text-2xl">memory</span>
+<span class="font-display-lg-mobile text-display-lg-mobile tracking-tighter text-on-surface">YRecall</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex gap-8">
+<span class="font-label-caps text-label-caps text-on-surface-variant hover:opacity-80 transition-opacity cursor-pointer">Network</span>
+<span class="font-label-caps text-label-caps text-primary hover:opacity-80 transition-opacity cursor-pointer">Collaboration</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant hover:opacity-80 transition-opacity cursor-pointer">Security</span>
+</div>
+<button class="bg-secondary-container text-on-secondary-container px-4 py-2 rounded-full font-label-caps text-label-caps active:scale-95 transition-transform">Join Team</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="relative pt-32 pb-40 px-margin-mobile flex flex-col items-center min-h-screen bg-mesh overflow-hidden">
+<!-- Background Atmospheric Elements -->
+<div class="absolute inset-0 z-0 pointer-events-none">
+<!-- Simulated Cursors for Team Presence -->
+<div class="cursor-trail opacity-40 top-[20%] left-[15%] flex flex-col items-start gap-1">
+<div class="flex items-center gap-2 bg-secondary/20 px-3 py-1 rounded-full border border-secondary/30 backdrop-blur-md">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="font-label-caps text-[10px] text-secondary">Alex M.</span>
+</div>
+<span class="material-symbols-outlined text-secondary text-xl" style="transform: rotate(-20deg);">near_me</span>
+</div>
+<div class="cursor-trail opacity-30 bottom-[30%] right-[10%] flex flex-col items-end gap-1">
+<div class="flex items-center gap-2 bg-primary/20 px-3 py-1 rounded-full border border-primary/30 backdrop-blur-md">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<span class="font-label-caps text-[10px] text-primary">Sarah K.</span>
+</div>
+<span class="material-symbols-outlined text-primary text-xl" style="transform: rotate(150deg);">near_me</span>
+</div>
+<!-- Avatar Cluster Floating -->
+<div class="absolute top-1/4 right-[5%] flex -space-x-4 opacity-60">
+<div class="w-12 h-12 rounded-full border-2 border-surface-container overflow-hidden bg-surface-container-high" data-alt="A professional close-up portrait of a diverse team member in a high-tech office environment, featuring soft, cinematic lighting and a shallow depth of field. The aesthetic is clean and corporate-modern, utilizing the Deep Midnight and Electric Blue color palette of the YRecall design system." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD9xpI8DA7s2au-KGA95MFoD4w2v2k8ulKmVNs8EzRiM5hOfbL8Hnr56KlEVXyR99Wy7USjfb_JPo-8M6Wci9yuksgMyhhbjJkMJ5IuKmPT4nCipluWYDmz6r2PMY1dgbDUO2xKwx849F6Ib710y92YSP6klPIO6FZUD581K1bB8vWfwfACMLhcABNPLK-rU1bhl-KGi7C7QKP6cwP7Bi1U9XfPdqgQf15YJ0YOj06NC9RtpjlbkdULsiwNGuJevmHEmMw7CqUVDq4')"></div>
+<div class="w-12 h-12 rounded-full border-2 border-surface-container overflow-hidden bg-surface-container-high" data-alt="A portrait of a creative professional woman looking thoughtfully toward a digital display. The lighting is dominated by cool blue tones and soft amber highlights, creating a sophisticated editorial look. The background is a blurred modern workspace with architectural glass elements." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD7X4Tvi-qPI_1V8kgjqRx0Z5fkLeqn6OsBj5IWK0pM3epjMIRFx8HsFzk9CL8DdMbtHvFlawJkTUHnIhHS2g48LQAv2yWFuTGFP0qsEngpWYWOFCjaq9tQLHuBn719KP3p_KJaV13k6hIgvL2odd_s0ufb_z_T4Doyu15n2L60EXX9yorbxkyJDB4ExZd_Jp76gzucz6wNehWPGKher5jMcq8IfWgarN7mQQbDL6JHnXgKce685fb71Eb8kAcQnZ8W5zo7-7IFQ4s')"></div>
+<div class="w-12 h-12 rounded-full border-2 border-surface-container overflow-hidden bg-surface-container-high flex items-center justify-center text-primary font-label-caps text-xs backdrop-blur-xl bg-primary/10 border-dashed border-primary/40">+8</div>
+</div>
+</div>
+<!-- Typography Header -->
+<div class="z-10 text-center max-w-4xl mb-16">
+<div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-panel mb-6 border-secondary/20">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">hub</span>
+<span class="font-label-caps text-label-caps text-secondary uppercase tracking-widest">Collective Intelligence</span>
+</div>
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-6 leading-tight">
+                Synchronize your team’s <span class="text-primary italic">memory.</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto opacity-80">
+                Shared knowledge graphs and real-time team insights. Transform individual data points into a living, breathing organizational brain.
+            </p>
+</div>
+<!-- Central Device Mockup -->
+<div class="z-20 relative w-full max-w-[1000px] mx-auto animate-float">
+<!-- Glow Effect behind mockup -->
+<div class="absolute -inset-10 bg-secondary/10 blur-[100px] rounded-full pointer-events-none"></div>
+<div class="relative glass-panel rounded-[2.5rem] p-4 mockup-shadow overflow-hidden border-on-surface/5">
+<div class="relative rounded-[1.5rem] overflow-hidden border border-on-surface/10 aspect-[16/10] bg-surface-container-lowest">
+<img alt="Workspace Central Dashboard" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3-ruKZBsfVx7UfmSlXmMQAPnRz5yNVH-qnJYc5IDtfk7gEE6IcA1gYwiQ65TO-GcAfmcIz7H9dscqwH_0OELtcAIKdx0MAFXlaIZscR7d4Zr5zmtncRo9c6-_2YzEpnOCVPdh0Hzf5Iy-xAbbDHqT9jFd0LZiGqlq5WpPOrsr8Pd00gnCVtI-Uuo9bYqKAxh31sbcfOBj1xOYSraw2tiKCUzCHeHq_CVGxzAix5iOg6VF9X9-Qk1loyUSLyOrhaTzrID7-eaQ3BI"/>
+<!-- Overlay Micro-Interactions -->
+<div class="absolute top-6 right-6 flex flex-col gap-3">
+<div class="glass-panel px-4 py-2 rounded-xl flex items-center gap-3 animate-pulse">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span class="font-label-caps text-[10px] text-on-surface uppercase">Live Synthesis</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bento Highlights around the Mockup -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+<div class="glass-panel p-6 rounded-2xl border-on-surface/10 hover:border-secondary/30 transition-all duration-500 group">
+<span class="material-symbols-outlined text-secondary mb-4 text-3xl group-hover:scale-110 transition-transform">schema</span>
+<h3 class="font-headline-md text-headline-md-mobile text-on-surface mb-2">Neural Sync</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Merge cross-departmental documentation into a single, navigable neural map.</p>
+</div>
+<div class="glass-panel p-6 rounded-2xl border-on-surface/10 hover:border-secondary/30 transition-all duration-500 group">
+<span class="material-symbols-outlined text-secondary mb-4 text-3xl group-hover:scale-110 transition-transform">group_add</span>
+<h3 class="font-headline-md text-headline-md-mobile text-on-surface mb-2">Contextual Access</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Intelligent permission layers that learn who needs what information before they ask.</p>
+</div>
+<div class="glass-panel p-6 rounded-2xl border-on-surface/10 hover:border-secondary/30 transition-all duration-500 group">
+<span class="material-symbols-outlined text-secondary mb-4 text-3xl group-hover:scale-110 transition-transform">query_stats</span>
+<h3 class="font-headline-md text-headline-md-mobile text-on-surface mb-2">Team Velocity</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Eliminate duplicative research by surfacing existing team expertise instantly.</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Hidden on Desktop) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 backdrop-blur-2xl border-t border-on-surface/5 bg-surface-container-low/70 shadow-[0_-8px_32px_rgba(5,102,217,0.15)] rounded-t-xl">
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:scale-90 transition-transform">
+<span class="material-symbols-outlined">account_tree</span>
+<span class="font-label-caps text-label-caps">Graph</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:scale-90 transition-transform">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-caps text-label-caps">Timeline</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">psychology</span>
+<span class="font-label-caps text-label-caps">AI</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:scale-90 transition-transform">
+<span class="material-symbols-outlined">shield</span>
+<span class="font-label-caps text-label-caps">Vault</span>
+</div>
+</nav>
+<script>
+        // Simple micro-interaction for cursors
+        document.addEventListener('mousemove', (e) => {
+            const cursors = document.querySelectorAll('.cursor-trail');
+            cursors.forEach((cursor, index) => {
+                const factor = (index + 1) * 0.02;
+                const x = (window.innerWidth / 2 - e.clientX) * factor;
+                const y = (window.innerHeight / 2 - e.clientY) * factor;
+                cursor.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+
+        // Intersection Observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-10');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.glass-panel').forEach(panel => {
+            panel.classList.add('transition-all', 'duration-1000', 'opacity-0', '</script></body></html>

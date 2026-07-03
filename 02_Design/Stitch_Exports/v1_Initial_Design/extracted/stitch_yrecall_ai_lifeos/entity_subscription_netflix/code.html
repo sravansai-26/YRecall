@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YRecall | Subscription Details</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #fff8f1;
+            color: #1e1b17;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .ai-border {
+            position: relative;
+        }
+        .ai-border::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 24px;
+            padding: 1px;
+            background: linear-gradient(135deg, #006a6a, #76d6d5, #fff8f1);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        .custom-toggle:checked + .toggle-dot {
+            transform: translateX(100%);
+            background-color: #ffffff;
+        }
+        .custom-toggle:checked ~ .toggle-bg {
+            background-color: #001e40;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary": "#006a6a",
+                      "tertiary-fixed-dim": "#88d982",
+                      "on-tertiary-fixed-variant": "#005312",
+                      "tertiary-container": "#003d0b",
+                      "on-tertiary-fixed": "#002204",
+                      "on-secondary-fixed-variant": "#004f4f",
+                      "on-primary-fixed-variant": "#1f477b",
+                      "on-tertiary-container": "#5ead5c",
+                      "secondary-fixed-dim": "#76d6d5",
+                      "outline": "#737780",
+                      "surface-tint": "#3a5f94",
+                      "primary-fixed": "#d5e3ff",
+                      "surface-container": "#f4ede5",
+                      "secondary-fixed": "#93f2f2",
+                      "surface-variant": "#e8e1da",
+                      "tertiary-fixed": "#a3f69c",
+                      "on-primary-container": "#799dd6",
+                      "secondary-container": "#90efef",
+                      "outline-variant": "#c3c6d1",
+                      "surface": "#fff8f1",
+                      "inverse-surface": "#33302b",
+                      "on-secondary-container": "#006e6e",
+                      "tertiary": "#002504",
+                      "surface-bright": "#fff8f1",
+                      "on-surface": "#1e1b17",
+                      "error": "#ba1a1a",
+                      "surface-container-low": "#faf3eb",
+                      "on-secondary-fixed": "#002020",
+                      "on-error": "#ffffff",
+                      "on-tertiary": "#ffffff",
+                      "primary-container": "#003366",
+                      "surface-container-highest": "#e8e1da",
+                      "error-container": "#ffdad6",
+                      "on-secondary": "#ffffff",
+                      "inverse-on-surface": "#f7f0e8",
+                      "primary-fixed-dim": "#a7c8ff",
+                      "surface-container-lowest": "#ffffff",
+                      "primary": "#001e40",
+                      "background": "#fff8f1",
+                      "on-background": "#1e1b17",
+                      "inverse-primary": "#a7c8ff",
+                      "on-surface-variant": "#43474f",
+                      "on-primary": "#ffffff",
+                      "on-primary-fixed": "#001b3c",
+                      "surface-dim": "#e0d9d1",
+                      "surface-container-high": "#eee7df",
+                      "on-error-container": "#93000a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "12px",
+                      "2xl": "24px",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-desktop": "40px",
+                      "xl": "32px",
+                      "md": "16px",
+                      "lg": "24px",
+                      "base": "8px",
+                      "margin-mobile": "20px",
+                      "gutter": "16px",
+                      "xxl": "48px",
+                      "xs": "4px",
+                      "sm": "8px"
+              },
+              "fontFamily": {
+                      "display-lg-mobile": ["Public Sans"],
+                      "body-md": ["Public Sans"],
+                      "display-lg": ["Public Sans"],
+                      "label-xs": ["Public Sans"],
+                      "title-sm": ["Public Sans"],
+                      "headline-md": ["Public Sans"],
+                      "caption-sm": ["Public Sans"]
+              },
+              "fontSize": {
+                      "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                      "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- Top AppBar -->
+<header class="bg-surface dark:bg-surface-dim w-full top-0 sticky z-40 transition-colors">
+<div class="flex justify-between items-center h-16 px-margin-mobile md:px-margin-desktop w-full max-w-[1440px] mx-auto">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary dark:text-primary-fixed active:scale-95 transition-transform duration-150 p-2 hover:bg-surface-container-low rounded-full">
+                    arrow_back
+                </button>
+<h1 class="font-headline-md text-headline-md-mobile md:text-headline-md text-primary dark:text-primary-fixed tracking-tight">
+                    Netflix
+                </h1>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-surface-container-low rounded-full cursor-pointer">share</span>
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A clean and professional headshot of a young creative professional with a friendly smile, set against a soft-focus studio background with warm, natural lighting. The visual style is minimalist and high-end, matching a premium AI-driven lifestyle application's aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCc8C2U9jh-7mYJNgCVnnMLNuUHWxrSWdIuBa7W93X2HfXz8YTdfHz8Ur7bl_FPU6Ba2vLTKeAu5O25acOEJ788cg9r26b84giCQleAoDGtN0Y0ZwnhTZIwuIb6MRglCjTsYA86DPmoNXMMOYUa3Zc4IYCZuxM12OpJwpZi0UR0KoVuk8ky4ZnTWcFHEyH26wHydWff6epJGkZIKhkqKOsKC7O4VRzOJ1FKlGs042zA7os7sexGXQ0-9ZGQfkuVjpUnjuREc71UyxQ"/>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-desktop py-lg grid grid-cols-1 md:grid-cols-12 gap-gutter lg:gap-lg">
+<!-- Hero Section / Brand Identity -->
+<section class="col-span-12 md:col-span-12 lg:col-span-8">
+<div class="relative h-64 rounded-2xl overflow-hidden mb-lg shadow-sm">
+<img class="w-full h-full object-cover" data-alt="A cinematic, high-resolution still of a modern living room at dusk, with the warm glow of a television screen reflecting off minimalist furniture. The lighting is moody and sophisticated, dominated by deep blues and soft ambers, evoking a premium entertainment experience. The style is clean, editorial, and calm." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVYGq9ZZP_Jl8qlJQZXFLPIweGezUwb2gkFeO0D6GazCZywLsGD1fPSl0JDq1me8NlvNXatJLjJJY-4i9J0IgReXOOpC6y14qd3kZ9-gA7E-l0cVWR8FHeDvsU5XvBf9mNmngi25e2tAHij5XqaekhmdHagKGbQTb6WuqR4F0TSulgQyrrEhMctuRtDJwnrsWuPgUfCsM6auMqCgvabkWXxQA8ogogtn687a0kv4xG4soejtIrMeXfXa8JLpOofSRip_Pz3iGPgWo"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-lg">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 bg-white rounded-xl flex items-center justify-center shadow-lg">
+<span class="material-symbols-outlined text-error text-4xl" style="font-variation-settings: 'FILL' 1;">movie</span>
+</div>
+<div>
+<p class="text-white/80 font-label-xs text-label-xs uppercase tracking-widest">Entertainment Subscription</p>
+<h2 class="text-white font-headline-md text-headline-md-mobile md:text-headline-md">Netflix Premium</h2>
+</div>
+</div>
+</div>
+</div>
+<!-- Bento Grid - Subscription Details -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter lg:gap-lg">
+<!-- Monthly Cost -->
+<div class="bg-white p-lg rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-surface-variant flex flex-col justify-between hover:translate-y-[-4px] transition-transform">
+<div>
+<p class="text-on-surface-variant font-body-md text-body-md mb-xs">Monthly Cost</p>
+<h3 class="font-headline-md text-headline-md text-primary">$19.99</h3>
+</div>
+<div class="mt-md pt-md border-t border-surface-variant flex items-center text-secondary text-caption-sm font-label-xs">
+<span class="material-symbols-outlined text-sm mr-1">trending_up</span>
+<span>Increased by $2.00 last Oct</span>
+</div>
+</div>
+<!-- Renewal Date -->
+<div class="bg-white p-lg rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-surface-variant flex flex-col justify-between hover:translate-y-[-4px] transition-transform">
+<div>
+<p class="text-on-surface-variant font-body-md text-body-md mb-xs">Next Renewal</p>
+<h3 class="font-headline-md text-headline-md text-primary">May 14, 2024</h3>
+</div>
+<div class="mt-md pt-md border-t border-surface-variant flex items-center text-on-surface-variant text-caption-sm font-label-xs">
+<span class="material-symbols-outlined text-sm mr-1">calendar_today</span>
+<span>12 days remaining</span>
+</div>
+</div>
+<!-- Payment Method -->
+<div class="bg-white p-lg rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-surface-variant flex flex-col justify-between hover:translate-y-[-4px] transition-transform">
+<div>
+<p class="text-on-surface-variant font-body-md text-body-md mb-xs">Payment Method</p>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-3xl">credit_card</span>
+<h3 class="font-title-sm text-title-sm text-primary">Visa •••• 4242</h3>
+</div>
+</div>
+<button class="mt-md w-full py-2 rounded-xl bg-surface-container text-primary font-label-xs hover:bg-surface-container-high transition-colors">
+                        Change
+                    </button>
+</div>
+</div>
+<!-- AI Usage Analysis -->
+<div class="mt-lg ai-border p-lg rounded-2xl bg-white shadow-[0_10px_30px_rgba(0,106,106,0.05)] overflow-hidden">
+<div class="flex items-start justify-between mb-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<h4 class="font-title-sm text-title-sm text-primary">AI Usage Insight</h4>
+</div>
+<span class="px-3 py-1 bg-secondary/10 text-secondary rounded-full font-label-xs text-[10px] uppercase tracking-wider">Highly Efficient</span>
+</div>
+<div class="flex flex-col md:flex-row gap-lg items-center">
+<div class="w-full md:w-1/3 flex flex-col items-center justify-center p-md bg-background rounded-xl border border-secondary-container/30">
+<div class="relative w-32 h-32 flex items-center justify-center">
+<svg class="w-full h-full -rotate-90">
+<circle class="text-surface-container-highest" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-secondary" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-dasharray="364.42" stroke-dashoffset="43.7" stroke-width="8"></circle>
+</svg>
+<div class="absolute flex flex-col items-center">
+<span class="font-headline-md text-headline-md text-primary leading-none">88%</span>
+<span class="text-caption-sm text-on-surface-variant">Usage</span>
+</div>
+</div>
+<p class="mt-base font-caption-sm text-center text-on-surface-variant">Daily avg: 1.4 hours</p>
+</div>
+<div class="w-full md:w-2/3">
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+                            Your Netflix usage remains high, averaging <strong class="text-primary">42 hours</strong> of content per month. At <strong class="text-primary">$0.47 per hour</strong>, this subscription provides exceptional value compared to your typical cinema visits ($9.50/hr). 
+                        </p>
+<div class="mt-md flex flex-wrap gap-2">
+<span class="bg-secondary-container/50 text-on-secondary-container px-3 py-1 rounded-full text-caption-sm font-medium">Binge-Watching Peak (Weekends)</span>
+<span class="bg-secondary-container/50 text-on-secondary-container px-3 py-1 rounded-full text-caption-sm font-medium">Top Genre: Scifi</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Sidebar / Actions -->
+<aside class="col-span-12 md:col-span-12 lg:col-span-4 space-y-lg">
+<!-- Controls & Settings -->
+<div class="bg-white p-lg rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-surface-variant">
+<h4 class="font-title-sm text-title-sm text-primary mb-md">Preference Engine</h4>
+<div class="space-y-md">
+<!-- Receipt Toggle -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">receipt_long</span>
+<div>
+<p class="font-label-xs text-body-md text-on-surface leading-tight">Auto-archive receipts</p>
+<p class="text-caption-sm text-on-surface-variant">Store in Finance folder</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only custom-toggle" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest rounded-full transition-colors toggle-bg"></div>
+<div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform toggle-dot"></div>
+</label>
+</div>
+<!-- Usage Tracking Toggle -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">monitoring</span>
+<div>
+<p class="font-label-xs text-body-md text-on-surface leading-tight">Usage Monitoring</p>
+<p class="text-caption-sm text-on-surface-variant">Analyze screentime data</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only custom-toggle" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest rounded-full transition-colors toggle-bg"></div>
+<div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform toggle-dot"></div>
+</label>
+</div>
+</div>
+</div>
+<!-- Related Memories -->
+<div class="bg-white p-lg rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-surface-variant">
+<div class="flex items-center justify-between mb-md">
+<h4 class="font-title-sm text-title-sm text-primary">Related Memories</h4>
+<span class="text-secondary font-label-xs cursor-pointer hover:underline">View All</span>
+</div>
+<div class="space-y-base">
+<!-- Memory Item -->
+<div class="group flex gap-3 p-2 rounded-xl hover:bg-surface-container-low transition-colors cursor-pointer border border-transparent hover:border-surface-variant">
+<div class="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A nostalgic Polaroid-style photograph of friends gathered on a cozy sofa, eating popcorn and watching a movie in a dimly lit room. The colors are warm and slightly faded, capturing a candid, heartfelt moment of connection and entertainment. The style is intimate and human-centric." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBN-R1kXTn5mHwA2ayiHJ-967WV9qZmWFQngnB8Sf-zMdizmSWVd0FQcjxllVxxDE7Guz0KoKrKeAYAqA0ZbGLT3C4JyuCMrTaJz5sECnd7Jy3RL9wx5xeaLzly2iDLN2mDL5QCNfm0f2qlxuc-SFc0n5SGovQjfbpYjUeOHrRNcE67q6r4F1vvj-WlIVzxBhItn9UYW_KC3rnFFj4ObSTMBa6kAkuBO70XeYlHcLamYkuCeC0TkcqoEerRo24htShIrrMnjPXoqbs"/>
+</div>
+<div class="flex flex-col justify-center">
+<p class="font-label-xs text-on-surface leading-tight group-hover:text-primary transition-colors">Movie Night with Sarah</p>
+<p class="text-caption-sm text-on-surface-variant">Oct 24, 2023 • Entertainment</p>
+</div>
+</div>
+<!-- Memory Item -->
+<div class="group flex gap-3 p-2 rounded-xl hover:bg-surface-container-low transition-colors cursor-pointer border border-transparent hover:border-surface-variant">
+<div class="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="An artistic flat-lay of a movie theater ticket, a box of luxury chocolates, and a pair of high-quality headphones on a clean white marble surface. The lighting is bright and airy, with a cool-toned, minimalist aesthetic that feels modern and sophisticated. The composition is balanced and elegant." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCofcC5vnJArnMb8UngIqbAE3m_zZ3Lp41MaPxDexXUZQqbfjuboSlvzXAh1s8nCn4mRw42KcvM8xiJ0x1mdpD9QEDZdjpkGHaHMqt6dZs-IwYqiLr_2uetiZ_gHxv_QwX89RQtTaBUWcv9HhMi8WTlqtg1DmohTxnZSq0H1E6e1UjolTVAG9ksFc64_SDOUl0cPPnX9Vqm8wm-6-WJbjnrsAAVwVQOfFuL4Vy6k4vr4TM9Qf8pin5r__7HrlQ0diw68_hk4Q-xsUA"/>
+</div>
+<div class="flex flex-col justify-center">
+<p class="font-label-xs text-on-surface leading-tight group-hover:text-primary transition-colors">Interstellar IMAX Weekend</p>
+<p class="text-caption-sm text-on-surface-variant">Dec 02, 2023 • Entertainment</p>
+</div>
+</div>
+<!-- Memory Item -->
+<div class="group flex gap-3 p-2 rounded-xl hover:bg-surface-container-low transition-colors cursor-pointer border border-transparent hover:border-surface-variant">
+<div class="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A minimalist digital screenshot of a 'Top 10 Movies' list on a sleek tablet device, with a soft blur in the background. The design of the tablet interface is modern and clean, utilizing a professional palette of grays and deep blues. The lighting is soft and indirect, emphasizing a calm digital lifestyle." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmVMFDvKxhHtXb4QvvYhTkOUOQBHTBSFO5vVYzBgf3jXNGvYLBaLwB71crHmoGQxYoeenYKJRGUk6KYqK_gLPESLI1HPoS_qaHgQR02XdHdoJQwtIVJcRZ_tsI0W8WKIsmdURFJ2Yjfw6ISV8-PMbNHodaGbGf6_pj3a0zbqsmKGI0A25M2glk7EnzRIf1ijI14qDToFpsP396T08FLVRQTqdrvBQSj5xsJlufudRWWhCCkyhaD105lc5P5v9Mk5tnqxzcNLX9t_4"/>
+</div>
+<div class="flex flex-col justify-center">
+<p class="font-label-xs text-on-surface leading-tight group-hover:text-primary transition-colors">2023 Wrapped List</p>
+<p class="text-caption-sm text-on-surface-variant">Jan 01, 2024 • Insights</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Danger Zone -->
+<button class="w-full py-4 rounded-2xl border border-error/20 text-error font-title-sm hover:bg-error/5 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">cancel</span>
+                Cancel Subscription
+            </button>
+</aside>
+</main>
+<!-- Bottom Navigation Bar (Mobile only) -->
+<nav class="md:hidden fixed bottom-0 w-full h-[80px] z-50 bg-surface dark:bg-surface-dim border-t border-outline-variant dark:border-outline flex justify-around items-center px-base">
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-5 py-1 hover:text-primary dark:hover:text-primary-fixed active:scale-90 transition-all duration-200">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-xs text-label-xs">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-5 py-1 hover:text-primary dark:hover:text-primary-fixed active:scale-90 transition-all duration-200">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-xs text-label-xs">Recall</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-secondary-container dark:bg-on-secondary-fixed-variant text-on-secondary-container dark:text-secondary-fixed-dim rounded-full px-5 py-1 active:scale-90 transition-all duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">hub</span>
+<span class="font-label-xs text-label-xs">Insights</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-5 py-1 hover:text-primary dark:hover:text-primary-fixed active:scale-90 transition-all duration-200">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-xs text-label-xs">Settings</span>
+</button>
+</nav>
+<script>
+        // Micro-interactions and subtle scroll effects
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 20) {
+                header.classList.add('shadow-md');
+                header.classList.add('bg-white/95');
+                header.classList.add('backdrop-blur-md');
+            } else {
+                header.classList.remove('shadow-md');
+                header.classList.</script></body></html>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YRecall - Global Search</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#a3f69c",
+                        "on-surface": "#1e1b17",
+                        "on-tertiary-fixed": "#002204",
+                        "inverse-surface": "#33302b",
+                        "surface-tint": "#3a5f94",
+                        "on-primary": "#ffffff",
+                        "primary": "#001e40",
+                        "tertiary-container": "#003d0b",
+                        "secondary": "#006a6a",
+                        "on-primary-fixed-variant": "#1f477b",
+                        "error": "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "tertiary": "#002504",
+                        "secondary-fixed-dim": "#76d6d5",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e8e1da",
+                        "outline-variant": "#c3c6d1",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#004f4f",
+                        "surface-dim": "#e0d9d1",
+                        "on-tertiary-container": "#5ead5c",
+                        "secondary-container": "#90efef",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#003366",
+                        "on-surface-variant": "#43474f",
+                        "on-secondary-container": "#006e6e",
+                        "surface-bright": "#fff8f1",
+                        "surface-container-low": "#faf3eb",
+                        "outline": "#737780",
+                        "on-secondary-fixed": "#002020",
+                        "background": "#fff8f1",
+                        "on-primary-container": "#799dd6",
+                        "inverse-on-surface": "#f7f0e8",
+                        "tertiary-fixed-dim": "#88d982",
+                        "secondary-fixed": "#93f2f2",
+                        "surface-variant": "#e8e1da",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#005312",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#eee7df",
+                        "primary-fixed": "#d5e3ff",
+                        "surface-container": "#f4ede5",
+                        "on-primary-fixed": "#001b3c",
+                        "primary-fixed-dim": "#a7c8ff",
+                        "inverse-primary": "#a7c8ff",
+                        "on-background": "#1e1b17",
+                        "surface": "#fff8f1"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "margin-mobile": "20px",
+                        "xxl": "48px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "base": "8px",
+                        "margin-desktop": "40px",
+                        "md": "16px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Public Sans"],
+                        "body-md": ["Public Sans"],
+                        "label-xs": ["Public Sans"],
+                        "caption-sm": ["Public Sans"],
+                        "title-sm": ["Public Sans"],
+                        "headline-md": ["Public Sans"],
+                        "display-lg-mobile": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                        "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Public Sans', sans-serif; background-color: #fff8f1; color: #001e40; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface selection:bg-primary-fixed selection:text-on-primary-fixed min-h-screen pb-[80px]">
+<!-- Top Navigation Placeholder (Hidden for Search State but implied) -->
+<header class="w-full top-0 sticky bg-surface z-40 transition-colors duration-200 shadow-sm flex items-center justify-between px-margin-mobile py-sm">
+<div class="flex items-center gap-md">
+<button class="p-xs rounded-full hover:bg-surface-variant transition-colors" onclick="window.history.back()">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="font-title-sm text-title-sm font-bold text-primary">Recall</h1>
+</div>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional close-up portrait of a user for an AI life operating system interface. The lighting is soft and natural, with a warm color palette of cream and deep navy. The background is a clean, minimalist studio setting, emphasizing a calm and intelligent persona consistent with high-end tech branding." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtALDf7VjDjMHEnxvTjwicB18j00Wo_vGPd1ymIamKOxlznUFALv5z-Q2qo2QZD-kdevyiWGuoPkVFgMND9IpZ0IljcBBAdBO35rKzliHCNGEfBrcKi2uKQs7zU2K6XVgCpLYNhcdBtfpzxgRG8jofgd7DLAvQ_tbM5gs55mi0_RgSPE5HYDr16qHnVU4felYWnKDoUg9NUUPECbQs2R_o-PL0iD9EUHYHBWqWaowHgTnQhvDGigTyvvSlIx71cBht1KhOr-OuuMU"/>
+</div>
+</header>
+<main class="max-w-3xl mx-auto px-margin-mobile pt-lg">
+<!-- Search Bar Section -->
+<section class="mb-xl">
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline">search</span>
+</div>
+<input autofocus="" class="w-full h-[56px] pl-[52px] pr-[52px] bg-white rounded-xl border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary font-body-md text-primary placeholder:text-outline-variant transition-all shadow-sm" placeholder="Search your life..." type="text"/>
+<div class="absolute inset-y-0 right-0 pr-md flex items-center">
+<button class="p-xs text-primary hover:bg-surface-variant rounded-full transition-colors">
+<span class="material-symbols-outlined">mic</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Semantic Filters (Bento-lite Layout) -->
+<section class="mb-xl">
+<h2 class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-wider mb-md">Semantic Filters</h2>
+<div class="flex flex-wrap gap-sm">
+<!-- Filter Chips -->
+<button class="flex items-center gap-xs px-md py-sm bg-tertiary-fixed/20 text-on-tertiary-fixed border border-tertiary-fixed rounded-full font-label-xs text-label-xs hover:bg-tertiary-fixed/30 transition-colors">
+<span class="material-symbols-outlined text-[18px]">group</span> People
+                </button>
+<button class="flex items-center gap-xs px-md py-sm bg-secondary-container/30 text-on-secondary-container border border-outline-variant rounded-full font-label-xs text-label-xs hover:bg-secondary-container/50 transition-colors">
+<span class="material-symbols-outlined text-[18px]">location_on</span> Places
+                </button>
+<button class="flex items-center gap-xs px-md py-sm bg-white text-on-surface-variant border border-outline-variant rounded-full font-label-xs text-label-xs hover:border-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">photo_library</span> Photos
+                </button>
+<button class="flex items-center gap-xs px-md py-sm bg-white text-on-surface-variant border border-outline-variant rounded-full font-label-xs text-label-xs hover:border-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">audio_file</span> Audio
+                </button>
+<button class="flex items-center gap-xs px-md py-sm bg-white text-on-surface-variant border border-outline-variant rounded-full font-label-xs text-label-xs hover:border-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">description</span> Docs
+                </button>
+<button class="flex items-center gap-xs px-md py-sm bg-white text-on-surface-variant border border-outline-variant rounded-full font-label-xs text-label-xs hover:border-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">schedule</span> Time
+                </button>
+</div>
+</section>
+<!-- Suggested Queries (Asymmetric Cards) -->
+<section class="mb-xl">
+<div class="flex items-center justify-between mb-md">
+<h2 class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-wider">Suggested Queries</h2>
+<span class="material-symbols-outlined text-secondary text-[18px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<div class="glass-card p-lg rounded-2xl cursor-pointer hover:shadow-lg transition-all border-l-4 border-l-secondary-fixed-dim group">
+<p class="font-body-md text-primary group-hover:text-secondary transition-colors">"What did I talk about with Sarah yesterday?"</p>
+<div class="mt-md flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-outline">history_edu</span>
+<span class="font-caption-sm text-caption-sm text-outline">From Journal</span>
+</div>
+</div>
+<div class="glass-card p-lg rounded-2xl cursor-pointer hover:shadow-lg transition-all border-l-4 border-l-tertiary-fixed-dim group">
+<p class="font-body-md text-primary group-hover:text-secondary transition-colors">"Find the document about the solar project."</p>
+<div class="mt-md flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-outline">description</span>
+<span class="font-caption-sm text-caption-sm text-outline">Found in Files</span>
+</div>
+</div>
+<div class="md:col-span-2 glass-card p-lg rounded-2xl cursor-pointer hover:shadow-lg transition-all border-l-4 border-l-primary-fixed-dim group">
+<p class="font-body-md text-primary group-hover:text-secondary transition-colors">"Show me all photos from the hike in Tokyo last October."</p>
+<div class="mt-md flex flex-wrap gap-sm">
+<div class="w-12 h-12 rounded-lg bg-surface-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A cinematic, sun-drenched photo of a mountain trail in Tokyo during autumn. Vivid orange and red maple leaves frame a narrow winding path. The lighting is warm and ethereal, capturing a peaceful morning hike with soft lens flares and a minimalist, high-quality aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXhObOYRSgbOE8aE0i9-DAMuScabxt_82p5Y3vkPgXzmxr7ZC_totvCIzzZSi1ulNPsbKBUvM-A7Z_MwvCt6pnSXWvJ_IsEXh7mL0H6JY-oKDtPr7-VCPU1hPKbObvv2L27OdSip6j63bQ_QxFi2ZjBhLAjyZ5IiphdtqIma0gLxoTFTGs_H5mJ_gkl8KXUV0JtVkBkmWZJ4WBxcjjKIgJa7AeZbvDhYINK_hDdji6BaBZXQAtRAJ7-Q4OpC0Idp_Ko6YVJTq2SvY"/>
+</div>
+<div class="w-12 h-12 rounded-lg bg-surface-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A serene landscape of Mount Fuji seen from a forest trail in autumn. The peak is dusted with light snow, set against a crisp blue sky. The foreground features rich autumn foliage in shades of crimson and amber, maintaining a clean, editorial composition suitable for a high-end travel memory." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDl-jwCLcmyDDiv7WG8sLw7IizwYRa4oUeW4n9FqQ122C640ECvqAIZCE9EUIqCwDGQMtXuiRr27xoW0NI2leQfTNRPg8GhpVZ2KGTKfC4lrAJSiQ-l7nkU30qWumKYRNEwT_WWbPECprwwOuzq3wTc7Muz2xVaqFHMA6ZdLgJcoGRs9Lh9Nvr_mc_jfRaGNPHub0pnnNrMHZ93qnDsTV1vgz2XDzy3JPCzfwRdq5iE0YTFmHPKE_KOlx5akN0rrFLSnjT1aefl6eo"/>
+</div>
+<div class="w-12 h-12 rounded-lg bg-surface-variant border border-outline-variant flex items-center justify-center">
+<span class="font-label-xs text-label-xs text-outline">+12</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Recent Searches -->
+<section class="mb-xl">
+<div class="flex items-center justify-between mb-md">
+<h2 class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-wider">Recent Searches</h2>
+<button class="text-primary font-label-xs text-label-xs hover:underline">Clear All</button>
+</div>
+<ul class="space-y-xs">
+<li class="flex items-center justify-between py-md px-sm rounded-lg hover:bg-surface-container transition-colors group cursor-pointer">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-outline">history</span>
+<span class="font-body-md text-primary">Quarterly budget review notes</span>
+</div>
+<button class="opacity-0 group-hover:opacity-100 p-xs hover:text-error transition-all">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</li>
+<li class="flex items-center justify-between py-md px-sm rounded-lg hover:bg-surface-container transition-colors group cursor-pointer">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-outline">history</span>
+<span class="font-body-md text-primary">Restaurant recommendations in Paris</span>
+</div>
+<button class="opacity-0 group-hover:opacity-100 p-xs hover:text-error transition-all">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</li>
+<li class="flex items-center justify-between py-md px-sm rounded-lg hover:bg-surface-container transition-colors group cursor-pointer">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-outline">history</span>
+<span class="font-body-md text-primary">Wifi password for the guest room</span>
+</div>
+<button class="opacity-0 group-hover:opacity-100 p-xs hover:text-error transition-all">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</li>
+</ul>
+</section>
+<!-- Atmosphere Element -->
+<div class="relative w-full h-32 mt-xxl opacity-30 pointer-events-none overflow-hidden rounded-3xl">
+
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 h-[80px] bg-surface dark:bg-on-surface border-t border-outline-variant dark:border-inverse-surface shadow-lg flex justify-around items-center px-margin-mobile">
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:opacity-80 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-xs text-label-xs">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:opacity-80 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">history_edu</span>
+<span class="font-label-xs text-label-xs">Recall</span>
+</button>
+<!-- Active Search State implied - but as per prompt using standard BottomNavBar logic -->
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container dark:bg-secondary dark:text-on-secondary rounded-full px-4 py-1 hover:opacity-80 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+<span class="font-label-xs text-label-xs">Insights</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:opacity-80 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-xs text-label-xs">Settings</span>
+</button>
+</nav>
+<script>
+        // Micro-interaction for search bar focus
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('scale-[1.01]');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('scale-[1.01]');
+        });
+
+        // Simple animation for the suggested cards on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.glass-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(2</script></body></html>

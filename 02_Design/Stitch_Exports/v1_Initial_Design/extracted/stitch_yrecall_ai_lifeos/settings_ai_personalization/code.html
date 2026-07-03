@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI Personalization | YRecall</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+
+        /* Custom Slider Styling */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+        }
+        input[type="range"]::-webkit-slider-runnable-track {
+            background: #e8e1da;
+            height: 4px;
+            border-radius: 2px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            margin-top: -10px;
+            background-color: #001e40;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        /* Waveform Animation */
+        .wave-bar {
+            animation: wave 1.2s ease-in-out infinite;
+        }
+        @keyframes wave {
+            0%, 100% { height: 8px; }
+            50% { height: 32px; }
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-bright": "#fff8f1",
+                        "surface-dim": "#e0d9d1",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#88d982",
+                        "surface-container-high": "#eee7df",
+                        "surface-variant": "#e8e1da",
+                        "primary-fixed-dim": "#a7c8ff",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#004f4f",
+                        "secondary": "#006a6a",
+                        "primary-fixed": "#d5e3ff",
+                        "outline": "#737780",
+                        "on-error": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#faf3eb",
+                        "surface": "#fff8f1",
+                        "on-secondary-fixed": "#002020",
+                        "inverse-surface": "#33302b",
+                        "on-primary-fixed-variant": "#1f477b",
+                        "on-secondary-container": "#006e6e",
+                        "on-primary-container": "#799dd6",
+                        "on-tertiary-fixed": "#002204",
+                        "secondary-fixed-dim": "#76d6d5",
+                        "surface-tint": "#3a5f94",
+                        "tertiary-container": "#003d0b",
+                        "inverse-on-surface": "#f7f0e8",
+                        "outline-variant": "#c3c6d1",
+                        "tertiary-fixed": "#a3f69c",
+                        "secondary-container": "#90efef",
+                        "on-tertiary-container": "#5ead5c",
+                        "primary-container": "#003366",
+                        "tertiary": "#002504",
+                        "surface-container": "#f4ede5",
+                        "background": "#fff8f1",
+                        "on-background": "#1e1b17",
+                        "inverse-primary": "#a7c8ff",
+                        "on-surface-variant": "#43474f",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-container-highest": "#e8e1da",
+                        "on-primary-fixed": "#001b3c",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#1e1b17",
+                        "primary": "#001e40",
+                        "secondary-fixed": "#93f2f2",
+                        "on-tertiary-fixed-variant": "#005312"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "40px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "xxl": "48px",
+                        "base": "8px",
+                        "margin-mobile": "20px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "label-xs": ["Public Sans"],
+                        "headline-md": ["Public Sans"],
+                        "display-lg-mobile": ["Public Sans"],
+                        "body-md": ["Public Sans"],
+                        "caption-sm": ["Public Sans"],
+                        "title-sm": ["Public Sans"],
+                        "display-lg": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                        "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md min-h-screen selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="w-full sticky top-0 z-50 bg-surface/80 backdrop-blur-md flex items-center justify-between px-margin-mobile h-16 md:px-margin-desktop transition-all duration-300">
+<div class="flex items-center gap-md">
+<button class="p-2 rounded-full hover:bg-surface-variant/50 transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-title-sm text-title-sm text-primary">AI Personalization</h1>
+</div>
+<div class="flex items-center gap-sm">
+<button class="p-2 rounded-full hover:bg-surface-variant/50 transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="search">search</span>
+</button>
+</div>
+</header>
+<main class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-desktop py-lg pb-32">
+<!-- Header Section -->
+<section class="mb-xl">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-xs">Refine your AI</h2>
+<p class="text-on-surface-variant max-w-2xl">Tailor YRecall's intelligence to match your workflow. These settings adjust how your personal AI interacts with you and processes your knowledge base.</p>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-lg items-start">
+<!-- Left Column: Personality & Voice -->
+<div class="lg:col-span-7 space-y-lg">
+<!-- AI Persona Section -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-sm border border-outline-variant/30">
+<div class="flex items-center gap-sm mb-lg">
+<span class="material-symbols-outlined text-on-secondary-container bg-secondary-container p-2 rounded-lg" data-icon="psychology">psychology</span>
+<h3 class="font-title-sm text-title-sm">AI Persona</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+<!-- Calm -->
+<label class="relative flex flex-col p-md rounded-xl border-2 border-outline-variant cursor-pointer hover:bg-surface-container-low transition-all has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+<input checked="" class="hidden" name="persona" type="radio" value="calm"/>
+<span class="font-bold mb-1">Calm</span>
+<span class="font-caption-sm text-caption-sm text-on-surface-variant">Minimizes interruptions, provides brief, serene summaries.</span>
+</label>
+<!-- Analytical -->
+<label class="relative flex flex-col p-md rounded-xl border-2 border-outline-variant cursor-pointer hover:bg-surface-container-low transition-all has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+<input class="hidden" name="persona" type="radio" value="analytical"/>
+<span class="font-bold mb-1">Analytical</span>
+<span class="font-caption-sm text-caption-sm text-on-surface-variant">Data-driven, cites sources, focuses on logical patterns.</span>
+</label>
+<!-- Creative -->
+<label class="relative flex flex-col p-md rounded-xl border-2 border-outline-variant cursor-pointer hover:bg-surface-container-low transition-all has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+<input class="hidden" name="persona" type="radio" value="creative"/>
+<span class="font-bold mb-1">Creative</span>
+<span class="font-caption-sm text-caption-sm text-on-surface-variant">Explores distant connections, uses expressive metaphors.</span>
+</label>
+</div>
+</div>
+<!-- Voice Settings -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-sm border border-outline-variant/30 overflow-hidden relative">
+<div class="flex items-center gap-sm mb-lg">
+<span class="material-symbols-outlined text-on-secondary-container bg-secondary-container p-2 rounded-lg" data-icon="record_voice_over">record_voice_over</span>
+<h3 class="font-title-sm text-title-sm">Voice Synthesis</h3>
+</div>
+<!-- Waveform Visualizer -->
+<div class="h-24 bg-surface-container-low rounded-xl mb-lg flex items-center justify-center gap-1 overflow-hidden px-lg">
+<div class="wave-bar w-1 bg-primary rounded-full" style="animation-delay: 0.1s;"></div>
+<div class="wave-bar w-1 bg-primary rounded-full" style="animation-delay: 0.3s; height: 16px;"></div>
+<div class="wave-bar w-1 bg-primary rounded-full" style="animation-delay: 0.5s; height: 24px;"></div>
+<div class="wave-bar w-1 bg-primary rounded-full" style="animation-delay: 0.2s; height: 40px;"></div>
+<div class="wave-bar w-1 bg-primary rounded-full" style="animation-delay: 0.6s; height: 20px;"></div>
+<div class="wave-bar w-1 bg-primary rounded-full" style="animation-delay: 0.4s; height: 32px;"></div>
+<div class="wave-bar w-1 bg-primary rounded-full" style="animation-delay: 0.1s; height: 12px;"></div>
+<div class="wave-bar w-1 bg-primary rounded-full" style="animation-delay: 0.7s; height: 18px;"></div>
+<div class="wave-bar w-1 bg-primary rounded-full" style="animation-delay: 0.3s;"></div>
+<div class="wave-bar w-1 bg-primary rounded-full hidden md:block" style="animation-delay: 0.2s; height: 22px;"></div>
+<div class="wave-bar w-1 bg-primary rounded-full hidden md:block" style="animation-delay: 0.5s; height: 14px;"></div>
+</div>
+<div class="flex flex-wrap gap-md">
+<button class="flex-1 min-w-[120px] py-md px-lg rounded-full border border-outline bg-surface text-primary font-medium hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="play_circle">play_circle</span>
+                            Aura
+                        </button>
+<button class="flex-1 min-w-[120px] py-md px-lg rounded-full border-2 border-primary bg-primary text-white font-medium transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="play_circle" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+                            Echo
+                        </button>
+<button class="flex-1 min-w-[120px] py-md px-lg rounded-full border border-outline bg-surface text-primary font-medium hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="play_circle">play_circle</span>
+                            Horizon
+                        </button>
+</div>
+</div>
+<!-- Knowledge Sources -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-sm border border-outline-variant/30">
+<div class="flex items-center justify-between mb-lg">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-secondary-container bg-secondary-container p-2 rounded-lg" data-icon="hub">hub</span>
+<h3 class="font-title-sm text-title-sm">Knowledge Sources</h3>
+</div>
+<button class="text-secondary font-medium hover:underline flex items-center gap-1">
+                            Add New
+                            <span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+</button>
+</div>
+<div class="space-y-sm">
+<!-- Email -->
+<div class="flex items-center justify-between p-md bg-surface-container-low rounded-lg hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded bg-white flex items-center justify-center text-primary border border-outline-variant">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+</div>
+<div>
+<p class="font-medium">Work Email (Gmail)</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">Last synced 5m ago</p>
+</div>
+</div>
+<label class="inline-flex relative items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-outline-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Slack -->
+<div class="flex items-center justify-between p-md bg-surface-container-low rounded-lg hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded bg-white flex items-center justify-center text-primary border border-outline-variant">
+<span class="material-symbols-outlined" data-icon="forum">forum</span>
+</div>
+<div>
+<p class="font-medium">Slack (Workspace X)</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">Permissions: Public channels only</p>
+</div>
+</div>
+<label class="inline-flex relative items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-outline-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Calendar -->
+<div class="flex items-center justify-between p-md bg-surface-container-low rounded-lg hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded bg-white flex items-center justify-center text-primary border border-outline-variant">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+</div>
+<div>
+<p class="font-medium">Primary Calendar</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">Syncs event context for memories</p>
+</div>
+</div>
+<label class="inline-flex relative items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-outline-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Memory Synthesis (Bento-style Cards) -->
+<div class="lg:col-span-5 space-y-lg">
+<!-- Memory Synthesis Slider Card -->
+<div class="bg-primary text-white rounded-xl p-lg shadow-xl relative overflow-hidden">
+
+<div class="relative z-10">
+<div class="flex items-center gap-sm mb-lg">
+<span class="material-symbols-outlined" data-icon="auto_awesome" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<h3 class="font-title-sm text-title-sm">Memory Synthesis</h3>
+</div>
+<div class="space-y-xl">
+<div>
+<div class="flex justify-between mb-2">
+<span class="font-medium">Proactivity</span>
+<span class="text-primary-fixed">High</span>
+</div>
+<input class="w-full accent-white" max="100" min="0" type="range" value="80"/>
+<p class="text-on-primary-container text-caption-sm mt-3 leading-relaxed">Adjust how often YRecall suggests memories without being prompted. High levels provide deep contextual insights daily.</p>
+</div>
+<div>
+<div class="flex justify-between mb-2">
+<span class="font-medium">Insight Depth</span>
+<span class="text-primary-fixed">Balanced</span>
+</div>
+<input class="w-full accent-white" max="100" min="0" type="range" value="50"/>
+<p class="text-on-primary-container text-caption-sm mt-3 leading-relaxed">Controls the detail of AI-generated summaries. Deeper insights require more processing but provide richer context.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- AI Snapshot (Illustrative Card) -->
+<div class="bg-surface-container-high rounded-xl p-lg relative overflow-hidden h-64 flex flex-col justify-end group">
+<div class="absolute inset-0 grayscale group-hover:grayscale-0 transition-all duration-700">
+<img class="w-full h-full object-cover" data-alt="A clean, abstract architectural photo of a museum interior with soft morning light streaming through high windows, illuminating dust motes. The atmosphere is quiet, intelligent, and vast, representing the internal knowledge base of a sophisticated AI. Neutral tones and high-key lighting create a sense of calm and clarity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHH6CbS2ZklSqAA944U7GOgEkIxfmNpwjkjJsO3Es0gFFPa86NWzrqAPL-FqK-oaJaKuZVT8RUZFodldc68FTRHsC81GLhPqcBucIoOOuqrA4Ia0_2rp65bFcUQhN_p5bgS-AqmVGIaXfn85kTtPU2CLoI8lE9x7d_JyevUNJDAPMFJN1OWAiYOVZ0i9wi9wWOTyfwNcvHzEig5E8uyMN_2TdS2Ctg7otGyg8jrC4l6tSXXOZIEvHjIH-kU9RVIMDtjpKAk65uEOI"/>
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="relative z-10 text-white">
+<div class="flex items-center gap-2 mb-2">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-2 py-0.5 rounded-full font-label-xs text-label-xs">ACTIVE</span>
+<span class="text-label-xs font-label-xs uppercase tracking-widest opacity-80">Memory Cluster #442</span>
+</div>
+<h4 class="font-title-sm text-title-sm">Optimizing neural pathways</h4>
+<p class="text-caption-sm opacity-90 mt-1">AI is currently indexing your last 48 hours of communications.</p>
+</div>
+</div>
+<!-- Security Disclaimer -->
+<div class="bg-error-container text-on-error-container p-md rounded-xl flex gap-md items-start">
+<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
+<div>
+<p class="font-bold text-caption-sm uppercase mb-1">Privacy Guard</p>
+<p class="text-caption-sm leading-relaxed">All AI processing happens within your encrypted private cloud. No data is used to train global models. Your memory is yours alone.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="mt-xxl pt-lg border-t border-outline-variant/30 flex flex-col md:flex-row items-center justify-between gap-md">
+<p class="text-on-surface-variant font-caption-sm text-caption-sm italic">Changes are synced across all your YRecall instances.</p>
+<div class="flex items-center gap-md w-full md:w-auto">
+<button class="flex-1 md:flex-initial px-xl h-14 rounded-xl border border-outline text-primary font-medium hover:bg-surface-variant/30 transition-colors">Discard</button>
+<button class="flex-1 md:flex-initial px-xl h-14 rounded-xl bg-primary text-white font-medium shadow-lg active:scale-95 transition-all">Save Changes</button>
+</div>
+</div>
+</main>
+<!-- Navigation Bar (Shell) -->
+<nav class="fixed bottom-0 left-0 w-full h-20 flex justify-around items-center px-4 pb-safe bg-surface-container-low dark:bg-surface-container-lowest border-t border-outline-variant/30 z-50 md:hidden">
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="brain">grain</span>
+<span class="font-label-xs text-label-xs">Memories</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="psychology_alt">psychology_alt</span>
+<span class="font-label-xs text-label-xs">Recall</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-label-xs text-label-xs">Insights</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1">
+<span class="material-symbols-outlined" data-icon="settings" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="font-label-xs text-label-xs">Settings</span>
+</div>
+</nav>
+<script>
+        // Simple Interaction logic for demo purposes
+        const personaLabels = document.querySelectorAll('input[name="persona"]');
+        personaLabels.forEach(input => {
+            input.addEventListener('change', (e) => {
+                console.log('Persona changed to:', e.target.value);
+            });
+        });
+
+        // Toggle handling
+        const toggles = document.querySelectorAll('input[type="checkbox"]');
+        toggles.forEach(toggle => {
+            toggle.addEventListener('change', (e) => {
+                const parent = e.target.closest('.bg-surface-container-low');
+                if (e.target.checked) {
+                    parent.style.opacity = '1';
+                } else {
+                    parent.style.opacity = '0.6';
+                }
+            });
+        });
+    </script>
+</body></html>

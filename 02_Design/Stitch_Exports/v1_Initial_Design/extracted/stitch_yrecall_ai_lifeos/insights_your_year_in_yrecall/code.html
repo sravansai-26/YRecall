@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Your Year in YRecall</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed-dim": "#88d982",
+                    "secondary-container": "#90efef",
+                    "on-secondary": "#ffffff",
+                    "primary-fixed-dim": "#a7c8ff",
+                    "on-primary-container": "#799dd6",
+                    "on-surface": "#1e1b17",
+                    "surface-container-high": "#eee7df",
+                    "on-tertiary-fixed-variant": "#005312",
+                    "on-primary-fixed-variant": "#1f477b",
+                    "background": "#fff8f1",
+                    "primary-fixed": "#d5e3ff",
+                    "inverse-on-surface": "#f7f0e8",
+                    "tertiary-fixed": "#a3f69c",
+                    "on-tertiary-fixed": "#002204",
+                    "error-container": "#ffdad6",
+                    "surface-tint": "#3a5f94",
+                    "surface-bright": "#fff8f1",
+                    "surface-container": "#f4ede5",
+                    "outline-variant": "#c3c6d1",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "surface": "#fff8f1",
+                    "inverse-surface": "#33302b",
+                    "surface-dim": "#e0d9d1",
+                    "outline": "#737780",
+                    "primary": "#001e40",
+                    "on-primary-fixed": "#001b3c",
+                    "secondary": "#006a6a",
+                    "on-background": "#1e1b17",
+                    "surface-container-highest": "#e8e1da",
+                    "on-secondary-fixed-variant": "#004f4f",
+                    "tertiary-container": "#003d0b",
+                    "surface-variant": "#e8e1da",
+                    "on-tertiary-container": "#5ead5c",
+                    "on-error": "#ffffff",
+                    "secondary-fixed": "#93f2f2",
+                    "primary-container": "#003366",
+                    "secondary-fixed-dim": "#76d6d5",
+                    "on-secondary-container": "#006e6e",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-low": "#faf3eb",
+                    "on-surface-variant": "#43474f",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#002504",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed": "#002020",
+                    "inverse-primary": "#a7c8ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "margin-desktop": "40px",
+                    "xxl": "48px",
+                    "xl": "32px",
+                    "xs": "4px",
+                    "lg": "24px",
+                    "margin-mobile": "20px",
+                    "sm": "8px",
+                    "md": "16px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "body-md": ["Public Sans"],
+                    "headline-md": ["Public Sans"],
+                    "label-xs": ["Public Sans"],
+                    "caption-sm": ["Public Sans"],
+                    "title-sm": ["Public Sans"],
+                    "display-lg": ["Public Sans"],
+                    "display-lg-mobile": ["Public Sans"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .ai-glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 110, 110, 0.1);
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+        }
+        .node-pulse {
+            animation: pulse 4s infinite ease-in-out;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+        .floating-ui {
+            animation: float 6s infinite ease-in-out;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        body {
+            background-color: #fff8f1;
+            scroll-behavior: smooth;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c3c6d1;
+            border-radius: 10px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="font-body-md text-on-surface">
+<!-- Top Navigation Bar -->
+<header class="w-full sticky top-0 bg-surface dark:bg-surface-dim flex items-center justify-between px-margin-mobile h-16 w-full z-[100]">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed cursor-pointer p-2 hover:bg-surface-variant/50 transition-colors rounded-full active:opacity-80 active:scale-95">arrow_back</span>
+<h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed">Your Year in YRecall</h1>
+</div>
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed cursor-pointer p-2 hover:bg-surface-variant/50 transition-colors rounded-full active:opacity-80 active:scale-95">search</span>
+<button class="bg-primary text-on-primary px-lg py-sm rounded-full font-medium text-caption-sm hover:shadow-lg transition-all active:scale-95">Share Story</button>
+</div>
+</header>
+<main class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-desktop py-xl">
+<!-- Hero Section: Knowledge Graph Visualization -->
+<section class="mb-xxl relative overflow-hidden rounded-[32px] bg-primary h-[530px] flex flex-col items-center justify-center text-center p-xl">
+
+<div class="relative z-10 space-y-md max-w-2xl">
+<p class="text-secondary-fixed font-bold tracking-widest uppercase text-[12px]">2024 Retrospective</p>
+<h2 class="font-display-lg text-display-lg-mobile md:text-display-lg text-white">Your Life in Nodes</h2>
+<p class="text-primary-fixed text-body-md opacity-80">We tracked 4,281 new conceptual connections in your mental model this year. Your knowledge graph grew by 32%.</p>
+</div>
+<!-- Abstract Stats Nodes -->
+<div class="absolute bottom-xl left-xl ai-glass p-md rounded-xl floating-ui">
+<span class="text-caption-sm font-bold text-secondary">Strongest Hub</span>
+<p class="text-title-sm text-primary">Quantum Computing</p>
+</div>
+<div class="absolute top-xl right-xl ai-glass p-md rounded-xl floating-ui" style="animation-delay: -2s;">
+<span class="text-caption-sm font-bold text-secondary">New Horizon</span>
+<p class="text-title-sm text-primary">Urban Forestry</p>
+</div>
+</section>
+<!-- Bento Grid Stats -->
+<div class="bento-grid">
+<!-- Top People (Circular Avatars) -->
+<div class="col-span-12 md:col-span-8 bg-surface-container-low p-xl rounded-[24px] shadow-sm relative overflow-hidden group">
+<div class="relative z-10 flex flex-col h-full justify-between">
+<div>
+<h3 class="font-title-sm text-title-sm text-primary mb-xs">The Inner Circle</h3>
+<p class="text-on-surface-variant text-body-md mb-lg">Your most meaningful digital interactions of 2024.</p>
+</div>
+<div class="flex flex-wrap gap-lg items-center justify-around py-md">
+<!-- Avatar 1 -->
+<div class="flex flex-col items-center gap-sm group/avatar cursor-pointer">
+<div class="relative w-20 h-20 rounded-full border-4 border-white shadow-xl overflow-hidden transition-transform group-hover/avatar:scale-110">
+<img class="w-full h-full object-cover" data-alt="A cinematic portrait of a professional woman with creative glasses, warm studio lighting, minimalist beige background, high-end editorial photography style, soft focus, sophisticated atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6LHrQLywgW6GR3hhJ37KhJfVvN1ROrZ2QzBFqjD1WHvfuV8fuTVHKT5ltrx067YSBHY8Htv4mOL_FQe9desCltEiskEUqFBiEBFC1IRi-Z4-R3DhVm3oG5iAMu_M9C9AgRQEU9YqGdOUy0IhDxKFBbQQB03xruxZEspIGwKSI-LCs4jTFhfcstmCv5sKYoK_exLDoVwgtUvgM2azDCS4mA4YS4c2cymWWCyQxSE47jXpbB7kK_4V4CldImoc_fpXnXvyn22cTm6s"/>
+</div>
+<span class="font-bold text-caption-sm text-primary">Elena V.</span>
+</div>
+<!-- Avatar 2 -->
+<div class="flex flex-col items-center gap-sm group/avatar cursor-pointer">
+<div class="relative w-24 h-24 rounded-full border-4 border-secondary shadow-xl overflow-hidden transition-transform group-hover/avatar:scale-110">
+<img class="w-full h-full object-cover" data-alt="A portrait of a thoughtful man in a designer turtleneck, soft blue lighting, high-end commercial aesthetic, professional and intellectual vibe, minimalist composition." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmzouNeunIhZQTBgn_5Qgd7nYjZpXAfJ-3TK6W1_ES3YB_INECLruZUjX7hQ3OZkx4hhDvCUhbk3KS7nv4PJlv7FAKdh15ilDrsUPOUhuy9nV7_XGCzVZv2BwBW9CvCm7wde0A2X3dWxmyafKm7uapH2plpR8anGhS2oiM2P40xnUfJhEPaxLTeP0-rG6VJX9Ow3lhRfiV-tsKv8ToKqtq3kmtyNxlQIzdYS8Xp_SjXExxnVSjiPR4QFtICbBRp1O6qezHxEf1vkE"/>
+<div class="absolute inset-0 bg-secondary/20 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+</div>
+<span class="font-bold text-caption-sm text-secondary">#1 Contact</span>
+</div>
+<!-- Avatar 3 -->
+<div class="flex flex-col items-center gap-sm group/avatar cursor-pointer">
+<div class="relative w-20 h-20 rounded-full border-4 border-white shadow-xl overflow-hidden transition-transform group-hover/avatar:scale-110">
+<img class="w-full h-full object-cover" data-alt="Close up portrait of a young male architect, natural window light, modern minimalist studio setting, high resolution editorial portraiture, earthy tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBH71Tvujb7IMOqpi_v1LSz6yK5zawSEVvDM4gwtIMKh682jgwTUai7GgNiruxGv7nxEoNfpvlSNkCAqYvOnJ7-9IERjEGg5mW25SAVXfPZREWX_oZpOWBLKwXk8WHXFSQQP3XyjB1IGRvwZpuU84GRkuxxpxLpfb0OWMVZgnHPKP7wZb_qJJyJsYITuhq6D4xouqKXJIla5nSi2mRyAbWwYIFuJv9N_TFPY0k1o0dyTRd0SuSAuZ8eZeoki6CcVXQxmWr2TMJh0s"/>
+</div>
+<span class="font-bold text-caption-sm text-primary">Marcus J.</span>
+</div>
+<!-- Avatar 4 -->
+<div class="flex flex-col items-center gap-sm group/avatar cursor-pointer">
+<div class="relative w-16 h-16 rounded-full border-4 border-white shadow-xl overflow-hidden transition-transform group-hover/avatar:scale-110">
+<img class="w-full h-full object-cover" data-alt="Portrait of an elderly woman with bright eyes and gray hair, soft morning light, elegant and minimalist, high-end fashion photography style, serene expression." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCifSHY-HN_ugBrkB7yF8wPaOx9bvh_cBKk3U4TlVChwyGr2HA_7jT-ncDJajwt8UjDAUAfeMbbKPf2gawYmhoFEza_UtuvYdsAkcliN7uXrUCPfCW2N37TmH_EIj4S1dwCJWxmAEPvZ_sLoHE0V3aypEMz-8YphS0pFLlQtlQ9xjK5XGiQ5R7HBIvYG4dtusCJ51e-MzEAUHdrmdr3Ake560dxC4e6eb3zuD3Nf9BZiZgBWe-EGOR7xReZpoPKagMxXvQQtuU3HbQ"/>
+</div>
+<span class="font-bold text-caption-sm text-primary">Sarah K.</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Total Recall Stat -->
+<div class="col-span-12 md:col-span-4 bg-secondary-container p-xl rounded-[24px] flex flex-col justify-between text-on-secondary-container">
+<span class="material-symbols-outlined text-[48px] opacity-40">psychology_alt</span>
+<div>
+<h4 class="font-display-lg text-[64px] leading-none mb-sm">842</h4>
+<p class="font-bold text-title-sm">Total Recalls</p>
+<p class="text-caption-sm opacity-80 mt-xs">Memories retrieved via AI search</p>
+</div>
+</div>
+<!-- Mindfulness vs. Productivity Chart -->
+<div class="col-span-12 md:col-span-7 bg-white p-xl rounded-[24px] shadow-sm border border-outline-variant/30">
+<div class="flex justify-between items-start mb-xl">
+<div>
+<h3 class="font-title-sm text-title-sm text-primary">The Balance</h3>
+<p class="text-caption-sm text-on-surface-variant">Mindfulness vs. Productivity</p>
+</div>
+<div class="flex gap-md">
+<div class="flex items-center gap-xs">
+<span class="w-3 h-3 rounded-full bg-secondary"></span>
+<span class="text-[10px] font-bold text-outline">PRODUCTIVITY</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="w-3 h-3 rounded-full bg-tertiary-fixed-dim"></span>
+<span class="text-[10px] font-bold text-outline">MINDFULNESS</span>
+</div>
+</div>
+</div>
+<!-- Mock Chart Visualization -->
+<div class="h-64 flex items-end justify-between gap-2 px-md pb-xl">
+<div class="flex flex-col gap-1 w-full items-center">
+<div class="w-full bg-secondary/10 rounded-t-lg h-24 relative overflow-hidden">
+<div class="absolute bottom-0 w-full bg-secondary rounded-t-lg h-16 transition-all duration-1000"></div>
+</div>
+<div class="w-full bg-tertiary-fixed-dim/10 rounded-t-lg h-16 relative overflow-hidden">
+<div class="absolute bottom-0 w-full bg-tertiary-fixed-dim rounded-t-lg h-8 transition-all duration-1000"></div>
+</div>
+<span class="text-[10px] mt-2 font-bold opacity-40 uppercase">Jan</span>
+</div>
+<div class="flex flex-col gap-1 w-full items-center">
+<div class="w-full bg-secondary/10 rounded-t-lg h-32 relative overflow-hidden">
+<div class="absolute bottom-0 w-full bg-secondary rounded-t-lg h-24 transition-all duration-1000"></div>
+</div>
+<div class="w-full bg-tertiary-fixed-dim/10 rounded-t-lg h-20 relative overflow-hidden">
+<div class="absolute bottom-0 w-full bg-tertiary-fixed-dim rounded-t-lg h-12 transition-all duration-1000"></div>
+</div>
+<span class="text-[10px] mt-2 font-bold opacity-40 uppercase">Mar</span>
+</div>
+<div class="flex flex-col gap-1 w-full items-center">
+<div class="w-full bg-secondary/10 rounded-t-lg h-48 relative overflow-hidden">
+<div class="absolute bottom-0 w-full bg-secondary rounded-t-lg h-40 transition-all duration-1000"></div>
+</div>
+<div class="w-full bg-tertiary-fixed-dim/10 rounded-t-lg h-32 relative overflow-hidden">
+<div class="absolute bottom-0 w-full bg-tertiary-fixed-dim rounded-t-lg h-20 transition-all duration-1000"></div>
+</div>
+<span class="text-[10px] mt-2 font-bold opacity-40 uppercase">Jun</span>
+</div>
+<div class="flex flex-col gap-1 w-full items-center">
+<div class="w-full bg-secondary/10 rounded-t-lg h-40 relative overflow-hidden">
+<div class="absolute bottom-0 w-full bg-secondary rounded-t-lg h-32 transition-all duration-1000"></div>
+</div>
+<div class="w-full bg-tertiary-fixed-dim/10 rounded-t-lg h-56 relative overflow-hidden">
+<div class="absolute bottom-0 w-full bg-tertiary-fixed-dim rounded-t-lg h-48 transition-all duration-1000"></div>
+</div>
+<span class="text-[10px] mt-2 font-bold opacity-40 uppercase">Sep</span>
+</div>
+<div class="flex flex-col gap-1 w-full items-center">
+<div class="w-full bg-secondary/10 rounded-t-lg h-56 relative overflow-hidden">
+<div class="absolute bottom-0 w-full bg-secondary rounded-t-lg h-48 transition-all duration-1000"></div>
+</div>
+<div class="w-full bg-tertiary-fixed-dim/10 rounded-t-lg h-40 relative overflow-hidden">
+<div class="absolute bottom-0 w-full bg-tertiary-fixed-dim rounded-t-lg h-24 transition-all duration-1000"></div>
+</div>
+<span class="text-[10px] mt-2 font-bold opacity-40 uppercase">Dec</span>
+</div>
+</div>
+<div class="mt-md p-md bg-background rounded-xl">
+<p class="text-caption-sm italic">"You are most productive on Tuesdays after a morning meditation session."</p>
+</div>
+</div>
+<!-- Digital Footprint Map -->
+<div class="col-span-12 md:col-span-5 bg-surface-container-highest p-xl rounded-[24px] relative overflow-hidden min-h-[400px]">
+<div class="relative z-10">
+<h3 class="font-title-sm text-title-sm text-primary">Digital Footprint</h3>
+<p class="text-caption-sm text-on-surface-variant mb-xl">Your movement across the globe.</p>
+<div class="space-y-md">
+<div class="flex justify-between items-center bg-white/50 backdrop-blur-sm p-sm rounded-lg border border-white">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary">location_on</span>
+<span class="text-body-md font-medium">Tokyo, Japan</span>
+</div>
+<span class="text-caption-sm font-bold opacity-60">12 Days</span>
+</div>
+<div class="flex justify-between items-center bg-white/50 backdrop-blur-sm p-sm rounded-lg border border-white">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary">location_on</span>
+<span class="text-body-md font-medium">London, UK</span>
+</div>
+<span class="text-caption-sm font-bold opacity-60">24 Days</span>
+</div>
+<div class="flex justify-between items-center bg-white/50 backdrop-blur-sm p-sm rounded-lg border border-white">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary">location_on</span>
+<span class="text-body-md font-medium">San Francisco, CA</span>
+</div>
+<span class="text-caption-sm font-bold opacity-60">182 Days</span>
+</div>
+</div>
+</div>
+<!-- Map Layer (Abstracted) -->
+<div class="absolute inset-0 z-0 opacity-40 grayscale group-hover:grayscale-0 transition-all duration-1000">
+<div class="w-full h-full bg-cover bg-center" data-alt="A stylized, minimalist vector map of the world in soft beige and muted teal colors, high-end cartography design, clean lines, professional digital interface look, sophisticated and modern." data-location="Tokyo" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBxcxvUhpIjK2wB02CoyJwU_SW769XiWloCuNFqTMTviYu8seR-uLpz9c6nUsCXiY4WxaGirw_qemMe6VSQk5opCWUyPX8rAEDUpzAg1JCCeA9r2ffaZobGizXyHfSTUWmZ-AdGg8FVIFxcza-lqnc_QXp1150OYJhaGwqgRSvndggxVcUjD-dqPG0PbhmJg2Cs22dP7DbsOXz2kgNDuz8ezPthHykE9x0T7YEztrMIYIqWOIJrG8jdKaY-Bzhrh6cYGTloRiS249Y')"></div>
+</div>
+<!-- Hotspots -->
+<div class="absolute top-1/2 left-1/3 w-3 h-3 bg-secondary rounded-full node-pulse"></div>
+<div class="absolute top-1/4 right-1/4 w-4 h-4 bg-secondary rounded-full node-pulse" style="animation-delay: 1s;"></div>
+<div class="absolute bottom-1/3 left-1/2 w-2 h-2 bg-secondary rounded-full node-pulse" style="animation-delay: 2s;"></div>
+</div>
+</div>
+<!-- Viral Share CTA Section -->
+<section class="mt-xxl bg-primary text-white p-xxl rounded-[32px] text-center relative overflow-hidden">
+
+<div class="relative z-10">
+<h2 class="font-headline-md text-headline-md mb-md">This is your YRecall legacy.</h2>
+<p class="max-w-xl mx-auto text-primary-fixed opacity-80 mb-xl">Share your year in knowledge with your network and see how your mind maps compare.</p>
+<div class="flex flex-col md:flex-row gap-md justify-center items-center">
+<button class="bg-secondary-fixed text-on-secondary-fixed px-xl py-md rounded-full font-bold flex items-center gap-sm hover:scale-105 transition-all">
+<span class="material-symbols-outlined">share</span>
+                        Share on Instagram
+                    </button>
+<button class="bg-white/10 backdrop-blur-md text-white px-xl py-md rounded-full font-bold flex items-center gap-sm hover:bg-white/20 transition-all">
+<span class="material-symbols-outlined">download</span>
+                        Export PDF Report
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full h-20 flex justify-around items-center px-4 pb-safe bg-surface-container-low dark:bg-surface-container-lowest z-50 rounded-t-xl shadow-sm border-t border-outline-variant/30">
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/20 transition-colors p-2 rounded-lg cursor-pointer">
+<span class="material-symbols-outlined">grain</span>
+<span class="font-label-xs text-label-xs">Memories</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/20 transition-colors p-2 rounded-lg cursor-pointer">
+<span class="material-symbols-outlined">psychology_alt</span>
+<span class="font-label-xs text-label-xs">Recall</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1 scale-90 transition-transform duration-150 cursor-pointer">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span class="font-label-xs text-label-xs">Insights</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/20 transition-colors p-2 rounded-lg cursor-pointer">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-xs text-label-xs">Settings</span>
+</div>
+</nav>
+<script>
+        // Micro-interactions for chart animation on scroll
+        const observerOptions = {
+            threshold: 0.5
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const bars = entry.target.querySelectorAll('.absolute.bottom-0');
+                    bars.forEach((bar, index) => {
+                        const originalHeight = bar.style.height;
+                        bar.style.height = '0';
+                        setTimeout(() => {
+                            bar.style.height = bar.parentElement.dataset.height || '100%';
+                        }, index * 100);
+                    });
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.bento-grid > div').forEach(div => {
+            div.classList.add('transition-all', 'duration-700', 'translate-y-4', 'opacity-0');
+        });
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.remove('translate-y-4', 'opacity-0');
+                    entry.target.classList.add('translate-y-0', 'opacity-100');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.bento-grid > div, section').forEach(el => revealObserver.observe(el));
+    </script>
+</body></html>

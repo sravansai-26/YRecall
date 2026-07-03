@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YRecall Support Hub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#90efef",
+                        "on-tertiary-fixed": "#002204",
+                        "on-secondary": "#ffffff",
+                        "surface-tint": "#3a5f94",
+                        "tertiary": "#002504",
+                        "surface-container-low": "#faf3eb",
+                        "tertiary-container": "#003d0b",
+                        "background": "#fff8f1",
+                        "on-primary-fixed-variant": "#1f477b",
+                        "surface-dim": "#e0d9d1",
+                        "on-tertiary-fixed-variant": "#005312",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed-dim": "#a7c8ff",
+                        "primary-fixed": "#d5e3ff",
+                        "on-secondary-fixed": "#002020",
+                        "surface-container": "#f4ede5",
+                        "on-primary-fixed": "#001b3c",
+                        "secondary": "#006a6a",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#76d6d5",
+                        "on-surface": "#1e1b17",
+                        "on-secondary-fixed-variant": "#004f4f",
+                        "tertiary-fixed-dim": "#88d982",
+                        "primary": "#001e40",
+                        "inverse-primary": "#a7c8ff",
+                        "surface": "#fff8f1",
+                        "primary-container": "#003366",
+                        "on-secondary-container": "#006e6e",
+                        "surface-variant": "#e8e1da",
+                        "outline-variant": "#c3c6d1",
+                        "tertiary-fixed": "#a3f69c",
+                        "inverse-surface": "#33302b",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "surface-container-highest": "#e8e1da",
+                        "secondary-fixed": "#93f2f2",
+                        "on-primary-container": "#799dd6",
+                        "on-error": "#ffffff",
+                        "on-background": "#1e1b17",
+                        "outline": "#737780",
+                        "inverse-on-surface": "#f7f0e8",
+                        "surface-container-high": "#eee7df",
+                        "on-surface-variant": "#43474f",
+                        "on-tertiary-container": "#5ead5c",
+                        "surface-bright": "#fff8f1"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "12px",
+                        "2xl": "24px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "xxl": "48px",
+                        "base": "8px",
+                        "xs": "4px",
+                        "margin-desktop": "40px",
+                        "xl": "32px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "lg": "24px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "label-xs": ["Public Sans"],
+                        "headline-md": ["Public Sans"],
+                        "display-lg": ["Public Sans"],
+                        "title-sm": ["Public Sans"],
+                        "body-md": ["Public Sans"],
+                        "caption-sm": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .ai-inner-stroke {
+            box-shadow: inset 0 0 0 1px rgba(0, 110, 110, 0.2);
+        }
+        .tonal-layer-1 {
+            background-color: #ffffff;
+            box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.1);
+        }
+        body {
+            background-color: #FCFAF7;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #D1CDC7;
+            border-radius: 10px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-on-surface custom-scrollbar">
+<!-- Top Navigation Header -->
+<header class="w-full top-0 sticky z-50 bg-surface dark:bg-on-surface shadow-sm flex items-center justify-between px-margin-mobile py-sm h-16 transition-colors duration-200">
+<div class="flex items-center gap-md">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-surface text-[20px]" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+<h1 class="text-title-sm font-title-sm font-bold text-primary dark:text-primary-fixed">YRecall</h1>
+</div>
+<div class="flex items-center gap-md">
+<button class="material-symbols-outlined p-2 rounded-full hover:bg-surface-variant dark:hover:bg-inverse-surface transition-colors duration-200 text-on-surface-variant dark:text-outline-variant">search</button>
+<div class="w-8 h-8 rounded-full border border-outline-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a person with a serene expression, soft studio lighting, minimalist beige background, high-end editorial photography style consistent with a premium AI operating system aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBa2X7YhItNPl9xstZ4saKLMg4jUqW7iBfPTCA2NxXmTC_n7OJBsVlsiTe5sRgrRck0viQNASfwiJp7T5m_Fds2oFuk63K3MJb7p3hlg--CqGYZhpQ740B0DouwJGDpandsjby1lthw1SYSzh6mKvfFyXtCdp_aJc8C45HsbrW69FMqCu1o3r0LuNUEd07TxRvboJnFWWV2sTqRu7ym32WXYFV-LJqc6Fydj302PuP3cKfxWMPVURUuHYmNkubQ7NWgVeNDp5qQl38"/>
+</div>
+</div>
+</header>
+<main class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-desktop py-xl">
+<!-- Hero Search Section -->
+<section class="mb-xxl text-center max-w-2xl mx-auto">
+<h2 class="font-headline-md text-headline-md text-primary mb-md">How can we help you?</h2>
+<div class="relative mt-lg group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full h-14 pl-12 pr-4 bg-surface rounded-xl border border-[#D1CDC7] focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-300 shadow-sm" placeholder="Search tutorials, FAQs, or features..." type="text"/>
+</div>
+<div class="flex flex-wrap justify-center gap-sm mt-md">
+<span class="font-label-xs text-label-xs bg-secondary-container/20 text-on-secondary-container px-3 py-1 rounded-full border border-secondary-container/30">Knowledge Graph</span>
+<span class="font-label-xs text-label-xs bg-secondary-container/20 text-on-secondary-container px-3 py-1 rounded-full border border-secondary-container/30">Privacy Mode</span>
+<span class="font-label-xs text-label-xs bg-secondary-container/20 text-on-secondary-container px-3 py-1 rounded-full border border-secondary-container/30">Exporting Data</span>
+</div>
+</section>
+<!-- Main Content Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-lg">
+<!-- Left Column: Tutorials & FAQs -->
+<div class="md:col-span-8 space-y-lg">
+<!-- Tutorials Bento -->
+<div class="tonal-layer-1 rounded-2xl p-lg ai-inner-stroke">
+<div class="flex items-center justify-between mb-lg">
+<h3 class="font-title-sm text-title-sm text-primary">Mastering YRecall</h3>
+<a class="text-on-secondary-container font-label-xs text-label-xs flex items-center gap-xs" href="#">View all <span class="material-symbols-outlined text-[16px]">arrow_forward</span></a>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
+<!-- Tutorial Card 1 -->
+<div class="group cursor-pointer">
+<div class="aspect-video rounded-xl overflow-hidden mb-sm relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A clean digital interface showing a knowledge graph visualization, with floating nodes and glowing connections in shades of deep teal and soft white, minimalist and intellectual atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAu7N7NWtmDb1ccyGvVukzZ8L--SgweWfhzM7hVo5Ino54-7Iwa62M4q9Mg07xcfXPhqBrq7BkV0t0EGV6KQJ9TP5nWRHmnQWuhOnCefMPsNWgTFxHgPqLHVlEGbWRhoZViTphO4pJbPSqj8WZDUGsHKT3KV3pDbZNsyLddmC2rohoq1_fydcLcJuD57adeuWmtQwvF10mJjqvO2ltFGFTNCIvgM9siO6OH24PvW5diuY2mu7MzptuKrrkdArRFwHmIWVAaGppgr0"/>
+<div class="absolute inset-0 bg-primary/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-surface text-[48px]" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+</div>
+</div>
+<h4 class="font-body-md font-semibold text-primary">Understanding your Knowledge Graph</h4>
+<p class="font-caption-sm text-caption-sm text-outline">4 min • Beginner</p>
+</div>
+<!-- Tutorial Card 2 -->
+<div class="group cursor-pointer">
+<div class="aspect-video rounded-xl overflow-hidden mb-sm relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A minimalist workspace with a single smartphone displaying a notification, soft natural lighting through a window, serene and productive mood with warm neutral tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuS3akgUpTQYcg8unwO23a16NObg6iXER6KgA8L5QErCscFstTN2Ls4KGxcEx81fUZHc3JFexaMgSKiGLnKi4GGCw9vqNaTyXahMqO-sUeoaewFjjbP01ZsJIRcf2IOuc7A4g0QAIEjl9tfljj3ABZ8O8NimcQT8UP0hDkG-gbBfj8W5O6szUSWz8Jwy7MEBDc71qWUdNq1Ccv1wRfsrWRSEDAj84x6OR2MWAmEUOaYpKjfNZTlQgcI9BbFU4X7BMuQeIBtZ6YXAc"/>
+<div class="absolute inset-0 bg-primary/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-surface text-[48px]" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+</div>
+</div>
+<h4 class="font-body-md font-semibold text-primary">Setting up Proactive Notifications</h4>
+<p class="font-caption-sm text-caption-sm text-outline">6 min • Intermediate</p>
+</div>
+</div>
+</div>
+<!-- FAQs Accordion -->
+<div class="tonal-layer-1 rounded-2xl p-lg">
+<h3 class="font-title-sm text-title-sm text-primary mb-lg">Frequently Asked Questions</h3>
+<div class="space-y-sm">
+<!-- FAQ Item -->
+<div class="border-b border-surface-variant pb-sm">
+<button class="w-full flex justify-between items-center py-sm text-left hover:text-on-secondary-container transition-colors" onclick="toggleFaq(this)">
+<span class="font-body-md font-medium">How secure is my personal recall data?</span>
+<span class="material-symbols-outlined transition-transform duration-300">expand_more</span>
+</button>
+<div class="hidden pt-xs pb-sm text-on-surface-variant font-body-md animate-fade-in">
+                                We use end-to-end encryption for all synced data. Your 'Mind' is stored locally by default, only syncing to our secure nodes if you explicitly enable Proactive AI services.
+                            </div>
+</div>
+<div class="border-b border-surface-variant pb-sm">
+<button class="w-full flex justify-between items-center py-sm text-left hover:text-on-secondary-container transition-colors" onclick="toggleFaq(this)">
+<span class="font-body-md font-medium">Can I export my Knowledge Graph to other apps?</span>
+<span class="material-symbols-outlined transition-transform duration-300">expand_more</span>
+</button>
+<div class="hidden pt-xs pb-sm text-on-surface-variant font-body-md">
+                                Yes, YRecall supports standard JSON and Markdown exports. Visit Settings &gt; Data Privacy to initiate a full archive export at any time.
+                            </div>
+</div>
+<div class="border-b border-surface-variant pb-sm">
+<button class="w-full flex justify-between items-center py-sm text-left hover:text-on-secondary-container transition-colors" onclick="toggleFaq(this)">
+<span class="font-body-md font-medium">What is the difference between Timeline and History?</span>
+<span class="material-symbols-outlined transition-transform duration-300">expand_more</span>
+</button>
+<div class="hidden pt-xs pb-sm text-on-surface-variant font-body-md">
+                                History is a raw log of inputs, while Timeline uses AI to synthesize events into meaningful contexts and narratives about your daily life.
+                            </div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Contact & Bug Report -->
+<div class="md:col-span-4 space-y-lg">
+<!-- Contact Support -->
+<div class="tonal-layer-1 rounded-2xl p-lg bg-primary text-surface">
+<h3 class="font-title-sm text-title-sm mb-md">Need Human Help?</h3>
+<p class="font-body-md opacity-80 mb-lg">Our support team is available 24/7 for Enterprise users and 9-5 for Personal users.</p>
+<div class="space-y-md">
+<button class="w-full h-14 bg-surface text-primary rounded-xl font-body-md font-semibold flex items-center justify-center gap-sm hover:bg-secondary-fixed transition-colors active:scale-95">
+<span class="material-symbols-outlined">chat_bubble</span>
+                            Start Live Chat
+                        </button>
+<button class="w-full h-14 border border-surface/30 text-surface rounded-xl font-body-md font-semibold flex items-center justify-center gap-sm hover:bg-surface/10 transition-colors">
+<span class="material-symbols-outlined">mail</span>
+                            Email Support
+                        </button>
+</div>
+</div>
+<!-- Report a Bug -->
+<div class="tonal-layer-1 rounded-2xl p-lg ai-inner-stroke">
+<div class="flex items-center gap-sm mb-md">
+<span class="material-symbols-outlined text-error">bug_report</span>
+<h3 class="font-title-sm text-title-sm text-primary">Report a Bug</h3>
+</div>
+<form class="space-y-md">
+<div>
+<label class="font-label-xs text-label-xs text-outline block mb-xs">Issue Category</label>
+<select class="w-full h-12 bg-surface border border-[#D1CDC7] rounded-lg px-3 font-body-md focus:border-primary focus:ring-0 outline-none">
+<option>Interface Glitch</option>
+<option>Sync Error</option>
+<option>AI Hallucination</option>
+<option>Performance Issue</option>
+</select>
+</div>
+<div>
+<label class="font-label-xs text-label-xs text-outline block mb-xs">Description</label>
+<textarea class="w-full h-24 bg-surface border border-[#D1CDC7] rounded-lg p-3 font-body-md focus:border-primary focus:ring-0 outline-none resize-none" placeholder="What happened?"></textarea>
+</div>
+<button class="w-full h-12 bg-primary-container text-on-primary-container rounded-lg font-body-md font-semibold hover:opacity-90 transition-opacity" type="button">
+                            Submit Report
+                        </button>
+</form>
+</div>
+<!-- Community Help -->
+<div class="tonal-layer-1 rounded-2xl p-lg flex items-center justify-between group cursor-pointer hover:bg-surface-container-high transition-colors">
+<div>
+<h4 class="font-body-md font-semibold text-primary">Community Forum</h4>
+<p class="font-caption-sm text-outline">Learn from other YRecall users</p>
+</div>
+<span class="material-symbols-outlined text-on-secondary-container group-hover:translate-x-1 transition-transform">forum</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 h-[80px] bg-surface dark:bg-on-surface border-t border-outline-variant dark:border-inverse-surface shadow-lg flex justify-around items-center px-margin-mobile">
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant transition-transform active:scale-90">
+<span class="material-symbols-outlined text-[24px]">home</span>
+<span class="font-label-xs text-label-xs">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant transition-transform active:scale-90">
+<span class="material-symbols-outlined text-[24px]">history_edu</span>
+<span class="font-label-xs text-label-xs">Recall</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant transition-transform active:scale-90">
+<span class="material-symbols-outlined text-[24px]">lightbulb</span>
+<span class="font-label-xs text-label-xs">Insights</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container dark:bg-secondary dark:text-on-secondary rounded-full px-4 py-1 transition-transform scale-95 active:scale-90">
+<span class="material-symbols-outlined text-[24px]">help</span>
+<span class="font-label-xs text-label-xs">Support</span>
+</div>
+</nav>
+<!-- Floating Feedback Action (Only on Desktop) -->
+<button class="hidden md:flex fixed bottom-8 right-8 w-14 h-14 bg-secondary-container text-on-secondary-container rounded-full shadow-xl items-center justify-center hover:scale-110 transition-transform z-40 group">
+<span class="material-symbols-outlined">feedback</span>
+<span class="absolute right-16 bg-primary text-surface font-label-xs px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md">Give Feedback</span>
+</button>
+<script>
+        function toggleFaq(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('.material-symbols-outlined');
+            
+            // Toggle visibility
+            const isHidden = content.classList.contains('hidden');
+            
+            // Close all others (optional for accordion style)
+            document.querySelectorAll('.animate-fade-in').forEach(el => {
+                if(el !== content) {
+                    el.classList.add('hidden');
+                    el.previousElementSibling.querySelector('.material-symbols-outlined').style.transform = 'rotate(0deg)';
+                }
+            });
+
+            if(isHidden) {
+                content.classList.remove('hidden');
+                content.classList.add('animate-fade-in');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                content.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Add small fade-in animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .animate-fade-in {
+                animation: fadeIn 0.3s ease-out forwards;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body></html>

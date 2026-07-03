@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YRecall | Knowledge Graph Hub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline-variant": "#c3c6d1",
+                    "surface-tint": "#3a5f94",
+                    "secondary-fixed-dim": "#76d6d5",
+                    "inverse-primary": "#a7c8ff",
+                    "error-container": "#ffdad6",
+                    "error": "#ba1a1a",
+                    "secondary-fixed": "#93f2f2",
+                    "tertiary-fixed-dim": "#88d982",
+                    "on-surface": "#1e1b17",
+                    "surface-container-highest": "#e8e1da",
+                    "on-surface-variant": "#43474f",
+                    "on-secondary-fixed-variant": "#004f4f",
+                    "primary": "#001e40",
+                    "on-primary-fixed-variant": "#1f477b",
+                    "surface-container-low": "#faf3eb",
+                    "outline": "#737780",
+                    "secondary-container": "#90efef",
+                    "primary-fixed-dim": "#a7c8ff",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "surface": "#fff8f1",
+                    "on-tertiary-fixed": "#002204",
+                    "surface-variant": "#e8e1da",
+                    "on-primary-container": "#799dd6",
+                    "on-secondary-fixed": "#002020",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-high": "#eee7df",
+                    "surface-container": "#f4ede5",
+                    "on-background": "#1e1b17",
+                    "on-primary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "secondary": "#006a6a",
+                    "tertiary-container": "#003d0b",
+                    "primary-container": "#003366",
+                    "on-secondary-container": "#006e6e",
+                    "tertiary": "#002504",
+                    "on-tertiary-fixed-variant": "#005312",
+                    "on-error": "#ffffff",
+                    "inverse-on-surface": "#f7f0e8",
+                    "inverse-surface": "#33302b",
+                    "tertiary-fixed": "#a3f69c",
+                    "primary-fixed": "#d5e3ff",
+                    "on-tertiary-container": "#5ead5c",
+                    "surface-bright": "#fff8f1",
+                    "surface-dim": "#e0d9d1",
+                    "on-primary-fixed": "#001b3c",
+                    "background": "#fff8f1"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "xl": "32px",
+                    "gutter": "16px",
+                    "sm": "8px",
+                    "xs": "4px",
+                    "lg": "24px",
+                    "margin-mobile": "20px",
+                    "md": "16px",
+                    "margin-desktop": "40px",
+                    "xxl": "48px"
+            },
+            "fontFamily": {
+                    "title-sm": ["Public Sans"],
+                    "display-lg": ["Public Sans"],
+                    "body-md": ["Public Sans"],
+                    "headline-md": ["Public Sans"],
+                    "caption-sm": ["Public Sans"],
+                    "display-lg-mobile": ["Public Sans"],
+                    "label-xs": ["Public Sans"]
+            },
+            "fontSize": {
+                    "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .ai-inner-stroke {
+            position: relative;
+        }
+        .ai-inner-stroke::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, #006a6a, transparent 50%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background min-h-screen font-body-md overflow-x-hidden">
+<!-- Top Navigation Anchor (Shared Component: TopAppBar) -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md h-20 flex justify-between items-center px-margin-mobile md:px-margin-desktop">
+<div class="flex items-center gap-4">
+<span class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary tracking-tight">YRecall</span>
+</div>
+<div class="flex items-center gap-6">
+<button class="hidden md:flex items-center gap-2 text-on-surface-variant hover:bg-surface-container-high transition-colors px-4 py-2 rounded-full active:scale-95">
+<span class="material-symbols-outlined">search</span>
+<span class="font-title-sm text-sm">Explore Hub</span>
+</button>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant active:scale-95">notifications</button>
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden active:scale-95 transition-transform cursor-pointer">
+<img class="w-full h-full object-cover" data-alt="A professional studio portrait of a woman with a confident expression, soft natural lighting, minimalist aesthetic, using a soft palette of neutral tones and deep blue accents to match the high-end digital operating system theme." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBu-RodgEeAvPv-kjY_pTwZHMA4OPKo5Gzeru5nR5OeH7e97kQpgk1WOm8q3opNa-k-PKg5-VN4ygHlRt6qU-CBpgw9VAaw1MRNtciuSy3-hZmHAx09Ax6gE7PmHBU2tWLslfpB38csV7DblpUh-reCadvVEYr8tBX_jV1i6XH4XXfCLWppToVk-vb9WJvEfh7my6sGiEYPeW-QUHMwa2ETPg4-9PEyOX3Blhn-vtTRLGrpSahqtyCSPkjznrieOF0OS6AUamWlEj0"/>
+</div>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-32 px-margin-mobile md:px-margin-desktop max-w-[1440px] mx-auto">
+<!-- Search & Header -->
+<section class="mb-xl animate-in fade-in slide-in-from-bottom-4 duration-700">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h1 class="font-headline-md text-headline-md-mobile md:text-headline-md text-primary mb-2">Digital Brain</h1>
+<p class="text-on-surface-variant max-w-xl">Visualize the neural network of your memories, connections, and projects. Your digital self, mapped in real-time.</p>
+</div>
+<div class="relative w-full md:w-96 group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full h-14 pl-12 pr-4 bg-white border border-[#D1CDC7] rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-outline-variant" placeholder="Search your knowledge graph..." type="text"/>
+</div>
+</div>
+</section>
+<!-- Relationship Map / Bento Grid -->
+<section class="mb-xxl">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Main Visual Map (Interactive Placeholder) -->
+<div class="md:col-span-8 h-[400px] bg-white rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.05)] ai-inner-stroke relative overflow-hidden group">
+<div class="absolute inset-0 p-lg flex flex-col justify-between z-10 pointer-events-none">
+<span class="px-4 py-1.5 bg-secondary/10 text-secondary rounded-full font-label-xs self-start backdrop-blur-sm">Live Visualization</span>
+<div class="flex flex-col">
+<span class="font-headline-md text-primary">Connection Flow</span>
+<span class="text-on-surface-variant">Active nodes based on your morning workflow.</span>
+</div>
+</div>
+<!-- Stylized Graph Animation Placeholder -->
+
+<div class="absolute inset-0 bg-gradient-to-t from-white/80 via-transparent to-transparent"></div>
+<!-- Floating Nodes Illustration -->
+<div class="absolute inset-0 pointer-events-none">
+<div class="absolute top-1/4 left-1/3 w-3 h-3 bg-secondary rounded-full shadow-[0_0_15px_rgba(0,106,106,0.5)] animate-pulse"></div>
+<div class="absolute bottom-1/3 right-1/4 w-2 h-2 bg-primary rounded-full shadow-[0_0_10px_rgba(0,30,64,0.3)] animate-pulse" style="animation-delay: 1s"></div>
+<div class="absolute top-1/2 right-1/2 w-4 h-4 bg-secondary-fixed-dim rounded-full shadow-[0_0_20px_rgba(118,214,213,0.4)] animate-pulse" style="animation-delay: 2s"></div>
+</div>
+</div>
+<!-- Categories Quick Access -->
+<div class="md:col-span-4 grid grid-cols-2 gap-4">
+<!-- Category: People -->
+<div class="bg-white p-lg rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:bg-surface-container-low transition-colors cursor-pointer group active:scale-95">
+<div class="flex flex-col h-full justify-between">
+<div class="flex justify-between items-start">
+<div class="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">person</span>
+</div>
+<span class="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-opacity">arrow_outward</span>
+</div>
+<div>
+<h3 class="font-title-sm text-primary">People</h3>
+<p class="text-caption-sm text-on-surface-variant">142 Entities</p>
+</div>
+</div>
+</div>
+<!-- Category: Places -->
+<div class="bg-white p-lg rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:bg-surface-container-low transition-colors cursor-pointer group active:scale-95">
+<div class="flex flex-col h-full justify-between">
+<div class="flex justify-between items-start">
+<div class="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">location_on</span>
+</div>
+<span class="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-opacity">arrow_outward</span>
+</div>
+<div>
+<h3 class="font-title-sm text-primary">Places</h3>
+<p class="text-caption-sm text-on-surface-variant">28 Locations</p>
+</div>
+</div>
+</div>
+<!-- Category: Projects -->
+<div class="bg-white p-lg rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:bg-surface-container-low transition-colors cursor-pointer group active:scale-95">
+<div class="flex flex-col h-full justify-between">
+<div class="flex justify-between items-start">
+<div class="w-10 h-10 rounded-xl bg-tertiary-fixed-dim/20 flex items-center justify-center text-on-tertiary-fixed-variant">
+<span class="material-symbols-outlined">folder</span>
+</div>
+<span class="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-opacity">arrow_outward</span>
+</div>
+<div>
+<h3 class="font-title-sm text-primary">Projects</h3>
+<p class="text-caption-sm text-on-surface-variant">12 Active</p>
+</div>
+</div>
+</div>
+<!-- Category: Companies -->
+<div class="bg-white p-lg rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:bg-surface-container-low transition-colors cursor-pointer group active:scale-95">
+<div class="flex flex-col h-full justify-between">
+<div class="flex justify-between items-start">
+<div class="w-10 h-10 rounded-xl bg-primary-container/10 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined">corporate_fare</span>
+</div>
+<span class="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-opacity">arrow_outward</span>
+</div>
+<div>
+<h3 class="font-title-sm text-primary">Companies</h3>
+<p class="text-caption-sm text-on-surface-variant">54 Partners</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Recent Connections -->
+<section>
+<div class="flex items-center justify-between mb-lg">
+<h2 class="font-title-sm text-primary">Recent Connections</h2>
+<button class="text-secondary font-label-xs uppercase tracking-widest hover:underline transition-all">View All History</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Connection Card 1 -->
+<div class="bg-white p-lg rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:translate-y-[-4px] transition-all duration-300 group">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-surface-container">
+<img class="w-full h-full object-cover" data-alt="A close-up portrait of a professional male designer in a creative studio, natural sunlight coming through a large window, modern clean environment, featuring deep blue and soft gray tones to match the corporate AI design system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAElTwkpunw7Ymlm-Pd7D9bAIDUqvPsQ9k_neD7lujOZ6PM8x7KMZ7-Y5diyFgB_clIg-ZOPwDvCpbHmINNxh2YONGuW9IOTgANSHAqfaJZiKpMVPl3nIZhUAP9tGZuHgIjsaI6tTyF17B4lolK_VLSozDjMf93qW3EhGYtSJfVLZZGFmWwI2hxNkWoMbap5QOycaeWb0TMFaTxd2NClpuLoWy1fBE04sOL-IPHQ1O-jePapiF_Lul2y61S8fHko3pum7ppAUg4_so"/>
+</div>
+<div>
+<h4 class="font-title-sm text-primary text-base">Marcus Thorne</h4>
+<span class="text-caption-sm text-on-surface-variant">Connected via 'Project Aurora'</span>
+</div>
+</div>
+<p class="text-body-md text-on-surface-variant mb-4 line-clamp-2">Mentioned in today's voice note about the quarterly design review and stakeholder alignment.</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container rounded-full text-caption-sm text-on-surface-variant">Project</span>
+<span class="px-3 py-1 bg-secondary/10 rounded-full text-caption-sm text-secondary">Person</span>
+</div>
+</div>
+<!-- Connection Card 2 -->
+<div class="bg-white p-lg rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:translate-y-[-4px] transition-all duration-300 group">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined">corporate_fare</span>
+</div>
+<div>
+<h4 class="font-title-sm text-primary text-base">Veloce Robotics</h4>
+<span class="text-caption-sm text-on-surface-variant">Update: New Funding Round</span>
+</div>
+</div>
+<p class="text-body-md text-on-surface-variant mb-4 line-clamp-2">Entity linked to 'Tech Trends' document from 2 days ago. AI identified cross-industry synergy.</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container rounded-full text-caption-sm text-on-surface-variant">Company</span>
+<span class="px-3 py-1 bg-primary/10 rounded-full text-caption-sm text-primary">Insight</span>
+</div>
+</div>
+<!-- Connection Card 3 -->
+<div class="bg-white p-lg rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:translate-y-[-4px] transition-all duration-300 group">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-surface-container">
+<div class="w-full h-full bg-cover bg-center" data-alt="A minimalist architectural photograph of a modern glass skyscraper in Tokyo at twilight, city lights beginning to glow, cool blue and teal lighting, very clean and sophisticated composition." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDc-pDZJO5LOxXo3MZtD9Upy7jGrQjMTN6a9aCyP5mQMHilRnY975B1LCndt6IyG0F7lzi9E8UOmdgOVjefgYJxkm64BIiNXQ6tnTvHb_Se3gSJ1KIO_hQ5xFtPuPTGt6TP7ckxqaHPacUN-1a6yEeygITcuWtPrcAUgBoqwlUXsC_kgweGM3sHSmWdTpR2TgxIOmC9Brq07dOjClT0XPEn7B6jtmzMtJvwK9U-a_aPiYF8k8ud_yoZV7hYLHol6f6AXG0S-WNeOmE')"></div>
+</div>
+<div>
+<h4 class="font-title-sm text-primary text-base">Tokyo Office</h4>
+<span class="text-caption-sm text-on-surface-variant">Location: Minato City</span>
+</div>
+</div>
+<p class="text-body-md text-on-surface-variant mb-4 line-clamp-2">Associated with 'International Strategy' and the 'October 2024 Travel' memory set.</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container rounded-full text-caption-sm text-on-surface-variant">Place</span>
+<span class="px-3 py-1 bg-secondary/10 rounded-full text-caption-sm text-secondary">Travel</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Navigation Shell (Shared Component: BottomNavBar) -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface dark:bg-surface-container border-t border-outline-variant/30 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] rounded-t-xl h-20 flex justify-around items-center px-2 pb-safe">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1.5 hover:bg-surface-container-highest rounded-full transition-all active:scale-90" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-xs text-label-xs">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1.5 hover:bg-surface-container-highest rounded-full transition-all active:scale-90" href="#">
+<span class="material-symbols-outlined">chat_spark</span>
+<span class="font-label-xs text-label-xs">Ask</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1.5 hover:bg-surface-container-highest rounded-full transition-all active:scale-90" href="#">
+<span class="material-symbols-outlined text-4xl">add_circle</span>
+<span class="sr-only">Capture</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1.5 hover:bg-surface-container-highest rounded-full transition-all active:scale-90" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-xs text-label-xs">Timeline</span>
+</a>
+<!-- Active Tab: Profile (Knowledge Graph sits here) -->
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1.5 transition-all active:scale-90" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-xs text-label-xs">Profile</span>
+</a>
+</nav>
+<!-- Micro-interaction Scripts -->
+<script>
+        // Simple hover effect for graph nodes simulation
+        document.querySelectorAll('.cursor-pointer').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                // Potential to trigger shader changes if exposed
+            });
+        });
+
+        // Search bar focus effect
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('scale-[1.01]');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('scale-[1.01]');
+        });
+    </script>
+</body></html>

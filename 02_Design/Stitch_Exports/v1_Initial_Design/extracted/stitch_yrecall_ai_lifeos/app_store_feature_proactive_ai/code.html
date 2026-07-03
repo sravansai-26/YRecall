@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YRecall - Think Forward</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=Hanken+Grotesk:wght@400;500;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#bec6e0",
+                    "surface-tint": "#bec6e0",
+                    "on-tertiary-container": "#85807a",
+                    "surface-container-highest": "#353436",
+                    "error-container": "#93000a",
+                    "secondary": "#adc6ff",
+                    "inverse-surface": "#e4e2e4",
+                    "on-secondary-container": "#e6ecff",
+                    "primary": "#bec6e0",
+                    "surface-container": "#1f1f21",
+                    "surface-bright": "#39393b",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "on-surface": "#e4e2e4",
+                    "outline-variant": "#45464d",
+                    "tertiary-fixed": "#e8e1db",
+                    "background": "#131315",
+                    "on-primary-fixed-variant": "#3f465c",
+                    "on-surface-variant": "#c6c6cd",
+                    "surface-container-low": "#1b1b1d",
+                    "on-background": "#e4e2e4",
+                    "secondary-fixed": "#d8e2ff",
+                    "surface": "#131315",
+                    "on-primary": "#283044",
+                    "error": "#ffb4ab",
+                    "secondary-container": "#0566d9",
+                    "inverse-on-surface": "#303032",
+                    "on-secondary-fixed-variant": "#004395",
+                    "tertiary-fixed-dim": "#cbc5bf",
+                    "tertiary": "#cbc5bf",
+                    "primary-container": "#0f172a",
+                    "outline": "#909097",
+                    "surface-dim": "#131315",
+                    "on-primary-fixed": "#131b2e",
+                    "on-secondary-fixed": "#001a42",
+                    "on-error": "#690005",
+                    "on-secondary": "#002e6a",
+                    "on-primary-container": "#798098",
+                    "primary-fixed": "#dae2fd",
+                    "surface-variant": "#353436",
+                    "inverse-primary": "#565e74",
+                    "surface-container-high": "#2a2a2b",
+                    "surface-container-lowest": "#0e0e10",
+                    "on-tertiary-fixed-variant": "#4a4641",
+                    "tertiary-container": "#191713",
+                    "on-error-container": "#ffdad6",
+                    "on-tertiary-fixed": "#1e1b17",
+                    "on-tertiary": "#33302c"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "section-gap": "128px",
+                    "unit": "8px",
+                    "margin-mobile": "20px",
+                    "gutter": "24px",
+                    "margin-desktop": "64px",
+                    "container-max": "1200px"
+            },
+            "fontFamily": {
+                    "display-lg-mobile": ["Playfair Display"],
+                    "body-sm": ["Hanken Grotesk"],
+                    "label-caps": ["JetBrains Mono"],
+                    "headline-md": ["Playfair Display"],
+                    "body-lg": ["Hanken Grotesk"],
+                    "display-lg": ["Playfair Display"]
+            },
+            "fontSize": {
+                    "display-lg-mobile": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                    "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #131315;
+            color: #e4e2e4;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-panel {
+            background: rgba(19, 19, 21, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(232, 225, 219, 0.1);
+        }
+        .electric-glow {
+            box-shadow: 0 0 80px rgba(5, 102, 217, 0.15);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #bec6e0 0%, #adc6ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .perspective-mockup {
+            perspective: 1200px;
+        }
+        .device-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotateX(2deg); }
+            50% { transform: translateY(-20px) rotateX(0deg); }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen">
+<!-- TopAppBar from JSON -->
+<header class="fixed top-0 w-full bg-background/80 dark:bg-background/80 backdrop-blur-xl border-b border-on-surface/10 z-50 flex items-center justify-between px-margin-mobile h-16 w-full">
+<div class="flex items-center gap-3 cursor-pointer active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-primary" data-icon="memory">memory</span>
+<h1 class="font-display-lg-mobile text-display-lg-mobile tracking-tighter text-on-surface">YRecall</h1>
+</div>
+<div class="hidden md:flex gap-8">
+<span class="font-label-caps text-label-caps text-primary hover:opacity-80 transition-opacity cursor-pointer">Graph</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant hover:opacity-80 transition-opacity cursor-pointer">Timeline</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant hover:opacity-80 transition-opacity cursor-pointer">AI</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant hover:opacity-80 transition-opacity cursor-pointer">Vault</span>
+</div>
+<div class="md:hidden">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="menu">menu</span>
+</div>
+</header>
+<main class="flex-grow pt-24 pb-32 relative">
+<!-- Background Atmospheric Element -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[800px] pointer-events-none overflow-hidden opacity-30">
+
+</div>
+<div class="container mx-auto px-margin-mobile relative z-10 text-center">
+<!-- Header Group -->
+<div class="mb-12 space-y-4">
+<span class="font-label-caps text-label-caps text-secondary-container px-4 py-1 rounded-full border border-secondary-container/30 uppercase tracking-[0.2em] bg-secondary-container/5">
+                    Proactive AI
+                </span>
+<h2 class="font-display-lg text-display-lg text-on-surface mt-6 mb-2">Think Forward.</h2>
+<p class="font-headline-md text-headline-md-mobile text-on-surface-variant max-w-2xl mx-auto">
+                    Your AI predicts what you <span class="text-gradient">need next.</span>
+</p>
+</div>
+<!-- Main Device Mockup Area -->
+<div class="relative max-w-lg mx-auto perspective-mockup mt-16">
+<!-- Glowing Aura -->
+<div class="absolute -inset-20 bg-secondary-container/10 blur-[100px] rounded-full pointer-events-none"></div>
+<!-- Floating Card Detail (Asymmetric Element) -->
+<div class="absolute -left-16 top-1/4 glass-panel p-4 rounded-xl z-20 hidden lg:block transform -rotate-12 electric-glow">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-secondary" data-icon="flight_takeoff">flight_takeoff</span>
+<p class="font-label-caps text-[10px] text-on-tertiary-container">TRAVEL RECOVERY</p>
+</div>
+<p class="font-body-sm text-on-surface text-left">Rescheduling LAX Flight...</p>
+</div>
+<div class="absolute -right-20 bottom-1/4 glass-panel p-4 rounded-xl z-20 hidden lg:block transform rotate-6 electric-glow">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-error" data-icon="favorite">favorite</span>
+<p class="font-label-caps text-[10px] text-on-tertiary-container">HEALTH OPTIMIZATION</p>
+</div>
+<p class="font-body-sm text-on-surface text-left">Adding Magnesium to cart.</p>
+</div>
+<!-- Central Phone Mockup -->
+<div class="relative device-float mx-auto w-[280px] h-[580px] bg-[#000] rounded-[3rem] border-4 border-surface-container-highest shadow-2xl overflow-hidden">
+<!-- Notch -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-[#000] rounded-b-2xl z-40"></div>
+<!-- Screen Content Placeholder -->
+<img alt="Proactive Execution Hub showing automated health and travel workflows" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrHppa9Q53qa29WC5QjKYSx4ebkzOhyZvmR8rcGD7jhyaOiqUsUqaanj-g69uWu0VioXuEpOBwpCrE3wdQ2aMdj79pFOYWDfESlNtud-EzV0YTMk1A1bL4PbPbqcMl8BgyPajmMSojcK4tyxzScp2QK0LWxqDGM_8DkxMcKf7xdlJAVZFlJtLpZztjFKZZNOiUaqqQf1PZBCvQKpB4iczQk55Jhjw8-CoY8oBL-PhkwXIFLRq0JkKjzd1lYUXdssdiWzH77FNkJ4c"/>
+</div>
+</div>
+<!-- Footer Caption -->
+<div class="mt-20 max-w-xl mx-auto">
+<p class="font-body-lg text-body-lg text-on-surface-variant italic">
+                    "From travel recovery to health optimization, it acts for you."
+                </p>
+<div class="mt-8 flex justify-center gap-4">
+<button class="bg-secondary-container text-on-secondary-container px-8 py-4 rounded-full font-label-caps text-label-caps flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="bolt">bolt</span>
+                        ENABLE AUTOPILOT
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar from JSON -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-surface-container-low/70 dark:bg-surface-container-low/70 backdrop-blur-2xl border-t border-on-surface/5 rounded-t-xl shadow-[0_-8px_32px_rgba(5,102,217,0.15)] md:hidden">
+<div class="flex flex-col items-center justify-center text-on-surface-variant tap-highlight-transparent active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+<span class="font-label-caps text-label-caps">Graph</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant tap-highlight-transparent active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-label-caps text-label-caps">Timeline</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 tap-highlight-transparent active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="psychology">psychology</span>
+<span class="font-label-caps text-label-caps">AI</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant tap-highlight-transparent active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="shield">shield</span>
+<span class="font-label-caps text-label-caps">Vault</span>
+</div>
+</nav>
+<!-- Micro-interaction Script -->
+<script>
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            const mockup = document.querySelector('.perspective-mockup');
+            if (mockup) {
+                const moveX = (x - 0.5) * 10;
+                const moveY = (y - 0.5) * -10;
+                mockup.style.transform = `rotateY(${moveX}deg) rotateX(${moveY}deg)`;
+            }
+        });
+    </script>
+</body></html>

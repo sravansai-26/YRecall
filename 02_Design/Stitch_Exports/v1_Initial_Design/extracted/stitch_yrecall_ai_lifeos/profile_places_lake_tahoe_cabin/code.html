@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YRecall | Lake Tahoe Cabin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline-variant": "#c3c6d1",
+                    "surface-tint": "#3a5f94",
+                    "secondary-fixed-dim": "#76d6d5",
+                    "inverse-primary": "#a7c8ff",
+                    "error-container": "#ffdad6",
+                    "error": "#ba1a1a",
+                    "secondary-fixed": "#93f2f2",
+                    "tertiary-fixed-dim": "#88d982",
+                    "on-surface": "#1e1b17",
+                    "surface-container-highest": "#e8e1da",
+                    "on-surface-variant": "#43474f",
+                    "on-secondary-fixed-variant": "#004f4f",
+                    "primary": "#001e40",
+                    "on-primary-fixed-variant": "#1f477b",
+                    "surface-container-low": "#faf3eb",
+                    "outline": "#737780",
+                    "secondary-container": "#90efef",
+                    "primary-fixed-dim": "#a7c8ff",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "surface": "#fff8f1",
+                    "on-tertiary-fixed": "#002204",
+                    "surface-variant": "#e8e1da",
+                    "on-primary-container": "#799dd6",
+                    "on-secondary-fixed": "#002020",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-high": "#eee7df",
+                    "surface-container": "#f4ede5",
+                    "on-background": "#1e1b17",
+                    "on-primary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "secondary": "#006a6a",
+                    "tertiary-container": "#003d0b",
+                    "primary-container": "#003366",
+                    "on-secondary-container": "#006e6e",
+                    "tertiary": "#002504",
+                    "on-tertiary-fixed-variant": "#005312",
+                    "on-error": "#ffffff",
+                    "inverse-on-surface": "#f7f0e8",
+                    "inverse-surface": "#33302b",
+                    "tertiary-fixed": "#a3f69c",
+                    "primary-fixed": "#d5e3ff",
+                    "on-tertiary-container": "#5ead5c",
+                    "surface-bright": "#fff8f1",
+                    "surface-dim": "#e0d9d1",
+                    "on-primary-fixed": "#001b3c",
+                    "background": "#fff8f1"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "xl": "32px",
+                    "gutter": "16px",
+                    "sm": "8px",
+                    "xs": "4px",
+                    "lg": "24px",
+                    "margin-mobile": "20px",
+                    "md": "16px",
+                    "margin-desktop": "40px",
+                    "xxl": "48px"
+            },
+            "fontFamily": {
+                    "title-sm": ["Public Sans"],
+                    "display-lg": ["Public Sans"],
+                    "body-md": ["Public Sans"],
+                    "headline-md": ["Public Sans"],
+                    "caption-sm": ["Public Sans"],
+                    "display-lg-mobile": ["Public Sans"],
+                    "label-xs": ["Public Sans"]
+            },
+            "fontSize": {
+                    "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #FCFAF7;
+            font-family: 'Public Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e8e1da;
+            border-radius: 10px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-surface">
+<!-- Top Navigation -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md flex justify-between items-center px-margin-mobile md:px-margin-desktop h-20 w-full">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary p-2 hover:bg-surface-container-high rounded-full transition-colors active:scale-95">arrow_back</button>
+<span class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary dark:text-primary-fixed-dim tracking-tight">YRecall</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-surface-container-high rounded-full transition-colors">notifications</button>
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border border-outline-variant/30">
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+</div>
+</nav>
+<main class="pt-20 pb-32">
+<!-- Hero Header -->
+<header class="relative w-full h-[442px] md:h-[530px] overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 hover:scale-105" data-alt="A breathtaking landscape of Lake Tahoe with its crystal clear turquoise and deep blue waters surrounded by majestic snow-capped granite mountains. A cozy, high-end A-frame cabin sits nestled among towering emerald green pine trees in the foreground. The lighting is golden hour, casting a warm, serene glow over the entire scene, reflecting the calm, premium, and human-centric aesthetic of the design system." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCYgqzwnmuTEIfSiPeIKm3l9BXqwQrtXPxLylGd0sQV7RVboUZ-16QX612C5L_m3SFsOgWSZ4l0KImIFkYb0bRczOJUI72oLiL8Ng2pvtRmV7b5t5gRaR5675StTmsQeGg7PB45QLQv07WQkNeYH7L8dE8wHPcuSGS9ZcBXteB4Ynogym0m2Wu5NOEtu7eb8dwEVbmvuPhfvsKmNeHDSXmBgSsLs1SAsBJugitt3D_J0ytmt0iTn6G6ESJNC2XchMal2IZaej3u_So')">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+<div class="absolute bottom-0 left-0 right-0 p-margin-mobile md:p-margin-desktop text-white">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<span class="bg-secondary-container/90 text-on-secondary-container px-3 py-1 rounded-full font-label-xs text-label-xs uppercase tracking-widest">Retreat</span>
+<span class="text-white/80 font-body-md text-body-md">• California, USA</span>
+</div>
+<h1 class="font-headline-md text-headline-md-mobile md:text-headline-md font-bold drop-shadow-md">Lake Tahoe Cabin</h1>
+</div>
+</div>
+</header>
+<!-- Content Grid -->
+<div class="px-margin-mobile md:px-margin-desktop mt-xl grid grid-cols-1 md:grid-cols-12 gap-lg">
+<!-- Sidebar / Details (Left) -->
+<aside class="md:col-span-4 flex flex-col gap-lg">
+<!-- Location & Weather -->
+<section class="bg-white rounded-2xl p-lg shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-outline-variant/10">
+<h2 class="font-title-sm text-title-sm text-primary mb-md">Location</h2>
+<div class="rounded-xl overflow-hidden mb-md aspect-video relative">
+<div class="w-full h-full bg-surface-container" data-location="Lake Tahoe, California" style=""></div>
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<span class="material-symbols-outlined text-error text-4xl" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-md bg-surface-container-low rounded-xl">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary text-3xl">partly_cloudy_day</span>
+<div>
+<p class="font-body-md text-body-md text-on-surface">68°F</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">Partly Cloudy</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">Feels like 65°</p>
+<p class="font-caption-sm text-caption-sm text-secondary">Perfect for a hike</p>
+</div>
+</div>
+</section>
+<!-- Visits Timeline -->
+<section class="bg-white rounded-2xl p-lg shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-outline-variant/10">
+<div class="flex justify-between items-center mb-md">
+<h2 class="font-title-sm text-title-sm text-primary">Recent Visits</h2>
+<span class="font-label-xs text-label-xs text-primary font-bold">12 TOTAL</span>
+</div>
+<div class="space-y-4">
+<div class="flex items-start gap-md group cursor-pointer">
+<div class="mt-1 w-2 h-2 rounded-full bg-secondary ring-4 ring-secondary-container/30"></div>
+<div>
+<p class="font-body-md text-body-md font-medium text-on-surface group-hover:text-secondary transition-colors">Aug 14 - Aug 20, 2024</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant italic">"The lakeside sunset was unforgettable."</p>
+</div>
+</div>
+<div class="flex items-start gap-md group cursor-pointer">
+<div class="mt-1 w-2 h-2 rounded-full bg-outline-variant"></div>
+<div>
+<p class="font-body-md text-body-md font-medium text-on-surface">Dec 22 - Jan 2, 2024</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">Winter Holidays 2023</p>
+</div>
+</div>
+<div class="flex items-start gap-md group cursor-pointer">
+<div class="mt-1 w-2 h-2 rounded-full bg-outline-variant"></div>
+<div>
+<p class="font-body-md text-body-md font-medium text-on-surface">July 4 - July 8, 2023</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">Summer Kickoff</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Connected Entities -->
+<section class="bg-white rounded-2xl p-lg shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-outline-variant/10">
+<h2 class="font-title-sm text-title-sm text-primary mb-md">Shared With</h2>
+<div class="flex -space-x-3 mb-lg">
+<div class="w-12 h-12 rounded-full border-4 border-white bg-cover bg-center" data-alt="A portrait of a smiling young woman with warm brown eyes and soft lighting, representing a family member in a minimalist digital profile style." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAaiEkMabD7UsQu6sxNwBitH_fvZHBYYIIxiSXq_LH59I6z6bzxTYzTIDVxfxfeLgGHbC8yLgk_mKWgHmVCYIKZqs-NRxooVDYc4bJxCD_QYpDMylaX7LjQVWNwGMHohAqMw9jv_7Ch7C2VVxMT8gGkXh4LrM-AwB3tlHNC5mLCzYEZ_0Vr73dF7beNVoCMHNIPmOK6hKLEb1ntbbrS3ryF_RU19KHQzRHALu6b5GauZnUxe_rFbl0iyybOxp6K0xLqbKa-zUdl4y8')"></div>
+<div class="w-12 h-12 rounded-full border-4 border-white bg-cover bg-center" data-alt="A portrait of a cheerful man with a short beard and outdoor gear, looking friendly and relaxed in natural mountain lighting." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDyEwRea933TOW8nytN8eaFpk3z5cOm3GVVuMQa_Fc0Pwb4h1xyJcZ-2KbRLWDRwxAdB_AFZUeVC1OnQLW1iyxmUkRwtjuKVT4_RfFg4EUgXsH9s-3LfHHoX1FfObQ3IA9KzleRMm35W9aGN-bsBA9v2xTE_Hs3AfIapwFH3pw6CdW5TXEceeX3gHasayFuSyZtaKz_VOqyKvkho1FTaxfGDgOX-Xs4B_f_I1Juiz0cYKaH5YX4tA-o-GaGA6M-nit-Bh-w7GsWoCo')"></div>
+<div class="w-12 h-12 rounded-full border-4 border-white bg-cover bg-center" data-alt="A candid photo of a happy child laughing, with a soft blurred background of trees and sunlight." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAPjqxvo5Pq0J7ktn58zafpiPbXWukmYXQdqajHlKgQo_HNoiib4lQdhIhiMMSav45-lKlx81DF6JKEzQoBp3YFxYRjp7iLTMm5ha-VO1gfNtA3HL1kWIdEZWWwJ652itBrv9OnlSP4RYq4FNq1vPWdGu7_0cmtnHp5cVoRPiMslWBRtQVhKinH2QhPZxfZF1N04IINDPICx3V5H9NGSKEg7wK20EhaU07HqXsVjv8cteywxlOOuIaHwC7aixRbFisVQc9vc0axN7c')"></div>
+<div class="w-12 h-12 rounded-full border-4 border-white bg-surface-container-highest flex items-center justify-center text-on-surface-variant font-bold text-sm">+2</div>
+</div>
+<div class="p-md bg-primary-container/10 rounded-xl border border-primary-container/20">
+<p class="font-caption-sm text-caption-sm text-on-primary-container uppercase font-bold mb-1">Associated Trip</p>
+<p class="font-body-md text-body-md text-primary font-medium">Summer 2024 Roadtrip</p>
+</div>
+</section>
+</aside>
+<!-- Main Content (Right) -->
+<div class="md:col-span-8 flex flex-col gap-lg">
+<!-- Memories Bento Grid -->
+<section>
+<div class="flex justify-between items-end mb-md">
+<div>
+<h2 class="font-headline-md text-headline-md-mobile text-primary font-bold">Related Memories</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Photos and notes from your stays</p>
+</div>
+<button class="text-primary font-bold flex items-center gap-1 hover:underline">
+                            View All <span class="material-symbols-outlined text-sm">open_in_new</span>
+</button>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-md">
+<!-- Large Feature Card -->
+<div class="col-span-2 row-span-2 rounded-2xl overflow-hidden relative group shadow-lg">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="A warm, intimate photo of a family gathering around a crackling stone fireplace inside a rustic cabin. The lighting is low and cozy, primarily provided by the orange glow of the fire. High-quality digital photography style with soft focus on the background." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD0ekfZfLwyk32x8wIo2a46olgBP8b7qGsMdh5dQsQfoB86dgK0U4ILATQRbK8yxDTrJCdu-mrUyQfCyz-YXE8Heli-NpPICAzfqstD6zzg9wq2omh3QmULr2ICDMhOoXrgCDWIOgvZ4CL5aeX_3HSA5uAMFXk4AUosBETC29ORFdTjPKY1Zc1jPfbOjVQLX5i48MOYnwoGSITnYZ0Zaj4inKlZziTxoZwqKfSGFnOZrr6lAQRp-u4yHka85OLqK8f8JgY_k45rnCw')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-lg">
+<p class="text-white/80 font-caption-sm text-caption-sm">Last Night Celebration</p>
+<p class="text-white font-title-sm text-title-sm font-medium">Aug 19, 2024</p>
+</div>
+</div>
+<!-- Small Card -->
+<div class="rounded-2xl overflow-hidden relative aspect-square shadow-md hover:shadow-xl transition-shadow group">
+<div class="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform" data-alt="A macro shot of a local wildflower in Lake Tahoe, with vibrant purple petals and golden center, captured with shallow depth of field in soft morning light." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC_AadlecehVAyXLTIuHU-Jp1L8NZ0dj3QZP-Ns3TCugUwX5LTiifejsimNTuE5A5UR5azIRYOPOPzDnOqBEXnGReQLKTrrVXVFfzWmE4T1TqnASug0Ap78glHhJ6ykKmny-A7U1Ki9fWADLqKL5Hqcwo1m0c6Z7KiYRZe3sO_TEgRky9O7SrWOB4M-91ylQMq223o7KLEnYgQdM1C4-PCxUGdkdJ4L3orjmEiUrKNaawh4iQWmz6EhgKri3LlQpo3-JsEXTd6Bli8')"></div>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+</div>
+<!-- Quote/Note Card -->
+<div class="bg-secondary-fixed text-on-secondary-fixed p-lg rounded-2xl flex flex-col justify-between shadow-md">
+<span class="material-symbols-outlined text-secondary">format_quote</span>
+<p class="font-body-md text-body-md italic leading-relaxed">"The air here just feels different. Can we stay another week?"</p>
+<p class="font-caption-sm text-caption-sm font-bold mt-md opacity-80">— Sarah</p>
+</div>
+<!-- Wide Image -->
+<div class="col-span-2 md:col-span-1 rounded-2xl overflow-hidden relative h-48 md:h-auto shadow-md group">
+<div class="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform" data-alt="A professional aerial photo of a wooden pier stretching out into the deep blue water of Lake Tahoe at sunrise, with ripples in the water reflecting the pink and orange sky." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCCSVQXPPS3VSNZrgcOyYrVV3EFs3NJwFA1CkpbdNm6rxDla8Z7gRXViYnAQDLNZ2T05TjumjNCv1XtSrx3hUjAhRbEH9vuivzF-KCk7oozy1AijcxuCRuVZwC7PdkdvjSQVJgYtFBaMZCqaenHidYGF3HpZGR3wpqCxRqJKTGx8rnHQgZalYy9VTi-eIUQrj-D3uAuBj42dWYcAeSoB_m6J6fz8Lht_BNynceptGDPxCFYMNG5COM-MSyciXxg1lrJdVGgdekqyNM')"></div>
+</div>
+</div>
+</section>
+<!-- Favorite Spots Chips -->
+<section class="bg-surface-container rounded-3xl p-lg border border-outline-variant/20">
+<div class="flex items-center gap-md mb-lg">
+<div class="p-3 bg-white rounded-full text-secondary shadow-sm">
+<span class="material-symbols-outlined">stars</span>
+</div>
+<div>
+<h2 class="font-title-sm text-title-sm text-primary">Favorite Spots Mentioned</h2>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant italic">AI-curated from your notes and chat history</p>
+</div>
+</div>
+<div class="flex flex-wrap gap-sm">
+<div class="bg-white px-lg py-sm rounded-full border border-outline-variant/30 flex items-center gap-2 hover:bg-secondary-container transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-secondary text-lg">hiking</span>
+<span class="font-body-md text-body-md font-medium">Eagle Falls Trail</span>
+</div>
+<div class="bg-white px-lg py-sm rounded-full border border-outline-variant/30 flex items-center gap-2 hover:bg-secondary-container transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-secondary text-lg">restaurant</span>
+<span class="font-body-md text-body-md font-medium">The Beacon Grill</span>
+</div>
+<div class="bg-white px-lg py-sm rounded-full border border-outline-variant/30 flex items-center gap-2 hover:bg-secondary-container transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-secondary text-lg">sailing</span>
+<span class="font-body-md text-body-md font-medium">Emerald Bay Dock</span>
+</div>
+<div class="bg-white px-lg py-sm rounded-full border border-outline-variant/30 flex items-center gap-2 hover:bg-secondary-container transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-secondary text-lg">coffee</span>
+<span class="font-body-md text-body-md font-medium">Cuppa Tahoe</span>
+</div>
+</div>
+</section>
+<!-- AI Insight Card -->
+<section class="bg-gradient-to-br from-primary to-primary-container text-white rounded-3xl p-xl relative overflow-hidden shadow-xl">
+<div class="absolute -right-20 -top-20 w-64 h-64 bg-secondary/20 blur-3xl rounded-full"></div>
+<div class="relative z-10 flex flex-col md:flex-row gap-lg items-center">
+<div class="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-md">
+<span class="material-symbols-outlined text-secondary-fixed text-4xl">auto_awesome</span>
+</div>
+<div>
+<h3 class="font-title-sm text-title-sm mb-1 font-bold">Smart Recall</h3>
+<p class="font-body-md text-body-md opacity-90 leading-relaxed">You typically visit this location when you mention feeling "overwhelmed" in your journal. It's your top-rated sanctuary for mental clarity.</p>
+</div>
+<button class="md:ml-auto bg-white text-primary px-xl py-md rounded-full font-bold hover:bg-secondary-fixed transition-colors active:scale-95 whitespace-nowrap">
+                            Plan Next Visit
+                        </button>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface dark:bg-surface-container rounded-t-xl border-t border-outline-variant/30 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] flex justify-around items-center h-20 px-2 pb-safe w-full">
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1.5 hover:bg-surface-container-highest rounded-full transition-all active:scale-90 duration-300 ease-out cursor-pointer">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-xs text-label-xs">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1.5 hover:bg-surface-container-highest rounded-full transition-all active:scale-90 duration-300 ease-out cursor-pointer">
+<span class="material-symbols-outlined">chat_spark</span>
+<span class="font-label-xs text-label-xs">Ask</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1.5 hover:bg-surface-container-highest rounded-full transition-all active:scale-90 duration-300 ease-out cursor-pointer">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-label-xs text-label-xs">Capture</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1.5 shadow-sm active:scale-90 transition-all duration-300 ease-out cursor-pointer">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">history</span>
+<span class="font-label-xs text-label-xs font-bold">Timeline</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1.5 hover:bg-surface-container-highest rounded-full transition-all active:scale-90 duration-300 ease-out cursor-pointer">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-xs text-label-xs">Profile</span>
+</div>
+</nav>
+<script>
+        // Simple Micro-interaction for hover states
+        document.querySelectorAll('.group').forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                // Potential for adding JS driven animations if needed
+            });
+        });
+    </script>
+</body></html>

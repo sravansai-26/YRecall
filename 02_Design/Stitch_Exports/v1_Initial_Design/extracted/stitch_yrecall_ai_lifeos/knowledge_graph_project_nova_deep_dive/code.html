@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YRecall | Knowledge Graph Deep Dive</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .node-pulse {
+            animation: pulse 3s infinite ease-in-out;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+        .canvas-container {
+            mask-image: radial-gradient(circle, black 60%, transparent 100%);
+        }
+        body {
+            background-color: #FCFAF7;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#ffdad6",
+                        "surface": "#fff8f1",
+                        "primary": "#001e40",
+                        "surface-dim": "#e0d9d1",
+                        "inverse-primary": "#a7c8ff",
+                        "on-secondary-fixed": "#002020",
+                        "inverse-on-surface": "#f7f0e8",
+                        "on-surface": "#1e1b17",
+                        "secondary-container": "#90efef",
+                        "outline": "#737780",
+                        "on-tertiary-container": "#5ead5c",
+                        "on-primary-fixed-variant": "#1f477b",
+                        "surface-container": "#f4ede5",
+                        "surface-bright": "#fff8f1",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#004f4f",
+                        "on-background": "#1e1b17",
+                        "surface-container-low": "#faf3eb",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#88d982",
+                        "primary-fixed-dim": "#a7c8ff",
+                        "secondary-fixed": "#93f2f2",
+                        "secondary": "#006a6a",
+                        "surface-variant": "#e8e1da",
+                        "inverse-surface": "#33302b",
+                        "surface-container-highest": "#e8e1da",
+                        "on-tertiary-fixed": "#002204",
+                        "background": "#fff8f1",
+                        "secondary-fixed-dim": "#76d6d5",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed": "#001b3c",
+                        "on-error-container": "#93000a",
+                        "surface-tint": "#3a5f94",
+                        "tertiary": "#002504",
+                        "primary-fixed": "#d5e3ff",
+                        "on-tertiary-fixed-variant": "#005312",
+                        "on-surface-variant": "#43474f",
+                        "on-secondary-container": "#006e6e",
+                        "on-primary-container": "#799dd6",
+                        "tertiary-container": "#003d0b",
+                        "tertiary-fixed": "#a3f69c",
+                        "on-error": "#ffffff",
+                        "primary-container": "#003366",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#eee7df",
+                        "outline-variant": "#c3c6d1"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "gutter": "16px",
+                        "base": "8px",
+                        "xl": "32px",
+                        "xxl": "48px",
+                        "margin-desktop": "40px",
+                        "xs": "4px",
+                        "margin-mobile": "20px",
+                        "lg": "24px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "caption-sm": ["Public Sans"],
+                        "display-lg": ["Public Sans"],
+                        "title-sm": ["Public Sans"],
+                        "headline-md": ["Public Sans"],
+                        "display-lg-mobile": ["Public Sans"],
+                        "body-md": ["Public Sans"],
+                        "label-xs": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                        "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen pb-24">
+<!-- TopAppBar Shell Component -->
+<header class="bg-surface dark:bg-on-surface shadow-sm w-full top-0 sticky z-[100] flex items-center justify-between px-margin-mobile py-sm md:px-margin-desktop h-16">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A high-end, editorial style professional headshot of a young woman with a focused, serene expression. She is in a minimalist office with soft natural side-lighting and a blurred background of architectural lines. The color palette is composed of warm whites, soft grays, and deep navy blues, reflecting the premium YRecall AI ecosystem." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxQXHkLXsLwQVgx-fdAJNpBqbPhKcmLU0G_GfbN20-ZXVR0lQZ-gtUAOXshAhu4NProh30x6FZLrGwWB3nO2otq0PS-C086y1axtgD4FbcCzsxwImL_oniZ_8mF5z0mZ-3LILmv6zeMmJm1-rsnICi0sLbDXTJ0iKNlOvY6HLSLcZiArR9t3LhJ7shXbVJjUbO8LPW2rUH8Y-amGbONb87pUq0joiJi5CTkHn_YstXTOhtYncET4BSU4TZ5BQtOtEy06fslUfdJN4"/>
+</div>
+<span class="text-title-sm font-title-sm font-bold text-primary dark:text-primary-fixed">YRecall</span>
+</div>
+<div class="flex items-center gap-sm">
+<button class="p-sm rounded-full text-on-surface-variant hover:bg-surface-variant transition-colors duration-200">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="p-sm rounded-full text-on-surface-variant hover:bg-surface-variant transition-colors duration-200 hidden md:block">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</header>
+<main class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-desktop py-lg space-y-xl">
+<!-- Entity Deep Dive Header -->
+<section class="flex flex-col md:flex-row md:items-end justify-between gap-md">
+<div class="space-y-xs">
+<div class="flex items-center gap-sm">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-xs text-label-xs">Active Entity</span>
+<span class="text-on-surface-variant text-caption-sm font-caption-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">calendar_today</span> Last updated 2h ago
+                    </span>
+</div>
+<h1 class="text-headline-md font-headline-md text-primary">Project Nova</h1>
+<p class="text-on-surface-variant max-w-xl">Deep exploration of strategic initiatives, cross-functional dependencies, and historical milestones for the next-generation platform launch.</p>
+</div>
+<div class="flex gap-sm">
+<button class="h-[56px] px-lg bg-surface-container border border-outline-variant rounded-xl flex items-center gap-sm hover:bg-surface-variant transition-all font-medium text-primary">
+<span class="material-symbols-outlined">share</span> Share
+                </button>
+<button class="h-[56px] px-lg bg-primary text-on-primary rounded-xl flex items-center gap-sm shadow-sm hover:opacity-90 transition-all font-medium">
+<span class="material-symbols-outlined">edit</span> Edit Entity
+                </button>
+</div>
+</section>
+<!-- Interactive Knowledge Graph Section -->
+<section class="relative w-full aspect-square md:aspect-[21/9] rounded-[24px] overflow-hidden bg-surface-container-low border border-outline-variant/30 shadow-sm">
+<div class="absolute inset-0 canvas-container">
+
+<!-- Central Node -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+<div class="node-pulse relative group cursor-pointer">
+<div class="w-32 h-32 rounded-full bg-primary flex items-center justify-center text-white shadow-xl ring-4 ring-primary/20">
+<span class="font-bold text-center leading-tight">Project<br/>Nova</span>
+</div>
+<div class="absolute -inset-2 rounded-full border border-primary/30 animate-ping opacity-20"></div>
+</div>
+</div>
+<!-- Entity Connections (Simulated with relative positioning and SVG lines in a real app, here using flex/absolute) -->
+<!-- Sarah Jenkins -->
+<div class="absolute top-[20%] left-[30%] -translate-x-1/2 z-10">
+<div class="glass-card px-4 py-2 rounded-full flex items-center gap-2 shadow-sm border border-outline-variant hover:scale-105 transition-transform cursor-pointer">
+<div class="w-6 h-6 rounded-full bg-secondary-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A portrait of a professional woman in her 30s with an intelligent and warm expression, photographed in high-key lighting with a minimalist studio background. The style is clean, modern, and high-end editorial, utilizing a palette of soft teal, charcoal gray, and crisp white to align with the YRecall brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDH-GxftyMZwSWSXTSL13yCnyF9gR2sWyJ0Bag2Uk5jZO5nbFPKLeJDCLyCRO4NHqInVfmakk3lxA8Cf0h6ojx_l_v0pydXcz6hpbbAuCPs6QvMyNx7JBFChiGsr-7sNgdTijF5Pcy0rQBWJOlV1e8aycBSGe3d-_s6SduQkSTytIXj5bX4Rsc1uCXkntlKJf-C8rjdoEDCSeZQY_7qPv-ia1IvbRdYaSXLSQSMLDyRJ-b6QgpT6pWsttzBuZvV8xiXcT2MY7wQ7GA"/>
+</div>
+<span class="text-label-xs font-label-xs font-bold text-primary">Sarah Jenkins</span>
+</div>
+</div>
+<!-- Q3 Roadmap -->
+<div class="absolute top-[30%] right-[25%] z-10">
+<div class="glass-card px-4 py-2 rounded-full flex items-center gap-2 shadow-sm border border-outline-variant hover:scale-105 transition-transform cursor-pointer">
+<span class="material-symbols-outlined text-secondary text-sm">map</span>
+<span class="text-label-xs font-label-xs font-bold text-primary">Q3 Roadmap</span>
+</div>
+</div>
+<!-- Lake Tahoe Meeting -->
+<div class="absolute bottom-[25%] left-[40%] z-10">
+<div class="glass-card px-4 py-2 rounded-full flex items-center gap-2 shadow-sm border border-outline-variant hover:scale-105 transition-transform cursor-pointer">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">mic</span>
+<span class="text-label-xs font-label-xs font-bold text-primary">Lake Tahoe Sync</span>
+</div>
+</div>
+<!-- SVG Connectors -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none opacity-20" xmlns="http://www.w3.org/2000/svg">
+<line class="text-primary" stroke="currentColor" stroke-width="2" x1="30%" x2="50%" y1="20%" y2="50%"></line>
+<line class="text-primary" stroke="currentColor" stroke-width="2" x1="75%" x2="50%" y1="30%" y2="50%"></line>
+<line class="text-primary" stroke="currentColor" stroke-width="2" x1="40%" x2="50%" y1="75%" y2="50%"></line>
+</svg>
+</div>
+<!-- Graph Controls -->
+<div class="absolute bottom-md right-md flex gap-xs">
+<button class="p-sm bg-white/80 backdrop-blur rounded-lg border border-outline-variant shadow-sm hover:bg-white"><span class="material-symbols-outlined">zoom_in</span></button>
+<button class="p-sm bg-white/80 backdrop-blur rounded-lg border border-outline-variant shadow-sm hover:bg-white"><span class="material-symbols-outlined">zoom_out</span></button>
+<button class="p-sm bg-white/80 backdrop-blur rounded-lg border border-outline-variant shadow-sm hover:bg-white"><span class="material-symbols-outlined">center_focus_strong</span></button>
+</div>
+</section>
+<!-- Related Memories Feed -->
+<section class="space-y-lg">
+<div class="flex items-center justify-between">
+<h2 class="text-title-sm font-title-sm text-primary">Related Memories</h2>
+<button class="text-on-primary-container font-label-xs text-label-xs flex items-center gap-1 hover:underline">
+                    View all 24 memories <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+<!-- Bento Grid of Memory Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+<!-- Voice Note Memory (Full Span) -->
+<div class="md:col-span-2 bg-white rounded-[24px] p-lg shadow-sm border border-outline-variant/30 flex flex-col justify-between hover:shadow-md transition-shadow group">
+<div class="space-y-md">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined">mic</span>
+</div>
+<div>
+<h3 class="font-bold text-primary">Strategic Alignment Discussion</h3>
+<p class="text-caption-sm text-on-surface-variant">Voice Note • Recorded Oct 12, 2023</p>
+</div>
+</div>
+<span class="text-label-xs font-label-xs px-2 py-1 bg-tertiary-container/10 text-on-tertiary-container rounded">High Priority</span>
+</div>
+<p class="text-body-md text-on-surface-variant italic">"...the core pillar for Project Nova revolves around decentralized memory retrieval. Sarah mentioned we need to align the Tahoe findings with the Q3 roadmap by Friday..."</p>
+</div>
+<div class="mt-xl flex items-center gap-md">
+<button class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined">play_arrow</span>
+</button>
+<div class="flex-1 h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="w-1/3 h-full bg-secondary"></div>
+</div>
+<span class="text-caption-sm text-on-surface-variant">04:22</span>
+</div>
+</div>
+<!-- Document Card -->
+<div class="bg-white rounded-[24px] p-lg shadow-sm border border-outline-variant/30 flex flex-col gap-md hover:shadow-md transition-shadow">
+<div class="aspect-video rounded-xl bg-surface-container overflow-hidden relative border border-outline-variant/20">
+<img class="w-full h-full object-cover" data-alt="A clean, minimalist document preview showing architectural diagrams and sleek typography for a project roadmap. The aesthetic uses a high-end white-mode palette with subtle blue accents, looking like a page from a premium design firm's internal strategy guide. The lighting is uniform and soft." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfqwgF9k0yNyqzmu0wKENX03B--k8N4CtoboFLT3slU4H0K6xgNJ7Dd7jigZmxM5wFCEQLm65gOzHenclzq8Ww009VbxEG9I18jUTUnxgrSM-BePSizBTP6L_bKuDle0MkYgoEf0aljM3liQjKWIrBaQ8B1oJAOHTgdyM4F3y438UrewWdH0rAJ4xeTlcVR5Rc2AFNBhxTwgeR0DqHfLnWQdN76LJuTtsOyi0d04HMbDf0YykKxVrFgr_Q0-EivEE8xDI7D5fteZU"/>
+<div class="absolute inset-0 bg-primary/5"></div>
+</div>
+<div class="space-y-xs">
+<h3 class="font-bold text-primary">Nova Architecture Doc</h3>
+<p class="text-caption-sm text-on-surface-variant">PDF • 1.2 MB • Updated 4d ago</p>
+</div>
+<button class="mt-auto w-full py-3 rounded-xl border border-outline text-primary font-medium hover:bg-surface-variant transition-colors">
+                        Preview
+                    </button>
+</div>
+<!-- AI Insight Card (Special "Smart" Container) -->
+<div class="bg-white rounded-[24px] p-lg shadow-sm border border-transparent hover:shadow-md transition-shadow relative overflow-hidden group">
+<!-- AI Border Effect -->
+<div class="absolute inset-0 border-2 border-transparent bg-gradient-to-br from-secondary/40 to-transparent opacity-30 pointer-events-none"></div>
+<div class="space-y-md relative z-10">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="text-label-xs font-label-xs uppercase tracking-widest text-secondary font-bold">AI Synthesis</span>
+</div>
+<h3 class="font-bold text-primary">Dependency Conflict Detected</h3>
+<p class="text-body-md text-on-surface-variant">There is a 48-hour gap between the Tahoe deliverables and the Q3 Roadmap freeze. Sarah Jenkins is the primary owner for both.</p>
+<div class="pt-sm">
+<button class="text-secondary font-bold flex items-center gap-1 group-hover:gap-2 transition-all">
+                                Resolve Conflict <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Lake Tahoe Memory Card -->
+<div class="md:col-span-2 bg-white rounded-[24px] overflow-hidden shadow-sm border border-outline-variant/30 flex flex-col md:flex-row hover:shadow-md transition-shadow">
+<div class="w-full md:w-1/3 h-48 md:h-auto">
+<img class="w-full h-full object-cover" data-alt="A serene landscape of Lake Tahoe during the autumn season, featuring crystal clear blue water and surrounding pine-covered mountains under a soft, golden afternoon sun. The photograph has a high-dynamic range with deep natural blues and warm oranges, evoking a calm yet inspiring atmosphere suitable for a corporate retreat or strategic summit." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNZoUJ4rfzmVAKRQGlZunX3iUMjHCCZllaCINaLI8g0pHrGYVsSveNIiOKkuSLyrO3xLdsw7i71BWJ7zeepUYNZCqBYrYvrIJ8Xe_3PZKBxdcYHsNx14Nqd6wO00xShAC20L16CuXsH4_i4Y84zLBtRWocYw3idBrU-RnS7rQwqPQpZ1dQTWphcU7TTKRPk3-extNPNAfvSqWHQFzzc2dPjxTcn6MpVt9NY2-fprInm49uDog71ZBH35O_fYlOld9gQaBlpPiDgZ0"/>
+</div>
+<div class="p-lg flex-1 flex flex-col justify-center gap-sm">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant">location_on</span>
+<span class="text-caption-sm text-on-surface-variant">Lake Tahoe, NV</span>
+</div>
+<h3 class="font-bold text-primary text-title-sm">Strategic Sync Summit</h3>
+<p class="text-body-md text-on-surface-variant">Summarized key takeaways from the off-site meeting regarding the Nova ecosystem integration.</p>
+<div class="flex gap-xs mt-sm">
+<span class="px-2 py-1 bg-surface-container rounded-full text-[10px] font-bold text-on-surface-variant uppercase">Retreat</span>
+<span class="px-2 py-1 bg-surface-container rounded-full text-[10px] font-bold text-on-surface-variant uppercase">Strategy</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar Shell Component -->
+<nav class="fixed bottom-0 w-full z-50 h-[80px] bg-surface dark:bg-on-surface border-t border-outline-variant dark:border-inverse-surface shadow-lg flex justify-around items-center px-margin-mobile">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:opacity-80 transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-xs text-label-xs">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container dark:bg-secondary dark:text-on-secondary rounded-full px-4 py-1 transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined">history_edu</span>
+<span class="font-label-xs text-label-xs">Recall</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:opacity-80 transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined">lightbulb</span>
+<span class="font-label-xs text-label-xs">Insights</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:opacity-80 transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-xs text-label-xs">Settings</span>
+</a>
+</nav>
+<!-- FAB Action (Contextual to Deep Dive) -->
+<button class="fixed bottom-28 right-margin-mobile md:right-margin-desktop w-[64px] h-[64px] rounded-[20px] bg-primary text-white shadow-xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-40">
+<span class="material-symbols-outlined text-[32px]">add</span>
+</button>
+<script>
+        // Micro-interaction for node hover
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.classList.add('shadow-md');
+            });
+            card.addEventListener('mouseleave', () => {
+                card.classList.remove('shadow-md');
+            });
+        });
+
+        // Simple parallax effect for graph nodes based on mouse movement
+        const canvas = document.querySelector('.canvas-container');
+        const nodes = document.querySelectorAll('.glass-card, .node-pulse');
+        
+        canvas.addEventListener('mousemove', (e) => {
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 40;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 40;
+            
+            nodes.forEach(node => {
+                node.style.transform = `translate(${xAxis}px, ${yAxis}px)`;
+            });
+        });
+    </script>
+</body></html>

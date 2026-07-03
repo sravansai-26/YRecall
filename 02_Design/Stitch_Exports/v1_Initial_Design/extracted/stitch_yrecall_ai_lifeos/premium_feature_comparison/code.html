@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YRecall - Upgrade to Premium</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#3a5f94",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#002504",
+                        "on-primary-container": "#799dd6",
+                        "primary": "#001e40",
+                        "primary-container": "#003366",
+                        "surface-container-low": "#faf3eb",
+                        "on-background": "#1e1b17",
+                        "primary-fixed": "#d5e3ff",
+                        "surface-dim": "#e0d9d1",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#002204",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#001b3c",
+                        "background": "#fff8f1",
+                        "surface": "#fff8f1",
+                        "on-primary-fixed-variant": "#1f477b",
+                        "inverse-surface": "#33302b",
+                        "secondary-container": "#90efef",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-high": "#eee7df",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#f4ede5",
+                        "tertiary-container": "#003d0b",
+                        "inverse-primary": "#a7c8ff",
+                        "on-surface-variant": "#43474f",
+                        "surface-bright": "#fff8f1",
+                        "secondary": "#006a6a",
+                        "outline-variant": "#c3c6d1",
+                        "on-secondary-container": "#006e6e",
+                        "on-tertiary-container": "#5ead5c",
+                        "inverse-on-surface": "#f7f0e8",
+                        "surface-container-highest": "#e8e1da",
+                        "tertiary-fixed": "#a3f69c",
+                        "outline": "#737780",
+                        "tertiary-fixed-dim": "#88d982",
+                        "on-secondary-fixed": "#002020",
+                        "surface-variant": "#e8e1da",
+                        "secondary-fixed": "#93f2f2",
+                        "on-tertiary-fixed-variant": "#005312",
+                        "secondary-fixed-dim": "#76d6d5",
+                        "on-surface": "#1e1b17",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed-dim": "#a7c8ff",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed-variant": "#004f4f",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "20px",
+                        "margin-desktop": "40px",
+                        "xxl": "48px",
+                        "md": "16px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "base": "8px",
+                        "gutter": "16px",
+                        "xs": "4px",
+                        "xl": "32px"
+                    },
+                    "fontFamily": {
+                        "label-xs": ["Public Sans"],
+                        "display-lg": ["Public Sans"],
+                        "headline-md": ["Public Sans"],
+                        "display-lg-mobile": ["Public Sans"],
+                        "caption-sm": ["Public Sans"],
+                        "body-md": ["Public Sans"],
+                        "title-sm": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #FCFAF7;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .ai-border {
+            position: relative;
+        }
+        .ai-border::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 24px;
+            padding: 1px;
+            background: linear-gradient(135deg, #006a6a, #e8e1da);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- Top App Bar -->
+<header class="w-full top-0 sticky z-50 bg-background/80 backdrop-blur-md">
+<div class="flex justify-between items-center px-margin-mobile md:px-margin-desktop py-base w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<h1 class="font-headline-md text-headline-md-mobile md:text-headline-md font-bold text-primary">YRecall</h1>
+</div>
+<button class="md:hidden">
+<span class="material-symbols-outlined text-on-surface-variant">close</span>
+</button>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop mt-xl">
+<!-- Hero Section -->
+<section class="text-center mb-xxl">
+<h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-primary mb-md">Expand Your Mind.</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl mx-auto">Choose the perfect tier for your digital second brain. Upgrade to YRecall Premium for unlimited potential and advanced AI synthesis.</p>
+</section>
+<!-- Comparison Table (Desktop) / Cards (Mobile) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg lg:gap-xxl">
+<!-- Free Plan -->
+<div class="bg-surface-container-lowest rounded-[24px] p-lg md:p-xl shadow-sm border border-outline-variant flex flex-col transition-all duration-300 hover:shadow-md">
+<div class="mb-xl">
+<span class="px-sm py-xs bg-surface-container rounded-full font-label-xs text-label-xs text-on-surface-variant mb-sm inline-block">FOR INDIVIDUALS</span>
+<h3 class="font-headline-md text-headline-md text-primary mb-xs">Free</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Essential features for casual note-taking.</p>
+<div class="mt-md flex items-baseline gap-xs">
+<span class="font-headline-md text-headline-md text-primary">$0</span>
+<span class="font-label-xs text-label-xs text-outline">/mo</span>
+</div>
+</div>
+<ul class="space-y-lg flex-grow">
+<li class="flex items-start gap-md">
+<span class="material-symbols-outlined text-on-tertiary-container mt-1">check_circle</span>
+<div>
+<p class="font-title-sm text-title-sm text-primary">2GB Capacity</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">Ample space for text and basic images.</p>
+</div>
+</li>
+<li class="flex items-start gap-md">
+<span class="material-symbols-outlined text-on-tertiary-container mt-1">check_circle</span>
+<div>
+<p class="font-title-sm text-title-sm text-primary">Standard AI</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">Basic summarization and tagging.</p>
+</div>
+</li>
+<li class="flex items-start gap-md">
+<span class="material-symbols-outlined text-on-tertiary-container mt-1">check_circle</span>
+<div>
+<p class="font-title-sm text-title-sm text-primary">1 Device</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">Access from your primary computer or phone.</p>
+</div>
+</li>
+<li class="flex items-start gap-md">
+<span class="material-symbols-outlined text-on-tertiary-container mt-1">check_circle</span>
+<div>
+<p class="font-title-sm text-title-sm text-primary">Keyword Search</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">Find specific terms within your memory.</p>
+</div>
+</li>
+<li class="flex items-start gap-md">
+<span class="material-symbols-outlined text-on-tertiary-container mt-1">check_circle</span>
+<div>
+<p class="font-title-sm text-title-sm text-primary">Community Support</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">Get help via forums and documentation.</p>
+</div>
+</li>
+</ul>
+<button class="mt-xxl w-full py-md border-2 border-primary text-primary font-bold rounded-[16px] hover:bg-primary hover:text-white transition-all active:scale-95">
+                    Current Plan
+                </button>
+</div>
+<!-- Premium Plan -->
+<div class="ai-border bg-surface-container-lowest rounded-[24px] p-lg md:p-xl shadow-xl flex flex-col transition-all duration-300 hover:shadow-2xl transform md:-translate-y-4">
+<div class="mb-xl">
+<div class="flex justify-between items-start">
+<span class="px-sm py-xs bg-secondary-container rounded-full font-label-xs text-label-xs text-on-secondary-container mb-sm inline-block">MOST POPULAR</span>
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">stars</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-xs">Premium</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">For power users who want a truly infinite memory.</p>
+<div class="mt-md flex items-baseline gap-xs">
+<span class="font-headline-md text-headline-md text-primary">$12</span>
+<span class="font-label-xs text-label-xs text-outline">/mo</span>
+</div>
+</div>
+<ul class="space-y-lg flex-grow">
+<li class="flex items-start gap-md">
+<span class="material-symbols-outlined text-secondary mt-1" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<div>
+<p class="font-title-sm text-title-sm text-primary">Unlimited Capacity</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant text-secondary font-medium">Store your entire digital life without limits.</p>
+</div>
+</li>
+<li class="flex items-start gap-md">
+<span class="material-symbols-outlined text-secondary mt-1" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<div>
+<p class="font-title-sm text-title-sm text-primary">Pro AI Intelligence</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">GPT-4o &amp; Claude 3.5 level reasoning.</p>
+</div>
+</li>
+<li class="flex items-start gap-md">
+<span class="material-symbols-outlined text-secondary mt-1" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<div>
+<p class="font-title-sm text-title-sm text-primary">Unlimited Devices</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">Perfect sync across phone, tablet, and web.</p>
+</div>
+</li>
+<li class="flex items-start gap-md">
+<span class="material-symbols-outlined text-secondary mt-1" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<div>
+<p class="font-title-sm text-title-sm text-primary">Semantic Retrieval</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">Ask complex questions; get natural answers.</p>
+</div>
+</li>
+<li class="flex items-start gap-md">
+<span class="material-symbols-outlined text-secondary mt-1" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<div>
+<p class="font-title-sm text-title-sm text-primary">Priority 24/7 Support</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">Direct line to our technical expert team.</p>
+</div>
+</li>
+</ul>
+<button class="mt-xxl w-full py-md bg-primary text-white font-bold rounded-[16px] shadow-lg hover:bg-primary-container transition-all active:scale-95">
+                    Upgrade Now
+                </button>
+</div>
+</div>
+<!-- Visual Credibility Section -->
+<section class="mt-xxl grid grid-cols-1 lg:grid-cols-3 gap-lg">
+<div class="glass-card rounded-[24px] p-lg flex flex-col items-center text-center">
+<div class="w-16 h-16 bg-primary-container/10 rounded-full flex items-center justify-center mb-md">
+<span class="material-symbols-outlined text-primary text-3xl">encrypted</span>
+</div>
+<h4 class="font-title-sm text-title-sm text-primary mb-xs">End-to-End Encrypted</h4>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">Your memories are your own. We use enterprise-grade AES-256 encryption.</p>
+</div>
+<div class="glass-card rounded-[24px] p-lg flex flex-col items-center text-center">
+<div class="w-16 h-16 bg-secondary-container/10 rounded-full flex items-center justify-center mb-md">
+<span class="material-symbols-outlined text-secondary text-3xl">bolt</span>
+</div>
+<h4 class="font-title-sm text-title-sm text-primary mb-xs">Lightning Fast</h4>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">Global edge network ensures your data is accessible instantly, anywhere.</p>
+</div>
+<div class="glass-card rounded-[24px] p-lg flex flex-col items-center text-center">
+<div class="w-16 h-16 bg-surface-container-high rounded-full flex items-center justify-center mb-md">
+<span class="material-symbols-outlined text-on-surface text-3xl">all_inclusive</span>
+</div>
+<h4 class="font-title-sm text-title-sm text-primary mb-xs">Future Proof</h4>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">Export your data anytime in open formats. No vendor lock-in, ever.</p>
+</div>
+</section>
+<!-- Detailed Comparison List (Hidden on Mobile) -->
+<section class="hidden md:block mt-xxl mb-xl overflow-hidden rounded-[24px] border border-outline-variant bg-surface-container-lowest">
+<div class="px-xl py-lg bg-surface-container flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md text-primary">Detailed Comparison</h3>
+<p class="font-label-xs text-label-xs text-outline">TRANSPARENT PRICING</p>
+</div>
+<div class="divide-y divide-outline-variant">
+<div class="grid grid-cols-3 px-xl py-md items-center">
+<div class="font-title-sm text-title-sm text-primary">Memory Engine</div>
+<div class="text-on-surface-variant">PostgreSQL</div>
+<div class="text-secondary font-bold">Vector + Graph Database</div>
+</div>
+<div class="grid grid-cols-3 px-xl py-md items-center">
+<div class="font-title-sm text-title-sm text-primary">Context Window</div>
+<div class="text-on-surface-variant">8k Tokens</div>
+<div class="text-secondary font-bold">1M+ Tokens</div>
+</div>
+<div class="grid grid-cols-3 px-xl py-md items-center">
+<div class="font-title-sm text-title-sm text-primary">File Attachments</div>
+<div class="text-on-surface-variant">Images only</div>
+<div class="text-secondary font-bold">Any file type (PDF, Video, etc.)</div>
+</div>
+<div class="grid grid-cols-3 px-xl py-md items-center">
+<div class="font-title-sm text-title-sm text-primary">API Access</div>
+<div class="text-on-surface-variant">Read-only</div>
+<div class="text-secondary font-bold">Full Read/Write Hooks</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Nav Bar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-safe bg-surface-container-low h-[80px] z-50 shadow-sm border-t border-outline-variant">
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-xs text-label-xs">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-xs text-label-xs">Recall</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">psychology</span>
+<span class="font-label-xs text-label-xs">Insights</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container rounded-2xl px-4 py-1 text-on-primary-container">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-xs text-label-xs">Settings</span>
+</div>
+</nav>
+<script>
+        // Micro-interaction for hover states on desktop
+        document.querySelectorAll('.ai-border').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+    </script>
+</body></html>

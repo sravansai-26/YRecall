@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YRecall Widget Showcase</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#004f4f",
+                        "primary-fixed-dim": "#a7c8ff",
+                        "secondary": "#006a6a",
+                        "tertiary-fixed-dim": "#88d982",
+                        "surface-bright": "#fff8f1",
+                        "surface-dim": "#e0d9d1",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#eee7df",
+                        "surface-variant": "#e8e1da",
+                        "on-secondary-container": "#006e6e",
+                        "on-primary-container": "#799dd6",
+                        "on-primary-fixed-variant": "#1f477b",
+                        "secondary-fixed-dim": "#76d6d5",
+                        "on-tertiary-fixed": "#002204",
+                        "primary-fixed": "#d5e3ff",
+                        "outline": "#737780",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#faf3eb",
+                        "surface": "#fff8f1",
+                        "on-secondary-fixed": "#002020",
+                        "inverse-surface": "#33302b",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "inverse-on-surface": "#f7f0e8",
+                        "outline-variant": "#c3c6d1",
+                        "tertiary-container": "#003d0b",
+                        "primary-container": "#003366",
+                        "tertiary": "#002504",
+                        "surface-container": "#f4ede5",
+                        "tertiary-fixed": "#a3f69c",
+                        "secondary-container": "#90efef",
+                        "on-tertiary-container": "#5ead5c",
+                        "surface-tint": "#3a5f94",
+                        "on-primary-fixed": "#001b3c",
+                        "on-primary": "#ffffff",
+                        "surface-container-highest": "#e8e1da",
+                        "primary": "#001e40",
+                        "secondary-fixed": "#93f2f2",
+                        "on-tertiary-fixed-variant": "#005312",
+                        "on-surface": "#1e1b17",
+                        "on-surface-variant": "#43474f",
+                        "background": "#fff8f1",
+                        "on-background": "#1e1b17",
+                        "inverse-primary": "#a7c8ff",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "margin-desktop": "40px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "margin-mobile": "20px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "gutter": "16px",
+                        "xxl": "48px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["Public Sans"],
+                        "body-md": ["Public Sans"],
+                        "headline-md": ["Public Sans"],
+                        "label-xs": ["Public Sans"],
+                        "title-sm": ["Public Sans"],
+                        "display-lg": ["Public Sans"],
+                        "caption-sm": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                        "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Public Sans', sans-serif; background-color: #fff8f1; overflow-x: hidden; }
+        .ios-shadow { box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3); }
+        .widget-radius { border-radius: 28px; } /* iOS 16+ Widget Radius */
+        .glass-blur { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col items-center py-12 px-4">
+<!-- Hero Header -->
+<header class="max-w-4xl w-full text-center mb-16">
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-primary mb-2">YRecall Hub</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto">
+            Your intelligence operating system, accessible at a glance. Editorial design meets iOS efficiency.
+        </p>
+</header>
+<!-- iPhone Mockup Shell -->
+<main class="relative w-[375px] h-[812px] bg-black rounded-[60px] p-4 shadow-2xl ring-8 ring-neutral-800">
+<!-- Screen Content -->
+<div class="relative w-full h-full overflow-hidden rounded-[48px] bg-cover bg-center" data-alt="A sophisticated iPhone wallpaper featuring a minimalist abstract gradient of soft peach and deep navy blue. The lighting is diffused and atmospheric, creating a premium light-mode aesthetic that complements an AI-driven operating system. The style is clean, modern, and high-end editorial, with plenty of negative space for icons." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuATXus8ePB1nuqwP7XCk4uurSW9i9HajG0tkd8XIhDGOMVs_r2woApsoaEdwUh2VtUcg1685P6yYdW_amHQq0VIbVnkez22GvAduG-jv3XA1c2ShSXiPeayIUy9ddBakA37rbjd-55qFvwCySjuHiEsNWY4UfT61DDJCiLbV0cD-mBIO7gm74rk6u5nCbIWljIJsyJrPqBa5WLU58krHIlhh5hjPFNZEHU_328enzRQbz93j4Lcb1AnVCX9M4jPtfjZQtpb4qL8b6A')">
+<!-- Status Bar Placeholder -->
+<div class="flex justify-between items-center px-8 pt-4 text-primary font-bold text-xs">
+<span>9:41</span>
+<div class="flex gap-1.5 items-center">
+<span class="material-symbols-outlined !text-[14px]">signal_cellular_alt</span>
+<span class="material-symbols-outlined !text-[14px]">wifi</span>
+</div></div></div></main></body></html>

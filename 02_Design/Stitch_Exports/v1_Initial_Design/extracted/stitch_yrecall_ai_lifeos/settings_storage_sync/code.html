@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YRecall | Storage &amp; Data Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-bright": "#fff8f1",
+                    "surface-dim": "#e0d9d1",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary-fixed-dim": "#88d982",
+                    "surface-container-high": "#eee7df",
+                    "surface-variant": "#e8e1da",
+                    "primary-fixed-dim": "#a7c8ff",
+                    "on-error-container": "#93000a",
+                    "on-secondary-fixed-variant": "#004f4f",
+                    "secondary": "#006a6a",
+                    "primary-fixed": "#d5e3ff",
+                    "outline": "#737780",
+                    "on-error": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "surface-container-low": "#faf3eb",
+                    "surface": "#fff8f1",
+                    "on-secondary-fixed": "#002020",
+                    "inverse-surface": "#33302b",
+                    "on-primary-fixed-variant": "#1f477b",
+                    "on-secondary-container": "#006e6e",
+                    "on-primary-container": "#799dd6",
+                    "on-tertiary-fixed": "#002204",
+                    "secondary-fixed-dim": "#76d6d5",
+                    "surface-tint": "#3a5f94",
+                    "tertiary-container": "#003d0b",
+                    "inverse-on-surface": "#f7f0e8",
+                    "outline-variant": "#c3c6d1",
+                    "tertiary-fixed": "#a3f69c",
+                    "secondary-container": "#90efef",
+                    "on-tertiary-container": "#5ead5c",
+                    "primary-container": "#003366",
+                    "tertiary": "#002504",
+                    "surface-container": "#f4ede5",
+                    "background": "#fff8f1",
+                    "on-background": "#1e1b17",
+                    "inverse-primary": "#a7c8ff",
+                    "on-surface-variant": "#43474f",
+                    "on-secondary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "surface-container-highest": "#e8e1da",
+                    "on-primary-fixed": "#001b3c",
+                    "on-primary": "#ffffff",
+                    "on-surface": "#1e1b17",
+                    "primary": "#001e40",
+                    "secondary-fixed": "#93f2f2",
+                    "on-tertiary-fixed-variant": "#005312"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-desktop": "40px",
+                    "lg": "24px",
+                    "xs": "4px",
+                    "xl": "32px",
+                    "xxl": "48px",
+                    "base": "8px",
+                    "margin-mobile": "20px",
+                    "sm": "8px",
+                    "md": "16px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "label-xs": ["Public Sans"],
+                    "headline-md": ["Public Sans"],
+                    "display-lg-mobile": ["Public Sans"],
+                    "body-md": ["Public Sans"],
+                    "caption-sm": ["Public Sans"],
+                    "title-sm": ["Public Sans"],
+                    "display-lg": ["Public Sans"]
+            },
+            "fontSize": {
+                    "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #FCFAF7;
+            font-family: 'Public Sans', sans-serif;
+            color: #1e1b17;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .chart-container {
+            position: relative;
+            width: 240px;
+            height: 240px;
+        }
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(209, 205, 199, 0.3);
+        }
+        .ai-border {
+            position: relative;
+        }
+        .ai-border::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 24px;
+            padding: 1px;
+            background: linear-gradient(135deg, #006a6a, #e8e1da, #006a6a);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-24 md:pb-0">
+<!-- TopAppBar -->
+<header class="w-full sticky top-0 z-50 bg-surface dark:bg-surface-dim h-16 flex items-center justify-between px-margin-mobile md:px-margin-desktop transition-all">
+<div class="flex items-center gap-md">
+<button class="hover:bg-surface-variant/50 transition-colors p-2 rounded-full active:opacity-80 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed">arrow_back</span>
+</button>
+<h1 class="font-title-sm text-title-sm text-primary dark:text-primary-fixed">Storage &amp; Sync</h1>
+</div>
+<div class="flex items-center gap-sm">
+<button class="hover:bg-surface-variant/50 transition-colors p-2 rounded-full active:opacity-80 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed">search</span>
+</button>
+</div>
+</header>
+<main class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-desktop py-lg space-y-xl">
+<!-- Cloud Status & Main Hero -->
+<section class="grid grid-cols-1 md:grid-cols-12 gap-lg">
+<div class="md:col-span-12 lg:col-span-4 flex flex-col gap-md">
+<div class="p-xl rounded-[24px] bg-white shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-outline-variant/30 flex flex-col items-center text-center space-y-md">
+<div class="chart-container flex items-center justify-center">
+<svg class="progress-ring" height="220" width="220">
+<!-- Background circles -->
+<circle class="text-surface-variant" cx="110" cy="110" fill="transparent" r="90" stroke="currentColor" stroke-width="12"></circle>
+<!-- Audio (Teal) -->
+<circle class="text-secondary" cx="110" cy="110" fill="transparent" r="90" stroke="currentColor" stroke-dasharray="565.48" stroke-dashoffset="141" stroke-linecap="round" stroke-width="12"></circle>
+<!-- Photos (Blue) -->
+<circle class="text-primary-container" cx="110" cy="110" fill="transparent" r="72" stroke="currentColor" stroke-dasharray="565.48" stroke-dashoffset="350" stroke-linecap="round" stroke-width="12"></circle>
+<!-- Documents (Gray) -->
+<circle class="text-outline" cx="110" cy="110" fill="transparent" r="54" stroke="currentColor" stroke-dasharray="565.48" stroke-dashoffset="480" stroke-linecap="round" stroke-width="12"></circle>
+</svg>
+<div class="absolute flex flex-col items-center">
+<span class="font-headline-md text-headline-md">74%</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">Used</span>
+</div>
+</div>
+<div class="w-full text-left space-y-sm">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-sm">
+<div class="w-3 h-3 rounded-full bg-secondary"></div>
+<span class="font-body-md text-body-md">Audio Memories</span>
+</div>
+<span class="font-label-xs text-label-xs">12.4 GB</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-sm">
+<div class="w-3 h-3 rounded-full bg-primary-container"></div>
+<span class="font-body-md text-body-md">Photo Streams</span>
+</div>
+<span class="font-label-xs text-label-xs">8.1 GB</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-sm">
+<div class="w-3 h-3 rounded-full bg-outline"></div>
+<span class="font-body-md text-body-md">Documents</span>
+</div>
+<span class="font-label-xs text-label-xs">3.2 GB</span>
+</div>
+</div>
+</div>
+</div>
+<div class="md:col-span-12 lg:col-span-8 space-y-lg">
+<!-- Sync Card -->
+<div class="p-xl rounded-[24px] bg-white shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-outline-variant/30 flex flex-col md:flex-row justify-between items-start md:items-center gap-lg">
+<div class="flex items-center gap-lg">
+<div class="w-16 h-16 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container text-[32px]">cloud_sync</span>
+</div>
+<div>
+<h2 class="font-title-sm text-title-sm text-primary">Cloud Sync Status</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Last synced: 2 minutes ago</p>
+</div>
+</div>
+<button class="bg-primary text-white font-body-md h-[56px] px-xl rounded-[16px] hover:shadow-lg transition-all active:scale-95 flex items-center gap-sm">
+<span class="material-symbols-outlined">sync</span>
+                        Sync Now
+                    </button>
+</div>
+<!-- AI Cleanup Tools Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<div class="ai-border p-lg rounded-[24px] bg-white shadow-[0_4px_20px_rgba(0,0,0,0.05)] flex flex-col justify-between h-full group hover:scale-[1.01] transition-transform">
+<div class="space-y-md">
+<div class="w-12 h-12 rounded-full bg-tertiary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-fixed">auto_awesome</span>
+</div>
+<div>
+<h3 class="font-title-sm text-title-sm">Duplicate Memory Cleaner</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-sm">AI found 127 identical memory clusters saving up to 1.4 GB.</p>
+</div>
+</div>
+<button class="mt-xl text-secondary font-body-md flex items-center gap-xs group-hover:gap-sm transition-all">
+                            Review Duplicates <span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+<div class="ai-border p-lg rounded-[24px] bg-white shadow-[0_4px_20px_rgba(0,0,0,0.05)] flex flex-col justify-between h-full group hover:scale-[1.01] transition-transform">
+<div class="space-y-md">
+<div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-fixed">folder_open</span>
+</div>
+<div>
+<h3 class="font-title-sm text-title-sm">Large Attachment Manager</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-sm">Summarize or archive raw files over 100MB to optimize local cache.</p>
+</div>
+</div>
+<button class="mt-xl text-secondary font-body-md flex items-center gap-xs group-hover:gap-sm transition-all">
+                            Analyze Files <span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Export Options Section -->
+<section class="space-y-lg">
+<h2 class="font-headline-md text-headline-md">Export Options</h2>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-lg">
+<!-- PDF Export -->
+<div class="p-lg rounded-[24px] bg-white border border-outline-variant/30 hover:border-primary/50 transition-colors cursor-pointer flex flex-col items-center text-center gap-md active:scale-95">
+<div class="w-14 h-14 rounded-xl bg-surface-container-low flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[28px]">picture_as_pdf</span>
+</div>
+<div>
+<p class="font-title-sm text-title-sm">PDF Portfolio</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">High-res memories report</p>
+</div>
+</div>
+<!-- Markdown Export -->
+<div class="p-lg rounded-[24px] bg-white border border-outline-variant/30 hover:border-primary/50 transition-colors cursor-pointer flex flex-col items-center text-center gap-md active:scale-95">
+<div class="w-14 h-14 rounded-xl bg-surface-container-low flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[28px]">markdown</span>
+</div>
+<div>
+<p class="font-title-sm text-title-sm">Markdown Archive</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">Interconnected text notes</p>
+</div>
+</div>
+<!-- JSON Export -->
+<div class="p-lg rounded-[24px] bg-white border border-outline-variant/30 hover:border-primary/50 transition-colors cursor-pointer flex flex-col items-center text-center gap-md active:scale-95">
+<div class="w-14 h-14 rounded-xl bg-surface-container-low flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[28px]">data_object</span>
+</div>
+<div>
+<p class="font-title-sm text-title-sm">JSON Raw Data</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant">Developer-friendly structure</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Visualization Placeholder -->
+<section class="h-[400px] rounded-[32px] overflow-hidden relative shadow-sm border border-outline-variant/10">
+
+<div class="absolute inset-0 glass-card m-xl rounded-[24px] p-xl flex flex-col justify-end max-w-md">
+<h3 class="font-headline-md text-headline-md text-primary">Data Health Score</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-sm">Your memory architecture is 98% efficient. The AI suggests optimizing metadata for faster recall lookups.</p>
+<div class="mt-lg flex gap-md">
+<div class="flex-1 h-2 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[98%]"></div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full h-20 flex justify-around items-center px-4 pb-safe bg-surface-container-low dark:bg-surface-container-lowest border-t border-outline-variant/30 z-50 md:hidden">
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/20 px-3 py-1 rounded-lg">
+<span class="material-symbols-outlined">grain</span>
+<span class="font-label-xs text-label-xs">Memories</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/20 px-3 py-1 rounded-lg">
+<span class="material-symbols-outlined">psychology_alt</span>
+<span class="font-label-xs text-label-xs">Recall</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/20 px-3 py-1 rounded-lg">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-xs text-label-xs">Insights</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1 scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-xs text-label-xs">Settings</span>
+</button>
+</nav>
+<script>
+        // Micro-interaction for the Sync button
+        const syncBtn = document.querySelector('button:has(.material-symbols-outlined:contains("sync"))');
+        if(syncBtn) {
+            syncBtn.addEventListener('click', function() {
+                const icon = this.querySelector('.material-symbols-outlined');
+                icon.classList.add('animate-spin');
+                this.textContent = 'Syncing...';
+                setTimeout(() => {
+                    icon.classList.remove('animate-spin');
+                    this.innerHTML = '<span class="material-symbols-outlined">check</span> Synced';
+                    setTimeout(() => {
+                        this.innerHTML = '<span class="material-symbols-outlined">sync</span> Sync Now';
+                    }, 3000);
+                }, 2000);
+            });
+        }
+
+        // Custom selector for Material Symbols since :contains isn't standard
+        document.querySelectorAll('.material-symbols-outlined').forEach(icon => {
+            if(icon.textContent.trim() === 'sync') {
+                const btn = icon.closest('button');
+                btn.addEventListener('click', () => {
+                    icon.style.animation = 'spin 1s linear infinite';
+                });
+            }
+        });
+    </script>
+<style>
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</body></html>

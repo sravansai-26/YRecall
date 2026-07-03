@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YRecall Teams | ROI Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;600;700;800;900&amp;family=Courier+Prime&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- CSS Classes and Theme Integration -->
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .knowledge-graph-bg {
+            background-image: radial-gradient(circle at 2px 2px, rgba(115, 119, 128, 0.05) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+        .presence-glow {
+            box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #006a6a;
+        }
+        /* Custom scrollbar for dense data views */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #c3c6d1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #737780; }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-container": "#90efef",
+                    "on-primary-fixed-variant": "#1f477b",
+                    "surface-dim": "#cfdaf1",
+                    "on-primary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "surface-container-high": "#dee8ff",
+                    "secondary-fixed-dim": "#76d6d5",
+                    "on-primary-container": "#799dd6",
+                    "on-tertiary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "surface-tint": "#3a5f94",
+                    "inverse-on-surface": "#ebf1ff",
+                    "tertiary-fixed": "#e8e1db",
+                    "error": "#ba1a1a",
+                    "surface-container": "#e7eeff",
+                    "on-primary-fixed": "#001b3c",
+                    "inverse-surface": "#263142",
+                    "tertiary-container": "#36332f",
+                    "background": "#f9f9ff",
+                    "tertiary-fixed-dim": "#cbc5bf",
+                    "on-surface-variant": "#43474f",
+                    "on-secondary-fixed-variant": "#004f4f",
+                    "on-secondary": "#ffffff",
+                    "primary": "#001e40",
+                    "on-tertiary-fixed-variant": "#4a4641",
+                    "on-background": "#111c2c",
+                    "error-container": "#ffdad6",
+                    "secondary-fixed": "#93f2f2",
+                    "outline": "#737780",
+                    "surface-container-low": "#f0f3ff",
+                    "on-tertiary-container": "#a09b95",
+                    "tertiary": "#201e1a",
+                    "surface-variant": "#d8e3fa",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed-dim": "#a7c8ff",
+                    "primary-fixed": "#d5e3ff",
+                    "on-secondary-container": "#006e6e",
+                    "inverse-primary": "#a7c8ff",
+                    "surface-container-highest": "#d8e3fa",
+                    "surface": "#f9f9ff",
+                    "on-tertiary-fixed": "#1e1b17",
+                    "on-secondary-fixed": "#002020",
+                    "secondary": "#006a6a",
+                    "surface-bright": "#f9f9ff",
+                    "outline-variant": "#c3c6d1",
+                    "primary-container": "#003366",
+                    "on-surface": "#111c2c"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "container-margin": "24px",
+                    "sidebar-width": "280px",
+                    "node-padding": "12px",
+                    "unit": "4px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Public Sans"],
+                    "display-lg": ["Public Sans"],
+                    "label-caps": ["Public Sans"],
+                    "body-sm": ["Public Sans"],
+                    "body-lg": ["Public Sans"],
+                    "headline-lg": ["Public Sans"],
+                    "mono-data": ["Courier Prime"],
+                    "headline-sm": ["Public Sans"],
+                    "body-md": ["Public Sans"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "body-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "mono-data": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md min-h-screen knowledge-graph-bg">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-40 bg-surface-container dark:bg-surface-container-high text-primary dark:text-primary-fixed border-b border-outline-variant/10 shadow-sm">
+<div class="flex items-center justify-between px-container-margin h-16 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-3 cursor-pointer active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-primary text-3xl">hub</span>
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed tracking-tight">YRecall Teams</span>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-primary font-bold font-label-caps text-label-caps transition-colors" href="#">Activity</a>
+<a class="text-on-surface-variant hover:text-primary font-label-caps text-label-caps transition-colors" href="#">Graph</a>
+<a class="text-on-surface-variant hover:text-primary font-label-caps text-label-caps transition-colors" href="#">Members</a>
+<a class="text-on-surface-variant hover:text-primary font-label-caps text-label-caps transition-colors" href="#">Settings</a>
+</nav>
+<div class="flex items-center gap-4">
+<div class="flex -space-x-2">
+<img class="w-8 h-8 rounded-full border-2 border-surface presence-glow" data-alt="A small circular avatar of a professional team member with a clean background, matching the minimalist scholarly aesthetic of YRecall." src="https://lh3.googleusercontent.com/aida-public/AB6AXuACaf1aEAaImTlkJJZyvx2VUYMv4ZRJzQYNsVOSGIMT176IKi3IxCJnv-Bk4Q32ofvHTS8jdliseSLApIt2SWlgljV2Pf96lK3YFQ8jAU19soiHnah1uHEm_8zDcv1alxcPr4DMM2S_s-J6eVG4k2W_b_5Vf9GJeQxf99ZbBGvh4MUbtryzmnm0YUDxOx-KWdTxus1TuibAnpCCgVMGIhHFb1a1xgIkInECTgPdETA4bHzfmkcumdBTSLF_L89VdmUoEq1XEPjjG1M"/>
+<img class="w-8 h-8 rounded-full border-2 border-surface" data-alt="A small circular avatar of a diverse software engineering team lead, professional headshot with soft lighting and a neutral palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdTAWsTbXF_M5zCEra7uZYGD3xRnYKjhvZQfv_0QI111J6G3QAqEvi-CnVVzzeTJySxdx_AmV8dQhLMpBvcWmFbVXbgMd7qugypfzg1nvbglqWTOsew4IQPBZvbiKNIkuzdQhJKG9yUuPaentL2u4QatpOGqcWiPjZ-puuRAaFjueDWcp8heryX6LFwP9RAF7b_yq7kgEgw4S14LdPO5pUzTVxLxqCH1AaguAMmim9UX_cOtxJo0PSKCOiXybZTM_SGV_QRQR-WH4"/>
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center text-[10px] font-bold border-2 border-surface">+4</div>
+</div>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-xl text-body-sm font-bold flex items-center gap-2 hover:bg-primary-container transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm">bolt</span>
+                    Presence
+                </button>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-container-margin py-8 mb-24">
+<!-- Section 1: Executive Overview -->
+<section class="mb-12">
+<div class="flex items-end justify-between mb-6">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Executive ROI Overview</h1>
+<p class="text-on-surface-variant font-body-md">Quantifying the impact of the AI Life OS across Engineering Alpha.</p>
+</div>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 border border-outline-variant rounded text-body-sm font-bold hover:bg-surface-bright transition-colors">Last 30 Days <span class="material-symbols-outlined text-sm">expand_more</span></button>
+<button class="px-3 py-1.5 bg-primary text-on-primary rounded text-body-sm font-bold flex items-center gap-2"><span class="material-symbols-outlined text-sm">download</span> Export</button>
+</div>
+</div>
+<!-- Bento Grid Metrics -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Knowledge Capital Growth -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/20 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-secondary text-3xl">psychology</span>
+<span class="bg-secondary-container text-on-secondary-container text-[11px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">trending_up</span> +24%
+                        </span>
+</div>
+<div class="mt-8">
+<p class="text-on-surface-variant font-label-caps text-label-caps mb-1 uppercase tracking-widest">Knowledge Capital Growth</p>
+<h2 class="font-display-lg text-display-lg text-primary leading-none">12,482 <span class="text-headline-sm font-normal text-on-surface-variant">nodes</span></h2>
+</div>
+<div class="mt-4 border-t border-outline-variant/10 pt-4">
+<div class="flex justify-between text-body-sm">
+<span class="text-on-surface-variant">Avg synthesis rate</span>
+<span class="font-mono-data text-primary">142/day</span>
+</div>
+</div>
+</div>
+<!-- Time Saved -->
+<div class="bg-primary text-on-primary p-6 rounded-xl border border-primary-container shadow-lg flex flex-col justify-between relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 opacity-10">
+<span class="material-symbols-outlined text-[120px] -mr-8 -mt-8">timer</span>
+</div>
+<div class="flex justify-between items-start relative z-10">
+<span class="material-symbols-outlined text-primary-fixed-dim text-3xl">bolt</span>
+<span class="bg-white/10 text-white text-[11px] font-bold px-2 py-0.5 rounded-full">Optimized</span>
+</div>
+<div class="mt-8 relative z-10">
+<p class="text-primary-fixed-dim font-label-caps text-label-caps mb-1 uppercase tracking-widest">Time Saved by AI Retrieval</p>
+<h2 class="font-display-lg text-display-lg text-white leading-none">140<span class="text-headline-sm font-normal text-primary-fixed-dim">h/mo</span></h2>
+</div>
+<div class="mt-4 border-t border-white/10 pt-4 relative z-10">
+<div class="flex justify-between text-body-sm">
+<span class="text-primary-fixed-dim">Recouped Operational Cost</span>
+<span class="font-mono-data text-white">$18,200</span>
+</div>
+</div>
+</div>
+<!-- Team Alignment -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/20 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-secondary text-3xl">diversity_3</span>
+<span class="bg-secondary-container text-on-secondary-container text-[11px] font-bold px-2 py-0.5 rounded-full">High</span>
+</div>
+<div class="mt-8">
+<p class="text-on-surface-variant font-label-caps text-label-caps mb-1 uppercase tracking-widest">Team Alignment Score</p>
+<h2 class="font-display-lg text-display-lg text-primary leading-none">92<span class="text-headline-sm font-normal text-on-surface-variant">%</span></h2>
+</div>
+<div class="mt-4 border-t border-outline-variant/10 pt-4">
+<div class="w-full bg-surface-container rounded-full h-1.5">
+<div class="bg-secondary h-1.5 rounded-full" style="width: 92%"></div>
+</div>
+<div class="flex justify-between text-[10px] mt-2 font-bold text-on-surface-variant">
+<span>COHESION</span>
+<span>PEAK LEVEL</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Knowledge Growth (Visualization) -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+<div class="lg:col-span-2 bg-white rounded-xl border border-outline-variant/20 p-8 shadow-sm">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-primary">Knowledge Growth</h3>
+<p class="text-body-sm text-on-surface-variant">Node accumulation by functional department.</p>
+</div>
+<div class="flex items-center gap-4 text-body-sm font-bold">
+<div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-primary"></span> Eng</div>
+<div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-secondary"></span> Prod</div>
+<div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-outline"></span> Mark</div>
+</div>
+</div>
+<!-- Mock Chart Area -->
+<div class="relative h-64 w-full flex items-end gap-1 px-2 border-b border-l border-outline-variant/20">
+<!-- SVG Chart Background Simulation -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20">
+<div class="border-t border-outline border-dashed w-full"></div>
+<div class="border-t border-outline border-dashed w-full"></div>
+<div class="border-t border-outline border-dashed w-full"></div>
+</div>
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 800 200">
+<!-- Engineering Path -->
+<path d="M0,180 Q100,160 200,170 T400,120 T600,60 T800,20" fill="none" stroke="#001e40" stroke-linecap="round" stroke-width="3"></path>
+<!-- Product Path -->
+<path d="M0,190 Q150,185 300,160 T500,140 T800,90" fill="none" stroke="#006a6a" stroke-linecap="round" stroke-width="3"></path>
+<!-- Marketing Path -->
+<path d="M0,195 Q200,195 400,180 T700,170 T800,160" fill="none" stroke="#737780" stroke-dasharray="4" stroke-linecap="round" stroke-width="2"></path>
+<!-- Points of interest -->
+<circle cx="400" cy="120" fill="#001e40" r="4"></circle>
+<circle cx="600" cy="60" fill="#001e40" r="4"></circle>
+</svg>
+<!-- Tooltip Simulation -->
+<div class="absolute left-[75%] top-[10%] bg-primary text-on-primary px-3 py-2 rounded-lg text-[11px] shadow-lg animate-bounce pointer-events-none">
+<p class="font-bold">Eng Peak</p>
+<p class="opacity-80">Synthesis surge</p>
+</div>
+</div>
+<div class="flex justify-between mt-4 text-mono-data text-on-surface-variant">
+<span>JAN</span><span>FEB</span><span>MAR</span><span>APR</span><span>MAY</span><span>JUN</span>
+</div>
+</div>
+<!-- Section 4: AI Impact Synthesis -->
+<div class="bg-surface-container-low rounded-xl border border-outline-variant/20 p-8 flex flex-col">
+<h3 class="font-headline-sm text-headline-sm text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">analytics</span>
+                    Impact Synthesis
+                </h3>
+<div class="space-y-6 flex-grow">
+<div class="bg-white p-4 rounded-lg border-l-4 border-secondary shadow-sm">
+<p class="text-label-caps font-label-caps text-secondary mb-1">DUPLICATE PREVENTION</p>
+<p class="text-body-md text-primary font-bold">"Architectural Schema 4.0"</p>
+<p class="text-body-sm text-on-surface-variant mt-2 italic">AI flagged a matching research node from Engineering Beta, preventing 12 hours of re-modeling effort.</p>
+</div>
+<div class="bg-white p-4 rounded-lg border-l-4 border-primary shadow-sm">
+<p class="text-label-caps font-label-caps text-primary mb-1">SILO IDENTIFICATION</p>
+<p class="text-body-md text-primary font-bold">Marketing &amp; API Docs</p>
+<p class="text-body-sm text-on-surface-variant mt-2 italic">Found 48% semantic overlap. Automated sync now maintains feature naming consistency across channels.</p>
+</div>
+<div class="bg-primary-container text-white p-4 rounded-lg shadow-inner">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-sm">auto_awesome</span>
+<span class="text-label-caps font-label-caps">AI INSIGHT</span>
+</div>
+<p class="text-body-sm leading-relaxed">Knowledge density is highest in <b>Technical Debt</b> nodes. Suggest a synthesis sprint to resolve overlapping documentation.</p>
+</div>
+</div>
+<button class="mt-6 w-full text-center text-body-sm font-bold text-primary hover:underline transition-all">Review All 14 Synthesis Logs</button>
+</div>
+</section>
+<!-- Section 3: Engagement & Participation -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Trending Topics -->
+<div class="bg-white rounded-xl border border-outline-variant/20 p-6 shadow-sm">
+<h3 class="font-headline-sm text-headline-sm text-primary mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">trending_up</span>
+                    Trending Intelligence
+                </h3>
+<div class="flex flex-wrap gap-2">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-body-sm font-bold border border-secondary/10 flex items-center gap-1 cursor-pointer hover:scale-105 transition-transform">#CloudNative <span class="text-[10px] opacity-70">x42</span></span>
+<span class="bg-surface-container-high text-primary px-3 py-1 rounded-full text-body-sm font-bold border border-outline-variant/20 flex items-center gap-1 cursor-pointer hover:scale-105 transition-transform">#RustCore <span class="text-[10px] opacity-70">x38</span></span>
+<span class="bg-surface-container-high text-primary px-3 py-1 rounded-full text-body-sm font-bold border border-outline-variant/20 flex items-center gap-1 cursor-pointer hover:scale-105 transition-transform">#VectorSearch <span class="text-[10px] opacity-70">x31</span></span>
+<span class="bg-surface-container-high text-primary px-3 py-1 rounded-full text-body-sm font-bold border border-outline-variant/20 flex items-center gap-1 cursor-pointer hover:scale-105 transition-transform">#LatencyReduction <span class="text-[10px] opacity-70">x29</span></span>
+<span class="bg-surface-container-high text-primary px-3 py-1 rounded-full text-body-sm font-bold border border-outline-variant/20 flex items-center gap-1 cursor-pointer hover:scale-105 transition-transform">#AuthRefactor <span class="text-[10px] opacity-70">x15</span></span>
+</div>
+<div class="mt-8 space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-primary text-on-primary flex items-center justify-center font-bold">1</div>
+<div>
+<p class="text-body-md font-bold text-primary">Cross-Team API Protocol</p>
+<p class="text-body-sm text-on-surface-variant">12 nodes updated today</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant">open_in_new</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-surface-container text-primary flex items-center justify-center font-bold border border-outline-variant/20">2</div>
+<div>
+<p class="text-body-md font-bold text-primary">Q3 Infrastructure Roadmap</p>
+<p class="text-body-sm text-on-surface-variant">4 active contributors</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant">open_in_new</span>
+</div>
+</div>
+</div>
+<!-- Active Contributors -->
+<div class="bg-white rounded-xl border border-outline-variant/20 p-6 shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-headline-sm text-headline-sm text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">group</span>
+                        Top Contributors
+                    </h3>
+<a class="text-label-caps text-secondary font-bold hover:underline" href="#">VIEW ALL</a>
+</div>
+<div class="space-y-4">
+<!-- Contributor 1 -->
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors group cursor-pointer">
+<div class="flex items-center gap-3">
+<img class="w-12 h-12 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all" data-alt="A professional headshot of a woman in a minimal office setting, high key lighting, white background, clean and professional look for a tech company executive." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbdJGD2PX7KqnWnFbYDHh_yuJBFf4f803ap7JRzY4WHI18--MtrWGOfteOHliCDI3NJGiTmDfOz7UIa3MWjXqREDjzWkQk_4LP--uSdc2KsyLTbeklXCakRS005CUObtQ7dNMh9NHsN64hJF_78DuoqF3s1MRxlWE9Gi9RndXX5GHiGqDdFrNrIktiUe39qZi8yhAwvVpjaqF_jY62_VgsD4uKzwTd16ITXnf6tQC2_xn2dQpkYtq1dvIW1nJfr_K25PPZtYN7EIA"/>
+<div>
+<p class="text-body-md font-bold text-primary">Sarah Chen</p>
+<p class="text-body-sm text-on-surface-variant">Lead Architect</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-body-md font-mono-data font-bold text-primary">1,240</p>
+<p class="text-[10px] font-label-caps text-on-surface-variant">NODES ADDED</p>
+</div>
+</div>
+<!-- Contributor 2 -->
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors group cursor-pointer">
+<div class="flex items-center gap-3">
+<img class="w-12 h-12 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all" data-alt="A high-quality portrait of a focused software developer in a modern, brightly lit environment. Minimalist corporate style with soft shadows and clean aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBR7ZjQ-ZDome-9NrPNeRGxulleTsCmBwoZqjf4V6kML30tphN0eNQscOaSJtrmzHDdiFxPAKDWkpxxsBqW48gcE_DrjUnmrMuKhGdsQ3-JC-IKoN8wpSZVZzFTC4Lg0A57Nas5zGJgYj1KV7eCMnysvo3ic2EDwb5LdTym9_z0ZyyyUscH3yj2_y3IBRuxvx3ubd4UEImEvKmAw_BPgioGFGvvYQJcxSTF7Ig0RRFFkTUhAVfL2MNTN_w3907MbUScrDrn_leHcMU"/>
+<div>
+<p class="text-body-md font-bold text-primary">Marcus Holloway</p>
+<p class="text-body-sm text-on-surface-variant">Staff Engineer</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-body-md font-mono-data font-bold text-primary">982</p>
+<p class="text-[10px] font-label-caps text-on-surface-variant">NODES ADDED</p>
+</div>
+</div>
+<!-- Contributor 3 -->
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors group cursor-pointer">
+<div class="flex items-center gap-3">
+<img class="w-12 h-12 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all" data-alt="A profile photo of a creative director in a minimal, high-end studio. Light mode palette with professional soft-box lighting, representing intelligence and organized design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2sX7Lkm3FPN5_wjQ2nchqKePa-iEtXzUD0RzzTYw-PfGlWtagAcLjFzEIVX9NzkLjGL0o0I9V5n6r02hGsEg8FIZwBzxJy5MOGv-DpyLVcVYTB_FNdWl-ZeHHd6Wn5U3o6SPyRd0CTp8RSEfZl3anj0RZzUqVHP_1J3fLgyiAVSvdKARZ7QE69KOYXnlZmHqAT-gbpd8d1Eajj90qCwkNhf_xGHIOE06u3gPOsbbdSPCCNKdAopcEq09q2U26Siq7GBYdaGXDV-U"/>
+<div>
+<p class="text-body-md font-bold text-primary">Elena Rodriguez</p>
+<p class="text-body-sm text-on-surface-variant">Product Design</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-body-md font-mono-data font-bold text-primary">754</p>
+<p class="text-[10px] font-label-caps text-on-surface-variant">NODES ADDED</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- NavigationDrawer (Mobile - Hidden by default but structure exists) -->
+<div class="hidden lg:flex fixed left-0 top-16 h-[calc(100vh-64px)] w-16 bg-surface-container-low border-r border-outline-variant/10 flex-col items-center py-6 gap-6 z-30">
+<div class="w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center cursor-pointer hover:translate-x-1 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">cloud_alert</span>
+</div>
+<div class="w-10 h-10 rounded-xl text-on-surface-variant hover:bg-surface-container-high flex items-center justify-center cursor-pointer hover:translate-x-1 transition-transform">
+<span class="material-symbols-outlined">person_search</span>
+</div>
+<div class="w-10 h-10 rounded-xl text-on-surface-variant hover:bg-surface-container-high flex items-center justify-center cursor-pointer hover:translate-x-1 transition-transform">
+<span class="material-symbols-outlined">psychology</span>
+</div>
+<div class="w-10 h-10 rounded-xl text-on-surface-variant hover:bg-surface-container-high flex items-center justify-center cursor-pointer hover:translate-x-1 transition-transform mt-auto">
+<span class="material-symbols-outlined">inventory_2</span>
+</div>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<footer class="md:hidden fixed bottom-0 w-full z-50 bg-surface dark:bg-surface-container-lowest border-t border-outline-variant/20 shadow-lg">
+<div class="flex justify-around items-center h-20 px-4 pb-safe">
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 tap-highlight-transparent active:scale-90 transition-all">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-caps text-[10px] uppercase">Activity</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary tap-highlight-transparent active:scale-90 transition-all">
+<span class="material-symbols-outlined">hub</span>
+<span class="font-label-caps text-[10px] uppercase">Graph</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary tap-highlight-transparent active:scale-90 transition-all">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-caps text-[10px] uppercase">Members</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary tap-highlight-transparent active:scale-90 transition-all">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-caps text-[10px] uppercase">Settings</span>
+</div>
+</div>
+</footer>
+<!-- Micro-interactions Script -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Hover effect for charts or specific metrics
+            const metrics = document.querySelectorAll('.hover\\:shadow-md');
+            metrics.forEach(m => {
+                m.addEventListener('mouseenter', () => {
+                    m.style.transform = 'translateY(-2px)';
+                });
+                m.addEventListener('mouseleave', () => {
+                    m.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YRecall - Upgrade Your Memory</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#3a5f94",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#002504",
+                        "on-primary-container": "#799dd6",
+                        "primary": "#001e40",
+                        "primary-container": "#003366",
+                        "surface-container-low": "#faf3eb",
+                        "on-background": "#1e1b17",
+                        "primary-fixed": "#d5e3ff",
+                        "surface-dim": "#e0d9d1",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#002204",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#001b3c",
+                        "background": "#fff8f1",
+                        "surface": "#fff8f1",
+                        "on-primary-fixed-variant": "#1f477b",
+                        "inverse-surface": "#33302b",
+                        "secondary-container": "#90efef",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-high": "#eee7df",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#f4ede5",
+                        "tertiary-container": "#003d0b",
+                        "inverse-primary": "#a7c8ff",
+                        "on-surface-variant": "#43474f",
+                        "surface-bright": "#fff8f1",
+                        "secondary": "#006a6a",
+                        "outline-variant": "#c3c6d1",
+                        "on-secondary-container": "#006e6e",
+                        "on-tertiary-container": "#5ead5c",
+                        "inverse-on-surface": "#f7f0e8",
+                        "surface-container-highest": "#e8e1da",
+                        "tertiary-fixed": "#a3f69c",
+                        "outline": "#737780",
+                        "tertiary-fixed-dim": "#88d982",
+                        "on-secondary-fixed": "#002020",
+                        "surface-variant": "#e8e1da",
+                        "secondary-fixed": "#93f2f2",
+                        "on-tertiary-fixed-variant": "#005312",
+                        "secondary-fixed-dim": "#76d6d5",
+                        "on-surface": "#1e1b17",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed-dim": "#a7c8ff",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed-variant": "#004f4f",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "20px",
+                        "margin-desktop": "40px",
+                        "xxl": "48px",
+                        "md": "16px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "base": "8px",
+                        "gutter": "16px",
+                        "xs": "4px",
+                        "xl": "32px"
+                    },
+                    "fontFamily": {
+                        "label-xs": ["Public Sans"],
+                        "display-lg": ["Public Sans"],
+                        "headline-md": ["Public Sans"],
+                        "display-lg-mobile": ["Public Sans"],
+                        "caption-sm": ["Public Sans"],
+                        "body-md": ["Public Sans"],
+                        "title-sm": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #FCFAF7; /* Brand background */
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .ai-border {
+            position: relative;
+            z-index: 0;
+        }
+        .ai-border::before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            padding: 1px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, #006a6a, #e8e1da);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        .shadow-premium {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+        .shadow-premium-hover:hover {
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="font-body-md text-on-background selection:bg-secondary-container">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-50 bg-background/80 backdrop-blur-md">
+<div class="flex justify-between items-center px-margin-mobile py-base md:px-margin-desktop w-full max-w-7xl mx-auto h-16">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<h1 class="font-headline-md text-headline-md-mobile font-bold text-primary">YRecall</h1>
+</div>
+<nav class="hidden md:flex gap-xl">
+<a class="text-on-surface-variant hover:opacity-80 transition-opacity font-medium" href="#">Home</a>
+<a class="text-on-surface-variant hover:opacity-80 transition-opacity font-medium" href="#">Recall</a>
+<a class="text-on-surface-variant hover:opacity-80 transition-opacity font-medium" href="#">Insights</a>
+<a class="text-primary font-bold" href="#">Pricing</a>
+</nav>
+<button class="bg-primary text-white px-lg py-sm rounded-full font-medium transition-all hover:scale-105 active:scale-95 shadow-sm">
+                Sign In
+            </button>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop pb-xxl">
+<!-- Hero Section with AI Background -->
+<section class="relative py-xl md:py-xxl flex flex-col items-center text-center overflow-hidden">
+<div class="absolute inset-0 -z-10 opacity-20">
+
+</div>
+<span class="bg-secondary/10 text-secondary px-4 py-1 rounded-full text-label-xs font-label-xs mb-lg uppercase tracking-widest">Premium Intelligence</span>
+<h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-primary max-w-3xl mb-md">
+                A Second Brain that Never Forgets.
+            </h2>
+<p class="text-on-surface-variant font-body-md text-body-md max-w-xl mb-xl">
+                Unlock the full potential of your cognitive lifecycle. Upgrade to YRecall Pro for unlimited memory expansion and advanced AI insights.
+            </p>
+</section>
+<!-- Pricing Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-lg items-stretch">
+<!-- Features Highlight Card -->
+<div class="md:col-span-7 bg-white p-xl rounded-[24px] shadow-premium flex flex-col justify-between">
+<div>
+<h3 class="font-title-sm text-title-sm text-primary mb-xl">Why go Pro?</h3>
+<ul class="space-y-lg">
+<li class="flex items-start gap-md group">
+<div class="bg-secondary-container/30 p-2 rounded-xl group-hover:bg-secondary-container transition-colors">
+<span class="material-symbols-outlined text-secondary">cloud_done</span>
+</div>
+<div>
+<h4 class="font-bold text-primary">Unlimited Recall</h4>
+<p class="text-on-surface-variant font-body-md text-sm">Store every thought, document, and meeting without limits.</p>
+</div>
+</li>
+<li class="flex items-start gap-md group">
+<div class="bg-secondary-container/30 p-2 rounded-xl group-hover:bg-secondary-container transition-colors">
+<span class="material-symbols-outlined text-secondary">psychology</span>
+</div>
+<div>
+<h4 class="font-bold text-primary">Deep Cognitive Insights</h4>
+<p class="text-on-surface-variant font-body-md text-sm">AI-driven patterns that map how you learn and think.</p>
+</div>
+</li>
+<li class="flex items-start gap-md group">
+<div class="bg-secondary-container/30 p-2 rounded-xl group-hover:bg-secondary-container transition-colors">
+<span class="material-symbols-outlined text-secondary">sync</span>
+</div>
+<div>
+<h4 class="font-bold text-primary">Universal Sync</h4>
+<p class="text-on-surface-variant font-body-md text-sm">Access your brain from any device, offline or online.</p>
+</div>
+</li>
+<li class="flex items-start gap-md group">
+<div class="bg-secondary-container/30 p-2 rounded-xl group-hover:bg-secondary-container transition-colors">
+<span class="material-symbols-outlined text-secondary">verified_user</span>
+</div>
+<div>
+<h4 class="font-bold text-primary">Priority Processing</h4>
+<p class="text-on-surface-variant font-body-md text-sm">Experience 10x faster AI indexing and retrieval.</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<!-- Main Pro Subscription Card -->
+<div class="md:col-span-5 ai-border bg-white p-xl rounded-[24px] shadow-premium flex flex-col relative">
+<div class="absolute -top-4 right-8 bg-primary text-white px-md py-1 rounded-full text-label-xs font-bold shadow-lg">
+                    BEST VALUE
+                </div>
+<div class="mb-xxl">
+<h3 class="font-title-sm text-title-sm text-primary mb-sm">Annual Plan</h3>
+<div class="flex items-baseline gap-xs">
+<span class="font-display-lg text-display-lg text-primary">$12</span>
+<span class="text-on-surface-variant font-medium">/month</span>
+</div>
+<p class="text-on-surface-variant text-sm mt-sm">Billed annually at $144/year</p>
+</div>
+<div class="space-y-md mb-xxl">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-body-md">Unlimited Data Nodes</span>
+</div>
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-body-md">Advanced Semantic Search</span>
+</div>
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-body-md">Personal AI Tutor</span>
+</div>
+</div>
+<button class="w-full bg-primary text-white h-[56px] rounded-xl font-bold text-lg hover:bg-primary-container transition-all shadow-lg active:scale-[0.98] mt-auto">
+                    Start 14-Day Free Trial
+                </button>
+<p class="text-center text-xs text-on-surface-variant mt-md">Cancel anytime. No questions asked.</p>
+</div>
+<!-- Alternative Plan Card -->
+<div class="md:col-span-6 bg-surface-container p-lg rounded-[24px] shadow-premium flex items-center justify-between group cursor-pointer hover:bg-surface-container-high transition-colors">
+<div>
+<h4 class="font-bold text-primary">Monthly Flexible</h4>
+<p class="text-on-surface-variant text-sm">Pay month-to-month, pause anytime.</p>
+</div>
+<div class="text-right">
+<span class="font-title-sm font-bold text-primary block">$19</span>
+<span class="material-symbols-outlined text-primary group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</div>
+</div>
+<!-- Student/Team Card -->
+<div class="md:col-span-6 bg-surface-container p-lg rounded-[24px] shadow-premium flex items-center justify-between group cursor-pointer hover:bg-surface-container-high transition-colors">
+<div>
+<h4 class="font-bold text-primary">Teams &amp; Education</h4>
+<p class="text-on-surface-variant text-sm">Group licensing for schools and startups.</p>
+</div>
+<div class="text-right">
+<span class="font-title-sm font-bold text-primary block">Contact</span>
+<span class="material-symbols-outlined text-primary group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</div>
+</div>
+</div>
+<!-- Trust Section -->
+<section class="mt-xxl pt-xl border-t border-outline-variant/30 flex flex-col md:flex-row justify-between items-center gap-xl">
+<div class="flex flex-col items-center md:items-start">
+<p class="text-label-xs font-bold text-on-surface-variant uppercase tracking-widest mb-md">Trusted by professionals at</p>
+<div class="flex flex-wrap justify-center md:justify-start gap-xl opacity-40 grayscale hover:grayscale-0 transition-all duration-700">
+<div class="h-8 w-24 bg-on-surface-variant rounded-md"></div>
+<div class="h-8 w-32 bg-on-surface-variant rounded-md"></div>
+<div class="h-8 w-20 bg-on-surface-variant rounded-md"></div>
+<div class="h-8 w-28 bg-on-surface-variant rounded-md"></div>
+</div>
+</div>
+<div class="bg-white p-lg rounded-2xl shadow-sm border border-outline-variant/20 max-w-sm">
+<div class="flex gap-1 text-secondary mb-sm">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="text-on-surface font-body-md italic text-sm">"YRecall has transformed how I manage research. It's like having an assistant who knows exactly what I was thinking 3 months ago."</p>
+<p class="text-on-surface-variant text-xs mt-md font-bold">— Dr. Elena Vance, Neuroscientist</p>
+</div>
+</section>
+</main>
+<!-- Footer / Legal -->
+<footer class="w-full py-xl px-margin-mobile md:px-margin-desktop bg-surface-container-low mt-xxl mb-24 md:mb-0">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-lg">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container">auto_awesome</span>
+<span class="font-bold text-primary">YRecall</span>
+</div>
+<div class="flex gap-xl text-label-xs text-on-surface-variant">
+<a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-primary transition-colors" href="#">Contact Support</a>
+</div>
+<p class="text-label-xs text-outline">© 2024 YRecall Intelligence OS.</p>
+</div>
+</footer>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-safe bg-surface-container-low z-50 h-[80px] shadow-sm border-t border-outline-variant">
+<a class="flex flex-col items-center justify-center text-on-surface-variant group" href="#">
+<span class="material-symbols-outlined group-active:scale-95 transition-transform">home</span>
+<span class="font-label-xs text-label-xs">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant group" href="#">
+<span class="material-symbols-outlined group-active:scale-95 transition-transform">history</span>
+<span class="font-label-xs text-label-xs">Recall</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant group" href="#">
+<span class="material-symbols-outlined group-active:scale-95 transition-transform">psychology</span>
+<span class="font-label-xs text-label-xs">Insights</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-2xl px-4 py-1 group" href="#">
+<span class="material-symbols-outlined group-active:scale-95 transition-transform" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="font-label-xs text-label-xs">Settings</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions
+        document.querySelectorAll('.cursor-pointer').forEach(el => {
+            el.addEventListener('mousedown', () => {
+                el.style.transform = 'scale(0.98)';
+            });
+            el.addEventListener('mouseup', () => {
+                el.style.transform = 'scale(1)';
+            });
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body></html>

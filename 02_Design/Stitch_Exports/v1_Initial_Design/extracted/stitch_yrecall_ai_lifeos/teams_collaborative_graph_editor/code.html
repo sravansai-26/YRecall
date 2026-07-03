@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YRecall Teams - Collaborative Graph Editor</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Public Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;600;700;900&amp;family=Courier+Prime&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-dim": "#cfdaf1",
+                    "on-primary": "#ffffff",
+                    "secondary-container": "#90efef",
+                    "on-primary-fixed-variant": "#1f477b",
+                    "on-primary-container": "#799dd6",
+                    "secondary-fixed-dim": "#76d6d5",
+                    "surface-container-high": "#dee8ff",
+                    "on-error-container": "#93000a",
+                    "error": "#ba1a1a",
+                    "tertiary-fixed": "#e8e1db",
+                    "surface-tint": "#3a5f94",
+                    "inverse-on-surface": "#ebf1ff",
+                    "on-error": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-fixed": "#001b3c",
+                    "inverse-surface": "#263142",
+                    "surface-container": "#e7eeff",
+                    "tertiary-fixed-dim": "#cbc5bf",
+                    "background": "#f9f9ff",
+                    "tertiary-container": "#36332f",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed-variant": "#004f4f",
+                    "on-surface-variant": "#43474f",
+                    "primary": "#001e40",
+                    "on-tertiary-fixed-variant": "#4a4641",
+                    "outline": "#737780",
+                    "secondary-fixed": "#93f2f2",
+                    "error-container": "#ffdad6",
+                    "on-background": "#111c2c",
+                    "on-tertiary-container": "#a09b95",
+                    "surface-container-low": "#f0f3ff",
+                    "primary-fixed": "#d5e3ff",
+                    "primary-fixed-dim": "#a7c8ff",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary": "#201e1a",
+                    "surface-variant": "#d8e3fa",
+                    "on-secondary-container": "#006e6e",
+                    "inverse-primary": "#a7c8ff",
+                    "surface-container-highest": "#d8e3fa",
+                    "surface": "#f9f9ff",
+                    "on-tertiary-fixed": "#1e1b17",
+                    "outline-variant": "#c3c6d1",
+                    "surface-bright": "#f9f9ff",
+                    "secondary": "#006a6a",
+                    "on-secondary-fixed": "#002020",
+                    "primary-container": "#003366",
+                    "on-surface": "#111c2c"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "container-margin": "24px",
+                    "gutter": "16px",
+                    "node-padding": "12px",
+                    "sidebar-width": "280px"
+            },
+            "fontFamily": {
+                    "mono-data": ["Courier Prime"],
+                    "headline-sm": ["Public Sans"],
+                    "body-md": ["Public Sans"],
+                    "body-lg": ["Public Sans"],
+                    "headline-lg": ["Public Sans"],
+                    "label-caps": ["Public Sans"],
+                    "body-sm": ["Public Sans"],
+                    "headline-md": ["Public Sans"],
+                    "display-lg": ["Public Sans"]
+            },
+            "fontSize": {
+                    "mono-data": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "body-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .graph-canvas {
+            background: radial-gradient(circle at center, #002b5c 0%, #001e40 100%);
+        }
+        .node-glow {
+            filter: drop-shadow(0 0 8px rgba(144, 239, 239, 0.4));
+        }
+        .active-node-halo {
+            box-shadow: 0 0 0 2px #90efef, 0 0 15px rgba(144, 239, 239, 0.6);
+        }
+        .cursor-anim {
+            transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-4px); }
+            100% { transform: translateY(0px); }
+        }
+        .floating { animation: float 3s ease-in-out infinite; }
+        .presence-glow { box-shadow: 0 0 0 2px #006a6a; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md overflow-hidden">
+<!-- TopAppBar from JSON -->
+<header class="w-full top-0 sticky z-50 bg-surface-container border-b border-outline-variant/10 shadow-sm">
+<div class="flex items-center justify-between px-container-margin h-16 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-4 cursor-pointer active:scale-95">
+<span class="material-symbols-outlined text-primary font-headline-md text-headline-md font-bold">hub</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">YRecall Teams</h1>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<nav class="flex gap-6">
+<span class="text-primary font-bold font-label-caps text-label-caps cursor-pointer">Project Nova</span>
+<span class="text-on-surface-variant font-label-caps text-label-caps cursor-pointer hover:bg-surface-bright transition-colors px-2 py-1 rounded">Analytics</span>
+<span class="text-on-surface-variant font-label-caps text-label-caps cursor-pointer hover:bg-surface-bright transition-colors px-2 py-1 rounded">History</span>
+</nav>
+</div>
+<div class="flex items-center gap-3">
+<!-- Multi-user Presence -->
+<div class="flex -space-x-2 mr-4">
+<div class="w-8 h-8 rounded-full border-2 border-surface-container overflow-hidden presence-glow" title="Alex R. (Editing)">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a young man with glasses, neutral expression, soft studio lighting, high-end corporate photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9hgppDyQH7mKIDZBtLS-LOdnLG9CeTqhaL0XIXo7uqavnaG8nveG1--58OQkAExBic9n8nliyBn1C41PYN1QMLxUkwD8XrcurI2yupRMZh1oD7WXFwM8GQwqbngTl92znCUZCmF4zqUNRRFfaCONr6T7TJphQq92jr0gyoM3SY1fgUxJMEzB1MKS2XQlA9zWoqojg0XaFOare8TSh_QTNz4A7FIADpy7zFZQaR3e_Gvs9COwIItpMo979LgZOp6BaDSJPcdREJZA"/>
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-surface-container overflow-hidden" title="Elena V.">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a woman with curly hair, smiling slightly, professional attire, clean minimalist background, soft focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAX0IugcGIxIH6zP3u2fQte2sL5le34r0I8tNiHYQSfUOOYSQuag3I4nPvn9y9pFnZuo4ZD4F7osrNTHa2L47TGlEPBmytNf1wRUzgXPBR5qPcpddbp5OSXe0KP1luCxBk0mnB5uGU_M6yNKWrOu3Ql-i8G6dlXY6Fgz4dDNskyMvN2gCDvzIrDg6J7bKGAhcuAzT6i7go4dzhR0vlp5KTPIPjQKAI3kBWxsBS9KqSUjpY80ObIKlfUIqxEwzaln2zdKPI_36hixPs"/>
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-surface-container bg-secondary-container flex items-center justify-center text-[10px] font-bold text-on-secondary-container border-2">
+                        +2
+                    </div>
+</div>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-xl font-label-caps text-label-caps hover:translate-x-1 transition-transform">
+<span class="material-symbols-outlined text-sm">cadence</span>
+                    Presence
+                </button>
+</div>
+</div>
+</header>
+<main class="relative h-[calc(100vh-144px)] md:h-[calc(100vh-64px)] overflow-hidden flex">
+<!-- Sidebar: Collaborative Edit (Selected Node) -->
+<aside class="hidden lg:flex flex-col w-sidebar-width bg-surface-container-low border-r border-outline-variant/10 z-40">
+<div class="p-container-margin border-b border-outline-variant/10">
+<div class="flex items-center gap-2 mb-2">
+<span class="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">Active Node</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-primary mb-1">Architecture.v2</h2>
+<p class="text-on-surface-variant text-body-sm italic">Last modified by Alex R. 2m ago</p>
+</div>
+<div class="flex-1 overflow-y-auto p-node-padding space-y-6">
+<section>
+<h3 class="text-label-caps font-label-caps text-on-surface-variant mb-3">Live Collaboration</h3>
+<div class="space-y-3">
+<div class="p-3 bg-surface rounded-xl border border-outline-variant/20">
+<div class="flex items-center gap-2 mb-2">
+<div class="w-5 h-5 rounded-full bg-blue-500"></div>
+<span class="font-bold text-body-sm">Alex R.</span>
+</div>
+<p class="text-body-sm text-on-surface-variant">"Updating the latency constraints for the core cluster nodes."</p>
+</div>
+<div class="p-3 bg-surface rounded-xl border border-outline-variant/20">
+<div class="flex items-center gap-2 mb-2">
+<div class="w-5 h-5 rounded-full bg-teal-500"></div>
+<span class="font-bold text-body-sm">Elena V.</span>
+</div>
+<p class="text-body-sm text-on-surface-variant">"Linked the Security Protocol node to this."</p>
+</div>
+</div>
+</section>
+<section>
+<h3 class="text-label-caps font-label-caps text-on-surface-variant mb-3">Node Connections</h3>
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface-bright px-3 py-1 rounded-full text-body-sm flex items-center gap-1 border border-outline-variant/10 cursor-pointer hover:bg-secondary-fixed transition-colors">
+<span class="material-symbols-outlined text-sm">link</span> API-Gateway
+                        </span>
+<span class="bg-surface-bright px-3 py-1 rounded-full text-body-sm flex items-center gap-1 border border-outline-variant/10 cursor-pointer hover:bg-secondary-fixed transition-colors">
+<span class="material-symbols-outlined text-sm">link</span> Auth-Service
+                        </span>
+<span class="bg-surface-bright px-3 py-1 rounded-full text-body-sm flex items-center gap-1 border border-outline-variant/10 cursor-pointer hover:bg-secondary-fixed transition-colors">
+<span class="material-symbols-outlined text-sm">link</span> Cloud-Storage
+                        </span>
+</div>
+</section>
+</div>
+<div class="p-node-padding bg-surface-container-high/50">
+<button class="w-full bg-primary text-on-primary py-3 rounded-xl font-bold hover:scale-[1.02] active:scale-95 transition-all">
+                    Commit Changes
+                </button>
+</div>
+</aside>
+<!-- Main Knowledge Canvas -->
+<div class="flex-1 relative graph-canvas overflow-hidden">
+<!-- Animated Shader Background (Subtle movement) -->
+
+<!-- Graph UI Elements -->
+<div class="absolute inset-0 p-container-margin z-10 pointer-events-none">
+<!-- Sync Indicator -->
+<div class="absolute bottom-6 left-6 flex items-center gap-2 bg-primary/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 pointer-events-auto">
+<span class="w-2 h-2 rounded-full bg-secondary-container animate-pulse shadow-[0_0_8px_#90efef]"></span>
+<span class="text-secondary-fixed text-label-caps font-label-caps tracking-widest">AI SYNCHRONIZED</span>
+</div>
+<!-- Cluster Label -->
+<div class="absolute top-6 left-6">
+<div class="flex items-center gap-2 text-white/60 mb-1">
+<span class="material-symbols-outlined text-sm">folder_open</span>
+<span class="text-label-caps font-label-caps">PROJECT NOVA CLUSTER</span>
+</div>
+<div class="h-1 w-16 bg-secondary-container"></div>
+</div>
+<!-- Collaborative Cursors (Simulated) -->
+<div class="absolute cursor-anim pointer-events-none" id="cursor-alex" style="top: 30%; left: 45%;">
+<div class="relative">
+<svg fill="none" height="20" viewbox="0 0 20 20" width="20">
+<path d="M4 2L17 10L11 12L15 17L13 18L9 13L4 17V2Z" fill="#3B82F6" stroke="white" stroke-width="1.5"></path>
+</svg>
+<div class="absolute top-5 left-4 bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm whitespace-nowrap">Alex R.</div>
+</div>
+</div>
+<div class="absolute cursor-anim pointer-events-none" id="cursor-elena" style="top: 60%; left: 35%;">
+<div class="relative">
+<svg fill="none" height="20" viewbox="0 0 20 20" width="20">
+<path d="M4 2L17 10L11 12L15 17L13 18L9 13L4 17V2Z" fill="#14B8A6" stroke="white" stroke-width="1.5"></path>
+</svg>
+<div class="absolute top-5 left-4 bg-teal-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm whitespace-nowrap">Elena V.</div>
+</div>
+</div>
+</div>
+<!-- Knowledge Nodes -->
+<div class="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+<div class="relative w-[800px] h-[600px]">
+<!-- Connections (SVG Lines) -->
+<svg class="absolute inset-0 w-full h-full opacity-30">
+<line stroke="#90efef" stroke-width="2" x1="400" x2="200" y1="300" y2="150"></line>
+<line stroke="#90efef" stroke-width="2" x1="400" x2="600" y1="300" y2="200"></line>
+<line stroke="#90efef" stroke-width="2" x1="400" x2="500" y1="300" y2="450"></line>
+<line stroke="#90efef" stroke-dasharray="4" stroke-width="1" x1="200" x2="100" y1="150" y2="350"></line>
+</svg>
+<!-- Central Node -->
+<div class="absolute top-[260px] left-[340px] w-32 h-32 flex items-center justify-center pointer-events-auto cursor-pointer group">
+<div class="absolute inset-0 bg-secondary-container/20 rounded-full active-node-halo animate-pulse"></div>
+<div class="relative w-24 h-24 bg-white/10 backdrop-blur-xl border-2 border-secondary-container rounded-full flex flex-col items-center justify-center node-glow group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-secondary-fixed text-3xl">hub</span>
+<span class="text-white text-[10px] font-bold mt-1">NOVA-CORE</span>
+</div>
+</div>
+<!-- Satellite Nodes -->
+<div class="absolute top-[120px] left-[150px] pointer-events-auto cursor-pointer group floating" style="animation-delay: 0s;">
+<div class="w-16 h-16 bg-white/5 backdrop-blur-md border border-white/20 rounded-xl flex items-center justify-center group-hover:border-secondary-container transition-colors">
+<span class="material-symbols-outlined text-white/80">architecture</span>
+</div>
+<div class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-white/60 text-[10px] font-bold">Architecture.v2</div>
+</div>
+<div class="absolute top-[160px] left-[550px] pointer-events-auto cursor-pointer group floating" style="animation-delay: 0.5s;">
+<div class="w-14 h-14 bg-white/5 backdrop-blur-md border border-white/20 rounded-xl flex items-center justify-center group-hover:border-secondary-container transition-colors">
+<span class="material-symbols-outlined text-white/80">security</span>
+</div>
+<div class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-white/60 text-[10px] font-bold">Security</div>
+</div>
+<div class="absolute top-[420px] left-[460px] pointer-events-auto cursor-pointer group floating" style="animation-delay: 1.2s;">
+<div class="w-20 h-20 bg-white/5 backdrop-blur-md border border-white/20 rounded-xl flex items-center justify-center group-hover:border-secondary-container transition-colors">
+<span class="material-symbols-outlined text-white/80">analytics</span>
+</div>
+<div class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-white/60 text-[10px] font-bold">Telemetry-Data</div>
+</div>
+</div>
+</div>
+<!-- Toolbar Overlay -->
+<div class="absolute right-6 top-6 flex flex-col gap-3 pointer-events-auto z-30">
+<button class="w-12 h-12 bg-primary/80 backdrop-blur-md border border-white/10 rounded-full flex items-center justify-center text-white hover:bg-secondary-container hover:text-on-secondary-container transition-all">
+<span class="material-symbols-outlined">zoom_in</span>
+</button>
+<button class="w-12 h-12 bg-primary/80 backdrop-blur-md border border-white/10 rounded-full flex items-center justify-center text-white hover:bg-secondary-container hover:text-on-secondary-container transition-all">
+<span class="material-symbols-outlined">zoom_out</span>
+</button>
+<button class="w-12 h-12 bg-primary/80 backdrop-blur-md border border-white/10 rounded-full flex items-center justify-center text-white hover:bg-secondary-container hover:text-on-secondary-container transition-all">
+<span class="material-symbols-outlined">center_focus_strong</span>
+</button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar from JSON -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface border-t border-outline-variant/20 shadow-lg md:hidden">
+<div class="flex justify-around items-center h-20 px-4 pb-safe">
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 tap-highlight-transparent">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-caps text-label-caps mt-1">Activity</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 transition-all active:scale-90 tap-highlight-transparent">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">hub</span>
+<span class="font-label-caps text-label-caps mt-1">Graph</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 tap-highlight-transparent">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-caps text-label-caps mt-1">Members</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 tap-highlight-transparent">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-caps text-label-caps mt-1">Settings</span>
+</div>
+</div>
+</nav>
+<script>
+        // Micro-interactions for live cursors
+        document.addEventListener('mousemove', (e) => {
+            const canvas = document.querySelector('.graph-canvas');
+            const rect = canvas.getBoundingClientRect();
+            
+            // Alex cursor logic (follows slightly delayed)
+            const alex = document.getElementById('cursor-alex');
+            const elena = document.getElementById('cursor-elena');
+
+            // Random movement for "live" feel if mouse isn't on canvas
+            if (e.clientX > rect.left && e.clientX < rect.right && e.clientY > rect.top && e.clientY < rect.bottom) {
+                const targetX = e.clientX - rect.left;
+                const targetY = e.clientY - rect.top;
+                
+                setTimeout(() => {
+                    alex.style.left = `${targetX + 150}px`;
+                    alex.style.top = `${targetY - 50}px`;
+                }, 150);
+
+                setTimeout(() => {
+                    elena.style.left = `${targetX - 200}px`;
+                    elena.style.top = `${targetY + 100}px`;
+                }, 300);
+            }
+        });
+
+        // Toggle Sidebar visibility on mobile/tablet (conceptual)
+        const toggleSidebar = () => {
+            const sidebar = document.querySelector('aside');
+            sidebar.classList.toggle('hidden');
+        };
+    </script>
+</body></html>

@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Security &amp; Privacy Dashboard | AI Life OS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .pulse-teal {
+            animation: pulse-animation 2s infinite;
+        }
+        @keyframes pulse-animation {
+            0% { box-shadow: 0 0 0 0px rgba(0, 110, 110, 0.4); }
+            100% { box-shadow: 0 0 0 15px rgba(0, 110, 110, 0); }
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .ai-border {
+            position: relative;
+        }
+        .ai-border::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(to right, #006e6e, #e8e1da);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#003366",
+                        "on-background": "#1e1b17",
+                        "surface-container-high": "#eee7df",
+                        "on-tertiary-container": "#5ead5c",
+                        "on-primary": "#ffffff",
+                        "surface": "#fff8f1",
+                        "outline": "#737780",
+                        "primary": "#001e40",
+                        "on-secondary-fixed": "#002020",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#f4ede5",
+                        "on-secondary-container": "#006e6e",
+                        "tertiary-fixed": "#a3f69c",
+                        "surface-dim": "#e0d9d1",
+                        "on-secondary-fixed-variant": "#004f4f",
+                        "on-surface": "#1e1b17",
+                        "tertiary-fixed-dim": "#88d982",
+                        "on-primary-fixed-variant": "#1f477b",
+                        "error-container": "#ffdad6",
+                        "surface-container-highest": "#e8e1da",
+                        "surface-variant": "#e8e1da",
+                        "tertiary-container": "#003d0b",
+                        "secondary": "#006a6a",
+                        "surface-tint": "#3a5f94",
+                        "surface-container-low": "#faf3eb",
+                        "on-tertiary-fixed-variant": "#005312",
+                        "on-primary-fixed": "#001b3c",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#002204",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#76d6d5",
+                        "secondary-container": "#90efef",
+                        "inverse-on-surface": "#f7f0e8",
+                        "on-error": "#ffffff",
+                        "tertiary": "#002504",
+                        "secondary-fixed": "#93f2f2",
+                        "primary-fixed-dim": "#a7c8ff",
+                        "error": "#ba1a1a",
+                        "outline-variant": "#c3c6d1",
+                        "background": "#fff8f1",
+                        "on-surface-variant": "#43474f",
+                        "inverse-surface": "#33302b",
+                        "surface-bright": "#fff8f1",
+                        "on-primary-container": "#799dd6",
+                        "inverse-primary": "#a7c8ff",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#d5e3ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xxl": "48px",
+                        "base": "8px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "sm": "8px",
+                        "gutter": "16px",
+                        "margin-desktop": "40px",
+                        "margin-mobile": "20px",
+                        "md": "16px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Public Sans"],
+                        "headline-md": ["Public Sans"],
+                        "title-sm": ["Public Sans"],
+                        "label-xs": ["Public Sans"],
+                        "display-lg-mobile": ["Public Sans"],
+                        "body-md": ["Public Sans"],
+                        "caption-sm": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                        "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen pb-24">
+<!-- Top App Bar (Shared Component Logic) -->
+<header class="w-full sticky top-0 z-40 bg-surface/80 backdrop-blur-md flex items-center justify-between px-margin-mobile h-16 md:px-margin-desktop">
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-surface-variant/50 transition-colors Active:opacity-80 Active:scale-95">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="font-title-sm text-title-sm text-primary">Settings</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 rounded-full hover:bg-surface-variant/50 transition-colors">
+<span class="material-symbols-outlined text-primary">search</span>
+</button>
+</div>
+</header>
+<main class="max-w-6xl mx-auto px-margin-mobile md:px-margin-desktop py-lg space-y-xl">
+<!-- Hero: Vault Status -->
+<section class="relative overflow-hidden rounded-[24px] bg-primary text-on-primary p-xl md:p-xxl flex flex-col md:flex-row items-center justify-between gap-lg">
+<!-- Background WebGL Shader (Placeholder) -->
+
+<div class="relative z-10 flex flex-col items-center md:items-start text-center md:text-left">
+<div class="mb-md inline-flex items-center gap-2 bg-on-secondary-container/20 px-4 py-2 rounded-full border border-secondary/30">
+<span class="w-2 h-2 rounded-full bg-secondary pulse-teal"></span>
+<span class="font-label-xs text-label-xs uppercase tracking-widest text-secondary-fixed">System Armed</span>
+</div>
+<h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg mb-sm">Vault Status</h2>
+<p class="text-on-primary/70 max-w-md font-body-md text-body-md">Your AI ecosystem is protected by military-grade end-to-end encryption. Only your biometric signature can unlock your life's data.</p>
+<div class="mt-lg flex flex-wrap gap-4 justify-center md:justify-start">
+<div class="flex items-center gap-3 bg-white/10 px-md py-3 rounded-xl border border-white/10">
+<span class="material-symbols-outlined text-secondary-fixed" style="font-variation-settings: 'FILL' 1;">enhanced_encryption</span>
+<span class="font-title-sm text-[16px]">Active Encryption</span>
+</div>
+<div class="flex items-center gap-3 bg-white/10 px-md py-3 rounded-xl border border-white/10">
+<span class="material-symbols-outlined text-secondary-fixed" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="font-title-sm text-[16px]">Biometrics Locked</span>
+</div>
+</div>
+</div>
+<div class="relative z-10 hidden md:flex items-center justify-center">
+<div class="w-48 h-48 rounded-full border-4 border-secondary/20 flex items-center justify-center pulse-teal">
+<div class="w-40 h-40 rounded-full bg-secondary-container/10 border border-secondary/40 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary-fixed text-[64px]" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Main Dashboard Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Column: Privacy Log & Controls -->
+<div class="md:col-span-8 space-y-gutter">
+<!-- Section Header -->
+<div class="flex items-center justify-between px-xs">
+<h3 class="font-headline-md text-title-sm text-primary">Intelligence Privacy Log</h3>
+<button class="text-on-secondary-container font-label-xs text-label-xs flex items-center gap-1 hover:underline">
+                        View Detailed Audit <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+</button>
+</div>
+<!-- Privacy Log Bento -->
+<div class="ai-border glass-card rounded-[24px] overflow-hidden shadow-sm">
+<div class="divide-y divide-outline-variant/20">
+<!-- Log Item 1 -->
+<div class="p-md flex items-start gap-md hover:bg-surface-variant/20 transition-colors">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary">psychology</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-xs">
+<span class="font-title-sm text-[16px] text-primary">Memories AI Engine</span>
+<span class="font-caption-sm text-on-surface-variant">2 mins ago</span>
+</div>
+<p class="text-body-md text-on-surface-variant">Accessed "Travel Memories" to curate weekly digest. Verified locally via Secure Enclave.</p>
+<div class="mt-sm flex gap-2">
+<span class="px-2 py-0.5 rounded-full bg-tertiary-fixed-dim/20 text-on-tertiary-fixed-variant text-[10px] font-bold uppercase">Encrypted</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant text-[10px] font-bold uppercase">On-Device</span>
+</div>
+</div>
+</div>
+<!-- Log Item 2 -->
+<div class="p-md flex items-start gap-md hover:bg-surface-variant/20 transition-colors">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary">location_on</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-xs">
+<span class="font-title-sm text-[16px] text-primary">Contextual Awareness</span>
+<span class="font-caption-sm text-on-surface-variant">14 mins ago</span>
+</div>
+<p class="text-body-md text-on-surface-variant">Requested location data for "Home Arrival" automation trigger. Data purged immediately.</p>
+<div class="mt-sm flex gap-2">
+<span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container text-[10px] font-bold uppercase">Temporary Access</span>
+</div>
+</div>
+</div>
+<!-- Log Item 3 -->
+<div class="p-md flex items-start gap-md hover:bg-surface-variant/20 transition-colors">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary">mic</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-xs">
+<span class="font-title-sm text-[16px] text-primary">Voice Command Processor</span>
+<span class="font-caption-sm text-on-surface-variant">1 hour ago</span>
+</div>
+<p class="text-body-md text-on-surface-variant">Transcribed query: "Schedule secure backup for tonight". Audio deleted after processing.</p>
+<div class="mt-sm flex gap-2">
+<span class="px-2 py-0.5 rounded-full bg-tertiary-fixed-dim/20 text-on-tertiary-fixed-variant text-[10px] font-bold uppercase">Processed Locally</span>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-high p-4 flex justify-center">
+<button class="text-primary font-title-sm text-body-md hover:opacity-70 transition-opacity">Show More Activity</button>
+</div>
+</div>
+<!-- Privacy Controls Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-gutter">
+<!-- Biometric Lock -->
+<div class="bg-white rounded-[24px] p-lg shadow-sm border border-outline-variant/10 flex flex-col justify-between h-full">
+<div>
+<div class="flex items-center justify-between mb-md">
+<span class="material-symbols-outlined text-primary text-[32px]">fingerprint</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<h4 class="font-title-sm text-primary mb-xs">Biometric Lock</h4>
+<p class="text-caption-sm text-on-surface-variant">Require FaceID or TouchID for all vault access attempts.</p>
+</div>
+</div>
+<!-- App Hiding -->
+<div class="bg-white rounded-[24px] p-lg shadow-sm border border-outline-variant/10 flex flex-col justify-between h-full">
+<div>
+<div class="flex items-center justify-between mb-md">
+<span class="material-symbols-outlined text-primary text-[32px]">visibility_off</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<h4 class="font-title-sm text-primary mb-xs">Stealth Mode</h4>
+<p class="text-caption-sm text-on-surface-variant">Hide the AI OS icon from your home screen and launcher.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Column: Sidebar Features -->
+<div class="md:col-span-4 space-y-gutter">
+<!-- Data Retention Card -->
+<div class="bg-surface-container-lowest rounded-[24px] p-lg shadow-sm border border-outline-variant/10">
+<div class="flex items-center gap-3 mb-md">
+<span class="material-symbols-outlined text-secondary">history</span>
+<h4 class="font-title-sm text-primary">Data Retention</h4>
+</div>
+<p class="text-caption-sm text-on-surface-variant mb-lg">How long should the AI OS remember your interactions?</p>
+<div class="space-y-sm">
+<button class="w-full text-left p-md rounded-xl bg-primary text-on-primary flex items-center justify-between">
+<span class="font-body-md">30 Days</span>
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+</button>
+<button class="w-full text-left p-md rounded-xl bg-surface-container-high text-on-surface flex items-center justify-between hover:bg-surface-variant transition-colors">
+<span class="font-body-md">90 Days</span>
+<span class="material-symbols-outlined text-[18px] opacity-0 text-outline">radio_button_unchecked</span>
+</button>
+<button class="w-full text-left p-md rounded-xl bg-surface-container-high text-on-surface flex items-center justify-between hover:bg-surface-variant transition-colors">
+<span class="font-body-md">Permanent</span>
+<span class="material-symbols-outlined text-[18px] opacity-0 text-outline">radio_button_unchecked</span>
+</button>
+</div>
+<div class="mt-lg pt-lg border-t border-outline-variant/20">
+<button class="w-full py-3 bg-error-container text-on-error-container rounded-xl font-title-sm text-body-md flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">delete_forever</span>
+                            Wipe All Data Now
+                        </button>
+</div>
+</div>
+<!-- Connected Devices Section -->
+<div class="bg-surface-container-lowest rounded-[24px] p-lg shadow-sm border border-outline-variant/10">
+<h4 class="font-title-sm text-primary mb-md">Connected Devices</h4>
+<div class="space-y-md">
+<!-- Device 1 -->
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 bg-surface-container-high rounded-full flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">smartphone</span>
+</div>
+<div class="flex-1">
+<p class="font-body-md text-primary font-medium">iPhone 15 Pro</p>
+<p class="text-caption-sm text-on-tertiary-container font-medium">This device • Active</p>
+</div>
+</div>
+<!-- Device 2 -->
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 bg-surface-container-high rounded-full flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">laptop_mac</span>
+</div>
+<div class="flex-1">
+<p class="font-body-md text-primary font-medium">MacBook Air M2</p>
+<p class="text-caption-sm text-on-surface-variant">Last active: 4h ago</p>
+</div>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined">logout</span>
+</button>
+</div>
+<!-- Device 3 -->
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 bg-surface-container-high rounded-full flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">watch</span>
+</div>
+<div class="flex-1">
+<p class="font-body-md text-primary font-medium">Apple Watch Ultra</p>
+<p class="text-caption-sm text-on-surface-variant">Last active: 10m ago</p>
+</div>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined">logout</span>
+</button>
+</div>
+</div>
+<button class="w-full mt-lg py-3 border border-outline-variant text-primary rounded-xl font-title-sm text-body-md">
+                        Manage All Devices
+                    </button>
+</div>
+<!-- Trusted Contacts / Dead Man's Switch -->
+<div class="bg-primary-container text-on-primary-container rounded-[24px] p-lg shadow-sm">
+<div class="flex items-center gap-3 mb-md">
+<span class="material-symbols-outlined text-secondary-fixed">key</span>
+<h4 class="font-title-sm text-white">Digital Inheritance</h4>
+</div>
+<p class="text-caption-sm text-on-primary-container/80 mb-md">Assign a trusted contact to access your vault in case of emergency.</p>
+<button class="w-full py-2 bg-white/10 hover:bg-white/20 transition-colors border border-white/20 rounded-xl font-label-xs text-label-xs uppercase text-white tracking-widest">
+                        Setup Heir
+                    </button>
+</div>
+</div>
+</div>
+<!-- Security Recommendations (Bento Row) -->
+<section class="space-y-md">
+<h3 class="font-headline-md text-title-sm text-primary px-xs">Security Recommendations</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="bg-secondary-container/20 border border-secondary/20 p-lg rounded-[24px] flex items-start gap-md">
+<span class="material-symbols-outlined text-secondary-fixed-variant" style="font-variation-settings: 'FILL' 1;">stars</span>
+<div>
+<p class="font-title-sm text-primary text-[16px] mb-xs">Update Biometrics</p>
+<p class="text-caption-sm text-on-surface-variant">It's been 6 months since your last scan calibration.</p>
+</div>
+</div>
+<div class="bg-surface-container-high p-lg rounded-[24px] flex items-start gap-md">
+<span class="material-symbols-outlined text-primary">cloud_off</span>
+<div>
+<p class="font-title-sm text-primary text-[16px] mb-xs">Go Offline</p>
+<p class="text-caption-sm text-on-surface-variant">Switch to local-only mode for upcoming sensitive travel.</p>
+</div>
+</div>
+<div class="bg-surface-container-high p-lg rounded-[24px] flex items-start gap-md">
+<span class="material-symbols-outlined text-primary">verified</span>
+<div>
+<p class="font-title-sm text-primary text-[16px] mb-xs">Privacy Score: 98</p>
+<p class="text-caption-sm text-on-surface-variant">Your profile is highly secured. Keep it up!</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Shared Component Logic) -->
+<nav class="fixed bottom-0 left-0 w-full h-20 flex justify-around items-center px-4 pb-safe bg-surface-container-low dark:bg-surface-container-lowest border-t border-outline-variant/30 z-50 rounded-t-xl shadow-sm">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/20 transition-all Active:scale-90 p-2" href="#">
+<span class="material-symbols-outlined">grain</span>
+<span class="font-label-xs text-label-xs">Memories</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/20 transition-all Active:scale-90 p-2" href="#">
+<span class="material-symbols-outlined">psychology_alt</span>
+<span class="font-label-xs text-label-xs">Recall</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/20 transition-all Active:scale-90 p-2" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-xs text-label-xs">Insights</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1 transition-all Active:scale-90" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-xs text-label-xs">Settings</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for toggle switches
+        document.querySelectorAll('input[type="checkbox"]').forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                const parent = this.closest('.bg-white');
+                if (this.checked) {
+                    parent.style.borderColor = 'rgba(0, 30, 64, 0.2)';
+                } else {
+                    parent.style.borderColor = 'rgba(195, 198, 209, 0.1)';
+                }
+            });
+        });
+
+        // Simple scale effect on buttons
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mousedown', () => btn.classList.add('scale-95'));
+            btn.addEventListener('mouseup', () => btn.classList.remove('scale-95'));
+            btn.addEventListener('mouseleave', () => btn.classList.remove('scale-95'));
+        });
+    </script>
+</body></html>

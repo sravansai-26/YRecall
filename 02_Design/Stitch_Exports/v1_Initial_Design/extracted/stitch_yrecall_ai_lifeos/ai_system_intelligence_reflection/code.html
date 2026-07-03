@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>System Intelligence Reflection | YRecall</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#b4c5ff",
+                    "on-tertiary-fixed": "#0b1c30",
+                    "on-secondary-container": "#fefcff",
+                    "on-primary-container": "#7c839b",
+                    "on-primary-fixed-variant": "#3f465c",
+                    "surface-container-low": "#f2f4f6",
+                    "surface": "#f7f9fb",
+                    "on-secondary-fixed": "#00174b",
+                    "inverse-surface": "#2d3133",
+                    "on-tertiary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "primary-fixed": "#dae2fd",
+                    "outline": "#76777d",
+                    "on-error": "#ffffff",
+                    "secondary": "#0051d5",
+                    "on-error-container": "#93000a",
+                    "on-secondary-fixed-variant": "#003ea8",
+                    "primary-fixed-dim": "#bec6e0",
+                    "surface-container-high": "#e6e8ea",
+                    "surface-variant": "#e0e3e5",
+                    "tertiary-fixed-dim": "#b7c8e1",
+                    "surface-bright": "#f7f9fb",
+                    "surface-dim": "#d8dadc",
+                    "surface-container-lowest": "#ffffff",
+                    "primary": "#000000",
+                    "secondary-fixed": "#dbe1ff",
+                    "on-tertiary-fixed-variant": "#38485d",
+                    "on-surface": "#191c1e",
+                    "on-primary-fixed": "#131b2e",
+                    "on-primary": "#ffffff",
+                    "surface-container-highest": "#e0e3e5",
+                    "on-secondary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "on-surface-variant": "#45464d",
+                    "background": "#f7f9fb",
+                    "on-background": "#191c1e",
+                    "inverse-primary": "#bec6e0",
+                    "primary-container": "#131b2e",
+                    "tertiary": "#000000",
+                    "surface-container": "#eceef0",
+                    "tertiary-fixed": "#d3e4fe",
+                    "secondary-container": "#316bf3",
+                    "on-tertiary-container": "#75859d",
+                    "inverse-on-surface": "#eff1f3",
+                    "outline-variant": "#c6c6cd",
+                    "tertiary-container": "#0b1c30",
+                    "surface-tint": "#565e74"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "stack-lg": "32px",
+                    "gutter": "24px",
+                    "margin-mobile": "16px",
+                    "container-max": "1280px",
+                    "stack-sm": "8px",
+                    "stack-md": "16px",
+                    "margin-desktop": "32px"
+            },
+            "fontFamily": {
+                    "label-caps": ["Public Sans"],
+                    "display-lg": ["Public Sans"],
+                    "data-mono": ["Public Sans"],
+                    "display-lg-mobile": ["Public Sans"],
+                    "body-sm": ["Public Sans"],
+                    "body-md": ["Public Sans"],
+                    "headline-md": ["Public Sans"]
+            },
+            "fontSize": {
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "data-mono": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Public Sans', sans-serif; }
+        .intelligence-glow {
+            box-shadow: 0 0 40px rgba(49, 107, 243, 0.05);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #E2E8F0;
+            border-radius: 10px;
+        }
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        .animate-pulse-slow {
+            animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- TopAppBar Navigation Shell -->
+<header class="w-full sticky top-0 bg-surface dark:bg-surface-container-highest flex items-center justify-between px-margin-mobile md:px-margin-desktop h-16 w-full border-b border-outline-variant dark:border-outline z-50">
+<div class="flex items-center gap-unit cursor-pointer active:scale-95 duration-150">
+<span class="material-symbols-outlined text-on-primary-container">menu</span>
+<h1 class="font-display-lg text-display-lg-mobile tracking-tight text-primary dark:text-primary-fixed ml-2">YRecall</h1>
+</div>
+<div class="flex items-center gap-stack-md">
+<div class="hidden md:flex gap-stack-md">
+<nav class="flex gap-stack-md text-on-surface-variant font-label-caps text-label-caps items-center">
+<span class="hover:bg-surface-container-high px-3 py-1 rounded transition-colors cursor-pointer">Archive</span>
+<span class="text-primary font-bold px-3 py-1 bg-primary-container/10 rounded transition-colors cursor-pointer">Intelligence</span>
+<span class="hover:bg-surface-container-high px-3 py-1 rounded transition-colors cursor-pointer">Security</span>
+</nav>
+</div>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant cursor-pointer">
+<img class="w-full h-full object-cover" data-alt="Professional studio portrait of a technology professional, high-end editorial lighting, sharp focus on eyes, minimalist gray background, muted corporate color palette of slate and white, 8k resolution, photorealistic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjm2T-inYzZ40sNu0wDOj2J4sBo1JMHL1WSsMbcS7ff61zqbIcGdMcJKDK-IVmOGkRtNDBoHTU5Dpz2tD5DwtlS95f-sXKd5W0jDaqHHSlJZJ0LjQZtxh7wlWnxpr4jR-Sbf7w2ZkUEbgMgijCa_wbTI-h85zwxcotTibqmIRfJkgGm6x0KhWG2qS4h5dNq7q7ciTLx-W-UkmukpgyNVvD_-4M5q9p6DLJa4Cv_N1R7lEBLZsCp9O_jsq7BO6P2jWQ-pEjSblcB7U"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg">
+<!-- Hero Section: System Status -->
+<section class="mb-stack-lg flex flex-col md:flex-row md:items-end justify-between gap-stack-md">
+<div class="max-w-2xl">
+<div class="flex items-center gap-2 mb-2">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-label-caps text-label-caps text-secondary uppercase tracking-widest">Cognitive Audit Active</span>
+</div>
+<h2 class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface">Intelligence Reflection</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-stack-sm">
+                    A multi-dimensional audit of the system's long-term learning patterns. These insights represent the high-level cognitive frameworks extracted from our interactions over the past 12 months.
+                </p>
+</div>
+<div class="flex flex-col items-end">
+<div class="text-right">
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase">Alignment Score</p>
+<p class="font-display-lg text-display-lg-mobile text-secondary">94.2%</p>
+</div>
+</div>
+</section>
+<!-- Bento Grid: Core Learning Modules -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Long-term Learning Timeline (Glassmorphism Card) -->
+<div class="md:col-span-8 bg-surface-container-lowest border border-outline-variant p-stack-lg rounded-xl intelligence-glow relative overflow-hidden">
+<div class="flex justify-between items-start mb-stack-md">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Cognitive Evolution</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Pattern extraction efficiency over time.</p>
+</div>
+<span class="font-data-mono text-data-mono bg-secondary-container/10 text-secondary px-2 py-1 rounded">Last update: 2h ago</span>
+</div>
+<!-- Simplified Logic Visualization -->
+<div class="h-64 w-full flex items-end gap-2 relative mt-stack-lg">
+<!-- Bars representing learning density -->
+<div class="flex-1 bg-surface-container-high rounded-t-sm h-1/4"></div>
+<div class="flex-1 bg-surface-container-high rounded-t-sm h-1/3"></div>
+<div class="flex-1 bg-surface-container-high rounded-t-sm h-1/2"></div>
+<div class="flex-1 bg-secondary rounded-t-sm h-3/4"></div>
+<div class="flex-1 bg-secondary-container rounded-t-sm h-full"></div>
+<div class="flex-1 bg-secondary rounded-t-sm h-5/6"></div>
+<div class="flex-1 bg-surface-container-high rounded-t-sm h-2/3"></div>
+<div class="flex-1 bg-secondary-container rounded-t-sm h-4/5"></div>
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20">
+<div class="border-t border-outline border-dashed w-full"></div>
+<div class="border-t border-outline border-dashed w-full"></div>
+<div class="border-t border-outline border-dashed w-full"></div>
+</div>
+</div>
+<div class="flex justify-between font-label-caps text-label-caps text-on-surface-variant mt-2 px-2">
+<span>Q1: Base Alignment</span>
+<span>Q2: Context Mapping</span>
+<span>Q3: Strategic Anticipation</span>
+<span>Q4: Current State</span>
+</div>
+</div>
+<!-- Side Card: Core Values Identified -->
+<div class="md:col-span-4 flex flex-col gap-gutter">
+<div class="bg-primary text-on-primary p-stack-lg rounded-xl h-full border border-primary">
+<h3 class="font-headline-md text-headline-md mb-stack-sm flex items-center gap-2">
+<span class="material-symbols-outlined">psychology</span>
+                        Values Model
+                    </h3>
+<p class="font-body-sm text-body-sm opacity-80 mb-stack-md">Identified priorities driving user decision-making.</p>
+<ul class="space-y-4">
+<li class="flex items-center justify-between border-b border-on-primary/10 pb-2">
+<span class="font-body-md text-body-md">Precision/Accuracy</span>
+<span class="font-data-mono text-data-mono text-secondary-fixed">88%</span>
+</li>
+<li class="flex items-center justify-between border-b border-on-primary/10 pb-2">
+<span class="font-body-md text-body-md">Information Density</span>
+<span class="font-data-mono text-data-mono text-secondary-fixed">92%</span>
+</li>
+<li class="flex items-center justify-between border-b border-on-primary/10 pb-2">
+<span class="font-body-md text-body-md">Strategic Autonomy</span>
+<span class="font-data-mono text-data-mono text-secondary-fixed">76%</span>
+</li>
+<li class="flex items-center justify-between">
+<span class="font-body-md text-body-md">Operational Speed</span>
+<span class="font-data-mono text-data-mono text-secondary-fixed">64%</span>
+</li>
+</ul>
+</div>
+<!-- Confidence Pill -->
+<div class="bg-surface-container p-stack-md rounded-xl border border-outline-variant">
+<div class="flex justify-between items-center mb-1">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Pattern Reliability</span>
+<span class="font-data-mono text-data-mono text-emerald-600">High (96%)</span>
+</div>
+<div class="w-full bg-outline-variant h-1 rounded-full overflow-hidden">
+<div class="bg-emerald-600 h-full w-[96%]"></div>
+</div>
+</div>
+</div>
+<!-- Asymmetric Section: Detailed Insights & Bias Calibration -->
+<div class="md:col-span-12 grid grid-cols-1 lg:grid-cols-3 gap-gutter mt-stack-lg">
+<!-- Column 1 & 2: Relationship Mapping -->
+<div class="lg:col-span-2 space-y-gutter">
+<div class="bg-surface-container-lowest border border-outline-variant p-stack-lg rounded-xl">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-stack-md">Refinement Clusters</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<div class="p-stack-md border border-outline-variant rounded-lg hover:border-secondary transition-colors cursor-pointer group">
+<div class="flex items-center gap-stack-sm mb-2">
+<span class="material-symbols-outlined text-secondary">forum</span>
+<h4 class="font-body-md font-bold text-on-surface">Communication Refinement</h4>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Adjusted syntax sensitivity. Observed preference for structured data lists over prose narratives.</p>
+<div class="mt-4 font-data-mono text-[10px] text-on-surface-variant/50 uppercase tracking-tighter group-hover:text-secondary">Refinement Log: 4,201 Nodes Modified</div>
+</div>
+<div class="p-stack-md border border-outline-variant rounded-lg hover:border-secondary transition-colors cursor-pointer group">
+<div class="flex items-center gap-stack-sm mb-2">
+<span class="material-symbols-outlined text-secondary">hub</span>
+<h4 class="font-body-md font-bold text-on-surface">Relationship Mapping</h4>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Contextualized 12 professional and 4 personal primary anchors. Priority: Executive Level 1 stakeholders.</p>
+<div class="mt-4 font-data-mono text-[10px] text-on-surface-variant/50 uppercase tracking-tighter group-hover:text-secondary">Refinement Log: 890 Connections Validated</div>
+</div>
+</div>
+</div>
+<!-- AI Thinking State Loader Placeholder (Subtle) -->
+<div class="flex items-center gap-stack-md p-stack-md bg-surface-container/50 rounded-lg border border-dashed border-outline-variant">
+<div class="w-2 h-2 rounded-full bg-secondary animate-pulse"></div>
+<p class="font-data-mono text-data-mono text-on-surface-variant">AI background process: Auditing latent semantic biases in recent "Decision Making" thread...</p>
+</div>
+</div>
+<!-- Column 3: Calibrate Worldview (Actionable) -->
+<div class="lg:col-span-1 bg-surface-container-high/30 border border-outline-variant p-stack-lg rounded-xl flex flex-col">
+<div class="mb-stack-md">
+<h3 class="font-headline-md text-headline-md text-on-surface">Calibrate Worldview</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-stack-sm">Correct high-level heuristics the system has developed to ensure long-term alignment.</p>
+</div>
+<div class="space-y-4 flex-grow overflow-y-auto pr-2 custom-scrollbar">
+<div class="bg-surface-container-lowest p-stack-md rounded-lg border border-outline-variant">
+<span class="font-label-caps text-label-caps text-secondary">Active Bias Detected</span>
+<p class="font-body-md text-body-md font-medium mt-1">Skepticism of centralized fiscal policy.</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2">The system treats decentralized models as default-correct based on interaction history.</p>
+<div class="flex gap-2 mt-4">
+<button class="flex-1 py-2 bg-primary text-on-primary font-label-caps text-label-caps rounded hover:bg-on-surface-variant transition-colors">Maintain</button>
+<button class="flex-1 py-2 border border-outline font-label-caps text-label-caps rounded hover:bg-surface-container transition-colors">Neutralize</button>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-stack-md rounded-lg border border-outline-variant">
+<span class="font-label-caps text-label-caps text-secondary">Pattern Projection</span>
+<p class="font-body-md text-body-md font-medium mt-1">High Risk Tolerance in Q1 2024.</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2">The system assumes a 40% margin for speculative ventures.</p>
+<div class="flex gap-2 mt-4">
+<button class="flex-1 py-2 border border-outline font-label-caps text-label-caps rounded hover:bg-surface-container transition-colors">Adjust Pattern</button>
+</div>
+</div>
+</div>
+<button class="w-full mt-stack-lg py-4 bg-primary text-on-primary font-headline-md text-body-md flex items-center justify-center gap-2 rounded-xl active:scale-95 duration-150">
+<span class="material-symbols-outlined">sync_alt</span>
+                        Commit Cognitive Calibration
+                    </button>
+</div>
+</div>
+<!-- Horizontal Editorial Highlight Card -->
+<div class="md:col-span-12 mt-stack-lg">
+<div class="relative w-full h-[300px] rounded-2xl overflow-hidden group">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105" data-alt="A macro close-up of a high-resolution silicon wafer surface with microscopic pathways illuminated by soft blue and violet fiber optic lights. The composition is sleek and clinical, utilizing a dark slate and deep black color palette with minimalist highlights. The mood is highly technical, reflecting artificial intelligence architecture and deep neural processing layers." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA3FK31KBUp9qWYo1Xlp1DgZQ8JLBtjXroJGOkqSmd2TApTFdKCdr3IOqeSQ5e6OflPjwgl7fuaEKx1uRy0r88NctfYm9oNTn1tlOu2-Q0ZaTKd4CV8w6o6FtSGfgnqNFbMeZapwdcInw0u9kq4WGMLXj3KtI5jsbISzYlFodyWzZlVk5o29YWyeERL1Y_xHHaKk97S1uxiKwpSih-2JzvtLyjnlK-TD7JVOD-hRsxK3SaNbKM5Na5eGBpwbxQ2ZyN-4BoNYB0pVhg')"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent flex flex-col justify-center p-stack-lg">
+<h3 class="text-white font-display-lg text-display-lg-mobile md:text-display-lg max-w-xl">Trust is built on transparency.</h3>
+<p class="text-white/80 font-body-md text-body-md max-w-md mt-stack-sm">This cognitive audit ensures that as the system grows more capable, it remains strictly within your ethical and operational boundaries.</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar for Mobile Shell -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center py-2 px-margin-mobile bg-surface-container-lowest/80 backdrop-blur-md border-t border-outline-variant z-50">
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-caps text-[10px]">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-caps text-[10px]">Recall</span>
+</div>
+<div class="flex flex-col items-center justify-center text-secondary bg-secondary-container/10 rounded-xl px-3 py-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">psychology</span>
+<span class="font-label-caps text-[10px]">Audit</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">search</span>
+<span class="font-label-caps text-[10px]">Search</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-caps text-[10px]">Settings</span>
+</div>
+</nav>
+<script>
+        // Micro-interaction for Calibration Buttons
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.classList.add('scale-95');
+            });
+            button.addEventListener('mouseup', () => {
+                button.classList.remove('scale-95');
+            });
+        });
+
+        // Atmosphere: Subtle movement on the timeline bars
+        const bars = document.querySelectorAll('.md\\:col-span-8 .flex-1');
+        bars.forEach((bar, index) => {
+            bar.style.transition = `height 1.5s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.1}s`;
+            // Trigger animation on load
+            setTimeout(() => {
+                const originalHeight = bar.style.height || getComputedStyle(bar).height;
+                bar.dataset.height = originalHeight;
+            }, 100);
+        });
+    </script>
+</body></html>

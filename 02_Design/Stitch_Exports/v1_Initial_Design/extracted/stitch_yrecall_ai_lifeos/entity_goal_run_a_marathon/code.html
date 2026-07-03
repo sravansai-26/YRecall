@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YRecall - Goal Detail</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Public Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .progress-gradient {
+            background: linear-gradient(90deg, #001e40 0%, #006a6a 100%);
+        }
+        body {
+            background-color: #fff8f1;
+            font-family: 'Public Sans', sans-serif;
+            color: #1e1b17;
+        }
+    </style>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#006a6a",
+                    "tertiary-fixed-dim": "#88d982",
+                    "on-tertiary-fixed-variant": "#005312",
+                    "tertiary-container": "#003d0b",
+                    "on-tertiary-fixed": "#002204",
+                    "on-secondary-fixed-variant": "#004f4f",
+                    "on-primary-fixed-variant": "#1f477b",
+                    "on-tertiary-container": "#5ead5c",
+                    "secondary-fixed-dim": "#76d6d5",
+                    "outline": "#737780",
+                    "surface-tint": "#3a5f94",
+                    "primary-fixed": "#d5e3ff",
+                    "surface-container": "#f4ede5",
+                    "secondary-fixed": "#93f2f2",
+                    "surface-variant": "#e8e1da",
+                    "tertiary-fixed": "#a3f69c",
+                    "on-primary-container": "#799dd6",
+                    "secondary-container": "#90efef",
+                    "outline-variant": "#c3c6d1",
+                    "surface": "#fff8f1",
+                    "inverse-surface": "#33302b",
+                    "on-secondary-container": "#006e6e",
+                    "tertiary": "#002504",
+                    "surface-bright": "#fff8f1",
+                    "on-surface": "#1e1b17",
+                    "error": "#ba1a1a",
+                    "surface-container-low": "#faf3eb",
+                    "on-secondary-fixed": "#002020",
+                    "on-error": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "primary-container": "#003366",
+                    "surface-container-highest": "#e8e1da",
+                    "error-container": "#ffdad6",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#f7f0e8",
+                    "primary-fixed-dim": "#a7c8ff",
+                    "surface-container-lowest": "#ffffff",
+                    "primary": "#001e40",
+                    "background": "#fff8f1",
+                    "on-background": "#1e1b17",
+                    "inverse-primary": "#a7c8ff",
+                    "on-surface-variant": "#43474f",
+                    "on-primary": "#ffffff",
+                    "on-primary-fixed": "#001b3c",
+                    "surface-dim": "#e0d9d1",
+                    "surface-container-high": "#eee7df",
+                    "on-error-container": "#93000a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-desktop": "40px",
+                    "xl": "32px",
+                    "md": "16px",
+                    "lg": "24px",
+                    "base": "8px",
+                    "margin-mobile": "20px",
+                    "gutter": "16px",
+                    "xxl": "48px",
+                    "xs": "4px",
+                    "sm": "8px"
+            },
+            "fontFamily": {
+                    "display-lg-mobile": ["Public Sans"],
+                    "body-md": ["Public Sans"],
+                    "display-lg": ["Public Sans"],
+                    "label-xs": ["Public Sans"],
+                    "title-sm": ["Public Sans"],
+                    "headline-md": ["Public Sans"],
+                    "caption-sm": ["Public Sans"]
+            },
+            "fontSize": {
+                    "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background">
+<!-- Top AppBar (from JSON Hierarchy) -->
+<header class="w-full top-0 sticky z-[60] bg-surface flex justify-between items-center h-16 px-margin-mobile md:px-margin-desktop">
+<div class="flex items-center gap-4">
+<button class="active:scale-95 transition-transform duration-150 flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-on-surface-variant">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md-mobile md:text-headline-md text-primary tracking-tight">Run a Marathon</h1>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden border-2 border-primary-fixed">
+<img class="w-full h-full object-cover" data-alt="A close-up professional profile portrait of a young person with a focused expression, set against a blurred morning outdoor running track background. The lighting is soft, golden hour sunlight, contributing to an optimistic and high-performance atmosphere. The image is clean, high-resolution, and adheres to a minimalist light-mode aesthetic with cool blue and warm cream tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0Gsl3zC2n97fIVjDPxHlh6Nk2Qrr8MJ53Xt_9TDJHp_80PLz0BTBmVAeag3t4b391rekLax62W6gEe4NlvTMLDCKt_ePeXpmv1zLCmPbEtSOGYFl67U5tT7KHQNn_g4bOGJFOli_cO_t4CuQTKs47q8dKpcO3o_1o5Qy5xoCxLG9L_p2o1TG7E346DcJFdEMXKia0PDSIBmeoRDwGlRq-QZAvhk3Y28vLm5kXcKz4SMtpitrVLQrcao3U_ypDloQQllhxkMcK85Q"/>
+</div>
+</div>
+</header>
+<main class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-desktop pb-32 pt-8">
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-4 md:grid-cols-12 gap-gutter">
+<!-- Hero Progress Card -->
+<div class="col-span-4 md:col-span-8 bg-surface-container-lowest rounded-[24px] p-xl border border-outline-variant shadow-sm flex flex-col justify-between min-h-[320px] relative overflow-hidden">
+<div class="z-10">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-xs text-label-xs uppercase tracking-widest mb-4 inline-block">Active Journey</span>
+<h2 class="font-headline-md text-headline-md-mobile md:text-headline-md text-primary mb-2">64% Completed</h2>
+<p class="font-body-md text-on-surface-variant max-w-md">You've logged 270.4 miles of your 422.4 mile training block. Your stamina is trending 12% higher than last month.</p>
+</div>
+<div class="mt-8 z-10">
+<div class="w-full h-4 bg-surface-container-high rounded-full overflow-hidden mb-2">
+<div class="h-full progress-gradient w-[64%] rounded-full shadow-[0_0_12px_rgba(0,106,106,0.3)] transition-all duration-1000 ease-out"></div>
+</div>
+<div class="flex justify-between font-label-xs text-label-xs text-on-surface-variant">
+<span>START: JAN 15</span>
+<span class="text-secondary font-bold">CURRENT: MAR 22</span>
+<span>GOAL: JUN 10</span>
+</div>
+</div>
+<!-- Subtle Decorative Element -->
+<div class="absolute -right-16 -bottom-16 opacity-10 pointer-events-none">
+<span class="material-symbols-outlined text-[240px] text-primary">distance</span>
+</div>
+</div>
+<!-- AI Prediction Card -->
+<div class="col-span-4 md:col-span-4 bg-primary text-on-primary rounded-[24px] p-xl flex flex-col justify-between shadow-xl relative overflow-hidden">
+<div class="absolute inset-0 opacity-20 pointer-events-none">
+
+</div>
+<div class="z-10">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-secondary-fixed">psychology</span>
+<span class="font-label-xs text-label-xs uppercase tracking-widest text-secondary-fixed">AI Insight</span>
+</div>
+<h3 class="font-title-sm text-title-sm text-surface-container-lowest mb-2">Projected Finish</h3>
+<div class="font-display-lg text-display-lg-mobile md:text-display-lg text-white mb-1">June 08</div>
+<p class="font-caption-sm text-primary-fixed opacity-80 leading-relaxed">Based on your current 4-day-a-week habit and increasing split times, you are tracking 2 days ahead of schedule.</p>
+</div>
+<div class="mt-6 pt-4 border-t border-primary-fixed/20 z-10">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-[18px]">trending_up</span>
+</div>
+<span class="font-label-xs text-label-xs">Confidence Score: 94%</span>
+</div>
+</div>
+</div>
+<!-- Milestones Section -->
+<div class="col-span-4 md:col-span-5 bg-surface-container rounded-[24px] p-xl border border-outline-variant">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-title-sm text-title-sm text-primary">Milestones</h3>
+<span class="material-symbols-outlined text-on-surface-variant">flag</span>
+</div>
+<div class="space-y-6">
+<!-- Milestone 1 -->
+<div class="flex gap-4 items-start">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed-dim text-on-secondary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<div class="w-0.5 h-12 bg-outline-variant mt-2"></div>
+</div>
+<div>
+<p class="font-label-xs text-label-xs text-on-surface-variant">FEB 02</p>
+<h4 class="font-body-md font-bold text-primary">First 10K Logged</h4>
+<p class="font-caption-sm text-on-surface-variant">Completed in Central Park with 8:45 split.</p>
+</div>
+</div>
+<!-- Milestone 2 -->
+<div class="flex gap-4 items-start">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed-dim text-on-secondary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<div class="w-0.5 h-12 bg-outline-variant mt-2"></div>
+</div>
+<div>
+<p class="font-label-xs text-label-xs text-on-surface-variant">MAR 10</p>
+<h4 class="font-body-md font-bold text-primary">Half Marathon Simulation</h4>
+<p class="font-caption-sm text-on-surface-variant">13.1 miles. Toughest run yet but felt strong.</p>
+</div>
+</div>
+<!-- Milestone 3 -->
+<div class="flex gap-4 items-start">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full border-2 border-outline-variant text-on-surface-variant flex items-center justify-center bg-transparent">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+</div>
+</div>
+<div>
+<p class="font-label-xs text-label-xs text-on-surface-variant">APR 15 (UPCOMING)</p>
+<h4 class="font-body-md font-bold text-on-surface-variant">20-Mile Taper Start</h4>
+<p class="font-caption-sm text-on-surface-variant opacity-60">Prepare mentally for the long duration.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Memory Cloud (Linked Workouts) -->
+<div class="col-span-4 md:col-span-7 space-y-gutter">
+<div class="flex justify-between items-center">
+<h3 class="font-title-sm text-title-sm text-primary">Workout Memories</h3>
+<button class="text-secondary font-label-xs text-label-xs hover:underline uppercase tracking-wider">View All</button>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-sm">
+<!-- Photo 1 -->
+<div class="relative group rounded-xl overflow-hidden aspect-square cursor-pointer">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A first-person perspective shot of a runner's legs and carbon-fiber running shoes hitting a wet asphalt path in a lush green park during early morning. Sunlight filters through the trees, creating long shadows and highlighting mist. The style is cinematic and realistic with a premium, high-contrast finish, capturing the grit and determination of training." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkGfNTogPsMzn3opqYd_p_xNrXpdvICSGwzGu-185MzgtYIt1OkjAC5nNBZimkO8fkgH-zIIYMvD0QYh4IIb8TTuMw_lW2yxkFCJLh6kwXFdZZs_nFCjYZVm1QNy2mWy3fIFzvFQwgaORPIGgl4zsQTmKUtivbydQY713Y5i1hFNxvVUw8oUOXb2-m4R2AzfMXECr18tNi_KylgxHbIpc0EDeeuxOpkN1v7U_DR4-AB_Nr1LXoGR2sMIPFkX1oqvWOeB2r0pZ83gM"/>
+<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
+<span class="text-white font-label-xs text-[10px]">Morning Run • Mar 12</span>
+</div>
+</div>
+<!-- Voice Memo -->
+<div class="bg-surface-container-high rounded-xl aspect-square flex flex-col items-center justify-center p-4 text-center hover:bg-surface-variant transition-colors cursor-pointer border border-outline-variant">
+<span class="material-symbols-outlined text-primary text-[32px] mb-2">mic</span>
+<p class="font-label-xs text-label-xs font-bold text-primary">Post-Run Reflection</p>
+<p class="font-caption-sm text-on-surface-variant">0:45 • Mar 18</p>
+</div>
+<!-- Photo 2 -->
+<div class="relative group rounded-xl overflow-hidden aspect-square cursor-pointer">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A minimalist architectural shot of a stadium staircase where a person is doing sprint intervals. The lighting is harsh afternoon sun creating dramatic graphic shadows. The color palette is composed of concrete grays, a bright teal athletic shirt, and a clear blue sky. The composition is clean and artistic, reflecting the disciplined nature of personal goal achievement." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkdJhiZP2UCgR1zAioCLiO84vTKYRC21vugLzq2LdvptQd7lBLfK_wyKpjdnvXU6nVS49nBQxomI7wsjtcwF66CoZqXfk6HQx9g2aKijYZ7B5yI4r7r4aCAWIxgs6aTjG4hPcj_XpDDCr_VfZSt0-kpHIInpiyQhohkDx7pUgBx2wLbpTQQU3cMD40d80RZQumMaqgNgbqA3OOdR-o1W2XyNccDGSCvIXnY9mXaH1L9hH8PSJ6DWjbnUbhRS_6-uj0uLTcw9-G3o4"/>
+<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
+<span class="text-white font-label-xs text-[10px]">Hill Repeats • Mar 20</span>
+</div>
+</div>
+</div>
+<!-- AI Persona Encouragement -->
+<div class="bg-tertiary-container rounded-[24px] p-lg flex gap-md items-start shadow-inner border border-tertiary-fixed/30 relative overflow-hidden">
+<div class="absolute right-0 top-0 h-full w-24 opacity-10 pointer-events-none">
+
+</div>
+<div class="w-12 h-12 rounded-full bg-tertiary-fixed flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-tertiary text-[24px]">auto_awesome</span>
+</div>
+<div class="z-10">
+<h4 class="font-title-sm text-tertiary-fixed-dim text-[16px] mb-1">Encouragement from YRecall</h4>
+<p class="font-body-md text-on-tertiary-container italic">"I've noticed you've stayed consistent even on rainy days. That mental toughness is what's going to get you through mile 22. You’re doing exactly what you said you’d do, and that’s the hardest part of any marathon. Keep the pace, stay hydrated, and remember why we started."</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation (from JSON Hierarchy) -->
+<nav class="fixed bottom-0 w-full h-[80px] z-50 bg-surface flex justify-around items-center px-base border-t border-outline-variant">
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1 hover:text-primary transition-all duration-200 active:scale-90">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-xs text-label-xs mt-1">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1 transition-all duration-200 active:scale-90">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">history</span>
+<span class="font-label-xs text-label-xs mt-1">Recall</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1 hover:text-primary transition-all duration-200 active:scale-90">
+<span class="material-symbols-outlined">hub</span>
+<span class="font-label-xs text-label-xs mt-1">Insights</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1 hover:text-primary transition-all duration-200 active:scale-90">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-xs text-label-xs mt-1">Settings</span>
+</button>
+</nav>
+<!-- Interactive Layer: Simple Scroll Observer for sticky header effects -->
+<script>
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 20) {
+                header.classList.add('shadow-md', 'bg-surface/80', 'backdrop-blur-md');
+            } else {
+                header.classList.remove('shadow-md', 'bg-surface/80', 'backdrop-blur-md');
+            }
+        });
+
+        // Simple animation for progress bar on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const progressBar = document.querySelector('.progress-gradient');
+            progressBar.style.width = '0%';
+            setTimeout(() => {
+                progressBar.style.width = '64%';
+            }, 300);
+        });
+    </script>
+</body></html>

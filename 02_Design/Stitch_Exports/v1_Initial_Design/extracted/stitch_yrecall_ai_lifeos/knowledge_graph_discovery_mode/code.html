@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YRecall | Knowledge Graph Discovery</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .graph-node {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .graph-node:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 8px rgba(0, 30, 64, 0.2));
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        .glass-panel {
+            background: rgba(255, 248, 241, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(209, 205, 199, 0.3);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#ffdad6",
+                        "surface": "#fff8f1",
+                        "primary": "#001e40",
+                        "surface-dim": "#e0d9d1",
+                        "inverse-primary": "#a7c8ff",
+                        "on-secondary-fixed": "#002020",
+                        "inverse-on-surface": "#f7f0e8",
+                        "on-surface": "#1e1b17",
+                        "secondary-container": "#90efef",
+                        "outline": "#737780",
+                        "on-tertiary-container": "#5ead5c",
+                        "on-primary-fixed-variant": "#1f477b",
+                        "surface-container": "#f4ede5",
+                        "surface-bright": "#fff8f1",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#004f4f",
+                        "on-background": "#1e1b17",
+                        "surface-container-low": "#faf3eb",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#88d982",
+                        "primary-fixed-dim": "#a7c8ff",
+                        "secondary-fixed": "#93f2f2",
+                        "secondary": "#006a6a",
+                        "surface-variant": "#e8e1da",
+                        "inverse-surface": "#33302b",
+                        "surface-container-highest": "#e8e1da",
+                        "on-tertiary-fixed": "#002204",
+                        "background": "#fff8f1",
+                        "secondary-fixed-dim": "#76d6d5",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed": "#001b3c",
+                        "on-error-container": "#93000a",
+                        "surface-tint": "#3a5f94",
+                        "tertiary": "#002504",
+                        "primary-fixed": "#d5e3ff",
+                        "on-tertiary-fixed-variant": "#005312",
+                        "on-surface-variant": "#43474f",
+                        "on-secondary-container": "#006e6e",
+                        "on-primary-container": "#799dd6",
+                        "tertiary-container": "#003d0b",
+                        "tertiary-fixed": "#a3f69c",
+                        "on-error": "#ffffff",
+                        "primary-container": "#003366",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#eee7df",
+                        "outline-variant": "#c3c6d1"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "12px",
+                        "2xl": "24px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "gutter": "16px",
+                        "base": "8px",
+                        "xl": "32px",
+                        "xxl": "48px",
+                        "margin-desktop": "40px",
+                        "xs": "4px",
+                        "margin-mobile": "20px",
+                        "lg": "24px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "caption-sm": ["Public Sans"],
+                        "display-lg": ["Public Sans"],
+                        "title-sm": ["Public Sans"],
+                        "headline-md": ["Public Sans"],
+                        "display-lg-mobile": ["Public Sans"],
+                        "body-md": ["Public Sans"],
+                        "label-xs": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                        "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md overflow-hidden h-screen flex flex-col">
+<!-- Top Navigation Anchor -->
+<header class="bg-surface/80 backdrop-blur-md w-full top-0 sticky z-40 shadow-sm flex items-center justify-between px-margin-mobile py-sm h-16">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a creative individual with soft studio lighting. The background is a clean, minimalist off-white studio wall, echoing the design's premium aesthetic. The lighting is warm and directional, highlighting textures and creating a calm, high-end editorial feel with natural skin tones and sharp focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBV7g-w00DzNgqW91s19CjvCHSweA8CfPYa7rwrgtQGBUTb5Q1UF3N0lCzga29sPQ7DOAAp9hTqxaUH8AJ3c_8Iy0swNkW3vJfwSlDldDacARu9upRkHB96bktV2tJzZuZRF4HSAdg1miROvln8M6AtQiayN4K_kfGvJQ6CLX1LkGc_RDUz7FmXOuY1Godv7PJz7SVtYX7Jpce2lDHAAOOx96PzMDk2Y6ALWMWrCiGLo5j3SD0GZ4H8vaYUnm99Qqrx3q_FfLOpIi8"/>
+</div>
+<h1 class="text-title-sm font-title-sm font-bold text-primary">YRecall</h1>
+</div>
+<!-- Search Graph Bar -->
+<div class="hidden md:flex items-center flex-1 max-w-xl mx-xl px-md h-12 bg-surface-container rounded-full border border-outline-variant/30 focus-within:border-primary transition-all">
+<span class="material-symbols-outlined text-on-surface-variant mr-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 w-full text-body-md text-on-surface" placeholder="Search digital brain..." type="text"/>
+<span class="text-caption-sm text-outline-variant ml-sm">CMD + K</span>
+</div>
+<div class="flex items-center gap-sm">
+<button class="p-sm rounded-full hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</button>
+<button class="md:hidden p-sm rounded-full hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-primary">search</span>
+</button>
+</div>
+</header>
+<main class="flex-1 relative overflow-hidden flex">
+<!-- Side Navigation Drawer (Web) -->
+<aside class="hidden lg:flex flex-col p-md gap-sm bg-surface-container-low h-full w-[320px] rounded-r-xl border-r border-outline-variant/20">
+<div class="mb-lg px-sm">
+<h2 class="text-headline-md font-headline-md text-primary">Knowledge Graph</h2>
+<p class="text-caption-sm text-on-surface-variant">AI Life OS Active • 1,248 Entities</p>
+</div>
+<nav class="space-y-sm">
+<a class="flex items-center gap-md p-md bg-tertiary-container text-on-tertiary-container rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">hub</span>
+<span class="font-body-md">Discovery Mode</span>
+</a>
+<a class="flex items-center gap-md p-md text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">today</span>
+<span class="font-body-md">Daily Briefing</span>
+</a>
+<a class="flex items-center gap-md p-md text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">timeline</span>
+<span class="font-body-md">Timeline</span>
+</a>
+<a class="flex items-center gap-md p-md text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">inbox</span>
+<span class="font-body-md">Proactive Inbox</span>
+</a>
+</nav>
+<div class="mt-auto p-md glass-panel rounded-2xl">
+<h3 class="text-label-xs uppercase tracking-widest text-outline mb-sm">Graph Health</h3>
+<div class="flex justify-between items-end mb-xs">
+<span class="text-title-sm font-bold text-primary">98%</span>
+<span class="text-caption-sm text-on-tertiary-container">Optimized</span>
+</div>
+<div class="w-full bg-surface-variant h-1.5 rounded-full overflow-hidden">
+<div class="bg-on-tertiary-container h-full w-[98%]"></div>
+</div>
+</div>
+</aside>
+<!-- The Interactive Canvas -->
+<section class="flex-1 relative bg-surface overflow-hidden">
+<!-- Animated Subtle Background Pattern -->
+<div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#001e40 0.5px, transparent 0.5px); background-size: 24px 24px;"></div>
+<!-- Graph Clusters Mock Visualization -->
+<div class="w-full h-full relative cursor-grab active:cursor-grabbing" id="graph-container">
+<!-- Category Cluster: People -->
+<div class="absolute top-1/4 left-1/4 animate-float" style="animation-delay: 0s;">
+<div class="relative group">
+<div class="absolute -inset-8 bg-secondary-container/20 rounded-full blur-2xl group-hover:bg-secondary-container/40 transition-all"></div>
+<div class="graph-node flex flex-col items-center justify-center p-xl rounded-full bg-white shadow-xl border border-secondary-container/30 relative z-10">
+<span class="material-symbols-outlined text-on-secondary-container text-4xl mb-sm" style="font-variation-settings: 'FILL' 1;">groups</span>
+<span class="font-title-sm text-primary">People</span>
+</div>
+<!-- Individual Nodes -->
+<div class="absolute -top-16 -right-12 graph-node p-sm bg-white rounded-xl shadow-lg border border-outline-variant/30 flex items-center gap-xs">
+<div class="w-8 h-8 rounded-full bg-secondary-container/40 flex items-center justify-center">
+<span class="material-symbols-outlined text-xs">person</span>
+</div>
+<span class="text-caption-sm font-medium">Sarah Chen</span>
+</div>
+<div class="absolute top-12 -left-20 graph-node p-sm bg-white rounded-xl shadow-lg border border-outline-variant/30 flex items-center gap-xs">
+<div class="w-8 h-8 rounded-full bg-secondary-container/40 flex items-center justify-center">
+<span class="material-symbols-outlined text-xs">person</span>
+</div>
+<span class="text-caption-sm font-medium">Marcus Aurelius</span>
+</div>
+</div>
+</div>
+<!-- Category Cluster: Projects -->
+<div class="absolute bottom-1/3 right-1/4 animate-float" style="animation-delay: -2s;">
+<div class="relative group">
+<div class="absolute -inset-10 bg-tertiary-container/10 rounded-full blur-3xl group-hover:bg-tertiary-container/20 transition-all"></div>
+<div class="graph-node flex flex-col items-center justify-center p-xxl rounded-full bg-white shadow-xl border border-tertiary-fixed/30 relative z-10">
+<span class="material-symbols-outlined text-on-tertiary-container text-4xl mb-sm" style="font-variation-settings: 'FILL' 1;">terminal</span>
+<span class="font-title-sm text-primary">Projects</span>
+</div>
+<!-- Individual Nodes -->
+<div class="absolute -bottom-12 right-0 graph-node p-sm bg-white rounded-xl shadow-lg border border-outline-variant/30 flex items-center gap-xs">
+<div class="w-8 h-8 rounded-full bg-tertiary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-xs">edit_note</span>
+</div>
+<span class="text-caption-sm font-medium">YRecall Architecture</span>
+</div>
+<div class="absolute -top-10 -left-16 graph-node p-sm bg-white rounded-xl shadow-lg border border-outline-variant/30 flex items-center gap-xs">
+<div class="w-8 h-8 rounded-full bg-tertiary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-xs">lightbulb</span>
+</div>
+<span class="text-caption-sm font-medium">Quantum Logic Lab</span>
+</div>
+</div>
+</div>
+<!-- Category Cluster: Places -->
+<div class="absolute top-1/2 right-1/3 animate-float" style="animation-delay: -4s;">
+<div class="relative group">
+<div class="absolute -inset-8 bg-primary-container/5 rounded-full blur-2xl group-hover:bg-primary-container/10 transition-all"></div>
+<div class="graph-node flex flex-col items-center justify-center p-xl rounded-full bg-white shadow-xl border border-outline-variant/30 relative z-10">
+<span class="material-symbols-outlined text-primary-container text-4xl mb-sm" style="font-variation-settings: 'FILL' 1;">map</span>
+<span class="font-title-sm text-primary">Places</span>
+</div>
+<!-- Individual Nodes -->
+<div class="absolute top-20 -right-8 graph-node p-sm bg-white rounded-xl shadow-lg border border-outline-variant/30 flex items-center gap-xs">
+<div class="w-8 h-8 rounded-full bg-primary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-xs">location_on</span>
+</div>
+<span class="text-caption-sm font-medium">Tokyo, Japan</span>
+</div>
+</div>
+</div>
+<!-- Central Smart Hub -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+<div class="relative flex items-center justify-center">
+
+<div class="graph-node w-24 h-24 rounded-full bg-primary text-white flex items-center justify-center shadow-2xl relative z-30 border-4 border-white">
+<span class="material-symbols-outlined text-3xl">psychology</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Floating Action Buttons -->
+<div class="absolute bottom-xl right-xl flex flex-col gap-md z-30">
+<button class="w-14 h-14 rounded-2xl bg-white text-primary shadow-xl border border-outline-variant/30 flex items-center justify-center hover:bg-surface-container transition-all active:scale-95 group">
+<span class="material-symbols-outlined group-hover:rotate-180 transition-transform duration-500">sync</span>
+<div class="absolute right-full mr-md px-md py-xs bg-primary text-white text-caption-sm rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">Re-index Brain</div>
+</button>
+<button class="w-14 h-14 rounded-2xl bg-primary text-white shadow-xl flex items-center justify-center hover:opacity-90 transition-all active:scale-95 group">
+<span class="material-symbols-outlined">filter_list</span>
+<div class="absolute right-full mr-md px-md py-xs bg-primary text-white text-caption-sm rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">Filter View</div>
+</button>
+</div>
+<!-- View Controls -->
+<div class="absolute bottom-xl left-1/2 -translate-x-1/2 glass-panel p-xs rounded-full flex gap-xs z-30">
+<button class="px-md py-sm bg-primary text-white rounded-full text-caption-sm font-medium">Nodes</button>
+<button class="px-md py-sm hover:bg-surface-variant rounded-full text-caption-sm font-medium text-on-surface-variant">List View</button>
+<button class="px-md py-sm hover:bg-surface-variant rounded-full text-caption-sm font-medium text-on-surface-variant">Chronological</button>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Mobile) -->
+<nav class="md:hidden bg-surface fixed bottom-0 w-full z-50 h-[80px] flex justify-around items-center px-margin-mobile border-t border-outline-variant">
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-xs text-label-xs mt-1">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">history_edu</span>
+<span class="font-label-xs text-label-xs mt-1">Recall</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">hub</span>
+<span class="font-label-xs text-label-xs mt-1">Insights</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-xs text-label-xs mt-1">Settings</span>
+</div>
+</nav>
+<script>
+        // Simple Interaction logic for graph panning
+        const container = document.getElementById('graph-container');
+        let isDragging = false;
+        let startX, startY, scrollLeft, scrollTop;
+
+        container.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.pageX - container.offsetLeft;
+            startY = e.pageY - container.offsetTop;
+        });
+
+        container.addEventListener('mouseleave', () => {
+            isDragging = false;
+        });
+
+        container.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        container.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            const x = e.pageX - container.offsetLeft;
+            const y = e.pageY - container.offsetTop;
+            const walkX = (x - startX) * 0.5;
+            const walkY = (y - startY) * 0.5;
+            // In a real implementation, we would transform a wrapper div
+            // container.style.transform = `translate(${walkX}px, ${walkY}px)`;
+        });
+
+        // Click to Focus logic
+        const nodes = document.querySelectorAll('.graph-node');
+        nodes.forEach(node => {
+            node.addEventListener('click', () => {
+                nodes.forEach(n => n.classList.remove('ring-4', 'ring-primary/20'));
+                node.classList.add('ring-4', 'ring-primary/20');
+            });
+        });
+    </script>
+</body></html>

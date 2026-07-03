@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Knowledge Insights - AI Life OS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #fff8f1;
+            color: #1e1b17;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .ai-border {
+            position: relative;
+        }
+        .ai-border::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, #006a6a, #e8e1da);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        .heatmap-cell {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .heatmap-cell:hover {
+            transform: scale(1.15);
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0, 30, 64, 0.15);
+        }
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+        .nova-glow {
+            animation: pulse-slow 4s infinite ease-in-out;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed-dim": "#88d982",
+                        "secondary-container": "#90efef",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#a7c8ff",
+                        "on-primary-container": "#799dd6",
+                        "on-surface": "#1e1b17",
+                        "surface-container-high": "#eee7df",
+                        "on-tertiary-fixed-variant": "#005312",
+                        "on-primary-fixed-variant": "#1f477b",
+                        "background": "#fff8f1",
+                        "primary-fixed": "#d5e3ff",
+                        "inverse-on-surface": "#f7f0e8",
+                        "tertiary-fixed": "#a3f69c",
+                        "on-tertiary-fixed": "#002204",
+                        "error-container": "#ffdad6",
+                        "surface-tint": "#3a5f94",
+                        "surface-bright": "#fff8f1",
+                        "surface-container": "#f4ede5",
+                        "outline-variant": "#c3c6d1",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "surface": "#fff8f1",
+                        "inverse-surface": "#33302b",
+                        "surface-dim": "#e0d9d1",
+                        "outline": "#737780",
+                        "primary": "#001e40",
+                        "on-primary-fixed": "#001b3c",
+                        "secondary": "#006a6a",
+                        "on-background": "#1e1b17",
+                        "surface-container-highest": "#e8e1da",
+                        "on-secondary-fixed-variant": "#004f4f",
+                        "tertiary-container": "#003d0b",
+                        "surface-variant": "#e8e1da",
+                        "on-tertiary-container": "#5ead5c",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#93f2f2",
+                        "primary-container": "#003366",
+                        "secondary-fixed-dim": "#76d6d5",
+                        "on-secondary-container": "#006e6e",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-low": "#faf3eb",
+                        "on-surface-variant": "#43474f",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#002504",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#002020",
+                        "inverse-primary": "#a7c8ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "margin-desktop": "40px",
+                        "xxl": "48px",
+                        "xl": "32px",
+                        "xs": "4px",
+                        "lg": "24px",
+                        "margin-mobile": "20px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Public Sans"],
+                        "headline-md": ["Public Sans"],
+                        "label-xs": ["Public Sans"],
+                        "caption-sm": ["Public Sans"],
+                        "title-sm": ["Public Sans"],
+                        "display-lg": ["Public Sans"],
+                        "display-lg-mobile": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                        "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen pb-32 lg:pb-0 lg:pl-80">
+<!-- Top App Bar (Shared Component Logic) -->
+<header class="w-full sticky top-0 z-40 bg-surface dark:bg-surface-dim flex items-center justify-between px-margin-mobile h-16 w-full lg:px-margin-desktop">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary hover:bg-surface-variant/50 transition-colors p-2 rounded-full">arrow_back</button>
+<h1 class="font-title-sm text-title-sm text-primary font-bold">Knowledge Insights</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="material-symbols-outlined text-primary hover:bg-surface-variant/50 transition-colors p-2 rounded-full">search</button>
+<button class="material-symbols-outlined text-primary hover:bg-surface-variant/50 transition-colors p-2 rounded-full">tune</button>
+</div>
+</header>
+<!-- Desktop Navigation Drawer (Shared Component Logic) -->
+<aside class="hidden lg:flex flex-col h-full w-80 fixed left-0 top-0 bg-surface-container dark:bg-surface-container-high p-md shadow-xl z-50 border-r border-outline-variant/20">
+<div class="flex items-center gap-4 p-4 mb-8">
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a creative individual in a minimalist studio. The lighting is soft and directional, creating a sophisticated and intelligent mood. The background is a clean, neutral gray that emphasizes the subject's thoughtful expression. High-end photography style consistent with a premium AI operating system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAGVZY5WIW6bmBqoyvhClBtzw8tB75N1yvWeLlxs1gNZyCBFelBpgceZAz1sW9H6b5vRPeVGjTQfChjvH4HqLuWkG0oDjC1SehQqd0Z-_86uF-2jxjhaufMBbt6nTPM7r2ay0awNzuhJQ1nuDgB2glvL--o7E93yUdpf9ZGv03Y-XiIlbidmPeKwGi_hkdO3TWyCdeSXv0Q1E9XPqQ0703qvoXXmDgMOJMMFrSDZafkXCuWuI6CZXIjwcMYIDEf9-5keQ_V4isDdc"/>
+</div>
+<div>
+<p class="font-body-md text-on-surface font-bold">User Name</p>
+<p class="font-label-xs text-on-surface-variant uppercase tracking-wider">Premium Member</p>
+</div>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-4 p-4 text-on-surface-variant hover:bg-surface-variant/40 transition-all rounded-lg font-body-md" href="#">
+<span class="material-symbols-outlined">auto_awesome</span> Personalization
+            </a>
+<a class="flex items-center gap-4 p-4 text-on-surface-variant hover:bg-surface-variant/40 transition-all rounded-lg font-body-md" href="#">
+<span class="material-symbols-outlined">shield_lock</span> Privacy Guard
+            </a>
+<a class="flex items-center gap-4 p-4 text-on-surface-variant hover:bg-surface-variant/40 transition-all rounded-lg font-body-md" href="#">
+<span class="material-symbols-outlined">cloud_sync</span> Cloud Sync
+            </a>
+<a class="flex items-center gap-4 p-4 bg-primary-container text-on-primary-container font-medium rounded-lg font-body-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">analytics</span> Insights
+            </a>
+<a class="flex items-center gap-4 p-4 text-on-surface-variant hover:bg-surface-variant/40 transition-all rounded-lg font-body-md" href="#">
+<span class="material-symbols-outlined">help</span> Support
+            </a>
+</nav>
+<div class="p-4 bg-surface-container-low rounded-xl mt-auto">
+<p class="font-label-xs text-secondary font-bold mb-1 uppercase tracking-widest">AI Status</p>
+<p class="text-on-surface-variant text-caption-sm">Life OS: Active &amp; Learning</p>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="px-margin-mobile lg:px-margin-desktop py-lg max-w-7xl mx-auto space-y-xl">
+<!-- Hero Section -->
+<section class="space-y-sm">
+<h2 class="font-display-lg-mobile lg:font-display-lg text-primary">Semantic Clusters</h2>
+<p class="font-body-md text-on-surface-variant max-w-2xl leading-relaxed">
+                Discover the invisible threads connecting your projects, people, and locations. Your life as a coherent knowledge graph.
+            </p>
+</section>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-lg">
+<!-- Connection Heatmap (Priority Visualization) -->
+<div class="lg:col-span-8 glass-card rounded-3xl p-lg shadow-sm border border-outline-variant/30 space-y-lg">
+<div class="flex items-center justify-between">
+<div>
+<h3 class="font-title-sm text-primary font-bold">Connection Heatmap</h3>
+<p class="text-caption-sm text-on-surface-variant">Project-Location-People Overlap</p>
+</div>
+<div class="flex gap-2">
+<span class="px-3 py-1 bg-secondary-container/30 text-on-secondary-container text-label-xs rounded-full">Monthly View</span>
+</div>
+</div>
+<div class="grid grid-cols-7 lg:grid-cols-12 gap-2 h-64 lg:h-80">
+<!-- Iterative Heatmap Blocks -->
+<script>
+                        const heatmapContainer = document.currentScript.parentElement;
+                        const colors = ['bg-primary/10', 'bg-primary/30', 'bg-primary/50', 'bg-secondary/40', 'bg-secondary/70', 'bg-secondary', 'bg-primary-container'];
+                        for(let i=0; i<84; i++) {
+                            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                            const div = document.createElement('div');
+                            div.className = `heatmap-cell ${randomColor} rounded-lg cursor-pointer`;
+                            heatmapContainer.appendChild(div);
+                        }
+                    </script>
+</div>
+<div class="flex justify-between items-center text-label-xs text-on-surface-variant uppercase tracking-widest">
+<span>Sparse Interaction</span>
+<div class="flex gap-1">
+<div class="w-3 h-3 bg-primary/10 rounded-sm"></div>
+<div class="w-3 h-3 bg-primary/30 rounded-sm"></div>
+<div class="w-3 h-3 bg-primary/50 rounded-sm"></div>
+<div class="w-3 h-3 bg-secondary/70 rounded-sm"></div>
+<div class="w-3 h-3 bg-primary-container rounded-sm"></div>
+</div>
+<span>High Semantic Density</span>
+</div>
+</div>
+<!-- Side Card: Quick Stats -->
+<div class="lg:col-span-4 space-y-lg">
+<div class="bg-primary-container text-on-primary-container rounded-3xl p-lg shadow-sm relative overflow-hidden ai-border">
+
+<div class="relative z-10 space-y-md">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">hub</span>
+<h4 class="font-title-sm font-bold">Strongest Node</h4>
+<p class="font-display-lg-mobile font-extrabold">Nova Project</p>
+<p class="text-caption-sm opacity-80 leading-snug">Contributing to 42% of all new semantic connections this quarter.</p>
+<button class="w-full bg-on-primary-container text-primary-container py-3 rounded-xl font-bold transition-all hover:scale-[1.02] active:scale-95">Explore Node</button>
+</div>
+</div>
+<div class="glass-card rounded-3xl p-lg shadow-sm border border-outline-variant/30">
+<h4 class="font-label-xs text-on-surface-variant uppercase font-bold mb-4 tracking-widest">Top Clusters</h4>
+<ul class="space-y-4">
+<li class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="font-body-md font-medium">Design Ops</span>
+</div>
+<span class="text-label-xs font-bold bg-surface-variant px-2 py-1 rounded">88%</span>
+</li>
+<li class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<span class="font-body-md font-medium">Life Strategy</span>
+</div>
+<span class="text-label-xs font-bold bg-surface-variant px-2 py-1 rounded">64%</span>
+</li>
+<li class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-tertiary-container"></div>
+<span class="font-body-md font-medium">Health Sync</span>
+</div>
+<span class="text-label-xs font-bold bg-surface-variant px-2 py-1 rounded">32%</span>
+</li>
+</ul>
+</div>
+</div>
+<!-- Growth of Wisdom (Full Width Chart) -->
+<div class="lg:col-span-12 glass-card rounded-3xl p-lg lg:p-xxl shadow-sm border border-outline-variant/30 space-y-lg relative overflow-hidden">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+<div>
+<h3 class="font-title-sm text-primary font-bold">Growth of Wisdom</h3>
+<p class="font-body-md text-on-surface-variant">Cumulative semantic connections formed over time.</p>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-secondary">+1,240</span>
+<span class="text-label-xs text-on-surface-variant">NEW LINKS</span>
+</div>
+</div>
+<!-- Stylized SVG Line Chart -->
+<div class="w-full h-48 lg:h-64 relative">
+<svg class="w-full h-full overflow-visible" viewbox="0 0 1000 200">
+<defs>
+<lineargradient id="gradientLine" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#001e40"></stop>
+<stop offset="50%" stop-color="#006a6a"></stop>
+<stop offset="100%" stop-color="#90efef"></stop>
+</lineargradient>
+<filter id="glow">
+<fegaussianblur result="coloredBlur" stddeviation="3"></fegaussianblur>
+<femerge>
+<femergenode in="coloredBlur"></femergenode>
+<femergenode in="SourceGraphic"></femergenode>
+</femerge>
+</filter>
+</defs>
+<path d="M0,180 Q100,160 200,170 T400,120 T600,90 T800,40 T1000,10" fill="none" filter="url(#glow)" stroke="url(#gradientLine)" stroke-linecap="round" stroke-width="4"></path>
+<circle cx="200" cy="170" fill="#001e40" r="4"></circle>
+<circle cx="400" cy="120" fill="#001e40" r="4"></circle>
+<circle cx="600" cy="90" fill="#006a6a" r="4"></circle>
+<circle class="animate-pulse" cx="800" cy="40" fill="#006a6a" r="6"></circle>
+<circle cx="1000" cy="10" fill="#90efef" r="4"></circle>
+</svg>
+<!-- Chart Labels -->
+<div class="absolute bottom-0 w-full flex justify-between text-label-xs text-on-surface-variant/60 uppercase px-1">
+<span>JAN</span><span>MAR</span><span>MAY</span><span>JUL</span><span>SEP</span><span>NOV</span>
+</div>
+</div>
+</div>
+<!-- The Project Nova Impact (Deep Dive) -->
+<div class="lg:col-span-12 grid grid-cols-1 lg:grid-cols-2 gap-lg">
+<div class="glass-card rounded-3xl p-lg border border-outline-variant/30 flex flex-col justify-center">
+<div class="space-y-md">
+<h3 class="font-title-sm text-primary font-bold">The Project Nova Impact</h3>
+<p class="font-body-md text-on-surface-variant leading-relaxed">
+                            Analyzing the ripple effect of your primary focus. Nova didn't just occupy time; it acted as a catalyst for 14 ancillary sub-projects and connected you with 28 new professional contacts across 3 global regions.
+                        </p>
+<div class="pt-4 flex gap-4">
+<div class="p-4 bg-surface-container-highest rounded-2xl flex-1">
+<p class="text-label-xs text-on-surface-variant font-bold uppercase">Focus Intensity</p>
+<p class="font-title-sm text-primary font-bold">High (9.4/10)</p>
+</div>
+<div class="p-4 bg-surface-container-highest rounded-2xl flex-1">
+<p class="text-label-xs text-on-surface-variant font-bold uppercase">Success Propensity</p>
+<p class="font-title-sm text-secondary font-bold">82%</p>
+</div>
+</div>
+</div>
+</div>
+<div class="h-80 rounded-3xl overflow-hidden relative shadow-lg group">
+<div class="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-110" data-alt="A futuristic, abstract 3D visualization of a complex network. Glowing nodes of deep teal and bright cyan are interconnected by crystalline, translucent fibers against a dark blue, deep space background. The central node, representing Project Nova, is intensely bright and radiates energy, illuminating the surrounding clusters. It feels high-tech, cinematic, and profoundly organized." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBfMpXiSYyTxH8o60Ulfs68YxN7_4-XjOK-7sTUJ2Tk5s_8sA4Yw3YZjxqLQMIsbpxcT0NInHDVYwOtf_RmSA3ZlpJDeS8CRvZCGBCLGNN17uc404cA7mVzGUOBB7UbdHF3jsS94u7V8OnTumJZmf6sJYeMSvO1m2kNUKaf3XFN9qi2ZnyVD-o_r1WpB8Dwi0j6K9eVSr-fqbhHxXxho4rlL5dUz2KS1WtaSmcb8xp2Wtl_jCitTg4oU58kxpmBV-1GQq4VNwKO_4U')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent flex items-end p-lg">
+<p class="text-on-primary font-body-md italic">"Complexity is the baseline. Clarity is the breakthrough."</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Call to Action Section -->
+<section class="py-xl">
+<div class="bg-secondary p-lg lg:p-xxl rounded-[32px] text-on-secondary flex flex-col lg:flex-row items-center justify-between gap-lg relative overflow-hidden">
+<div class="relative z-10 text-center lg:text-left space-y-sm">
+<h2 class="font-headline-md">Synthesize New Connections?</h2>
+<p class="font-body-md opacity-90 max-w-lg">Let the AI run a deep scan across your fragmented notes and meeting transcripts to find hidden synergies.</p>
+</div>
+<button class="relative z-10 px-xl py-4 bg-white text-secondary font-bold rounded-full transition-all hover:bg-secondary-fixed hover:text-on-secondary-fixed active:scale-95 shadow-xl">
+                    Run Semantic Deep-Scan
+                </button>
+<div class="absolute -right-20 -top-20 w-64 h-64 bg-secondary-container opacity-20 rounded-full blur-3xl"></div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Mobile only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full h-20 flex justify-around items-center px-4 pb-safe bg-surface-container-low dark:bg-surface-container-lowest z-50 rounded-t-xl shadow-sm border-t border-outline-variant/30">
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">grain</span>
+<span class="font-label-xs text-label-xs">Memories</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">psychology_alt</span>
+<span class="font-label-xs text-label-xs">Recall</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span class="font-label-xs text-label-xs">Insights</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-xs text-label-xs">Settings</span>
+</a>
+</nav>
+<!-- Interactions Script -->
+<script>
+        // Simple micro-interaction for cards
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.classList.add('shadow-md');
+                card.style.transform = 'translateY(-2px)';
+                card.style.transition = 'all 0.3s ease';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.classList.remove('shadow-md');
+                card.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body></html>

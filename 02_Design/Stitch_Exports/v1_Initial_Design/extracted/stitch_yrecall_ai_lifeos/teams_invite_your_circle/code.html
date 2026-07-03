@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed": "#93f2f2",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed": "#a3f69c",
+                    "on-primary-fixed": "#001b3c",
+                    "inverse-on-surface": "#f7f0e8",
+                    "primary-container": "#003366",
+                    "error-container": "#ffdad6",
+                    "on-surface-variant": "#43474f",
+                    "tertiary-fixed-dim": "#88d982",
+                    "tertiary": "#002504",
+                    "error": "#ba1a1a",
+                    "on-background": "#1e1b17",
+                    "secondary": "#006a6a",
+                    "surface-container-high": "#eee7df",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-container": "#5ead5c",
+                    "background": "#fff8f1",
+                    "tertiary-container": "#003d0b",
+                    "outline-variant": "#c3c6d1",
+                    "on-tertiary-fixed": "#002204",
+                    "surface": "#fff8f1",
+                    "secondary-fixed-dim": "#76d6d5",
+                    "on-primary": "#ffffff",
+                    "surface-bright": "#fff8f1",
+                    "primary": "#001e40",
+                    "surface-container-highest": "#e8e1da",
+                    "surface-tint": "#3a5f94",
+                    "on-secondary-fixed-variant": "#004f4f",
+                    "on-secondary-fixed": "#002020",
+                    "inverse-surface": "#33302b",
+                    "surface-container-low": "#faf3eb",
+                    "secondary-container": "#90efef",
+                    "surface-variant": "#e8e1da",
+                    "on-surface-variant": "#43474f",
+                    "on-secondary-container": "#006e6e",
+                    "inverse-primary": "#a7c8ff",
+                    "outline": "#737780",
+                    "surface-container": "#f4ede5",
+                    "on-error-container": "#93000a",
+                    "on-surface": "#1e1b17",
+                    "primary-fixed": "#d5e3ff",
+                    "on-tertiary-fixed-variant": "#005312",
+                    "on-primary-fixed-variant": "#1f477b",
+                    "on-error": "#ffffff",
+                    "on-primary-container": "#799dd6",
+                    "surface-dim": "#e0d9d1",
+                    "primary-fixed-dim": "#a7c8ff",
+                    "on-tertiary": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "20px",
+                    "lg": "24px",
+                    "gutter": "16px",
+                    "base": "8px",
+                    "xxl": "48px",
+                    "margin-desktop": "40px",
+                    "xs": "4px",
+                    "sm": "8px",
+                    "xl": "32px",
+                    "md": "16px"
+            },
+            "fontFamily": {
+                    "body-md": ["Public Sans"],
+                    "label-xs": ["Public Sans"],
+                    "caption-sm": ["Public Sans"],
+                    "display-lg-mobile": ["Public Sans"],
+                    "display-lg": ["Public Sans"],
+                    "headline-md": ["Public Sans"],
+                    "title-sm": ["Public Sans"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .ai-inner-glow {
+            box-shadow: inset 0 0 0 1px rgba(0, 106, 106, 0.1);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e8e1da;
+            border-radius: 10px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen">
+<!-- TopAppBar from JSON -->
+<header class="fixed top-0 left-0 w-full z-40 flex items-center justify-between px-margin-mobile lg:px-margin-desktop h-20 bg-surface dark:bg-surface-dim shadow-sm">
+<div class="flex items-center gap-md">
+<button class="material-symbols-outlined text-primary dark:text-primary-fixed-dim p-2 rounded-full hover:bg-surface-container-high transition-colors" data-icon="menu">menu</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">Team Workspace</h1>
+</div>
+<div class="flex items-center gap-md">
+<div class="hidden md:flex gap-lg mr-md">
+<a class="text-on-surface-variant dark:text-outline-variant font-title-sm text-title-sm hover:text-primary transition-colors" href="#">Activity</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-title-sm text-title-sm hover:text-primary transition-colors" href="#">Graph</a>
+<a class="text-primary dark:text-primary-fixed font-bold font-title-sm text-title-sm" href="#">Members</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-title-sm text-title-sm hover:text-primary transition-colors" href="#">Settings</a>
+</div>
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a diverse male professional in a high-end corporate setting with soft natural lighting and a blurred minimalist office background. The style is clean, sharp, and editorial, maintaining the premium brand identity of an AI Life OS. The subject conveys intelligence and reliability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0jiDXvuSlQnyaHBmJEHpjxtj7ZXsGDI3KwQEctqXRC9B08DXH1YbzKYlri_QqcH46HrUZNeG5gOwV2rfY76CyrGAsfWpXTpHVQ9Y2sNU6s7p190TNWvBTG-FbZ8bGNqhynlMHoNaDqr2surUFfmUPTDm6ZYq36ag84fHqk5pq5tvjBI3neFVOKhA_ia9skn3FrhA7fGwrhvhz0ER-TQ3MEDpsE_WM5KVUKfIVpv3AyebUHZC7TX65n_hLu66X4gGJKs3tB4rYKMk"/>
+</div>
+</div>
+</header>
+<main class="pt-32 pb-24 px-margin-mobile lg:px-margin-desktop max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-xl">
+<!-- Left Section: Bulk Email & Roles -->
+<section class="lg:col-span-8 flex flex-col gap-lg">
+<div class="bg-surface-container-lowest p-xl rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-surface-container-high">
+<div class="flex flex-col gap-sm mb-xl">
+<h2 class="font-headline-md text-headline-md text-primary">Invite Members</h2>
+<p class="text-on-surface-variant font-body-md text-body-md">Expand your workspace by inviting collaborators. Multiple emails should be separated by commas.</p>
+</div>
+<div class="flex flex-col gap-lg">
+<!-- Email Input -->
+<div class="flex flex-col gap-sm">
+<label class="text-primary font-title-sm text-title-sm px-1">Email Addresses</label>
+<div class="relative group">
+<textarea class="w-full min-h-[140px] p-md bg-surface border border-outline-variant rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all font-body-md text-body-md resize-none custom-scrollbar" placeholder="alex@company.com, sarah@design.io..."></textarea>
+<div class="absolute bottom-4 right-4 flex gap-xs items-center px-3 py-1 bg-surface-container-high rounded-full text-on-surface-variant text-label-xs font-label-xs">
+<span class="material-symbols-outlined text-[16px]" data-icon="mail">mail</span>
+                                0 Emails identified
+                            </div>
+</div>
+</div>
+<!-- Role & CTA Row -->
+<div class="flex flex-col md:flex-row items-end md:items-center justify-between gap-md pt-md border-t border-outline-variant">
+<div class="w-full md:w-auto flex flex-col gap-sm">
+<label class="text-primary font-title-sm text-title-sm px-1">Assign Initial Role</label>
+<div class="relative w-full md:w-64">
+<select class="appearance-none w-full h-[56px] px-md pr-12 bg-surface-container-low border border-outline-variant rounded-xl font-body-md text-body-md focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer">
+<option value="viewer">Viewer (Can read &amp; comment)</option>
+<option selected="" value="editor">Editor (Can edit workspace)</option>
+<option value="admin">Admin (Full workspace control)</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<button class="w-full md:w-auto h-[56px] px-xxl bg-primary text-on-primary font-title-sm text-title-sm rounded-xl hover:shadow-lg active:scale-95 transition-all flex items-center justify-center gap-sm">
+                            Send Invitations
+                            <span class="material-symbols-outlined" data-icon="send">send</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Recently Invited (High-end List pattern) -->
+<div class="bg-surface-container-lowest p-xl rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-surface-container-high">
+<div class="flex items-center justify-between mb-lg">
+<h3 class="text-primary font-title-sm text-title-sm">Pending Invitations</h3>
+<span class="text-secondary font-label-xs text-label-xs bg-secondary-container px-3 py-1 rounded-full">4 Pending</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center justify-between py-md hover:bg-surface-container-low px-md rounded-xl transition-colors cursor-default">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary font-bold">M</div>
+<div class="flex flex-col">
+<span class="text-on-surface font-body-md font-semibold">marcus.v@future.tech</span>
+<span class="text-on-surface-variant text-caption-sm">Editor • Sent 2h ago</span>
+</div>
+</div>
+<button class="text-primary font-label-xs text-label-xs hover:underline">Resend</button>
+</div>
+<div class="flex items-center justify-between py-md hover:bg-surface-container-low px-md rounded-xl transition-colors cursor-default">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary font-bold">J</div>
+<div class="flex flex-col">
+<span class="text-on-surface font-body-md font-semibold">julia.chen@design.io</span>
+<span class="text-on-surface-variant text-caption-sm">Viewer • Sent 5h ago</span>
+</div>
+</div>
+<button class="text-primary font-label-xs text-label-xs hover:underline">Resend</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Section: Share Link & QR -->
+<aside class="lg:col-span-4 flex flex-col gap-lg">
+<!-- Invite Link Card -->
+<div class="bg-surface-container-lowest p-xl rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-surface-container-high relative overflow-hidden">
+<!-- AI Intelligent Accent -->
+<div class="absolute top-0 right-0 w-24 h-24 bg-secondary/5 rounded-full -mr-12 -mt-12 blur-2xl"></div>
+<h3 class="text-primary font-title-sm text-title-sm mb-md flex items-center gap-xs">
+<span class="material-symbols-outlined text-[20px]" data-icon="link">link</span>
+                    Quick Invite Link
+                </h3>
+<div class="flex flex-col gap-md">
+<div class="flex items-center justify-between p-sm bg-surface-container-low rounded-lg border border-outline-variant">
+<span class="text-on-surface-variant text-caption-sm truncate flex-1 px-2">workspace.ai/join/v4r-8k...</span>
+<button class="p-2 bg-primary text-on-primary rounded-md hover:scale-105 transition-transform" title="Copy Link">
+<span class="material-symbols-outlined text-[18px]" data-icon="content_copy">content_copy</span>
+</button>
+</div>
+<!-- Expiration Toggle -->
+<div class="flex items-center justify-between py-2 border-t border-outline-variant mt-sm">
+<div class="flex flex-col">
+<span class="text-on-surface font-label-xs font-bold uppercase tracking-wider">Link Expiration</span>
+<span class="text-on-surface-variant text-caption-sm" id="exp-status">Expires in 7 days</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" id="exp-toggle" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+</div>
+</div>
+<!-- In-person Join Card (QR) -->
+<div class="bg-surface-container-lowest p-xl rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-surface-container-high flex flex-col items-center text-center">
+<h3 class="text-primary font-title-sm text-title-sm mb-sm">In-Person Join</h3>
+<p class="text-on-surface-variant text-caption-sm mb-lg">Ask your team to scan this code to join immediately.</p>
+<!-- QR Code Representation -->
+<div class="relative p-md bg-white rounded-2xl border border-outline-variant shadow-inner flex items-center justify-center">
+<div class="w-48 h-48 bg-surface-container flex items-center justify-center relative overflow-hidden group">
+<!-- Simulated QR Code Grid -->
+<div class="absolute inset-0 grid grid-cols-8 grid-rows-8 gap-[2px] p-2 opacity-80 transition-opacity group-hover:opacity-100">
+<!-- This represents a stylized high-trust QR -->
+<div class="bg-primary rounded-sm"></div><div class="bg-primary rounded-sm"></div><div class="bg-primary rounded-sm"></div><div class="bg-transparent"></div><div class="bg-primary rounded-sm"></div><div class="bg-primary rounded-sm"></div><div class="bg-transparent"></div><div class="bg-primary rounded-sm"></div>
+<div class="bg-primary rounded-sm"></div><div class="bg-transparent"></div><div class="bg-primary rounded-sm"></div><div class="bg-primary rounded-sm"></div><div class="bg-transparent"></div><div class="bg-primary rounded-sm"></div><div class="bg-primary rounded-sm"></div><div class="bg-primary rounded-sm"></div>
+<div class="bg-primary rounded-sm"></div></div></div></div></div></aside></main></body></html>

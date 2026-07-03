@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YRecall - Relationship Insight</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .ai-shimmer {
+            background: linear-gradient(90deg, transparent, rgba(94, 173, 92, 0.05), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "error-container": "#ffdad6",
+                      "surface": "#fff8f1",
+                      "primary": "#001e40",
+                      "surface-dim": "#e0d9d1",
+                      "inverse-primary": "#a7c8ff",
+                      "on-secondary-fixed": "#002020",
+                      "inverse-on-surface": "#f7f0e8",
+                      "on-surface": "#1e1b17",
+                      "secondary-container": "#90efef",
+                      "outline": "#737780",
+                      "on-tertiary-container": "#5ead5c",
+                      "on-primary-fixed-variant": "#1f477b",
+                      "surface-container": "#f4ede5",
+                      "surface-bright": "#fff8f1",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary": "#ffffff",
+                      "on-secondary-fixed-variant": "#004f4f",
+                      "on-background": "#1e1b17",
+                      "surface-container-low": "#faf3eb",
+                      "error": "#ba1a1a",
+                      "tertiary-fixed-dim": "#88d982",
+                      "primary-fixed-dim": "#a7c8ff",
+                      "secondary-fixed": "#93f2f2",
+                      "secondary": "#006a6a",
+                      "surface-variant": "#e8e1da",
+                      "inverse-surface": "#33302b",
+                      "surface-container-highest": "#e8e1da",
+                      "on-tertiary-fixed": "#002204",
+                      "background": "#fff8f1",
+                      "secondary-fixed-dim": "#76d6d5",
+                      "on-primary": "#ffffff",
+                      "on-primary-fixed": "#001b3c",
+                      "on-error-container": "#93000a",
+                      "surface-tint": "#3a5f94",
+                      "tertiary": "#002504",
+                      "primary-fixed": "#d5e3ff",
+                      "on-tertiary-fixed-variant": "#005312",
+                      "on-surface-variant": "#43474f",
+                      "on-secondary-container": "#006e6e",
+                      "on-primary-container": "#799dd6",
+                      "tertiary-container": "#003d0b",
+                      "tertiary-fixed": "#a3f69c",
+                      "on-error": "#ffffff",
+                      "primary-container": "#003366",
+                      "on-secondary": "#ffffff",
+                      "surface-container-high": "#eee7df",
+                      "outline-variant": "#c3c6d1"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "sm": "8px",
+                      "gutter": "16px",
+                      "base": "8px",
+                      "xl": "32px",
+                      "xxl": "48px",
+                      "margin-desktop": "40px",
+                      "xs": "4px",
+                      "margin-mobile": "20px",
+                      "lg": "24px",
+                      "md": "16px"
+              },
+              "fontFamily": {
+                      "caption-sm": ["Public Sans"],
+                      "display-lg": ["Public Sans"],
+                      "title-sm": ["Public Sans"],
+                      "headline-md": ["Public Sans"],
+                      "display-lg-mobile": ["Public Sans"],
+                      "body-md": ["Public Sans"],
+                      "label-xs": ["Public Sans"]
+              },
+              "fontSize": {
+                      "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                      "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                      "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md text-body-md overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-50 bg-surface shadow-sm flex items-center justify-between px-margin-mobile py-sm h-16 transition-colors duration-200">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional high-resolution headshot of a person with a friendly expression, set against a soft, warm-toned studio background. The lighting is bright and airy, reflecting a clean and modern minimalist aesthetic with gentle highlights. The subject wears high-quality, professional attire in neutral tones, perfectly aligning with an AI-driven operating system's sophisticated and calm visual identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCR-1HkvbSU8bAoHrYH8VjQOdbVBAd8_Jd2BbGwKB-ypB9vQia4Gd3LNsNMxWlyTUOanx4EFMjePYnw9iDnbxca7doHNBe7x8oVwpo5rPuK-7C-sjPBYtuTvhrkK6HdOUfXVFRi8En7WumeUYLIm8qtE50WnNKKD07jr1VIyVFvU0K6oOOoYmkpm_pOJgkpGZRlTOboiCRCDRRTieA3KmNWAsqXCBVmS-o4TVnDG0_IuPvviXpjIvNlgff14J0RjHEpjOdy_EGBiD4"/>
+</div>
+<h1 class="text-title-sm font-title-sm font-bold text-primary">YRecall</h1>
+</div>
+<div class="flex items-center gap-md">
+<button class="p-2 rounded-full hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-primary">search</span>
+</button>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-lg mb-24">
+<!-- Breadcrumb / Header Section -->
+<section class="mb-xl">
+<div class="flex items-center gap-xs text-on-surface-variant mb-sm">
+<span class="font-label-xs text-label-xs">Knowledge Graph</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="font-label-xs text-label-xs text-primary font-bold">Relationship Insight</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Sarah Jenkins <span class="text-outline-variant px-2">&</span> Project Nova</h2>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-lg">
+<!-- AI Synthesis Card (Bento Row 1) -->
+<div class="lg:col-span-8 bg-surface-container-lowest rounded-xl p-lg shadow-sm border border-tertiary/10 relative overflow-hidden group">
+<!-- AI Active Signal -->
+<div class="absolute top-0 right-0 w-32 h-32 bg-on-tertiary-container/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:scale-110 transition-transform"></div>
+<div class="flex items-center gap-sm mb-md">
+<span class="material-symbols-outlined text-on-tertiary-container" style="font-variation-settings: 'FILL' 1;">hub</span>
+<h3 class="font-title-sm text-title-sm text-on-tertiary-container">AI Relationship Synthesis</h3>
+</div>
+<p class="text-on-surface-variant leading-relaxed mb-lg">
+                    Sarah Jenkins is the <span class="text-primary font-semibold">primary architect</span> for Project Nova. Her involvement spans from the initial conceptualization in March 2024 to the current optimization phase. Synthesis of cross-platform data reveals that her recent voice memos and Slack activity suggest a critical focus on <span class="bg-secondary-container/30 text-on-secondary-container px-1 rounded">latency issues</span> within the cloud-native infrastructure. Sarah acts as the bridge between technical execution and strategic vision, frequently mediating between the dev team and stakeholders.
+                </p>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+<div class="p-md rounded-lg bg-surface-container-low border border-outline-variant/30">
+<span class="font-label-xs text-label-xs text-on-surface-variant block mb-1">Key Connection</span>
+<p class="font-semibold text-primary">Strategic Architect</p>
+</div>
+<div class="p-md rounded-lg bg-surface-container-low border border-outline-variant/30">
+<span class="font-label-xs text-label-xs text-on-surface-variant block mb-1">Sentiment Score</span>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-on-tertiary-container text-[18px]">trending_up</span>
+<p class="font-semibold text-primary">Optimistic (88%)</p>
+</div>
+</div>
+<div class="p-md rounded-lg bg-surface-container-low border border-outline-variant/30">
+<span class="font-label-xs text-label-xs text-on-surface-variant block mb-1">Recent Intensity</span>
+<p class="font-semibold text-primary">High (Daily Sync)</p>
+</div>
+</div>
+</div>
+<!-- Entities Side Bar (Bento Row 1) -->
+<div class="lg:col-span-4 flex flex-col gap-md">
+<div class="bg-primary-container text-on-primary-container p-lg rounded-xl flex items-center justify-between shadow-sm">
+<div>
+<h4 class="font-title-sm text-title-sm">Entity Alpha</h4>
+<p class="text-on-primary-container/80">Sarah Jenkins</p>
+</div>
+<div class="w-12 h-12 rounded-full border-2 border-on-primary-container/20 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close-up portrait of a woman with intelligent eyes and a confident, thoughtful expression. She is in a contemporary office setting with soft, natural lighting and architectural details in the background. The color palette is composed of muted blues and warm neutrals, conveying a sense of high-level professional competence and creative leadership in an AI-centric workspace." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrkXbVtS44OmrGc1WWyJwoHjE_enHAdINluExZayftTxEDFmdCdbR6NM9Q_V90ih2cxxU_JD14kGwdY8_e3v-MPeWFAEJdedJqL5SNQAowIuysQiFlDamEucjO2kwyMu5Rtl4_aCjzem_TrWUI0VWe-NkQFsBuxRv2lCdc6FkSRvEno0yUodYOK2Y0GW6ClBuP25xB8dGMDCTml8bSRoqrOxHRlgiWeIvqJOpGFm8iSFzJATzJuGk9c7K4MBI9o93MuJhnEd6TtZ8"/>
+</div>
+</div>
+<div class="bg-surface-container-high p-lg rounded-xl flex items-center justify-between border border-outline-variant/50">
+<div>
+<h4 class="font-title-sm text-title-sm">Entity Beta</h4>
+<p class="text-on-surface-variant">Project Nova</p>
+</div>
+<div class="w-12 h-12 rounded-xl bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-surface" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
+</div>
+</div>
+</div>
+<!-- Visual Timeline (Bento Row 2) -->
+<div class="lg:col-span-12 bg-surface-container-lowest rounded-xl p-lg shadow-sm border border-outline-variant/20">
+<div class="flex items-center justify-between mb-xl">
+<h3 class="font-title-sm text-title-sm text-primary">Shared History Timeline</h3>
+<div class="flex gap-sm">
+<span class="px-3 py-1 rounded-full bg-surface-variant text-label-xs font-label-xs text-on-surface-variant">Last 6 Months</span>
+</div>
+</div>
+<div class="relative py-lg">
+<!-- Timeline Line -->
+<div class="absolute top-1/2 left-0 w-full h-[2px] bg-outline-variant/30 -translate-y-1/2"></div>
+<div class="relative flex justify-between">
+<!-- Point 1 -->
+<div class="flex flex-col items-center gap-sm relative group cursor-pointer">
+<div class="w-4 h-4 rounded-full bg-primary z-10 ring-4 ring-surface"></div>
+<div class="absolute -top-12 text-center opacity-0 group-hover:opacity-100 transition-opacity bg-inverse-surface text-inverse-on-surface text-[11px] px-2 py-1 rounded">Project Kickoff</div>
+<div class="text-center mt-md">
+<p class="text-on-surface font-bold">Mar 12</p>
+<p class="text-on-surface-variant text-[12px]">Entity Assignment</p>
+</div>
+</div>
+<!-- Point 2 -->
+<div class="flex flex-col items-center gap-sm relative group cursor-pointer">
+<div class="w-4 h-4 rounded-full bg-on-tertiary-container z-10 ring-4 ring-surface"></div>
+<div class="absolute -top-12 text-center opacity-0 group-hover:opacity-100 transition-opacity bg-inverse-surface text-inverse-on-surface text-[11px] px-2 py-1 rounded">Architecture Approval</div>
+<div class="text-center mt-md">
+<p class="text-on-surface font-bold">Apr 05</p>
+<p class="text-on-surface-variant text-[12px]">Milestone A</p>
+</div>
+</div>
+<!-- Point 3 -->
+<div class="flex flex-col items-center gap-sm relative group cursor-pointer">
+<div class="w-4 h-4 rounded-full bg-primary z-10 ring-4 ring-surface"></div>
+<div class="absolute -top-12 text-center opacity-0 group-hover:opacity-100 transition-opacity bg-inverse-surface text-inverse-on-surface text-[11px] px-2 py-1 rounded">Latex Refactor</div>
+<div class="text-center mt-md">
+<p class="text-on-surface font-bold">Jun 20</p>
+<p class="text-on-surface-variant text-[12px]">Key Collaboration</p>
+</div>
+</div>
+<!-- Point 4 (Active/Current) -->
+<div class="flex flex-col items-center gap-sm relative group">
+<div class="w-6 h-6 rounded-full bg-secondary-fixed z-10 ring-4 ring-surface border-4 border-secondary flex items-center justify-center">
+<div class="w-1.5 h-1.5 bg-secondary rounded-full animate-ping"></div>
+</div>
+<div class="text-center mt-md">
+<p class="text-secondary font-bold">Today</p>
+<p class="text-on-surface-variant text-[12px]">Optimization</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Shared Files (Bento Row 3) -->
+<div class="lg:col-span-5 bg-surface-container-lowest rounded-xl p-lg shadow-sm border border-outline-variant/20 flex flex-col h-full">
+<div class="flex items-center justify-between mb-lg">
+<h3 class="font-title-sm text-title-sm text-primary">Shared Assets</h3>
+<button class="text-on-secondary-container font-label-xs text-label-xs hover:underline">View All</button>
+</div>
+<div class="space-y-md flex-grow">
+<div class="flex items-center gap-md p-md rounded-lg hover:bg-surface-variant transition-colors cursor-pointer border border-transparent hover:border-outline-variant/20">
+<div class="w-10 h-10 rounded bg-error-container flex items-center justify-center text-error">
+<span class="material-symbols-outlined">description</span>
+</div>
+<div class="flex-grow">
+<p class="font-bold text-on-surface">Nova_System_Architecture.pdf</p>
+<p class="text-on-surface-variant text-[12px]">Last edited by Sarah • 2d ago</p>
+</div>
+</div>
+<div class="flex items-center gap-md p-md rounded-lg hover:bg-surface-variant transition-colors cursor-pointer border border-transparent hover:border-outline-variant/20">
+<div class="w-10 h-10 rounded bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">table_chart</span>
+</div>
+<div class="flex-grow">
+<p class="font-bold text-on-surface">Resource_Allocation_Matrix.xlsx</p>
+<p class="text-on-surface-variant text-[12px]">Shared via Slack • 5d ago</p>
+</div>
+</div>
+<div class="flex items-center gap-md p-md rounded-lg hover:bg-surface-variant transition-colors cursor-pointer border border-transparent hover:border-outline-variant/20">
+<div class="w-10 h-10 rounded bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined">slideshow</span>
+</div>
+<div class="flex-grow">
+<p class="font-bold text-on-surface">Stakeholder_Presentation_V4.pptx</p>
+<p class="text-on-surface-variant text-[12px]">Created by Sarah • 1w ago</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Proactive Recommendations (Bento Row 3) -->
+<div class="lg:col-span-7 flex flex-col gap-md">
+<div class="bg-tertiary-container text-on-tertiary-container p-lg rounded-xl shadow-sm border border-tertiary/20 flex flex-col gap-md h-full ai-shimmer">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+<h3 class="font-title-sm text-title-sm">AI Next-Step Projections</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<div class="p-md bg-surface/10 rounded-lg backdrop-blur-sm border border-on-tertiary-container/10">
+<p class="font-bold mb-xs">Review Latency Audio</p>
+<p class="text-[13px] text-on-tertiary-container/80">Sarah mentioned a potential bottleneck in her 3 PM memo. Shall I extract the transcript?</p>
+<button class="mt-md text-[12px] font-bold underline underline-offset-4">Extract Now</button>
+</div>
+<div class="p-md bg-surface/10 rounded-lg backdrop-blur-sm border border-on-tertiary-container/10">
+<p class="font-bold mb-xs">Schedule Sync</p>
+<p class="text-[13px] text-on-tertiary-container/80">Nova milestones are approaching. Both parties have a window tomorrow at 10 AM.</p>
+<button class="mt-md text-[12px] font-bold underline underline-offset-4">Send Invite</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 h-[80px] bg-surface shadow-lg border-t border-outline-variant flex justify-around items-center px-margin-mobile">
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:opacity-80 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-xs text-label-xs">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:opacity-80 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">history_edu</span>
+<span class="font-label-xs text-label-xs">Recall</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 hover:opacity-80 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+<span class="font-label-xs text-label-xs">Insights</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:opacity-80 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-xs text-label-xs">Settings</span>
+</button>
+</nav>
+<script>
+        // Micro-interactions for hovering over timeline points
+        document.querySelectorAll('.group').forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                // Subtle feedback handled by CSS groups
+            });
+        });
+
+        // Simple theme toggle logic (not required but useful for demonstration)
+        const root = document.documentElement;
+        function toggleDarkMode() {
+            root.classList.toggle('dark');
+        }
+    </script>
+</body></html>

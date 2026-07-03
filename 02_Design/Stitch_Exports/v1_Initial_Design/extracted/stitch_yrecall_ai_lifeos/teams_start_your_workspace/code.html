@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Team Workspace | AI Life OS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .ai-gradient-border {
+            position: relative;
+            background: #ffffff;
+        }
+        .ai-gradient-border::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            background: linear-gradient(to right, #006a6a, #c3c6d1);
+            z-index: -1;
+            border-radius: 25px;
+            opacity: 0.4;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed": "#93f2f2",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed": "#a3f69c",
+                    "on-primary-fixed": "#001b3c",
+                    "inverse-on-surface": "#f7f0e8",
+                    "primary-container": "#003366",
+                    "error-container": "#ffdad6",
+                    "on-surface-variant": "#43474f",
+                    "tertiary-fixed-dim": "#88d982",
+                    "tertiary": "#002504",
+                    "error": "#ba1a1a",
+                    "on-background": "#1e1b17",
+                    "secondary": "#006a6a",
+                    "surface-container-high": "#eee7df",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-container": "#5ead5c",
+                    "background": "#fff8f1",
+                    "tertiary-container": "#003d0b",
+                    "outline-variant": "#c3c6d1",
+                    "on-tertiary-fixed": "#002204",
+                    "surface": "#fff8f1",
+                    "secondary-fixed-dim": "#76d6d5",
+                    "on-primary": "#ffffff",
+                    "surface-bright": "#fff8f1",
+                    "primary": "#001e40",
+                    "surface-container-highest": "#e8e1da",
+                    "surface-tint": "#3a5f94",
+                    "on-secondary-fixed-variant": "#004f4f",
+                    "on-secondary-fixed": "#002020",
+                    "inverse-surface": "#33302b",
+                    "surface-container-low": "#faf3eb",
+                    "secondary-container": "#90efef",
+                    "surface-variant": "#e8e1da",
+                    "on-secondary-container": "#006e6e",
+                    "inverse-primary": "#a7c8ff",
+                    "outline": "#737780",
+                    "surface-container": "#f4ede5",
+                    "on-error-container": "#93000a",
+                    "on-surface": "#1e1b17",
+                    "primary-fixed": "#d5e3ff",
+                    "on-tertiary-fixed-variant": "#005312",
+                    "on-primary-fixed-variant": "#1f477b",
+                    "on-error": "#ffffff",
+                    "on-primary-container": "#799dd6",
+                    "surface-dim": "#e0d9d1",
+                    "primary-fixed-dim": "#a7c8ff",
+                    "on-tertiary": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "20px",
+                    "lg": "24px",
+                    "gutter": "16px",
+                    "base": "8px",
+                    "xxl": "48px",
+                    "margin-desktop": "40px",
+                    "xs": "4px",
+                    "sm": "8px",
+                    "xl": "32px",
+                    "md": "16px"
+            },
+            "fontFamily": {
+                    "body-md": ["Public Sans"],
+                    "label-xs": ["Public Sans"],
+                    "caption-sm": ["Public Sans"],
+                    "display-lg-mobile": ["Public Sans"],
+                    "display-lg": ["Public Sans"],
+                    "headline-md": ["Public Sans"],
+                    "title-sm": ["Public Sans"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md min-h-screen selection:bg-secondary-container">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-40 flex items-center justify-between px-margin-mobile lg:px-margin-desktop h-20 bg-surface dark:bg-surface-dim shadow-sm">
+<div class="flex items-center gap-md">
+<button class="material-symbols-outlined text-primary dark:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors p-2 rounded-full active:scale-95 duration-200" data-icon="menu">menu</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed tracking-tight">Team Workspace</h1>
+</div>
+<div class="flex items-center gap-md">
+<div class="hidden md:flex items-center gap-sm px-md py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-xs text-label-xs">
+<span class="material-symbols-outlined text-[16px]" data-icon="auto_awesome">auto_awesome</span>
+                AI Active
+            </div>
+<img class="w-10 h-10 rounded-full object-cover border-2 border-outline-variant shadow-sm" data-alt="A sophisticated professional portrait of a tech collaborator with a warm, intelligent expression. The lighting is soft and natural, with a clean office background featuring minimalist wooden textures and high-end design accents. The color palette is composed of warm whites, deep blues, and subtle teals, reflecting a high-end, human-centric AI digital environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgTnBvVUvte1zOPj1mi-qxzMKpwk4sFCG7JPMNECtAOYTa5Ca7uZRxOifxo2ZJgIu94qkKKhEcpm9LXS6SHhSWog_ZcS41NkQ2wuhX2AXUlbpNgeiVlHfCW78DIomkaxP2bHffDPFDsfbGidxERoVZLQ9b8K-hLP7GjbNMxkAguFC-ocJkNdWrywX34mgyADSL2DwFJ_sf_NurCAJJiEjzsmu6IyU_JzOw0WnVcuppHR--oXpe38eXlDqXSFQJwxdhtrey_DnZ0e4"/>
+</div>
+</header>
+<main class="pt-24 pb-32 px-margin-mobile lg:px-margin-desktop max-w-[1440px] mx-auto overflow-hidden">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-xl items-center mb-xxl">
+<!-- Left Content: Value Proposition -->
+<div class="lg:col-span-7 flex flex-col gap-lg">
+<div class="inline-flex items-center gap-sm text-secondary font-label-xs uppercase tracking-widest bg-secondary-container/20 w-fit px-md py-1 rounded-full">
+<span class="material-symbols-outlined text-[14px]" data-icon="hub">hub</span>
+                    Collective Intelligence
+                </div>
+<h2 class="font-display-lg text-display-lg-mobile lg:text-display-lg text-primary leading-tight">
+                    Amplify your team’s <br class="hidden lg:block"/><span class="text-secondary">shared memory.</span>
+</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xl">
+                    Bridge the gap between individual insights and collective power. Our AI Life OS for teams creates a persistent, collaborative graph of every interaction, document, and decision.
+                </p>
+<div class="flex flex-col sm:flex-row gap-md mt-sm">
+<button class="h-14 px-xl bg-primary text-on-primary rounded-xl font-title-sm text-title-sm hover:shadow-xl transition-all active:scale-95 flex items-center justify-center gap-sm">
+                        Start Your Team
+                        <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<button class="h-14 px-xl bg-surface-container-high text-primary rounded-xl font-title-sm text-title-sm hover:bg-surface-container-highest transition-all active:scale-95 flex items-center justify-center gap-sm">
+                        Watch Demo
+                    </button>
+</div>
+</div>
+<!-- Right Content: Interactive Illustration -->
+<div class="lg:col-span-5 relative">
+<div class="w-full aspect-square flex items-center justify-center relative">
+<!-- Background Glow -->
+<div class="absolute inset-0 bg-secondary-container/10 rounded-full blur-3xl"></div>
+<!-- Asymmetric Illustration Elements -->
+<div class="relative w-full h-full flex items-center justify-center">
+<div class="ai-gradient-border p-xxl rounded-[48px] shadow-2xl glass-card float-animation z-10">
+<img class="w-full h-64 object-contain" data-alt="A highly detailed, professional digital illustration representing collective intelligence. It shows abstract, glowing neural pathways connecting three elegant, minimalist human silhouettes. The aesthetic is clean and editorial, using a palette of Deep Blue, Accent Teal, and Warm White. Soft, ambient lighting creates a serene and technologically advanced atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCT1wBDdjFYF9xzI259703Ys3JK7PiBbRy-b9tvr-014lt1v4wla1DV6bCcz3TSkbcuZD2QPAACjXIvgS9RPxWESeSpw7Ll493Zg9qKMQ_9dUwyDVuuz2QFBvi_kMPosgK9gs6azkfBGKIrKaIuw5COfLHMyPeQH7-eJ5FSmP6N8vQy_V1qC4a-xeRtVY7mowdEzFQyC5zIucl68OYDnq5F03Y9_OPbRKn_xcGturWmxzAuTn7wUVcwc7sC6cojwHPmbc5oh1d06v4"/>
+</div>
+<!-- Floating Nodes (Simulated Graph) -->
+<div class="absolute top-10 left-10 w-16 h-16 bg-white rounded-2xl shadow-lg flex items-center justify-center text-secondary transform -rotate-12 animate-pulse">
+<span class="material-symbols-outlined text-[32px]" data-icon="share_reviews">share_reviews</span>
+</div>
+<div class="absolute bottom-20 -right-4 w-20 h-20 bg-primary-container text-on-primary-container rounded-3xl shadow-lg flex items-center justify-center transform rotate-6">
+<span class="material-symbols-outlined text-[40px]" data-icon="account_tree" data-weight="fill">account_tree</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Workspace Selection Bento Grid -->
+<section class="mb-xxl">
+<h3 class="font-headline-md text-headline-md text-primary mb-xl flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary" data-icon="select_window">select_window</span>
+                Choose Your Foundation
+            </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<!-- Personal Workspace -->
+<div class="group bg-white p-xl rounded-[24px] shadow-sm border border-outline-variant hover:border-secondary transition-all hover:shadow-xl cursor-pointer">
+<div class="flex items-start justify-between mb-lg">
+<div class="w-14 h-14 rounded-2xl bg-surface-container-low flex items-center justify-center text-primary group-hover:bg-secondary-container transition-colors">
+<span class="material-symbols-outlined text-[32px]" data-icon="person">person</span>
+</div>
+<span class="text-on-surface-variant font-label-xs py-1 px-3 bg-surface-container rounded-full">Standard</span>
+</div>
+<h4 class="font-title-sm text-title-sm text-primary mb-sm">Personal Space</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mb-lg">Your private sanctuary for thought, task management, and personal knowledge graphs. AI tailored specifically to your habits.</p>
+<ul class="flex flex-col gap-sm">
+<li class="flex items-center gap-sm text-on-surface-variant text-caption-sm">
+<span class="material-symbols-outlined text-secondary text-[18px]" data-icon="check_circle">check_circle</span>
+                            Private Knowledge Graph
+                        </li>
+<li class="flex items-center gap-sm text-on-surface-variant text-caption-sm">
+<span class="material-symbols-outlined text-secondary text-[18px]" data-icon="check_circle">check_circle</span>
+                            Personal Routine Optimization
+                        </li>
+</ul>
+</div>
+<!-- Team Workspace (Highlighted) -->
+<div class="group ai-gradient-border p-xl rounded-[24px] shadow-lg border-2 border-primary cursor-pointer hover:shadow-2xl transition-all overflow-hidden relative">
+<!-- AI Smart Accent -->
+<div class="absolute top-0 right-0 w-32 h-32 bg-secondary-container/20 blur-3xl -z-10"></div>
+<div class="flex items-start justify-between mb-lg">
+<div class="w-14 h-14 rounded-2xl bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined text-[32px]" data-icon="group">group</span>
+</div>
+<span class="text-on-secondary-container font-label-xs py-1 px-3 bg-secondary-container rounded-full">Collaborative</span>
+</div>
+<h4 class="font-title-sm text-title-sm text-primary mb-sm">Team Workspace</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mb-lg">Shared memory for high-performing teams. Synchronize minds with collaborative graphs and automated documentation.</p>
+<ul class="flex flex-col gap-sm">
+<li class="flex items-center gap-sm text-on-surface-variant text-caption-sm">
+<span class="material-symbols-outlined text-secondary text-[18px]" data-icon="auto_awesome">auto_awesome</span>
+                            Cross-Member Contextual Search
+                        </li>
+<li class="flex items-center gap-sm text-on-surface-variant text-caption-sm">
+<span class="material-symbols-outlined text-secondary text-[18px]" data-icon="auto_awesome">auto_awesome</span>
+                            Collaborative Intelligence Layer
+                        </li>
+</ul>
+<div class="mt-lg pt-md border-t border-outline-variant flex items-center justify-between">
+<span class="text-primary font-bold">Try for 14 days</span>
+<span class="material-symbols-outlined text-primary group-hover:translate-x-1 transition-transform" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Benefits Section with Tonal Layering -->
+<section class="bg-surface-container-low p-xl rounded-[32px] grid grid-cols-1 md:grid-cols-3 gap-xl">
+<div class="flex flex-col gap-sm">
+<span class="material-symbols-outlined text-secondary text-[32px]" data-icon="memory">memory</span>
+<h5 class="font-title-sm text-title-sm text-primary">Shared Memory</h5>
+<p class="font-body-md text-caption-sm text-on-surface-variant">Every chat, file, and decision is cataloged into a persistent knowledge base accessible by every member.</p>
+</div>
+<div class="flex flex-col gap-sm">
+<span class="material-symbols-outlined text-secondary text-[32px]" data-icon="hub">hub</span>
+<h5 class="font-title-sm text-title-sm text-primary">Collaborative Graphs</h5>
+<p class="font-body-md text-caption-sm text-on-surface-variant">Visualize how ideas connect across departments. Break silos by surfacing relevant work from other team members.</p>
+</div>
+<div class="flex flex-col gap-sm">
+<span class="material-symbols-outlined text-secondary text-[32px]" data-icon="psychology_alt">psychology_alt</span>
+<h5 class="font-title-sm text-title-sm text-primary">AI Synthesizer</h5>
+<p class="font-body-md text-caption-sm text-on-surface-variant">The OS automatically generates summaries of meetings and long-form threads, keeping everyone aligned instantly.</p>
+</div>
+</section>
+</main>
+<!-- NavigationDrawer (Mobile Interaction Mockup) -->
+<div class="fixed inset-y-0 left-0 z-50 flex flex-col p-md bg-surface-container-low dark:bg-surface-container-lowest shadow-xl h-full w-80 rounded-r-xl -translate-x-full transition-all duration-300 ease-in-out" id="drawer">
+<div class="flex items-center gap-md mb-xl p-sm">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A minimalist, professional profile photo for an AI interface architect. High-key lighting, soft neutral background, focusing on friendly and approachable professional aesthetics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBV7-N3L0ubKQmAP-lqdDjUjjMUT39abIhAAuli2oPJEgB4-nGTpum-Vc3gAxrPUiXepcjA8-Criytx9zA-hMtG83Y-_gzkyq8Cmi_5lKD_6lL71Ek2oQfr66C39M-XSVMR8_mw6-mMNnaqUJl2nRIEDcreLk4yd8ioyZean_dciIonqoJdBMXJI11kp2PMSdhlzSXL7MqWGSWYe2t6BhYNVVZYBbZ5-11XW9meD3Nca6Z_t-8yQX5YbwWoCAiDlyh3bVcOyAU6M0A"/>
+<div>
+<h3 class="font-title-sm text-title-sm text-primary">Alex Rivers</h3>
+<p class="font-caption-sm text-on-surface-variant">AI Life OS Pro</p>
+</div>
+</div>
+<nav class="flex flex-col gap-xs flex-1">
+<a class="flex items-center gap-md p-md text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-body-md">Personal Space</span>
+</a>
+<a class="flex items-center gap-md p-md bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-body-md">Engineering Team</span>
+</a>
+<a class="flex items-center gap-md p-md text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="draw">draw</span>
+<span class="font-body-md">Product Design</span>
+</a>
+<a class="flex items-center gap-md p-md text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="campaign">campaign</span>
+<span class="font-body-md">Marketing Ops</span>
+</a>
+<hr class="my-md border-outline-variant"/>
+<button class="flex items-center gap-md p-md text-primary font-bold hover:bg-surface-container-high transition-all rounded-lg">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+<span>Add Workspace</span>
+</button>
+</nav>
+<div class="mt-auto pt-md border-t border-outline-variant">
+<div class="flex items-center justify-between text-caption-sm text-on-surface-variant p-sm">
+<span>Switch Workspace</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="swap_horiz">swap_horiz</span>
+</div>
+</div>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 flex justify-around items-center h-20 px-4 pb-safe bg-surface dark:bg-surface-dim border-t border-outline-variant dark:border-outline flat no shadows">
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-container dark:hover:bg-surface-container-high px-4 py-1">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-label-xs text-label-xs-mobile">Activity</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-full px-4 py-1 scale-110 duration-150">
+<span class="material-symbols-outlined" data-icon="hub">hub</span>
+<span class="font-label-xs text-label-xs-mobile">Graph</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-container dark:hover:bg-surface-container-high px-4 py-1">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-label-xs text-label-xs-mobile">Members</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-container dark:hover:bg-surface-container-high px-4 py-1">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-xs text-label-xs-mobile">Settings</span>
+</button>
+</nav>
+<!-- Overlay for Drawer -->
+<div class="fixed inset-0 bg-black/20 z-40 hidden transition-opacity duration-300" id="overlay"></div>
+<script>
+        const menuBtn = document.querySelector('[data-icon="menu"]');
+        const drawer = document.getElementById('drawer');
+        const overlay = document.getElementById('overlay');
+
+        function toggleDrawer() {
+            drawer.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        menuBtn.addEventListener('click', toggleDrawer);
+        overlay.addEventListener('click', toggleDrawer);
+
+        // Simple parallax micro-interaction for the illustration
+        document.addEventListener('mousemove', (e) => {
+            const card = document.querySelector('.ai-gradient-border');
+            if (!card) return;
+            const x = (window.innerWidth / 2 - e.pageX) / 50;
+            const y = (window.innerHeight / 2 - e.pageY) / 50;
+            card.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+        });
+    </script>
+</body></html>

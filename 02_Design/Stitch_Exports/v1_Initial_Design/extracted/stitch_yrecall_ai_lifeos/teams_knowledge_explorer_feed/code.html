@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Team Discovery Feed | YRecall Teams</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Public Sans & Courier Prime -->
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400&amp;family=Courier+Prime&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-dim": "#cfdaf1",
+                    "on-primary": "#ffffff",
+                    "secondary-container": "#90efef",
+                    "on-primary-fixed-variant": "#1f477b",
+                    "on-primary-container": "#799dd6",
+                    "secondary-fixed-dim": "#76d6d5",
+                    "surface-container-high": "#dee8ff",
+                    "on-error-container": "#93000a",
+                    "error": "#ba1a1a",
+                    "tertiary-fixed": "#e8e1db",
+                    "surface-tint": "#3a5f94",
+                    "inverse-on-surface": "#ebf1ff",
+                    "on-error": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-fixed": "#001b3c",
+                    "inverse-surface": "#263142",
+                    "surface-container": "#e7eeff",
+                    "tertiary-fixed-dim": "#cbc5bf",
+                    "background": "#f9f9ff",
+                    "tertiary-container": "#36332f",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed-variant": "#004f4f",
+                    "on-surface-variant": "#43474f",
+                    "primary": "#001e40",
+                    "on-tertiary-fixed-variant": "#4a4641",
+                    "outline": "#737780",
+                    "secondary-fixed": "#93f2f2",
+                    "error-container": "#ffdad6",
+                    "on-background": "#111c2c",
+                    "on-tertiary-container": "#a09b95",
+                    "surface-container-low": "#f0f3ff",
+                    "primary-fixed": "#d5e3ff",
+                    "primary-fixed-dim": "#a7c8ff",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary": "#201e1a",
+                    "surface-variant": "#d8e3fa",
+                    "on-secondary-container": "#006e6e",
+                    "inverse-primary": "#a7c8ff",
+                    "surface-container-highest": "#d8e3fa",
+                    "surface": "#f9f9ff",
+                    "on-tertiary-fixed": "#1e1b17",
+                    "outline-variant": "#c3c6d1",
+                    "surface-bright": "#f9f9ff",
+                    "secondary": "#006a6a",
+                    "on-secondary-fixed": "#002020",
+                    "primary-container": "#003366",
+                    "on-surface": "#111c2c"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "container-margin": "24px",
+                    "gutter": "16px",
+                    "node-padding": "12px",
+                    "sidebar-width": "280px"
+            },
+            "fontFamily": {
+                    "mono-data": ["Courier Prime"],
+                    "headline-sm": ["Public Sans"],
+                    "body-md": ["Public Sans"],
+                    "body-lg": ["Public Sans"],
+                    "headline-lg": ["Public Sans"],
+                    "label-caps": ["Public Sans"],
+                    "body-sm": ["Public Sans"],
+                    "headline-md": ["Public Sans"],
+                    "display-lg": ["Public Sans"]
+            },
+            "fontSize": {
+                    "mono-data": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "body-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #f9f9ff;
+            color: #111c2c;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(0, 30, 64, 0.08);
+        }
+        .presence-cursor {
+            width: 1px;
+            height: 20px;
+            background: #006a6a;
+            position: relative;
+        }
+        .presence-tag {
+            position: absolute;
+            top: -20px;
+            left: 0;
+            white-space: nowrap;
+            background: #006a6a;
+            color: white;
+            padding: 2px 6px;
+            font-size: 10px;
+            border-radius: 2px;
+        }
+        .semantic-line {
+            position: absolute;
+            left: 20px;
+            top: 40px;
+            bottom: -40px;
+            width: 2px;
+            background: repeating-linear-gradient(to bottom, #d8e3fa 0px, #d8e3fa 4px, transparent 4px, transparent 8px);
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f0f3ff; }
+        ::-webkit-scrollbar-thumb { background: #cfdaf1; border-radius: 10px; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="font-body-md text-body-md overflow-x-hidden">
+<!-- Top Navigation -->
+<header class="w-full top-0 sticky z-50 bg-surface-container dark:bg-surface-container-high border-b border-outline-variant/10 shadow-sm">
+<div class="flex items-center justify-between px-container-margin h-16 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-unit cursor-pointer active:scale-95">
+<span class="material-symbols-outlined text-primary">hub</span>
+<span class="font-headline-md text-headline-md font-bold text-primary">YRecall Teams</span>
+</div>
+<div class="hidden md:flex items-center gap-6">
+<nav class="flex gap-4">
+<a class="text-primary font-bold transition-colors" href="#">Discovery</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Shared Space</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Insights</a>
+</nav>
+<div class="h-6 w-px bg-outline-variant/30"></div>
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary-container/30 text-on-secondary-container">
+<span class="material-symbols-outlined text-[18px]">sensors</span>
+<span class="font-label-caps text-label-caps uppercase">Presence</span>
+</div>
+</div>
+</div>
+</header>
+<div class="flex max-w-7xl mx-auto min-h-screen">
+<!-- Navigation Drawer (Desktop) -->
+<aside class="hidden lg:flex flex-col w-sidebar-width p-node-padding gap-unit border-r border-outline-variant/10 bg-surface-container-low sticky top-16 h-[calc(100vh-64px)] overflow-y-auto">
+<div class="flex flex-col mb-6 p-4 rounded-xl bg-surface-container-highest/50">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-white">architecture</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-primary leading-tight">Engineering Alpha</h3>
+<p class="text-body-sm text-on-surface-variant">12 Active Members</p>
+</div>
+</div>
+<div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed text-[10px] font-bold self-start uppercase tracking-wider">
+                    AI Synchronized
+                </div>
+</div>
+<nav class="space-y-1">
+<div class="flex items-center gap-3 p-3 bg-primary text-on-primary rounded-xl cursor-pointer duration-200 transition-transform">
+<span class="material-symbols-outlined">explore</span>
+<span>Discovery Feed</span>
+</div>
+<div class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl cursor-pointer duration-200 hover:translate-x-1 transition-transform">
+<span class="material-symbols-outlined">cloud_alert</span>
+<span>Shared Space</span>
+</div>
+<div class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl cursor-pointer duration-200 hover:translate-x-1 transition-transform">
+<span class="material-symbols-outlined">person_search</span>
+<span>Expert Search</span>
+</div>
+<div class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl cursor-pointer duration-200 hover:translate-x-1 transition-transform">
+<span class="material-symbols-outlined">psychology</span>
+<span>AI Insights</span>
+</div>
+<div class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl cursor-pointer duration-200 hover:translate-x-1 transition-transform">
+<span class="material-symbols-outlined">inventory_2</span>
+<span>Archive</span>
+</div>
+</nav>
+<div class="mt-auto pt-6 border-t border-outline-variant/10">
+<h4 class="font-label-caps text-label-caps text-on-surface-variant/60 mb-4 px-3">TEAM KNOWLEDGE HEALTH</h4>
+<div class="px-3">
+<div class="h-1.5 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-3/4"></div>
+</div>
+<p class="mt-2 text-body-sm text-on-surface-variant">86% Cohesion Rating</p>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 p-6 md:p-container-margin bg-background">
+<!-- Intelligence Alerts Hero -->
+<div class="mb-10 p-6 rounded-2xl glass-panel relative overflow-hidden group">
+
+<div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+<div class="max-w-xl">
+<div class="inline-flex items-center gap-2 mb-3 px-3 py-1 rounded-full bg-error-container text-on-error-container animate-pulse">
+<span class="material-symbols-outlined text-[16px]">priority_high</span>
+<span class="font-label-caps text-label-caps">Intelligence Alert</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-primary mb-2">3 Semantic Divergences Detected</h2>
+<p class="text-body-lg text-on-surface-variant">Your team's current research on 'Edge Computing' is drifting from established marketing whitepapers. AI suggests a synchronization meeting.</p>
+</div>
+<button class="px-6 py-3 bg-primary text-on-primary rounded-full font-bold shadow-lg hover:shadow-primary/20 active:scale-95 transition-all">
+                        Resolve Conflicts
+                    </button>
+</div>
+</div>
+<!-- Dashboard Layout: Bento Grid Style -->
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-gutter">
+<!-- Semantic Threads Feed -->
+<div class="xl:col-span-2 space-y-gutter">
+<div class="flex items-center justify-between mb-2">
+<h3 class="font-headline-sm text-headline-sm text-primary">Semantic Threads</h3>
+<div class="flex gap-2">
+<button class="p-2 rounded hover:bg-surface-container text-on-surface-variant">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+<button class="p-2 rounded hover:bg-surface-container text-on-surface-variant">
+<span class="material-symbols-outlined">sync</span>
+</button>
+</div>
+</div>
+<!-- Thread 1 -->
+<div class="relative pl-10">
+<div class="semantic-line"></div>
+<div class="absolute left-0 top-0 w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-on-secondary-container text-[18px]">account_tree</span>
+</div>
+<div class="p-5 bg-white border border-outline-variant/10 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="text-body-sm font-bold text-secondary uppercase tracking-tight">KNOWLEDGE SYNTHESIS</span>
+<h4 class="font-headline-sm text-headline-sm mt-1">A new research node linked 3 existing marketing docs</h4>
+</div>
+<span class="text-mono-data text-on-surface-variant">09:42 AM</span>
+</div>
+<p class="text-body-md text-on-surface-variant mb-4">
+                                Sarah uploaded "Q4 Latency Benchmarks". The AI autonomously mapped this to the "Customer Pain Points" deck and two technical specifications.
+                            </p>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-surface-container text-on-surface-variant rounded-md text-body-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">description</span> Q4_Latency_V2.pdf
+                                </span>
+<span class="px-2 py-1 bg-surface-container text-on-surface-variant rounded-md text-body-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">description</span> Pain_Points_Review
+                                </span>
+</div>
+<div class="mt-4 pt-4 border-t border-outline-variant/10 flex items-center justify-between">
+<div class="flex -space-x-2">
+<img class="w-8 h-8 rounded-full border-2 border-white object-cover" data-alt="Close-up portrait of a female software engineer with a thoughtful expression, high-key lighting, professional studio photography style, soft neutral background, wearing a modern dark blazer." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3LEP4pMRtRWZtqxmZSebx3bUT_LNstqKve7qp-xXaYrLQRMZaw5ZZtEHVgwmG88CKz4TmGXlPJU664JKGCPc4oGRuwSsKScgtTt9zV2GkuCdwwJU8aaK6Qh5GixN8U4mumSaoYDKQjEQtMXOp2W9qD9ySrjCoknpqeyZYxmzOTpvWNIXXp5PNjR5vtSOIgbHHQ3RyNq46bveJgTns2-jjGPe-VVtzjyhdBLGImPQiqo4quhLoLSpE8_mAksYXVcIM91Rc1MuMHA8"/>
+<img class="w-8 h-8 rounded-full border-2 border-white object-cover" data-alt="Portrait of a male marketing specialist in a minimalist office setting, warm natural sunlight, high-density collaboration environment, professional corporate headshot, soft focus background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKOpElRTTb3JGl_DaByjSgZ0xgq-whQ0kwRNJJaQLDLltztPJVCshR5ThURi15Xoxp8LNAxgd8tzHBxMi4RcWinhi65ZF9slOWeyau172nbjtysTVEcefQKyKow3oHlwB9YraaYFzq67USDyh79RNbji1H6me1xKNi2YgNI_cIK3gs88AwBIg7Q_7N3ceBogmXbg_KKd8G-Iu6LaPntymym8xk4kVuLEJp9e0b2huuZxA-DSUZgmbRuLYqYrAzwR1kI4xAvRWmzfA"/>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-primary text-white flex items-center justify-center text-[10px] font-bold">+3</div>
+</div>
+<button class="text-primary font-bold text-body-sm flex items-center gap-1 hover:underline">
+                                    View Graph <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Thread 2 -->
+<div class="relative pl-10">
+<div class="semantic-line"></div>
+<div class="absolute left-0 top-0 w-8 h-8 rounded-full bg-primary-container flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-white text-[18px]">psychology</span>
+</div>
+<div class="p-5 bg-white border border-outline-variant/10 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="text-body-sm font-bold text-primary uppercase tracking-tight">AI INSIGHT GENERATED</span>
+<h4 class="font-headline-sm text-headline-sm mt-1">Opportunity for Content Reuse</h4>
+</div>
+<span class="text-mono-data text-on-surface-variant">YESTERDAY</span>
+</div>
+<p class="text-body-md text-on-surface-variant mb-4">
+                                I've noticed overlapping themes between the 'Project Omega' draft and the 'SaaS Playbook'. 42% content redundancy detected. Recommend merging into a single Source of Truth.
+                            </p>
+<div class="inline-flex items-center gap-2 px-3 py-1.5 bg-secondary-container text-on-secondary-container rounded-full text-body-sm font-bold">
+<span class="material-symbols-outlined text-[16px]">auto_fix_high</span>
+                                Auto-Merge Suggested
+                            </div>
+</div>
+</div>
+</div>
+<!-- Right Column: Trending & Bookmarks -->
+<div class="space-y-gutter">
+<!-- Trending Intelligence -->
+<div class="p-6 bg-surface-container-low border border-outline-variant/20 rounded-2xl shadow-sm">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-secondary">trending_up</span>
+<h3 class="font-headline-sm text-headline-sm text-primary">Trending Intelligence</h3>
+</div>
+<ul class="space-y-4">
+<li class="group cursor-pointer">
+<div class="flex justify-between items-center mb-1">
+<span class="font-bold text-primary group-hover:underline">#API_Spec_Refactor</span>
+<span class="text-mono-data text-on-surface-variant">82 accesses</span>
+</div>
+<div class="h-1 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary w-full group-hover:bg-secondary transition-colors"></div>
+</div>
+</li>
+<li class="group cursor-pointer">
+<div class="flex justify-between items-center mb-1">
+<span class="font-bold text-primary group-hover:underline">Market_Entry_Strategy</span>
+<span class="text-mono-data text-on-surface-variant">45 accesses</span>
+</div>
+<div class="h-1 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[65%] group-hover:bg-secondary transition-colors"></div>
+</div>
+</li>
+<li class="group cursor-pointer">
+<div class="flex justify-between items-center mb-1">
+<span class="font-bold text-primary group-hover:underline">User_Testing_Notes</span>
+<span class="text-mono-data text-on-surface-variant">31 accesses</span>
+</div>
+<div class="h-1 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[40%] group-hover:bg-secondary transition-colors"></div>
+</div>
+</li>
+</ul>
+<button class="w-full mt-6 py-2 text-body-sm font-bold border border-outline-variant/30 rounded hover:bg-surface-container transition-colors">
+                            Explore All Clusters
+                        </button>
+</div>
+<!-- Shared Bookmarks -->
+<div class="p-6 bg-white border border-outline-variant/10 rounded-2xl shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+<h3 class="font-headline-sm text-headline-sm text-primary">Shared Bookmarks</h3>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary">add_circle</span>
+</div>
+<div class="grid grid-cols-1 gap-3">
+<div class="flex items-center gap-3 p-3 rounded-lg border border-outline-variant/5 bg-surface-bright hover:bg-surface-container transition-all cursor-pointer group">
+<div class="w-10 h-10 flex-shrink-0 bg-secondary-container/20 rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container text-[20px]">description</span>
+</div>
+<div class="overflow-hidden">
+<p class="font-bold text-primary truncate">Architecture_Master_v2</p>
+<p class="text-body-sm text-on-surface-variant">Updated 2h ago</p>
+</div>
+<span class="material-symbols-outlined ml-auto text-on-surface-variant opacity-0 group-hover:opacity-100">open_in_new</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-lg border border-outline-variant/5 bg-surface-bright hover:bg-surface-container transition-all cursor-pointer group">
+<div class="w-10 h-10 flex-shrink-0 bg-secondary-container/20 rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container text-[20px]">link</span>
+</div>
+<div class="overflow-hidden">
+<p class="font-bold text-primary truncate">Figma: Design System Hub</p>
+<p class="text-body-sm text-on-surface-variant">Shared by Kevin</p>
+</div>
+<span class="material-symbols-outlined ml-auto text-on-surface-variant opacity-0 group-hover:opacity-100">open_in_new</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-lg border border-outline-variant/5 bg-surface-bright hover:bg-surface-container transition-all cursor-pointer group">
+<div class="w-10 h-10 flex-shrink-0 bg-secondary-container/20 rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container text-[20px]">folder</span>
+</div>
+<div class="overflow-hidden">
+<p class="font-bold text-primary truncate">User Research 2024</p>
+<p class="text-body-sm text-on-surface-variant">148 nodes</p>
+</div>
+<span class="material-symbols-outlined ml-auto text-on-surface-variant opacity-0 group-hover:opacity-100">open_in_new</span>
+</div>
+</div>
+</div>
+<!-- Collaborative Presence Module -->
+<div class="p-4 glass-panel rounded-2xl border-l-4 border-secondary">
+<h4 class="font-label-caps text-label-caps text-on-surface-variant mb-3">NOW COLLABORATING</h4>
+<div class="flex flex-wrap gap-3">
+<div class="flex items-center gap-2 px-2 py-1 rounded bg-white shadow-sm border border-outline-variant/10">
+<div class="w-2 h-2 rounded-full bg-secondary animate-pulse"></div>
+<span class="text-body-sm font-bold">Liam G.</span>
+</div>
+<div class="flex items-center gap-2 px-2 py-1 rounded bg-white shadow-sm border border-outline-variant/10">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<span class="text-body-sm font-bold">Sarah W.</span>
+</div>
+<div class="flex items-center gap-2 px-2 py-1 rounded bg-white shadow-sm border border-outline-variant/10">
+<div class="w-2 h-2 rounded-full bg-on-tertiary-container"></div>
+<span class="text-body-sm font-bold">AI Assistant</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="h-24"></div> <!-- Bottom spacer -->
+</main>
+</div>
+<!-- Bottom Navigation Bar (Mobile) -->
+<footer class="md:hidden fixed bottom-0 w-full z-50 bg-surface dark:bg-surface-container-lowest border-t border-outline-variant/20 shadow-lg">
+<div class="flex justify-around items-center h-20 px-4 pb-safe">
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 active:scale-90 transition-all">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-caps text-label-caps uppercase text-[10px]">Activity</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-90 transition-all">
+<span class="material-symbols-outlined">hub</span>
+<span class="font-label-caps text-label-caps uppercase text-[10px]">Graph</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-90 transition-all">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-caps text-label-caps uppercase text-[10px]">Members</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-90 transition-all">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-caps text-label-caps uppercase text-[10px]">Settings</span>
+</div>
+</div>
+</footer>
+<!-- Micro-interaction Script -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const threadCards = document.querySelectorAll('.semantic-line').forEach(line => {
+                // Subtle animation for semantic lines
+            });
+
+            // Presence cursor simulation
+            const mainCanvas = document.querySelector('main');
+            const cursor = document.createElement('div');
+            cursor.className = 'presence-cursor fixed pointer-events-none z-[100] transition-all duration-300';
+            cursor.innerHTML = '<div class="presence-tag">Alex M. typing...</div>';
+            document.body.appendChild(cursor);
+
+            let mouseX = 0, mouseY = 0;
+            document.addEventListener('mousemove', (e) => {
+                // Only show near specific interactive cards to simulate collaborative feel
+                const rect = mainCanvas.getBoundingClientRect();
+                if(e.clientX > rect.left && e.clientX < rect.right) {
+                    cursor.style.opacity = '1';
+                    cursor.style.left = (e.clientX + 100) + 'px';
+                    cursor.style.top = (e.clientY + 50) + 'px';
+                } else {
+                    cursor.style.opacity = '0';
+                }
+            });
+        });
+    </script>
+</body></html>

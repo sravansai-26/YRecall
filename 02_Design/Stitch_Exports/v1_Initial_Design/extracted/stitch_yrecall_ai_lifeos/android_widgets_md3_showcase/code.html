@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YRecall Widget Showcase</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #FCFAF7;
+        }
+        .widget-shadow {
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .android-dock {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(20px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- Top App Bar (Shared Component) -->
+<header class="bg-surface dark:bg-on-background shadow-sm fixed top-0 full-width z-50 flex justify-between items-center w-full px-margin-mobile h-14">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim cursor-pointer">menu</span>
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-primary dark:text-primary-fixed-dim">YRecall</h1>
+</div>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A high-quality professional portrait of a tech-savvy individual in a minimalist studio. The lighting is soft and high-key, aligning with a light-mode aesthetic. The individual wears modern, clean-lined clothing. The background is a soft beige tone that matches the YRecall brand surface color, creating a seamless and premium visual identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsNHClivXi3CIqVJwlcuVwzjVANLaAWvZATsmbapP9lRLgP-rrIWTT4M1buQ6HjwC_fd49BPmcAOrXNglEUW4BKznLV-6UPuGxVwdI95x69kmcW6QIVAPwa_9GfJpLwa-LcZ2exO8r0na0ybNe9zTSdp19YSc1BA0LXgNd-DOYb1Dg9U5dsn5ljx46Cl4euam8IkeEDqvOwEGzEaz51ZabFzckZG_YQERUDnDy6apW0LfJQ49NwS0pRznKKt8N0VoRAAl3lY_WMig"/>
+</div>
+</header>
+<main class="pt-24 px-margin-mobile max-w-7xl mx-auto">
+<!-- Hero Intro -->
+<section class="mb-xxl text-center">
+<h2 class="font-headline-md text-headline-md text-primary mb-sm">Android Widgets</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl mx-auto">
+                Bring your memory operating system to your home screen with Material You widgets. Resizable, dynamic, and tactile.
+            </p>
+</section>
+<!-- Widget Display Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-lg items-start">
+<!-- Left Column: Large & Medium Widgets -->
+<div class="md:col-span-8 grid grid-cols-1 gap-lg">
+<!-- Large Widget: "Daily Digest" -->
+<div class="bg-surface-container-low rounded-[28px] p-lg widget-shadow border border-outline-variant/30 flex flex-col gap-md">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">history</span>
+<span class="font-title-sm text-title-sm text-primary">Daily Recall</span>
+</div>
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-widest">Large 4x4</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-md flex-grow">
+<div class="bg-white rounded-xl p-md flex flex-col justify-between border border-primary/5">
+<div>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant mb-xs">FROM 2 YEARS AGO</p>
+<p class="font-body-md text-body-md font-semibold text-primary">Hiking in Sedona</p>
+<p class="font-caption-sm text-caption-sm text-on-surface-variant line-clamp-2 mt-xs">The red rocks were glowing under the golden hour sun...</p>
+</div>
+<div class="mt-md h-32 rounded-lg overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A breathtaking cinematic wide shot of Sedona red rock formations at sunset. The lighting is warm and golden, casting long, soft shadows. The visual style is premium photography with a clean, minimalist feel, emphasizing the natural beauty and serene atmosphere. The color palette features deep oranges, soft creams, and a hint of brand-inspired deep blue in the shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFyARFyPCpW0kI6Z7kF3LjXJTwVvmuflrtjIM1xij1vonYJc0PMfQwEqxEwPhL1MXVlsNmz8y01bnDLBnPFlfm6lGWULDZ-fw2GldW6taJAMk-1EHoEaf7Z9STYAorj28iTZT2mWYa5NqjaYPO9EImpYX2tu0JEvvsK7cXZQY9_zT_p8wKN4zd-0zsBwWjZxAcCpfTTlMBFCG3oR86wqTXv6TM9bPW-PS00FqjLfxSBypMkbgIM2VXPMSqQltqNjqeyqqnKDFHsag"/>
+</div>
+</div>
+<div class="flex flex-col gap-sm">
+<div class="bg-secondary-container text-on-secondary-container rounded-xl p-md flex-grow flex flex-col justify-center">
+<span class="material-symbols-outlined mb-xs">query_stats</span>
+<p class="font-title-sm text-title-sm">12 New Insights</p>
+<p class="font-caption-sm text-caption-sm opacity-80">Based on your recent notes and location history.</p>
+</div>
+<div class="bg-surface-container-high rounded-xl p-md flex items-center justify-between">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">settings_input_component</span>
+<p class="font-body-md text-body-md font-medium">Quick Actions</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+</div>
+<!-- Bottom FAB Row -->
+<div class="flex justify-end gap-sm mt-md">
+<button class="w-12 h-12 rounded-2xl bg-primary text-white flex items-center justify-center shadow-lg hover:scale-105 transition-transform">
+<span class="material-symbols-outlined">mic</span>
+</button>
+<button class="w-12 h-12 rounded-2xl bg-primary text-white flex items-center justify-center shadow-lg hover:scale-105 transition-transform">
+<span class="material-symbols-outlined">photo_camera</span>
+</button>
+</div>
+</div>
+<!-- Medium Widget: "Active Context" -->
+<div class="bg-white rounded-[28px] p-lg widget-shadow border border-outline-variant/30 flex gap-md items-center">
+<div class="w-24 h-24 rounded-2xl overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="An artistic, minimalist abstract representation of neural connections or thought patterns. Delicate, glowing lines of teal and soft gray weave through a pristine white space. The lighting is diffused and ethereal, suggesting an 'AI operating system' aesthetic that is calm, intelligent, and highly organized. Perfect for a smart context widget." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqKcdH4cZaXqFFBEWUvZLou6uX8Hkd86zUvxanTeYbjpJ9fIfsUwNFXPyI2MpIZTxKS9VrQ43UPb6-M5S2ILSeCRa4zx_41Lf_AsGVAcRRircRJmp9a5jY5UWKrYy1C89sm6d9LoiuCsKn5ejpANf_1h4gXd535zWlEr4sXQ5GjmLWEu_t6Tf2atKeV4kKpcnUYktmPIDdJ1ZIN_1wsasHESYCqj1YduY8jf-MoExIG37lBFxV_NZug-41_iUnFlp2iR5rQLvgpDY"/>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<h3 class="font-title-sm text-title-sm text-primary">Project Echo</h3>
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase">Medium 4x2</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-xs">Summarizing meeting notes from today's sync...</p>
+<div class="flex gap-xs mt-md">
+<span class="px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-xs text-label-xs">Active AI</span>
+<span class="px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label-xs text-label-xs">Contextual</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Small, Lockscreen & Details -->
+<div class="md:col-span-4 flex flex-col gap-lg">
+<!-- Small Widget: "Capture" -->
+<div class="bg-primary rounded-[28px] p-lg widget-shadow text-white aspect-square flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-white/70" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+<span class="font-label-xs text-label-xs text-white/50 uppercase">Small 2x2</span>
+</div>
+<div>
+<p class="font-headline-md text-[24px] leading-tight font-bold">Capture Thought</p>
+<div class="flex gap-sm mt-md">
+<div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-white">edit</span>
+</div>
+<div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-white">link</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Lock Screen Widget Variant -->
+<div class="bg-on-background text-white rounded-[28px] p-lg widget-shadow border border-white/10">
+<div class="flex items-center gap-sm mb-md">
+<span class="material-symbols-outlined text-primary-fixed-dim">lock</span>
+<p class="font-label-xs text-label-xs uppercase tracking-widest text-white/60">Lock Screen Glance</p>
+</div>
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full border-2 border-primary-fixed-dim flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-fixed-dim">psychology</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold">Brain Activity</p>
+<p class="font-caption-sm text-caption-sm text-white/70">85% Recall Synced</p>
+</div>
+</div>
+</div>
+<!-- Stats Card -->
+<div class="bg-tertiary-fixed text-on-tertiary-fixed rounded-[28px] p-lg widget-shadow">
+<div class="flex justify-between items-start mb-md">
+<span class="material-symbols-outlined">bolt</span>
+<p class="font-label-xs text-label-xs uppercase">Recall Efficiency</p>
+</div>
+<p class="font-display-lg-mobile text-[32px] leading-none mb-xs">98.4%</p>
+<p class="font-caption-sm text-caption-sm opacity-80">Higher than 92% of users today.</p>
+</div>
+</div>
+</div>
+<!-- Android Home Screen Mockup Simulation -->
+<section class="mt-xxl pt-xl border-t border-outline-variant/30">
+<h3 class="font-title-sm text-title-sm text-primary mb-lg text-center">Home Screen Integration</h3>
+<div class="relative max-w-md mx-auto aspect-[9/19.5] rounded-[48px] border-[12px] border-on-background overflow-hidden bg-slate-900 shadow-2xl">
+<!-- Wallpaper -->
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover opacity-60" data-alt="A serene and minimalist abstract landscape wallpaper featuring soft, rolling gradients of warm beige, deep navy, and muted teal. The style is reminiscent of modern Android Material You wallpapers, with clean shapes and a sense of calm. The lighting is soft and diffused, creating a premium background for UI elements." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDzDeYZQUCFMWpuG16ia1CUkbeesAdXbmLqDdOqucnD-wNEjLWKDqTYOw7Wz0_zsnXesNCTuigMoupYh1yM0Fa5h25wOCpxWQboCSV-8gBp4-enYIzUh9KD0A4ZI8nnkxyrjoyWfGPpiNyNbEqMhFMROHlLSYbgttFo4as1wnfRhKAYr9Wx73nO4G_eVs3hSC1iP76-wgga7__60lh4C0XQpBfqP2dtoypPlKCEnWaIjJpmxWx7FqyqaNJlkcS03eQHn5YaDwd1UE"/>
+</div>
+<!-- System Status Bar -->
+<div class="relative z-10 px-8 py-3 flex justify-between items-center text-white/90 text-[12px]">
+<span>9:41</span>
+<div class="flex gap-1 items-center">
+<span class="material-symbols-outlined text-[14px]">signal_cellular_alt</span>
+<span class="material-symbols-outlined text-[14px]"></span></div></div></div></section></main></body></html>

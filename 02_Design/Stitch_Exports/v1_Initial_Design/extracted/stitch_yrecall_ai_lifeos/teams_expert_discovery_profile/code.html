@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;600;700;800;900&amp;family=Courier+Prime&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f9f9ff; }
+        ::-webkit-scrollbar-thumb { background: #cfdaf1; border-radius: 10px; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 30, 64, 0.1);
+        }
+        .knowledge-node-anim {
+            animation: pulse-border 4s infinite ease-in-out;
+        }
+        @keyframes pulse-border {
+            0%, 100% { border-color: rgba(0, 110, 110, 0.2); }
+            50% { border-color: rgba(0, 110, 110, 0.6); }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#cfdaf1",
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#90efef",
+                        "on-primary-fixed-variant": "#1f477b",
+                        "on-primary-container": "#799dd6",
+                        "secondary-fixed-dim": "#76d6d5",
+                        "surface-container-high": "#dee8ff",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#e8e1db",
+                        "surface-tint": "#3a5f94",
+                        "inverse-on-surface": "#ebf1ff",
+                        "on-error": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#001b3c",
+                        "inverse-surface": "#263142",
+                        "surface-container": "#e7eeff",
+                        "tertiary-fixed-dim": "#cbc5bf",
+                        "background": "#f9f9ff",
+                        "tertiary-container": "#36332f",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed-variant": "#004f4f",
+                        "on-surface-variant": "#43474f",
+                        "primary": "#001e40",
+                        "on-tertiary-fixed-variant": "#4a4641",
+                        "outline": "#737780",
+                        "secondary-fixed": "#93f2f2",
+                        "error-container": "#ffdad6",
+                        "on-background": "#111c2c",
+                        "on-tertiary-container": "#a09b95",
+                        "surface-container-low": "#f0f3ff",
+                        "primary-fixed": "#d5e3ff",
+                        "primary-fixed-dim": "#a7c8ff",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#201e1a",
+                        "surface-variant": "#d8e3fa",
+                        "on-secondary-container": "#006e6e",
+                        "inverse-primary": "#a7c8ff",
+                        "surface-container-highest": "#d8e3fa",
+                        "surface": "#f9f9ff",
+                        "on-tertiary-fixed": "#1e1b17",
+                        "outline-variant": "#c3c6d1",
+                        "surface-bright": "#f9f9ff",
+                        "secondary": "#006a6a",
+                        "on-secondary-fixed": "#002020",
+                        "primary-container": "#003366",
+                        "on-surface": "#111c2c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "container-margin": "24px",
+                        "gutter": "16px",
+                        "node-padding": "12px",
+                        "sidebar-width": "280px"
+                    },
+                    "fontFamily": {
+                        "mono-data": ["Courier Prime"],
+                        "headline-sm": ["Public Sans"],
+                        "body-md": ["Public Sans"],
+                        "body-lg": ["Public Sans"],
+                        "headline-lg": ["Public Sans"],
+                        "label-caps": ["Public Sans"],
+                        "body-sm": ["Public Sans"],
+                        "headline-md": ["Public Sans"],
+                        "display-lg": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "mono-data": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface-bright text-on-surface font-body-md overflow-x-hidden">
+<!-- Top Navigation Bar -->
+<header class="w-full top-0 sticky z-50 bg-surface-container/80 backdrop-blur-md shadow-sm border-b border-outline-variant/10">
+<div class="flex items-center justify-between px-container-margin h-16 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary font-headline-md">hub</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">YRecall Teams</h1>
+</div>
+<nav class="hidden md:flex items-center gap-gutter">
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-caps text-label-caps" href="#">Activity</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-caps text-label-caps" href="#">Graph</a>
+<a class="text-primary font-bold font-label-caps text-label-caps border-b-2 border-primary" href="#">Members</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-caps text-label-caps" href="#">Settings</a>
+</nav>
+<div class="flex items-center gap-4">
+<div class="flex items-center -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-surface-bright ring-2 ring-secondary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a team member with a subtle teal glow around their avatar indicating active status, high-density light mode workspace background, minimalist and scholarly corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBe03eYJLPO3Jc6tk9gdhfEWw8uzzDvExHk3MGXgqyS4Iha4WoIvWYrkWiAU-CNdywkLiewQzIB-r6rtn5jfKaOh_4TchUG9NmFM9lLvmCg0AtVYfo6zAroc6nI1bPh85dP_Ul_PnCeU4xfDYv6Q1TR8wwpyz0nan3TExp-EoFQ0aK0Mpc38F8R3iGAPO-BIfBEJszqaEkoWT2K7JK9_9Kojs9HoL_Z2dORtq5oBQZdK2Gpgj7noLvabTG04ow4ZS_DYUPFZ3goXyU"/>
+</div>
+</div>
+<button class="flex items-center gap-2 bg-primary text-on-primary px-4 py-2 rounded-lg font-label-caps text-label-caps cursor-pointer active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[18px]">bolt</span>
+                    AI INSIGHTS
+                </button>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-container-margin py-10 pb-32">
+<!-- Expert Profile Header Section -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 mb-12">
+<!-- Profile Info Sidebar -->
+<aside class="md:col-span-4 flex flex-col gap-6">
+<div class="relative group">
+<div class="aspect-square w-full rounded-xl overflow-hidden border border-outline-variant/20 shadow-lg">
+<img class="w-full h-full object-cover" data-alt="A high-end professional portrait of Elena Rodriguez, a scholarly woman with a focused expression, wearing a minimalist modern blazer. The lighting is soft and warm, reflecting a digital sanctuary environment. The background is a clean, architectural white space with subtle geometric shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkXEsvcnvZKCPQ0x-LNNptgJmI_GOWFY1NX_ODa7RBmNHTimCN8_IVPsl3p_K3WXM0I3uHHYxL1Z8UzFwSKlDFyHZLJbD-s7M6f68tRS0O6xuee3LZv-jjxLCuXu4r8RBVWO3PGTJoRYfjSmC3cbieBVWlfzpZPflGQUgFAO-JJPzB_SByhGYf-w90nJmE-MbmVU-wBKbD_hHxyZAxLRmcYdTV4MOZK7S_VpOAudUv43n_BIjJC9pA8DiytZ2VwTU0_YZWyItdrnU"/>
+</div>
+<div class="absolute bottom-4 right-4 bg-secondary text-on-secondary px-3 py-1 rounded-full text-label-caps font-label-caps flex items-center gap-1 shadow-md">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+                        CORE EXPERT
+                    </div>
+</div>
+<div class="space-y-2">
+<h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">Elena Rodriguez</h2>
+<p class="text-on-surface-variant font-body-lg">Senior Knowledge Architect &amp; Semantic Engineer</p>
+<div class="flex flex-wrap gap-2 pt-2">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-body-sm font-label-caps">GRAPH THEORY</span>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-body-sm font-label-caps">AI SYSTHESIS</span>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-body-sm font-label-caps">DATA ETHICS</span>
+</div>
+</div>
+<div class="pt-6 border-t border-outline-variant/20 flex flex-col gap-3">
+<button class="w-full bg-primary text-on-primary py-3 rounded-lg font-headline-sm text-headline-sm flex items-center justify-center gap-2 hover:bg-primary-container transition-all">
+<span class="material-symbols-outlined">mail</span>
+                        Consult Elena
+                    </button>
+<button class="w-full border border-primary text-primary py-3 rounded-lg font-headline-sm text-headline-sm flex items-center justify-center gap-2 hover:bg-surface-dim transition-all">
+<span class="material-symbols-outlined">schedule</span>
+                        View Availability
+                    </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<div class="md:col-span-8 flex flex-col gap-8">
+<!-- Collaborative Reach Card (Bento Style) -->
+<div class="bg-surface-container-low rounded-2xl p-8 border border-outline-variant/10 relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-32 h-32 bg-secondary/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700"></div>
+<div class="flex items-start justify-between mb-4">
+<div class="space-y-1">
+<span class="text-secondary font-label-caps text-label-caps tracking-widest uppercase">Collaborative Reach</span>
+<h3 class="text-primary font-headline-md text-headline-md">Impact Synthesis</h3>
+</div>
+<span class="material-symbols-outlined text-secondary text-4xl">psychology</span>
+</div>
+<div class="flex flex-col md:flex-row items-center gap-8">
+<div class="text-center md:text-left">
+<span class="text-display-lg font-display-lg text-primary">12%</span>
+<p class="text-on-surface-variant max-w-[200px]">Elena has optimized 12% of the project's architectural links through her recent contributions.</p>
+</div>
+<div class="flex-1 h-24 w-full bg-surface-bright rounded-xl border border-outline-variant/20 p-4 flex items-center justify-around overflow-hidden relative">
+<div class="flex flex-col items-center">
+<span class="text-primary font-bold text-headline-sm">4.8k</span>
+<span class="text-body-sm text-on-surface-variant font-label-caps">NODES EDITED</span>
+</div>
+<div class="w-px h-12 bg-outline-variant/30"></div>
+<div class="flex flex-col items-center">
+<span class="text-secondary font-bold text-headline-sm">82</span>
+<span class="text-body-sm text-on-surface-variant font-label-caps">PEER REVIEWS</span>
+</div>
+<div class="w-px h-12 bg-outline-variant/30"></div>
+<div class="flex flex-col items-center">
+<span class="text-primary font-bold text-headline-sm">1.2m</span>
+<span class="text-body-sm text-on-surface-variant font-label-caps">RECALL WEIGHT</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Knowledge Domain Map Visualization -->
+<div class="bg-white rounded-2xl p-8 border border-outline-variant/10 shadow-sm relative h-[400px] flex flex-col">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-primary font-headline-sm text-headline-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">explore</span>
+                            Knowledge Domain Map
+                        </h3>
+<div class="flex gap-2">
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors"><span class="material-symbols-outlined text-on-surface-variant">zoom_in</span></button>
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors"><span class="material-symbols-outlined text-on-surface-variant">filter_list</span></button>
+</div>
+</div>
+<!-- Abstract Visualization Area -->
+<div class="flex-1 relative rounded-xl bg-surface-dim/20 border border-dashed border-outline-variant overflow-hidden">
+<!-- Simulated Nodes -->
+<div class="absolute top-[20%] left-[30%] p-4 glass-card rounded-full knowledge-node-anim flex items-center gap-3 shadow-sm z-10">
+<div class="w-2 h-2 bg-secondary rounded-full"></div>
+<span class="font-label-caps text-label-caps text-primary">Semantic Mapping</span>
+</div>
+<div class="absolute top-[60%] left-[15%] p-3 glass-card rounded-full knowledge-node-anim flex items-center gap-3 shadow-sm z-10" style="animation-delay: 1s;">
+<div class="w-2 h-2 bg-primary rounded-full"></div>
+<span class="font-label-caps text-label-caps text-primary">API Architecture</span>
+</div>
+<div class="absolute top-[40%] left-[70%] p-5 glass-card rounded-full knowledge-node-anim flex items-center gap-3 shadow-sm z-10" style="animation-delay: 2s;">
+<div class="w-3 h-3 bg-secondary rounded-full"></div>
+<span class="font-label-caps text-label-caps text-primary">Neural Synthesis</span>
+</div>
+<!-- Decorative Lines -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none opacity-20">
+<line stroke="#001e40" stroke-width="1" x1="30%" x2="70%" y1="20%" y2="40%"></line>
+<line stroke="#001e40" stroke-width="1" x1="30%" x2="15%" y1="20%" y2="60%"></line>
+<line stroke="#001e40" stroke-width="1" x1="70%" x2="15%" y1="40%" y2="60%"></line>
+</svg>
+<!-- Background Atmosphere -->
+<div class="absolute inset-0 opacity-10">
+
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Contributions Section -->
+<section class="mt-12">
+<div class="flex items-center justify-between mb-8">
+<div class="space-y-1">
+<h3 class="text-primary font-headline-md text-headline-md">Recent Contributions</h3>
+<p class="text-on-surface-variant">Archival audit of indexed work and node modifications.</p>
+</div>
+<button class="text-primary font-bold font-label-caps text-label-caps flex items-center gap-1 hover:underline">
+                    VIEW ALL ACTIVITY <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Contribution Card 1 -->
+<div class="bg-white p-6 rounded-xl border border-outline-variant/10 shadow-sm hover:shadow-md transition-shadow cursor-pointer group">
+<div class="flex items-start justify-between mb-4">
+<span class="material-symbols-outlined text-secondary bg-secondary-container/30 p-2 rounded-lg">description</span>
+<span class="font-mono-data text-mono-data text-on-surface-variant">2h ago</span>
+</div>
+<h4 class="text-primary font-headline-sm text-headline-sm mb-2 group-hover:text-secondary transition-colors">Infrastructure Alpha_v2</h4>
+<p class="text-on-surface-variant text-body-sm mb-4 line-clamp-2">Optimized 14 sub-nodes related to latency reduction in the semantic vector engine.</p>
+<div class="flex items-center gap-2">
+<span class="text-secondary-container font-label-caps text-[10px] px-2 py-0.5 bg-on-secondary-container rounded">REFACTORED</span>
+<span class="text-surface-container-high font-label-caps text-[10px] px-2 py-0.5 bg-primary rounded">CORE</span>
+</div>
+</div>
+<!-- Contribution Card 2 -->
+<div class="bg-white p-6 rounded-xl border border-outline-variant/10 shadow-sm hover:shadow-md transition-shadow cursor-pointer group">
+<div class="flex items-start justify-between mb-4">
+<span class="material-symbols-outlined text-primary bg-primary-fixed/30 p-2 rounded-lg">schema</span>
+<span class="font-mono-data text-mono-data text-on-surface-variant">Yesterday</span>
+</div>
+<h4 class="text-primary font-headline-sm text-headline-sm mb-2 group-hover:text-secondary transition-colors">Team Onboarding Flow</h4>
+<p class="text-on-surface-variant text-body-sm mb-4 line-clamp-2">Created a new collection mapping organizational hierarchy to knowledge permissions.</p>
+<div class="flex items-center gap-2">
+<span class="text-secondary-container font-label-caps text-[10px] px-2 py-0.5 bg-on-secondary-container rounded">CREATED</span>
+<span class="text-surface-container-high font-label-caps text-[10px] px-2 py-0.5 bg-primary rounded">UX</span>
+</div>
+</div>
+<!-- Contribution Card 3 -->
+<div class="bg-white p-6 rounded-xl border border-outline-variant/10 shadow-sm hover:shadow-md transition-shadow cursor-pointer group">
+<div class="flex items-start justify-between mb-4">
+<span class="material-symbols-outlined text-error bg-error-container/30 p-2 rounded-lg">priority_high</span>
+<span class="font-mono-data text-mono-data text-on-surface-variant">3d ago</span>
+</div>
+<h4 class="text-primary font-headline-sm text-headline-sm mb-2 group-hover:text-secondary transition-colors">Security Audit Report</h4>
+<p class="text-on-surface-variant text-body-sm mb-4 line-clamp-2">High-level review of cross-tenant encryption protocols in shared spaces.</p>
+<div class="flex items-center gap-2">
+<span class="text-error-container font-label-caps text-[10px] px-2 py-0.5 bg-on-error-container rounded">AUDITED</span>
+<span class="text-surface-container-high font-label-caps text-[10px] px-2 py-0.5 bg-primary rounded">GOV</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Mobile) -->
+<footer class="md:hidden fixed bottom-0 w-full z-50 bg-surface dark:bg-surface-container-lowest border-t border-outline-variant/20 shadow-lg px-4 pb-safe h-20 flex justify-around items-center">
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 tap-highlight-transparent">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-caps text-label-caps">Activity</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 tap-highlight-transparent">
+<span class="material-symbols-outlined">hub</span>
+<span class="font-label-caps text-label-caps">Graph</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 transition-all active:scale-90 tap-highlight-transparent">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-caps text-label-caps">Members</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 tap-highlight-transparent">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-caps text-label-caps">Settings</span>
+</button>
+</footer>
+<script>
+        // Micro-interactions for knowledge nodes
+        document.querySelectorAll('.knowledge-node-anim').forEach(node => {
+            node.addEventListener('mouseenter', () => {
+                node.style.transform = 'scale(1.1) translateY(-5px)';
+                node.style.transition = 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                node.style.zIndex = '50';
+            });
+            node.addEventListener('mouseleave', () => {
+                node.style.transform = 'scale(1) translateY(0)';
+                node.style.zIndex = '10';
+            });
+        });
+    </script>
+</body></html>

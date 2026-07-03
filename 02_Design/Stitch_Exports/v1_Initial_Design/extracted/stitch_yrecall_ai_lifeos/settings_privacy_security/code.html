@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Privacy &amp; Security | YRecall</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .ai-border {
+            position: relative;
+        }
+        .ai-border::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(to right, #006a6a, #c3c6d1);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        @keyframes pulse-subtle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .animate-pulse-subtle {
+            animation: pulse-subtle 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-bright": "#fff8f1",
+                      "surface-dim": "#e0d9d1",
+                      "surface-container-lowest": "#ffffff",
+                      "tertiary-fixed-dim": "#88d982",
+                      "surface-container-high": "#eee7df",
+                      "surface-variant": "#e8e1da",
+                      "primary-fixed-dim": "#a7c8ff",
+                      "on-error-container": "#93000a",
+                      "on-secondary-fixed-variant": "#004f4f",
+                      "secondary": "#006a6a",
+                      "primary-fixed": "#d5e3ff",
+                      "outline": "#737780",
+                      "on-error": "#ffffff",
+                      "on-tertiary": "#ffffff",
+                      "error": "#ba1a1a",
+                      "surface-container-low": "#faf3eb",
+                      "surface": "#fff8f1",
+                      "on-secondary-fixed": "#002020",
+                      "inverse-surface": "#33302b",
+                      "on-primary-fixed-variant": "#1f477b",
+                      "on-secondary-container": "#006e6e",
+                      "on-primary-container": "#799dd6",
+                      "on-tertiary-fixed": "#002204",
+                      "secondary-fixed-dim": "#76d6d5",
+                      "surface-tint": "#3a5f94",
+                      "tertiary-container": "#003d0b",
+                      "inverse-on-surface": "#f7f0e8",
+                      "outline-variant": "#c3c6d1",
+                      "tertiary-fixed": "#a3f69c",
+                      "secondary-container": "#90efef",
+                      "on-tertiary-container": "#5ead5c",
+                      "primary-container": "#003366",
+                      "tertiary": "#002504",
+                      "surface-container": "#f4ede5",
+                      "background": "#fff8f1",
+                      "on-background": "#1e1b17",
+                      "inverse-primary": "#a7c8ff",
+                      "on-surface-variant": "#43474f",
+                      "on-secondary": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "surface-container-highest": "#e8e1da",
+                      "on-primary-fixed": "#001b3c",
+                      "on-primary": "#ffffff",
+                      "on-surface": "#1e1b17",
+                      "primary": "#001e40",
+                      "secondary-fixed": "#93f2f2",
+                      "on-tertiary-fixed-variant": "#005312"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-desktop": "40px",
+                      "lg": "24px",
+                      "xs": "4px",
+                      "xl": "32px",
+                      "xxl": "48px",
+                      "base": "8px",
+                      "margin-mobile": "20px",
+                      "sm": "8px",
+                      "md": "16px",
+                      "gutter": "16px"
+              },
+              "fontFamily": {
+                      "label-xs": ["Public Sans"],
+                      "headline-md": ["Public Sans"],
+                      "display-lg-mobile": ["Public Sans"],
+                      "body-md": ["Public Sans"],
+                      "caption-sm": ["Public Sans"],
+                      "title-sm": ["Public Sans"],
+                      "display-lg": ["Public Sans"]
+              },
+              "fontSize": {
+                      "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                      "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                      "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="w-full sticky top-0 z-[60] bg-surface/80 backdrop-blur-md flex items-center justify-between px-margin-mobile h-16 border-b border-outline-variant/10">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-variant/50 p-2 rounded-full transition-colors active:scale-95" data-icon="arrow_back">arrow_back</button>
+<h1 class="font-title-sm text-title-sm text-primary">Privacy &amp; Security</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-variant/50 p-2 rounded-full transition-colors" data-icon="search">search</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-variant/50 p-2 rounded-full transition-colors" data-icon="more_vert">more_vert</button>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-margin-mobile pt-lg space-y-xl">
+<!-- On-Device AI Status (AI-Enhanced Card) -->
+<section class="ai-border bg-surface-container-lowest p-lg rounded-[24px] shadow-sm overflow-hidden">
+<div class="flex flex-col md:flex-row items-center gap-lg">
+<div class="relative w-24 h-24 flex-shrink-0">
+
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-4xl" data-icon="security" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+</div>
+<div class="flex-1 space-y-2 text-center md:text-left">
+<div class="flex items-center justify-center md:justify-start gap-2">
+<h2 class="font-title-sm text-title-sm text-primary">On-Device Processing</h2>
+<span class="bg-secondary/10 text-on-secondary-container px-2 py-0.5 rounded-full text-[10px] font-bold tracking-widest uppercase animate-pulse-subtle">Active</span>
+</div>
+<p class="text-on-surface-variant font-body-md leading-relaxed">Your memories never leave your device. All AI logic, recall indexing, and neural analysis are performed locally to ensure absolute privacy.</p>
+</div>
+</div>
+</section>
+<!-- Security Core (Bento Layout) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- Biometric Toggle -->
+<article class="bg-surface-container-lowest p-lg rounded-[24px] shadow-sm flex flex-col justify-between hover:bg-white transition-colors">
+<div class="space-y-4">
+<div class="flex items-start justify-between">
+<div class="bg-primary/5 p-3 rounded-xl">
+<span class="material-symbols-outlined text-primary" data-icon="fingerprint">fingerprint</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<div>
+<h3 class="font-title-sm text-on-surface font-semibold">Biometric Access</h3>
+<p class="font-caption-sm text-on-surface-variant mt-1">Require FaceID or TouchID to open YRecall and access sensitive memories.</p>
+</div>
+</div>
+</article>
+<!-- Session Lock -->
+<article class="bg-surface-container-lowest p-lg rounded-[24px] shadow-sm flex flex-col justify-between hover:bg-white transition-colors">
+<div class="space-y-4">
+<div class="bg-primary/5 p-3 w-fit rounded-xl">
+<span class="material-symbols-outlined text-primary" data-icon="timer">timer</span>
+</div>
+<div>
+<h3 class="font-title-sm text-on-surface font-semibold">Session Auto-Lock</h3>
+<p class="font-caption-sm text-on-surface-variant mt-1">Automatically lock the app after a period of inactivity.</p>
+</div>
+<select class="w-full mt-2 bg-surface-container-low border-none rounded-lg text-body-md p-3 focus:ring-2 focus:ring-primary">
+<option>Immediately</option>
+<option selected="">After 1 minute</option>
+<option>After 5 minutes</option>
+<option>Never</option>
+</select>
+</div>
+</article>
+</div>
+<!-- Data Privacy & Sensitive Categories -->
+<section class="space-y-md">
+<h2 class="font-title-sm text-title-sm text-primary px-2">Memory Retention &amp; Auto-Clear</h2>
+<div class="bg-surface-container-lowest rounded-[24px] shadow-sm overflow-hidden">
+<div class="p-lg space-y-lg">
+<!-- Category Row: Financial -->
+<div class="flex items-center justify-between group">
+<div class="flex items-center gap-4">
+<div class="p-3 rounded-full bg-secondary-container/20 text-on-secondary-container">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+</div>
+<div>
+<h4 class="font-body-md font-bold text-on-surface">Financial Data</h4>
+<p class="font-caption-sm text-on-surface-variant">Banking info, bills, and card numbers.</p>
+</div>
+</div>
+<select class="bg-transparent border-none text-on-surface-variant font-body-md focus:ring-0 cursor-pointer">
+<option>Don't clear</option>
+<option selected="">30 days</option>
+<option>90 days</option>
+</select>
+</div>
+<hr class="border-outline-variant/30"/>
+<!-- Category Row: Health -->
+<div class="flex items-center justify-between group">
+<div class="flex items-center gap-4">
+<div class="p-3 rounded-full bg-secondary-container/20 text-on-secondary-container">
+<span class="material-symbols-outlined" data-icon="medical_services">medical_services</span>
+</div>
+<div>
+<h4 class="font-body-md font-bold text-on-surface">Health &amp; Fitness</h4>
+<p class="font-caption-sm text-on-surface-variant">Medical records and workout logs.</p>
+</div>
+</div>
+<select class="bg-transparent border-none text-on-surface-variant font-body-md focus:ring-0 cursor-pointer">
+<option selected="">Don't clear</option>
+<option>1 year</option>
+</select>
+</div>
+<hr class="border-outline-variant/30"/>
+<!-- Category Row: Incognito Mode -->
+<div class="flex items-center justify-between group">
+<div class="flex items-center gap-4">
+<div class="p-3 rounded-full bg-secondary-container/20 text-on-secondary-container">
+<span class="material-symbols-outlined" data-icon="visibility_off">visibility_off</span>
+</div>
+<div>
+<h4 class="font-body-md font-bold text-on-surface">Privacy Guard</h4>
+<p class="font-caption-sm text-on-surface-variant">Auto-detect and scrub faces/plates from images.</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</div>
+</section>
+<!-- Export & Danger Zone -->
+<section class="space-y-md pt-lg pb-xl">
+<h2 class="font-title-sm text-title-sm text-primary px-2">Data Portability</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-gutter">
+<!-- Export Data -->
+<button class="flex items-center justify-between p-lg bg-surface-container-lowest border border-outline-variant/30 rounded-xl hover:shadow-md transition-shadow group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" data-icon="download">download</span>
+<div class="text-left">
+<span class="block font-body-md font-bold text-on-surface">Download Memories</span>
+<span class="block font-caption-sm text-on-surface-variant">Full encrypted backup (JSON/HEIC)</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform" data-icon="chevron_right">chevron_right</span>
+</button>
+<!-- Delete Account -->
+<button class="flex items-center justify-between p-lg bg-error-container/20 border border-error/20 rounded-xl hover:bg-error-container/30 transition-colors group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-error" data-icon="delete_forever">delete_forever</span>
+<div class="text-left">
+<span class="block font-body-md font-bold text-on-error-container">Delete Account</span>
+<span class="block font-caption-sm text-on-error-container/70">Wipe all data permanently</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-error-container group-hover:translate-x-1 transition-transform" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Navigation Shell (BottomNavBar) -->
+<nav class="fixed bottom-0 left-0 w-full h-20 flex justify-around items-center px-4 pb-safe bg-surface-container-low dark:bg-surface-container-lowest border-t border-outline-variant/30 z-50">
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/20 transition-colors w-1/4 h-full">
+<span class="material-symbols-outlined mb-1" data-icon="brain">grain</span>
+<span class="font-label-xs text-label-xs">Memories</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/20 transition-colors w-1/4 h-full">
+<span class="material-symbols-outlined mb-1" data-icon="psychology_alt">psychology_alt</span>
+<span class="font-label-xs text-label-xs">Recall</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/20 transition-colors w-1/4 h-full">
+<span class="material-symbols-outlined mb-1" data-icon="analytics">analytics</span>
+<span class="font-label-xs text-label-xs">Insights</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1 w-1/4 h-full active:scale-90 transition-transform">
+<span class="material-symbols-outlined mb-1" data-icon="settings" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="font-label-xs text-label-xs">Settings</span>
+</button>
+</nav>
+<!-- Background Decoration -->
+<div class="fixed inset-0 -z-10 pointer-events-none opacity-20">
+
+</div>
+<script>
+        // Simple ripple-like effect for cards on click
+        document.querySelectorAll('article, button').forEach(el => {
+            el.addEventListener('mousedown', () => {
+                el.style.transform = 'scale(0.98)';
+            });
+            el.addEventListener('mouseup', () => {
+                el.style.transform = 'scale(1)';
+            });
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body></html>

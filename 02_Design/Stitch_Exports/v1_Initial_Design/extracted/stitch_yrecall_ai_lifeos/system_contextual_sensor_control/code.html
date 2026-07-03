@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YRecall | Contextual Awareness &amp; Sensors</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#b4c5ff",
+                    "on-tertiary-fixed": "#0b1c30",
+                    "on-secondary-container": "#fefcff",
+                    "on-primary-container": "#7c839b",
+                    "on-primary-fixed-variant": "#3f465c",
+                    "surface-container-low": "#f2f4f6",
+                    "surface": "#f7f9fb",
+                    "on-secondary-fixed": "#00174b",
+                    "inverse-surface": "#2d3133",
+                    "on-tertiary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "primary-fixed": "#dae2fd",
+                    "outline": "#76777d",
+                    "on-error": "#ffffff",
+                    "secondary": "#0051d5",
+                    "on-error-container": "#93000a",
+                    "on-secondary-fixed-variant": "#003ea8",
+                    "primary-fixed-dim": "#bec6e0",
+                    "surface-container-high": "#e6e8ea",
+                    "surface-variant": "#e0e3e5",
+                    "tertiary-fixed-dim": "#b7c8e1",
+                    "surface-bright": "#f7f9fb",
+                    "surface-dim": "#d8dadc",
+                    "surface-container-lowest": "#ffffff",
+                    "primary": "#000000",
+                    "secondary-fixed": "#dbe1ff",
+                    "on-tertiary-fixed-variant": "#38485d",
+                    "on-surface": "#191c1e",
+                    "on-primary-fixed": "#131b2e",
+                    "on-primary": "#ffffff",
+                    "surface-container-highest": "#e0e3e5",
+                    "on-secondary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "on-surface-variant": "#45464d",
+                    "background": "#f7f9fb",
+                    "on-background": "#191c1e",
+                    "inverse-primary": "#bec6e0",
+                    "primary-container": "#131b2e",
+                    "tertiary": "#000000",
+                    "surface-container": "#eceef0",
+                    "tertiary-fixed": "#d3e4fe",
+                    "secondary-container": "#316bf3",
+                    "on-tertiary-container": "#75859d",
+                    "inverse-on-surface": "#eff1f3",
+                    "outline-variant": "#c6c6cd",
+                    "tertiary-container": "#0b1c30",
+                    "surface-tint": "#565e74"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "stack-lg": "32px",
+                    "gutter": "24px",
+                    "margin-mobile": "16px",
+                    "container-max": "1280px",
+                    "stack-sm": "8px",
+                    "stack-md": "16px",
+                    "margin-desktop": "32px"
+            },
+            "fontFamily": {
+                    "label-caps": ["Public Sans"],
+                    "display-lg": ["Public Sans"],
+                    "data-mono": ["Public Sans"],
+                    "display-lg-mobile": ["Public Sans"],
+                    "body-sm": ["Public Sans"],
+                    "body-md": ["Public Sans"],
+                    "headline-md": ["Public Sans"]
+            },
+            "fontSize": {
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "data-mono": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .pulse-ai {
+            animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.95); }
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #E2E8F0;
+            border-radius: 10px;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 16px;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid #E2E8F0;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md text-body-md antialiased selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+<!-- TopAppBar -->
+<header class="w-full sticky top-0 bg-surface dark:bg-surface-container-highest flex items-center justify-between px-margin-mobile md:px-margin-desktop h-16 w-full border-b border-outline-variant dark:border-outline z-40">
+<div class="flex items-center gap-stack-md">
+<span class="material-symbols-outlined text-primary dark:text-on-primary-container cursor-pointer active:scale-95 duration-150">menu</span>
+<h1 class="font-display-lg text-display-lg-mobile tracking-tight text-primary dark:text-primary-fixed">YRecall</h1>
+</div>
+<div class="flex items-center gap-stack-md">
+<div class="hidden md:flex gap-6 mr-8">
+<span class="font-label-caps text-label-caps text-on-surface-variant dark:text-on-surface-variant cursor-pointer hover:bg-surface-container-high transition-colors px-2 py-1">System Health</span>
+<span class="font-label-caps text-label-caps text-primary dark:text-primary-fixed border-b-2 border-primary px-2 py-1">Privacy Lab</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined text-sm">person</span>
+</div>
+</div>
+</header>
+<main class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg pb-32">
+<!-- Header Section -->
+<section class="mb-stack-lg">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-stack-md">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="w-2 h-2 rounded-full bg-[#059669] pulse-ai"></span>
+<span class="font-label-caps text-label-caps text-[#059669]">Sensors Nominal</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-primary">Contextual Awareness</h2>
+<p class="text-on-surface-variant max-w-2xl mt-2">Manage the real-time telemetry feeding your personal OS. Define boundaries for automated awareness and active privacy shielding.</p>
+</div>
+<div class="flex gap-stack-sm">
+<button class="px-stack-md py-2 border border-outline text-on-surface rounded-lg font-label-caps text-label-caps hover:bg-surface-container-high transition-all active:scale-95">EXPORT LOGS</button>
+<button class="px-stack-md py-2 bg-primary text-on-primary rounded-lg font-label-caps text-label-caps hover:opacity-90 transition-all active:scale-95">FLUSH CACHE</button>
+</div>
+</div>
+</section>
+<!-- Main Bento Grid -->
+<div class="bento-grid">
+<!-- Sensor Feed: Audio Ambient -->
+<div class="col-span-12 md:col-span-4 glass-card p-6 rounded-xl flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-secondary/10 rounded-lg">
+<span class="material-symbols-outlined text-secondary">mic</span>
+</div>
+<span class="font-headline-md text-body-md font-semibold">Audio Ambient</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-outline-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+<div class="h-24 flex items-end gap-1 px-2 overflow-hidden">
+<!-- Fake Audio Waveform -->
+<div class="w-1 bg-secondary/30 rounded-t h-[20%]" style="animation: bounce 1.2s infinite 0.1s"></div>
+<div class="w-1 bg-secondary/50 rounded-t h-[40%]" style="animation: bounce 1.2s infinite 0.3s"></div>
+<div class="w-1 bg-secondary/80 rounded-t h-[70%]" style="animation: bounce 1.2s infinite 0.5s"></div>
+<div class="w-1 bg-secondary rounded-t h-[90%]" style="animation: bounce 1.2s infinite 0.2s"></div>
+<div class="w-1 bg-secondary/70 rounded-t h-[50%]" style="animation: bounce 1.2s infinite 0.4s"></div>
+<div class="w-1 bg-secondary/40 rounded-t h-[30%]" style="animation: bounce 1.2s infinite 0.6s"></div>
+<div class="w-1 bg-secondary/60 rounded-t h-[60%]" style="animation: bounce 1.2s infinite 0.1s"></div>
+<div class="w-1 bg-secondary rounded-t h-[80%]" style="animation: bounce 1.2s infinite 0.3s"></div>
+<div class="w-1 bg-secondary/40 rounded-t h-[20%]" style="animation: bounce 1.2s infinite 0.7s"></div>
+</div>
+<div class="flex justify-between font-data-mono text-data-mono text-on-surface-variant border-t border-outline-variant pt-4">
+<span>STATUS: ACTIVE</span>
+<span>LATENCY: 14MS</span>
+</div>
+</div>
+<!-- Sensor Feed: Location Context -->
+<div class="col-span-12 md:col-span-8 glass-card p-6 rounded-xl relative overflow-hidden">
+<div class="relative z-10 flex flex-col h-full justify-between">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-secondary/10 rounded-lg">
+<span class="material-symbols-outlined text-secondary">location_on</span>
+</div>
+<div>
+<span class="font-headline-md text-body-md font-semibold block">Location Semantic Context</span>
+<span class="text-body-sm text-on-surface-variant">Currently identifying: "Private Workspace"</span>
+</div>
+</div>
+<div class="flex gap-2">
+<span class="px-2 py-1 bg-[#059669]/10 text-[#059669] font-label-caps text-[10px] rounded">HIGH CONFIDENCE</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">settings</span>
+</div>
+</div>
+<div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="border border-outline-variant p-3 rounded-lg bg-surface">
+<span class="text-[10px] font-label-caps text-on-surface-variant block mb-1">PROXIMITY</span>
+<span class="font-data-mono text-body-md">0.4m (Desk)</span>
+</div>
+<div class="border border-outline-variant p-3 rounded-lg bg-surface">
+<span class="text-[10px] font-label-caps text-on-surface-variant block mb-1">ACCURACY</span>
+<span class="font-data-mono text-body-md">+/- 1.2m</span>
+</div>
+<div class="border border-outline-variant p-3 rounded-lg bg-surface">
+<span class="text-[10px] font-label-caps text-on-surface-variant block mb-1">GEOFENCE</span>
+<span class="font-data-mono text-body-md">Home/Work</span>
+</div>
+<div class="border border-outline-variant p-3 rounded-lg bg-surface">
+<span class="text-[10px] font-label-caps text-on-surface-variant block mb-1">SATELLITES</span>
+<span class="font-data-mono text-body-md">12 Fixed</span>
+</div>
+</div>
+</div>
+<div class="absolute inset-0 opacity-10 pointer-events-none">
+<div class="w-full h-full bg-cover bg-center" data-alt="A detailed blueprint architectural map showing minimalist floor plan structures with clean lines and technical data overlays. The style is technical and editorial, using a monochrome palette of slate grays and whites, reflecting a high-precision digital environment." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDY2zE7726l0fjwNo2ELzKJPwNV_xq6nbxzZQYj59vvDUOfCjkwXaLbvzJTD4707GzL-G9qHXlYvUWawbRqc76INy-9lR-ZUsN1cunT5cOfxotPYaCAewCwX32oqrcgLiUQIj4_cKBT8m1lwZwbuHludHad5iT85RXV5nXGHe87Mk6e5TW6yhBUrc53Yk5a94-plxvfnHQ1Y0yMBVV3lqrMLyo_5RZfYdO5EdhE1-de0SFyvQCmf5QZL2dWHWdlcnU6S_3ZlpAkYI8')"></div>
+</div>
+</div>
+<!-- Contextual Shushing -->
+<div class="col-span-12 md:col-span-7 glass-card p-6 rounded-xl">
+<div class="flex items-center gap-3 mb-6">
+<div class="p-2 bg-primary/5 rounded-lg">
+<span class="material-symbols-outlined text-primary">volume_off</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md">Contextual Shushing</h3>
+<p class="text-body-sm text-on-surface-variant">Automated privacy rules triggered by environmental states.</p>
+</div>
+</div>
+<div class="space-y-stack-sm">
+<!-- Rule 1 -->
+<div class="flex items-center justify-between p-4 bg-surface rounded-lg border border-outline-variant hover:border-secondary transition-colors group">
+<div class="flex gap-4 items-center">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary">medical_services</span>
+<div>
+<span class="font-body-md font-semibold block">Therapy Sessions</span>
+<span class="text-body-sm text-on-surface-variant">Mute all logs + Kill ambient audio processing</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-label-caps text-[10px] text-on-surface-variant">IF 'CALENDAR' = 'THERAPY'</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-10 h-5 bg-outline-variant rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+</div>
+<!-- Rule 2 -->
+<div class="flex items-center justify-between p-4 bg-surface rounded-lg border border-outline-variant hover:border-secondary transition-colors group">
+<div class="flex gap-4 items-center">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary">restaurant</span>
+<div>
+<span class="font-body-md font-semibold block">Family Dinner</span>
+<span class="text-body-sm text-on-surface-variant">Defer work notifications + Ignore productivity metrics</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-label-caps text-[10px] text-on-surface-variant">IF 'TIME' &gt; 18:30 &amp; 'GEO' = 'HOME'</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-10 h-5 bg-outline-variant rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+</div>
+<!-- Rule 3 -->
+<div class="flex items-center justify-between p-4 bg-surface rounded-lg border border-outline-variant hover:border-secondary transition-colors group">
+<div class="flex gap-4 items-center">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary">bed</span>
+<div>
+<span class="font-body-md font-semibold block">Sleep Protocol</span>
+<span class="text-body-sm text-on-surface-variant">Minimum telemetry mode (Biometrics only)</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-label-caps text-[10px] text-on-surface-variant">IF 'BIOMETRIC' = 'REM'</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-10 h-5 bg-outline-variant rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+</div>
+</div>
+<button class="w-full mt-4 py-3 border-2 border-dashed border-outline-variant rounded-lg text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-container-high hover:border-secondary transition-all">
+                    + ADD NEW CUSTOM BOUNDARY
+                </button>
+</div>
+<!-- Biometric Streams -->
+<div class="col-span-12 md:col-span-5 glass-card p-6 rounded-xl flex flex-col gap-6">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-[#DC2626]/10 rounded-lg">
+<span class="material-symbols-outlined text-[#DC2626]">monitor_heart</span>
+</div>
+<h3 class="font-headline-md text-body-md font-semibold">Biometric Streams</h3>
+</div>
+<span class="text-data-mono text-[10px] text-[#DC2626] font-bold">STREAMING</span>
+</div>
+<div class="space-y-6">
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="text-body-sm font-medium">Heart Rate (BPM)</span>
+<span class="font-data-mono text-secondary">72 BPM</span>
+</div>
+<div class="w-full h-1 bg-outline-variant rounded-full overflow-hidden">
+<div class="h-full bg-secondary transition-all duration-1000" style="width: 65%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="text-body-sm font-medium">Cortisol Proxy (Stress)</span>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#D97706]"></span>
+<span class="font-data-mono text-[#D97706]">Elevated (0.82)</span>
+</div>
+</div>
+<div class="w-full h-1 bg-outline-variant rounded-full overflow-hidden">
+<div class="h-full bg-[#D97706] transition-all duration-1000" style="width: 82%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="text-body-sm font-medium">Focus Metric</span>
+<span class="font-data-mono text-secondary">Optimal</span>
+</div>
+<div class="w-full h-1 bg-outline-variant rounded-full overflow-hidden">
+<div class="h-full bg-secondary transition-all duration-1000" style="width: 94%"></div>
+</div>
+</div>
+</div>
+<div class="mt-auto p-4 bg-surface-container-low rounded-lg border border-outline-variant">
+<p class="text-[11px] leading-relaxed text-on-surface-variant italic">
+                        "Biometric data is processed locally on the secure enclave. YRecall uses these streams to weight context importance, but never transmits raw pulse or stress signatures."
+                    </p>
+</div>
+</div>
+<!-- App Usage & Focus -->
+<div class="col-span-12 glass-card p-6 rounded-xl">
+<div class="flex flex-col md:flex-row justify-between gap-6">
+<div class="flex-1">
+<h3 class="font-headline-md text-headline-md mb-2">App Usage Visibility</h3>
+<p class="text-body-sm text-on-surface-variant mb-6">Control which applications contribute to the OS context model.</p>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="p-4 border border-outline-variant rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-surface-container-highest rounded-md flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">terminal</span>
+</div>
+<span class="font-body-md font-medium">IDE &amp; Tools</span>
+</div>
+<span class="font-data-mono text-secondary text-xs">FULL ACCESS</span>
+</div>
+<div class="p-4 border border-outline-variant rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-surface-container-highest rounded-md flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">mail</span>
+</div>
+<span class="font-body-md font-medium">Email Clients</span>
+</div>
+<span class="font-data-mono text-[#D97706] text-xs">SUMMARIZED</span>
+</div>
+<div class="p-4 border border-outline-variant rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-surface-container-highest rounded-md flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">chat</span>
+</div>
+<span class="font-body-md font-medium">Messengers</span>
+</div>
+<span class="font-data-mono text-[#ba1a1a] text-xs">BLOCKED</span>
+</div>
+</div>
+</div>
+<div class="md:w-64 flex flex-col justify-center items-center p-6 border-l border-outline-variant md:pl-10">
+<div class="w-32 h-32 rounded-full border-4 border-secondary/20 flex items-center justify-center relative">
+<div class="absolute inset-0 border-4 border-secondary rounded-full" style="clip-path: polygon(0 0, 80% 0, 80% 100%, 0 100%)"></div>
+<div class="text-center">
+<span class="font-display-lg text-headline-md block">80%</span>
+<span class="font-label-caps text-[10px] text-on-surface-variant">OS CONFIDENCE</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center py-2 px-margin-mobile bg-surface-container-lowest/80 backdrop-blur-md border-t border-outline-variant dark:border-outline z-50">
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-secondary transition-all cursor-pointer">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-caps text-[10px]">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-secondary transition-all cursor-pointer">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-caps text-[10px]">Recall</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-secondary transition-all cursor-pointer">
+<span class="material-symbols-outlined">psychology</span>
+<span class="font-label-caps text-[10px]">Ask</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-secondary transition-all cursor-pointer">
+<span class="material-symbols-outlined">search</span>
+<span class="font-label-caps text-[10px]">Search</span>
+</div>
+<div class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed bg-secondary-container/10 rounded-xl px-3 py-1">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-caps text-[10px]">Settings</span>
+</div>
+</nav>
+<!-- AI Thinking Pulse Overlay (Hidden by default, used for interaction feedback) -->
+<div class="fixed top-20 right-8 pointer-events-none opacity-0 transition-opacity duration-300" id="thinking-indicator">
+<div class="bg-primary-container text-on-primary-container px-4 py-2 rounded-full flex items-center gap-3 shadow-lg">
+<span class="w-2 h-2 rounded-full bg-[#8b5cf6] pulse-ai"></span>
+<span class="font-data-mono text-xs">AI SYNCING CONTEXT...</span>
+</div>
+</div>
+<script>
+        // Micro-interaction for toggles
+        document.querySelectorAll('input[type="checkbox"]').forEach(toggle => {
+            toggle.addEventListener('change', () => {
+                const indicator = document.getElementById('thinking-indicator');
+                indicator.style.opacity = '1';
+                setTimeout(() => {
+                    indicator.style.opacity = '0';
+                }, 2000);
+            });
+        });
+
+        // Keyframe bounce for audio bars
+        const styleSheet = document.createElement("style");
+        styleSheet.innerText = `
+            @keyframes bounce {
+                0%, 100% { height: 10%; }
+                50% { height: 90%; }
+            }
+        `;
+        document.head.appendChild(styleSheet);
+    </script>
+</body></html>

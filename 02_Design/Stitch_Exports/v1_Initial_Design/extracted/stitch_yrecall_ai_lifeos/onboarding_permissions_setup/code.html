@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YRecall - Permissions</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-highest": "#e8e1da",
+                    "on-error": "#ffffff",
+                    "inverse-on-surface": "#f7f0e8",
+                    "surface-variant": "#e8e1da",
+                    "primary-container": "#003366",
+                    "outline-variant": "#c3c6d1",
+                    "surface-dim": "#e0d9d1",
+                    "background": "#fff8f1",
+                    "secondary-container": "#90efef",
+                    "on-primary-container": "#799dd6",
+                    "on-background": "#1e1b17",
+                    "outline": "#737780",
+                    "surface-bright": "#fff8f1",
+                    "on-tertiary-fixed": "#002204",
+                    "error": "#ba1a1a",
+                    "surface-container": "#f4ede5",
+                    "surface-container-high": "#eee7df",
+                    "on-surface-variant": "#43474f",
+                    "tertiary-fixed-dim": "#88d982",
+                    "primary": "#001e40",
+                    "tertiary-container": "#003d0b",
+                    "on-primary-fixed": "#001b3c",
+                    "error-container": "#ffdad6",
+                    "tertiary": "#002504",
+                    "inverse-surface": "#33302b",
+                    "surface": "#fff8f1",
+                    "primary-fixed": "#d5e3ff",
+                    "on-secondary-container": "#006e6e",
+                    "secondary-fixed": "#93f2f2",
+                    "tertiary-fixed": "#a3f69c",
+                    "on-tertiary-fixed-variant": "#005312",
+                    "secondary": "#006a6a",
+                    "surface-container-low": "#faf3eb",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed": "#002020",
+                    "on-error-container": "#93000a",
+                    "on-secondary-fixed-variant": "#004f4f",
+                    "on-secondary": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "secondary-fixed-dim": "#76d6d5",
+                    "inverse-primary": "#a7c8ff",
+                    "surface-tint": "#3a5f94",
+                    "on-tertiary-container": "#5ead5c",
+                    "primary-fixed-dim": "#a7c8ff",
+                    "on-primary-fixed-variant": "#1f477b",
+                    "on-surface": "#1e1b17"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "lg": "24px",
+                    "base": "8px",
+                    "sm": "8px",
+                    "xl": "32px",
+                    "gutter": "16px",
+                    "xxl": "48px",
+                    "xs": "4px",
+                    "margin-mobile": "20px",
+                    "md": "16px",
+                    "margin-desktop": "40px"
+            },
+            "fontFamily": {
+                    "display-lg-mobile": ["Public Sans"],
+                    "caption-sm": ["Public Sans"],
+                    "display-lg": ["Public Sans"],
+                    "body-md": ["Public Sans"],
+                    "title-sm": ["Public Sans"],
+                    "label-xs": ["Public Sans"],
+                    "headline-md": ["Public Sans"]
+            },
+            "fontSize": {
+                    "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Public Sans', sans-serif; background-color: #fff8f1; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .permission-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .permission-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.05);
+        }
+        .toggle-switch {
+            width: 52px;
+            height: 32px;
+            background-color: #D1CDC7;
+            border-radius: 99px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .toggle-switch.active {
+            background-color: #003366;
+        }
+        .toggle-circle {
+            width: 24px;
+            height: 24px;
+            background-color: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            transition: transform 0.3s;
+        }
+        .toggle-switch.active .toggle-circle {
+            transform: translateX(20px);
+        }
+        .ai-aura {
+            filter: blur(60px);
+            opacity: 0.4;
+            background: radial-gradient(circle, #90efef 0%, #003366 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen flex flex-col items-center justify-start text-on-surface">
+<!-- Subtle AI Atmospheric Background -->
+<div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+<div class="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] ai-aura rounded-full"></div>
+<div class="absolute top-[40%] -right-[15%] w-[50%] h-[50%] ai-aura rounded-full" style="background: radial-gradient(circle, #f4ede5 0%, #d5e3ff 100%);"></div>
+</div>
+<!-- Top Navigation Placeholder (TopAppBar Rule Applied: Small variant) -->
+<header class="w-full top-0 sticky bg-background dark:bg-on-background transition-all duration-300 ease-in-out z-50">
+<div class="flex justify-between items-center px-margin-mobile py-base w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="auto_awesome">auto_awesome</span>
+<h1 class="font-headline-md text-headline-md-mobile font-bold text-primary">YRecall</h1>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:opacity-80 transition-opacity" data-icon="close">close</button>
+</div>
+</header>
+<main class="w-full max-w-2xl px-margin-mobile pt-xl pb-xxl flex flex-col gap-xl">
+<!-- Hero Section -->
+<section class="flex flex-col gap-base text-center md:text-left">
+<h2 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-primary tracking-tight">
+                Grant YRecall Wisdom
+            </h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md">
+                To capture your world, YRecall needs access to your camera, microphone, and location.
+            </p>
+</section>
+<!-- Permissions List -->
+<section class="flex flex-col gap-md">
+<!-- Permission Item: Microphone -->
+<div class="permission-card flex items-center justify-between p-lg bg-surface-container-lowest rounded-2xl border border-transparent shadow-sm">
+<div class="flex items-start gap-md">
+<div class="w-12 h-12 flex items-center justify-center rounded-xl bg-primary-fixed text-primary">
+<span class="material-symbols-outlined" data-icon="mic" style="font-variation-settings: 'FILL' 1;">mic</span>
+</div>
+<div class="flex flex-col gap-xs">
+<h3 class="font-title-sm text-title-sm text-primary">Microphone</h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-tight max-w-[280px]">
+                            Used to process ambient audio notes and voice-driven recall sessions.
+                        </p>
+</div>
+</div>
+<div class="toggle-switch" onclick="togglePermission(this, 'mic')">
+<div class="toggle-circle"></div>
+</div>
+</div>
+<!-- Permission Item: Photos -->
+<div class="permission-card flex items-center justify-between p-lg bg-surface-container-lowest rounded-2xl border border-transparent shadow-sm">
+<div class="flex items-start gap-md">
+<div class="w-12 h-12 flex items-center justify-center rounded-xl bg-secondary-fixed text-secondary">
+<span class="material-symbols-outlined" data-icon="photo_library" style="font-variation-settings: 'FILL' 1;">photo_library</span>
+</div>
+<div class="flex flex-col gap-xs">
+<h3 class="font-title-sm text-title-sm text-primary">Photos &amp; Videos</h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-tight max-w-[280px]">
+                            Enables YRecall to catalog your visual memories for instant retrieval.
+                        </p>
+</div>
+</div>
+<div class="toggle-switch" onclick="togglePermission(this, 'photos')">
+<div class="toggle-circle"></div>
+</div>
+</div>
+<!-- Permission Item: Location -->
+<div class="permission-card flex items-center justify-between p-lg bg-surface-container-lowest rounded-2xl border border-transparent shadow-sm">
+<div class="flex items-start gap-md">
+<div class="w-12 h-12 flex items-center justify-center rounded-xl bg-tertiary-fixed text-tertiary">
+<span class="material-symbols-outlined" data-icon="location_on" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+<div class="flex flex-col gap-xs">
+<h3 class="font-title-sm text-title-sm text-primary">Location</h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-tight max-w-[280px]">
+                            Provides context to your memories, allowing recall based on where you were.
+                        </p>
+</div>
+</div>
+<div class="toggle-switch" onclick="togglePermission(this, 'location')">
+<div class="toggle-circle"></div>
+</div>
+</div>
+<!-- Permission Item: Notifications -->
+<div class="permission-card flex items-center justify-between p-lg bg-surface-container-lowest rounded-2xl border border-transparent shadow-sm">
+<div class="flex items-start gap-md">
+<div class="w-12 h-12 flex items-center justify-center rounded-xl bg-surface-container-highest text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="notifications_active" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+</div>
+<div class="flex flex-col gap-xs">
+<h3 class="font-title-sm text-title-sm text-primary">Notifications</h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-tight max-w-[280px]">
+                            Receive timely insights and reminders to help strengthen your mental recall.
+                        </p>
+</div>
+</div>
+<div class="toggle-switch" onclick="togglePermission(this, 'notifications')">
+<div class="toggle-circle"></div>
+</div>
+</div>
+</section>
+<!-- Illustration / Visual Anchor -->
+<div class="w-full relative h-48 md:h-64 rounded-3xl overflow-hidden mt-base">
+<img class="w-full h-full object-cover grayscale-[20%] brightness-105" data-alt="A sophisticated and serene digital illustration showcasing a glowing human silhouette with a crystalline brain structure. The background is a soft, warm cream color with deep blue fluid gradients and floating geometric icons representing sensors like microphones and cameras. The lighting is ethereal and high-contrast, conveying a sense of advanced intelligence and human-centric technology in a light-mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtMsyXT_lqM1OFs7Qzzm_b0CUI6c_Gg2syR-2LOxndy4wkKohketFDBX5pLqXElowpuAEo_2AYGu46qmbrbEB-tmOyFzaG-f3PwWUTUFqGRwtQgL1sUDV57sZStYGxcOOXg7l3ghKp7BWFE8rCfjcA0n44p6bCzzyCJdbE_4vVbzGGSW83-L3bbkoMkFbiA3IJKaF7cnyTfeM1oyywYW1D8qUB5JmlDMMAfVFuq7MxrALAENgDZVQ24hFJYxbWW4hIyHX1-P9VwgY"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent"></div>
+</div>
+<!-- Action Footer -->
+<footer class="flex flex-col gap-md pt-lg pb-xxl">
+<button class="w-full h-[56px] flex items-center justify-center rounded-2xl bg-outline text-surface-container-lowest font-bold text-body-md transition-all duration-300 cursor-not-allowed opacity-50" disabled="" id="continue-btn">
+                Continue
+            </button>
+<p class="font-caption-sm text-caption-sm text-center text-on-surface-variant/70 px-xl">
+                YRecall processes your data locally whenever possible. Your privacy is our foundational operating principle.
+            </p>
+</footer>
+</main>
+<script>
+        const state = {
+            mic: false,
+            photos: false,
+            location: false,
+            notifications: false
+        };
+
+        const criticalPermissions = ['mic', 'photos', 'location'];
+
+        function togglePermission(el, key) {
+            state[key] = !state[key];
+            
+            // UI Toggle logic
+            if (state[key]) {
+                el.classList.add('active');
+            } else {
+                el.classList.remove('active');
+            }
+
+            // Button State Logic
+            checkContinueStatus();
+        }
+
+        function checkContinueStatus() {
+            const btn = document.getElementById('continue-btn');
+            const isReady = criticalPermissions.every(p => state[p] === true);
+
+            if (isReady) {
+                btn.disabled = false;
+                btn.classList.remove('bg-outline', 'cursor-not-allowed', 'opacity-50');
+                btn.classList.add('bg-primary-container', 'hover:bg-primary', 'active:scale-95', 'shadow-lg');
+                btn.textContent = 'Begin Your Journey';
+            } else {
+                btn.disabled = true;
+                btn.classList.add('bg-outline', 'cursor-not-allowed', 'opacity-50');
+                btn.classList.remove('bg-primary-container', 'hover:bg-primary', 'active:scale-95', 'shadow-lg');
+                btn.textContent = 'Continue';
+            }
+        }
+    </script>
+</body></html>

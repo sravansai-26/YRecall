@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Expense Detail | YRecall</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Public Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Design System Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#006a6a",
+                    "tertiary-fixed-dim": "#88d982",
+                    "on-tertiary-fixed-variant": "#005312",
+                    "tertiary-container": "#003d0b",
+                    "on-tertiary-fixed": "#002204",
+                    "on-secondary-fixed-variant": "#004f4f",
+                    "on-primary-fixed-variant": "#1f477b",
+                    "on-tertiary-container": "#5ead5c",
+                    "secondary-fixed-dim": "#76d6d5",
+                    "outline": "#737780",
+                    "surface-tint": "#3a5f94",
+                    "primary-fixed": "#d5e3ff",
+                    "surface-container": "#f4ede5",
+                    "secondary-fixed": "#93f2f2",
+                    "surface-variant": "#e8e1da",
+                    "tertiary-fixed": "#a3f69c",
+                    "on-primary-container": "#799dd6",
+                    "secondary-container": "#90efef",
+                    "outline-variant": "#c3c6d1",
+                    "surface": "#fff8f1",
+                    "inverse-surface": "#33302b",
+                    "on-secondary-container": "#006e6e",
+                    "tertiary": "#002504",
+                    "surface-bright": "#fff8f1",
+                    "on-surface": "#1e1b17",
+                    "error": "#ba1a1a",
+                    "surface-container-low": "#faf3eb",
+                    "on-secondary-fixed": "#002020",
+                    "on-error": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "primary-container": "#003366",
+                    "surface-container-highest": "#e8e1da",
+                    "error-container": "#ffdad6",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#f7f0e8",
+                    "primary-fixed-dim": "#a7c8ff",
+                    "surface-container-lowest": "#ffffff",
+                    "primary": "#001e40",
+                    "background": "#fff8f1",
+                    "on-background": "#1e1b17",
+                    "inverse-primary": "#a7c8ff",
+                    "on-surface-variant": "#43474f",
+                    "on-primary": "#ffffff",
+                    "on-primary-fixed": "#001b3c",
+                    "surface-dim": "#e0d9d1",
+                    "surface-container-high": "#eee7df",
+                    "on-error-container": "#93000a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-desktop": "40px",
+                    "xl": "32px",
+                    "md": "16px",
+                    "lg": "24px",
+                    "base": "8px",
+                    "margin-mobile": "20px",
+                    "gutter": "16px",
+                    "xxl": "48px",
+                    "xs": "4px",
+                    "sm": "8px"
+            },
+            "fontFamily": {
+                    "display-lg-mobile": ["Public Sans"],
+                    "body-md": ["Public Sans"],
+                    "display-lg": ["Public Sans"],
+                    "label-xs": ["Public Sans"],
+                    "title-sm": ["Public Sans"],
+                    "headline-md": ["Public Sans"],
+                    "caption-sm": ["Public Sans"]
+            },
+            "fontSize": {
+                    "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .ai-inner-stroke {
+            border: 1px solid transparent;
+            background-image: linear-gradient(to right, #ffffff, #ffffff), linear-gradient(to right, #006a6a, #c3c6d1);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+        }
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #fff8f1; /* Level 0 Background */
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-background min-h-screen pb-24 md:pb-0">
+<!-- Top App Bar (Shared Component Logic) -->
+<header class="w-full top-0 sticky z-50 bg-surface dark:bg-surface-dim flex justify-between items-center h-16 px-margin-mobile md:px-margin-desktop w-full">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary dark:text-primary-fixed hover:bg-surface-container-low transition-colors p-2 rounded-full active:scale-95 transition-transform duration-150">
+                arrow_back
+            </button>
+<h1 class="font-headline-md text-headline-md-mobile md:text-headline-md text-primary dark:text-primary-fixed tracking-tight">Expense Detail</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-low transition-colors p-2 rounded-full">share</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a person with a friendly expression, set against a soft, neutral-toned background that aligns with a premium minimalist AI OS aesthetic. The lighting is bright and high-key, conveying a sense of calm and clarity. The image style is polished and modern, utilizing a sophisticated palette of warm whites and subtle grays." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaDcfi1s7yEbCNV2BTdYj6NuLd2N07-lJbir-SlOp9jcuQKkXBY_TN8uqL8-1WRGFKBgdmvv6Bz1RjFNG6mF61doqZpsJOZuKMXcAYK8I9ERKNl0cZVTQu3nzOhTzlw4896jepV46pK1fPgoNpR7RkVpnDdiFytRvz6toh1fSyvf9jFlM5Gsv1RnE8IR5Y5hGrkVpNSBII4J5pUuOazKulwtpPzi2dstMOtjpckD5n7H8qH28jQiCDzfTBk7o8mqPEMzjavIuBnK8"/>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-lg">
+<!-- Main Content Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter lg:gap-xl">
+<!-- Transaction Header / Bento Card -->
+<div class="md:col-span-8 space-y-gutter">
+<section class="bg-surface-container-lowest rounded-[24px] p-lg shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-surface-container">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
+<div>
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-xs text-label-xs mb-sm">
+<span class="material-symbols-outlined text-[14px] mr-1">restaurant</span> DINING
+                            </span>
+<h2 class="font-headline-md text-headline-md-mobile md:text-headline-md text-primary">Dinner at The Glass House</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Thursday, Oct 24 • 8:42 PM</p>
+</div>
+<div class="text-left md:text-right">
+<div class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary">$142.50</div>
+<div class="font-caption-sm text-caption-sm text-on-surface-variant flex items-center md:justify-end">
+<span class="material-symbols-outlined text-[14px] mr-1">verified</span> Transaction Confirmed
+                            </div>
+</div>
+</div>
+</section>
+<!-- AI Insights Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- AI Summary Card -->
+<div class="ai-inner-stroke bg-surface-container-lowest rounded-[24px] p-lg shadow-[0_4px_20px_rgba(0,0,0,0.05)] col-span-1 md:col-span-2">
+<div class="flex items-center gap-2 mb-md">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<h3 class="font-title-sm text-title-sm text-primary">AI Recall Insights</h3>
+</div>
+<p class="font-body-md text-body-md text-on-surface mb-lg leading-relaxed">
+                            This is your 3rd visit to <span class="font-semibold">The Glass House</span> this quarter. You typically spend 15% more here than at other Italian venues. This transaction is likely related to the "Project Aurora" dinner you noted in your calendar for this evening.
+                        </p>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-sm">
+<div class="p-md rounded-xl bg-surface-container-low">
+<div class="text-label-xs font-label-xs text-on-surface-variant uppercase tracking-wider">Frequency</div>
+<div class="text-title-sm font-title-sm text-primary">Monthly</div>
+</div>
+<div class="p-md rounded-xl bg-surface-container-low">
+<div class="text-label-xs font-label-xs text-on-surface-variant uppercase tracking-wider">Avg Spend</div>
+<div class="text-title-sm font-title-sm text-primary">$128.00</div>
+</div>
+<div class="p-md rounded-xl bg-surface-container-low">
+<div class="text-label-xs font-label-xs text-on-surface-variant uppercase tracking-wider">Trend</div>
+<div class="text-title-sm font-title-sm text-secondary">+12.4%</div>
+</div>
+<div class="p-md rounded-xl bg-surface-container-low">
+<div class="text-label-xs font-label-xs text-on-surface-variant uppercase tracking-wider">Tax Prob.</div>
+<div class="text-title-sm font-title-sm text-primary">High</div>
+</div>
+</div>
+</div>
+<!-- Receipt Image -->
+<div class="bg-surface-container-lowest rounded-[24px] p-lg shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-surface-container h-[400px] flex flex-col">
+<div class="flex justify-between items-center mb-md">
+<h3 class="font-title-sm text-title-sm text-primary">Linked Receipt</h3>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary">fullscreen</button>
+</div>
+<div class="flex-grow rounded-xl overflow-hidden bg-surface-container-low relative group">
+<img class="w-full h-full object-cover" data-alt="A high-resolution, professional photograph of a restaurant receipt placed on a light oak wood surface. The lighting is soft and natural, coming from the side to create subtle depth. The receipt is crisp, showing clear black ink against a slightly warm paper texture. The overall composition is clean and minimalist, reflecting a high-end financial application aesthetic with balanced whites and natural tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqO-vSwiUBDjgV-lu3M23rMQb3U_Eze9Ls9MEV-4mAz9-HSPrIjZ_EiCXZ6Pby0WLUSLkqgMNa3KEEU6KbyTc1pmLNPgmaPETi_KIzqiAulRFrBSOpbO-0BNVzaaRpQS66XzIbTOIzbBCYUm7Jeu1Gwqd4tWmyp1DnFO8LQWm2rjc3jl7mfG6_XDUNmx-92aF76HROg6rwRYdZssDOLMxjgewKjmte6nT1rPqqtRu2wY71puNNYesiGNnxase_45IzXYfi5kF21q0"/>
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="px-lg py-sm bg-surface rounded-full font-title-sm text-primary shadow-lg active:scale-95 transition-transform">Update Receipt</button>
+</div>
+</div>
+</div>
+<!-- Connections Card -->
+<div class="bg-surface-container-lowest rounded-[24px] p-lg shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-surface-container flex flex-col">
+<h3 class="font-title-sm text-title-sm text-primary mb-md">Entity Links</h3>
+<div class="space-y-md flex-grow">
+<div class="flex items-center justify-between p-md bg-surface-container-low rounded-xl">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container">work</span>
+</div>
+<div>
+<div class="font-label-xs text-label-xs text-on-surface-variant">Project</div>
+<div class="font-title-sm text-body-md text-primary font-medium">Business Trip - Q4</div>
+</div>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant">edit</button>
+</div>
+<div class="flex items-center justify-between p-md bg-surface-container-low rounded-xl">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A close-up professional profile portrait of a smiling woman with a creative professional look, wearing a stylish dark blazer. The background is a soft-focus office environment with warm lighting. The image follows a high-end editorial style with clean lines and a palette of muted professional colors, perfectly suited for a premium business application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRfIiE-Tc9UzbadeTUztTO9lOvQREYQ3VEPyMqxrQgViO9scQv1cf_dZgkmpBxz1ijuYgo4NWdZsiat6Q66mBtxJU21TaN85gHZSzIWW-N3eNHtAuFqJXV0zD88mn8gpvi7Pdx56om7iwm3Nd8m61u0dRjfeLbKsguY7FEKokMJQchZ1nBr-h8XJyRumyMbbHLWLFjL2xECmGnSOovvawo4hwVzFxdNfF560BnUL6k851LYBVlZhkqIFG0n0ma4hMEhjaony77_AE"/>
+</div>
+<div>
+<div class="font-label-xs text-label-xs text-on-surface-variant">Linked Person</div>
+<div class="font-title-sm text-body-md text-primary font-medium">Elena Rodriguez</div>
+</div>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant">close</button>
+</div>
+<button class="w-full py-md border-2 border-dashed border-outline-variant rounded-xl flex items-center justify-center gap-2 text-on-surface-variant hover:border-primary hover:text-primary transition-all">
+<span class="material-symbols-outlined">add</span>
+<span class="font-body-md text-body-md">Link another entity</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Sidebar / Action Panel -->
+<div class="md:col-span-4 space-y-gutter">
+<!-- Actions Card -->
+<div class="bg-surface-container-lowest rounded-[24px] p-lg shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-surface-container">
+<h3 class="font-title-sm text-title-sm text-primary mb-lg">Actions</h3>
+<div class="flex flex-col gap-sm">
+<button class="w-full h-14 bg-primary text-on-primary rounded-xl font-title-sm text-title-sm flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined">description</span> Export for Expense Report
+                        </button>
+<button class="w-full h-14 bg-surface-container-high text-primary rounded-xl font-title-sm text-title-sm flex items-center justify-center gap-2 hover:bg-surface-variant active:scale-95 transition-all">
+<span class="material-symbols-outlined">splitscreen</span> Split Expense
+                        </button>
+<button class="w-full h-14 bg-surface-container-high text-primary rounded-xl font-title-sm text-title-sm flex items-center justify-center gap-2 hover:bg-surface-variant active:scale-95 transition-all">
+<span class="material-symbols-outlined">flag</span> Mark for Review
+                        </button>
+<button class="w-full h-14 border border-error text-error rounded-xl font-title-sm text-title-sm flex items-center justify-center gap-2 hover:bg-error-container/10 active:scale-95 transition-all mt-md">
+<span class="material-symbols-outlined">delete</span> Delete Transaction
+                        </button>
+</div>
+</div>
+<!-- Merchant Details Card -->
+<div class="bg-surface-container-lowest rounded-[24px] p-lg shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-surface-container">
+<h3 class="font-title-sm text-title-sm text-primary mb-md">Merchant Details</h3>
+<div class="space-y-md">
+<div class="aspect-video w-full rounded-xl overflow-hidden grayscale contrast-125 brightness-110">
+<!-- Map Placeholder -->
+<img class="w-full h-full object-cover" data-alt="A minimalist, stylized digital map of a city street intersection in Seattle. The map uses a clean, monochromatic color scheme with soft grays and thin white lines for roads. A single primary-colored pin marks a location. The style is modern and high-contrast, designed to blend into a premium UI without being distracting." data-location="Seattle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCeeVf5d6F0dvD9dbwC4i8j0ycRkEyvtazK2VcudCKVvTXpGWXj-Oscj5eNM4q5RJwgNV-Rps5zJCdkm7zn4wvKSXMaKi9Wgg91IbWwvlEjIElplA-r2Z30w_xqr4X8FDO6pkAgOUrdWnkdRX5V8Br9SdcgdsopWCiGNv2Gv4hqeH-UAMD5g8DoA59ahoSXntJbauvT3Fq_C2xWoLPGGb65rssCLYWPW2VleUELASEUBZOcn379hdzxyESqo8WEvavGx2nXWtw5XY"/>
+</div>
+<div class="space-y-sm">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-on-surface-variant">location_on</span>
+<span class="font-body-md text-body-md text-on-surface">123 Crystal Avenue, Downtown Seattle, WA 98101</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant">call</span>
+<span class="font-body-md text-body-md text-on-surface">(206) 555-0198</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant">language</span>
+<a class="font-body-md text-body-md text-secondary hover:underline" href="#">www.theglasshouse.com</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Shared Component Logic - Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full h-[80px] z-50 bg-surface dark:bg-surface-dim border-t border-outline-variant dark:border-outline flex justify-around items-center w-full px-base">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-5 py-1 hover:text-primary dark:hover:text-primary-fixed active:scale-90 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-xs text-label-xs">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container dark:bg-on-secondary-fixed-variant text-on-secondary-container dark:text-secondary-fixed-dim rounded-full px-5 py-1 active:scale-90 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">history</span>
+<span class="font-label-xs text-label-xs">Recall</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-5 py-1 hover:text-primary dark:hover:text-primary-fixed active:scale-90 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">hub</span>
+<span class="font-label-xs text-label-xs">Insights</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-5 py-1 hover:text-primary dark:hover:text-primary-fixed active:scale-90 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-xs text-label-xs">Settings</span>
+</a>
+</nav>
+<!-- Visual Polish: Subtle Background Noise Texture -->
+<div class="fixed inset-0 pointer-events-none opacity-[0.03] z-[100]" style="background-image: url('https://www.transparenttextures.com/patterns/p6-polka.png')"></div>
+<script>
+        // Micro-interactions
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.classList.add('scale-95');
+            });
+            button.addEventListener('mouseup', () => {
+                button.classList.remove('scale-95');
+            });
+            button.addEventListener('mouseleave', () => {
+                button</script></body></html>

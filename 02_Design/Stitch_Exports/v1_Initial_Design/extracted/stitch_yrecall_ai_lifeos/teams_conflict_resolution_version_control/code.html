@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YRecall Teams | Conflict Resolution</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;600;700;800;900&amp;family=Courier+Prime&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-container": "#90efef",
+                    "on-primary-fixed-variant": "#1f477b",
+                    "surface-dim": "#cfdaf1",
+                    "on-primary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "surface-container-high": "#dee8ff",
+                    "secondary-fixed-dim": "#76d6d5",
+                    "on-primary-container": "#799dd6",
+                    "on-tertiary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "surface-tint": "#3a5f94",
+                    "inverse-on-surface": "#ebf1ff",
+                    "tertiary-fixed": "#e8e1db",
+                    "error": "#ba1a1a",
+                    "surface-container": "#e7eeff",
+                    "on-primary-fixed": "#001b3c",
+                    "inverse-surface": "#263142",
+                    "tertiary-container": "#36332f",
+                    "background": "#f9f9ff",
+                    "tertiary-fixed-dim": "#cbc5bf",
+                    "on-surface-variant": "#43474f",
+                    "on-secondary-fixed-variant": "#004f4f",
+                    "on-secondary": "#ffffff",
+                    "primary": "#001e40",
+                    "on-tertiary-fixed-variant": "#4a4641",
+                    "on-background": "#111c2c",
+                    "error-container": "#ffdad6",
+                    "secondary-fixed": "#93f2f2",
+                    "outline": "#737780",
+                    "surface-container-low": "#f0f3ff",
+                    "on-surface": "#111c2c",
+                    "surface-variant": "#d8e3fa",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed-dim": "#a7c8ff",
+                    "primary-fixed": "#d5e3ff",
+                    "on-secondary-container": "#006e6e",
+                    "inverse-primary": "#a7c8ff",
+                    "surface-container-highest": "#d8e3fa",
+                    "surface": "#f9f9ff",
+                    "on-tertiary-fixed": "#1e1b17",
+                    "on-secondary-fixed": "#002020",
+                    "secondary": "#006a6a",
+                    "surface-bright": "#f9f9ff",
+                    "outline-variant": "#c3c6d1",
+                    "primary-container": "#003366"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "container-margin": "24px",
+                    "sidebar-width": "280px",
+                    "node-padding": "12px",
+                    "unit": "4px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Public Sans"],
+                    "display-lg": ["Public Sans"],
+                    "label-caps": ["Public Sans"],
+                    "body-sm": ["Public Sans"],
+                    "body-lg": ["Public Sans"],
+                    "headline-lg": ["Public Sans"],
+                    "mono-data": ["Courier Prime"],
+                    "headline-sm": ["Public Sans"],
+                    "body-md": ["Public Sans"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "body-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "mono-data": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .diff-added { background-color: rgba(144, 239, 239, 0.2); border-left: 2px solid #006e6e; }
+        .diff-removed { background-color: rgba(186, 26, 26, 0.1); border-left: 2px solid #ba1a1a; text-decoration: line-through; opacity: 0.7; }
+        .knowledge-canvas { background: #fff8f1; }
+        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(0, 30, 64, 0.1); }
+        .sidebar-mask { height: calc(100vh - 64px); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden">
+<!-- Top Navigation -->
+<header class="w-full top-0 sticky z-50 bg-surface-container border-b border-outline-variant/10 shadow-sm">
+<div class="flex items-center justify-between px-container-margin h-16 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" data-icon="hub">hub</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">YRecall Teams</h1>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<nav class="flex gap-6">
+<a class="text-primary font-bold transition-colors" href="#">Conflicts</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Graph</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Library</a>
+</nav>
+<div class="flex items-center gap-2 px-3 py-1 bg-surface-bright rounded-full border border-outline-variant/20 cursor-pointer active:scale-95 transition-all">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Presence</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="relative">
+<img class="w-8 h-8 rounded-full border-2 border-secondary object-cover" data-alt="A professional studio portrait of a young tech professional with short dark hair, wearing a minimalist grey linen shirt. The lighting is soft and diffused, characteristic of a high-end corporate environment. The background is a clean, neutral off-white with subtle depth and soft focus, maintaining the YRecall scholarly aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeyvt_2RQ1DwTiTW9AverwnHOw0uAOeU0RPvG0VSwHw-iqWS7duPW-6bdMTDjYBxq38MVGA50dkkKAD-wWMX1QhW1m_V6ENcpd5-k5TpjNLweZ4eIz8jS7v0SfuPh2r2FOZ2gIIQctHe2dH_Ljt6a7KqaH7MQ4l8AvPdIeiC1An1vH7i35wG7AC0mrxLH4xm0ni6tpWB4UFGCGD_8jeezSNOg48nmdz8fjwOqFo1H2TlF5wTl6pCe3WP9FHf655hddQ-9dLsg82oI"/>
+<div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-secondary border-2 border-surface-container rounded-full"></div>
+</div>
+</div>
+</div>
+</header>
+<div class="flex min-h-screen">
+<!-- Navigation Drawer (Sidebar) -->
+<aside class="hidden lg:flex flex-col h-screen w-sidebar-width sticky top-0 bg-surface-container-low border-r border-outline-variant/10 p-node-padding gap-unit">
+<div class="flex items-center gap-3 mb-8 p-3 bg-surface-container rounded-xl">
+<img class="w-10 h-10 rounded-lg object-cover" data-alt="A clean, abstract logo for a project named Engineering Alpha, featuring geometric patterns that resemble a stylized structural bridge. The color scheme is a professional deep navy and crisp white, suggesting stability and technical precision. The image is framed as a corporate profile icon in a high-trust digital workspace." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhUFhRmeh_Clm_vLgaQ6GaRi-PmGCTKmovRcIvK7kLCA--D2Vpscn_t-mEWK1UBPtyyXokhzpIfO6O3FILjs5mWq9aszzNZB9Lj6_NfSMsOiCQusB8dDc_GsYfE5xy6jLkEPbcfDR5cC_2UKEvohgpy2BR9Vde6tv3f32UNtqsTgfclP68l8c6O2LP-cWtH15yRQ3O8q09GkQMVcWfDSuVkk1YVe1kHraJ8dc1MGm8rKuMLwaL4TS8PuhkAusDovlsb6zfFa4EPA8"/>
+<div>
+<p class="font-headline-sm text-body-md font-black text-primary">Engineering Alpha</p>
+<p class="text-body-sm text-on-surface-variant">12 Active Members</p>
+</div>
+</div>
+<nav class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-transform hover:translate-x-1 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="cloud_shared">cloud_alert</span>
+<span class="font-body-md">Shared Space</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary text-on-primary rounded-xl duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="person_search">person_search</span>
+<span class="font-body-md">Conflict Resolver</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-transform hover:translate-x-1 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="psychology">psychology</span>
+<span class="font-body-md">AI Insights</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-transform hover:translate-x-1 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-body-md">Archive</span>
+</a>
+</nav>
+<div class="mt-auto p-4 glass-card rounded-xl">
+<div class="flex items-center gap-2 text-on-secondary-container mb-2">
+<span class="material-symbols-outlined text-sm" data-icon="auto_awesome">auto_awesome</span>
+<span class="font-label-caps text-[10px] uppercase">AI Synchronized</span>
+</div>
+<p class="text-body-sm text-on-surface-variant leading-tight">Graph integrity verified at 09:42 AM.</p>
+</div>
+</aside>
+<!-- Main Content Area: Conflict Canvas -->
+<main class="flex-1 knowledge-canvas p-gutter md:p-10">
+<div class="max-w-6xl mx-auto">
+<!-- Conflict Detection Alert Banner -->
+<section class="mb-8 animate-in fade-in slide-in-from-top-4 duration-500">
+<div class="bg-error-container text-on-error-container p-6 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4 border-l-4 border-error">
+<div class="flex items-start gap-4">
+<div class="bg-on-error-container/10 p-2 rounded-full">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm font-bold">3 Semantic Divergences detected</h2>
+<p class="font-body-md opacity-90">Project Nova: Inconsistent property values found in "Carbon Capture Module V2".</p>
+</div>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-full font-label-caps uppercase hover:shadow-lg transition-all active:scale-95 whitespace-nowrap">
+                            Review All
+                        </button>
+</div>
+</section>
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+<!-- Left: Comparison View -->
+<div class="xl:col-span-2 space-y-6">
+<div class="flex items-center justify-between mb-2">
+<h3 class="font-headline-sm text-headline-sm text-primary flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="difference">difference</span>
+                                Node Divergence: Deployment Timeline
+                            </h3>
+<span class="px-3 py-1 bg-surface-container-highest text-primary font-mono-data rounded text-xs border border-outline-variant/30">ID: N-402-DELTA</span>
+</div>
+<!-- Side-by-Side Comparison -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Version A -->
+<div class="glass-card rounded-xl overflow-hidden flex flex-col">
+<div class="bg-surface-container-high p-4 border-b border-outline-variant/10 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full object-cover" data-alt="Close up profile photo of a man named Alex R. with spectacles and a thoughtful expression, set against a blurred academic library background. The image is rendered with a cool, scholarly color palette consistent with a research-driven AI workspace. The lighting is crisp and natural, emphasizing professional detail." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjyS9R7UKfv7JZMaWWRmqjXEQ2KQA_0YjVeHYeoARnG54tQc5_zZCZ085BOz6D-2lgoCFx7cpevzYYwYKDruJnxaX1fyvNh0Gr0xbUBA6clVnT0FLTA3XDrcAwfgT6KlIry1ngfjCMZgVaURxcca2ZUBZysUxbitGvvmo5TBbLVpVr3UyGF2xNCF5E3FhbUeflVcWyKjJz9Ezy-flLP4oBb2ylfLKX3um9sWANNMc7PLU59aB3LOkvOfC1F9Oh348k1M0zysFMB38"/>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface">Alex R.</p>
+<p class="text-[10px] text-on-surface-variant uppercase">Proposed: 2h ago</p>
+</div>
+</div>
+<span class="px-2 py-0.5 bg-secondary/10 text-secondary border border-secondary/20 rounded text-[10px] font-bold">VERSION A</span>
+</div>
+<div class="p-6 flex-1 space-y-4">
+<div class="p-4 bg-white border border-outline-variant/10 rounded-lg">
+<h4 class="text-on-surface-variant font-label-caps text-xs mb-2">PHASE 1: PROTOTYPE</h4>
+<p class="text-body-md text-on-surface">Development phase is scheduled to conclude in <span class="diff-removed px-1">Q3 2024</span>.</p>
+<p class="text-body-md text-on-surface mt-2">Hardware stress tests indicate a requirement for <span class="diff-removed px-1">12kw</span> base power.</p>
+</div>
+<div class="p-4 bg-white border border-outline-variant/10 rounded-lg opacity-60">
+<h4 class="text-on-surface-variant font-label-caps text-xs mb-2">PHASE 2: PILOT</h4>
+<p class="text-body-md">Awaiting stakeholder approval for regional expansion.</p>
+</div>
+</div>
+<div class="p-4 bg-surface-container-low border-t border-outline-variant/10 flex justify-center">
+<button class="w-full py-2 bg-white border border-primary text-primary rounded-lg font-label-caps hover:bg-primary hover:text-white transition-all text-xs">KEEP VERSION A</button>
+</div>
+</div>
+<!-- Version B -->
+<div class="glass-card rounded-xl overflow-hidden flex flex-col border-secondary/30 ring-1 ring-secondary/20">
+<div class="bg-secondary-container p-4 border-b border-outline-variant/10 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full object-cover" data-alt="A high-quality portrait of a woman named Sarah J., a lead engineer with a calm and confident demeanor. She has silver-blonde hair in a neat bob and wears a professional dark navy blazer. The scene is lit by soft window light, creating a bright, scholarly atmosphere with a hint of high-tech minimalism in the background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBiQXuuuKl3kh14gSu3acLv0qyFN31A8qlRlg5Z5H7M_9x36Qf5iCIdBh7xUtw_WNt1Qq42Rzf2HbOTf-AIufXlppgG3fAYo7OzgoOdqx4HehJrzs2uNTIkxBMe1pl_JFsgfPdVI_X_fitnIfZHj38jtK2eyycE9dI2-N7UvUKHPaYtLc5tlEuHyjDtQqYEvObD9Kjb6Uc3GbEGh37ANiPMoJPCznyTnzDI8F2ciznA9lmp94TpIbd9GRLNMZWeA4gz96UsG5ZfKn4"/>
+<div>
+<p class="font-label-caps text-label-caps text-on-secondary-container">Sarah J.</p>
+<p class="text-[10px] text-on-secondary-container/80 uppercase">Proposed: 45m ago</p>
+</div>
+</div>
+<span class="px-2 py-0.5 bg-primary text-white rounded text-[10px] font-bold">VERSION B</span>
+</div>
+<div class="p-6 flex-1 space-y-4">
+<div class="p-4 bg-white border border-secondary/20 rounded-lg">
+<h4 class="text-on-surface-variant font-label-caps text-xs mb-2">PHASE 1: PROTOTYPE</h4>
+<p class="text-body-md text-on-surface">Development phase is scheduled to conclude in <span class="diff-added px-1">Q4 2024</span>.</p>
+<p class="text-body-md text-on-surface mt-2">Hardware stress tests indicate a requirement for <span class="diff-added px-1">15.5kw</span> base power.</p>
+</div>
+<div class="p-4 bg-white border border-outline-variant/10 rounded-lg">
+<h4 class="text-on-surface-variant font-label-caps text-xs mb-2">PHASE 2: PILOT</h4>
+<p class="text-body-md">Updated: Stakeholder approval secured for <span class="diff-added px-1">North Atlantic cluster</span>.</p>
+</div>
+</div>
+<div class="p-4 bg-surface-container-low border-t border-outline-variant/10 flex justify-center">
+<button class="w-full py-2 bg-primary text-white rounded-lg font-label-caps hover:bg-primary-container transition-all text-xs">KEEP VERSION B</button>
+</div>
+</div>
+</div>
+<!-- Central Actions -->
+<div class="flex flex-wrap items-center justify-center gap-4 py-6 border-y border-outline-variant/10">
+<button class="flex items-center gap-2 px-8 py-3 bg-primary text-on-primary rounded-xl font-headline-sm text-body-md hover:shadow-xl hover:-translate-y-0.5 transition-all active:scale-95">
+<span class="material-symbols-outlined" data-icon="call_merge">call_merge</span>
+                                Merge Versions
+                            </button>
+<button class="flex items-center gap-2 px-6 py-3 border border-primary text-primary rounded-xl font-headline-sm text-body-md hover:bg-primary/5 transition-all">
+<span class="material-symbols-outlined" data-icon="forum">forum</span>
+                                Open Discussion
+                            </button>
+</div>
+</div>
+<!-- Right: Intelligence & History -->
+<div class="space-y-6">
+<!-- AI Suggestion Card -->
+<div class="glass-card rounded-xl p-6 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-secondary"></div>
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-secondary" data-icon="smart_toy">smart_toy</span>
+<h4 class="font-label-caps text-label-caps text-secondary uppercase tracking-widest">AI Insight</h4>
+</div>
+<p class="text-body-md text-on-surface leading-relaxed italic mb-4">
+                                "The divergence in power requirements stems from Sarah J.'s recent integration of the Cryo-Processor logs. Version B reflects more accurate real-world telemetry."
+                            </p>
+<div class="p-3 bg-secondary/5 rounded-lg border border-secondary/10">
+<p class="text-[11px] text-on-surface-variant font-mono-data">Recommendation: Adopt Version B for electrical specs, Merge Version A for phrasing on Phase 1 timeline.</p>
+</div>
+<button class="w-full mt-4 text-secondary font-label-caps text-[10px] uppercase hover:underline text-center">View Technical Trace</button>
+</div>
+<!-- Version Control History Timeline -->
+<div class="glass-card rounded-xl p-6">
+<h4 class="font-headline-sm text-body-md font-bold text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="history">history</span>
+                                Edit Timeline
+                            </h4>
+<div class="relative space-y-8 before:absolute before:left-3 before:top-2 before:bottom-2 before:w-px before:bg-outline-variant/30">
+<!-- Timeline Item 1 -->
+<div class="relative pl-10">
+<div class="absolute left-1.5 top-1.5 w-3 h-3 rounded-full bg-secondary border-2 border-white ring-4 ring-secondary/10"></div>
+<p class="text-xs font-label-caps text-on-surface-variant">OCT 14, 08:52 AM</p>
+<div class="flex items-center gap-2 mt-1">
+<img class="w-5 h-5 rounded-full" data-alt="A portrait of Sarah J. in profile, looking concentrated at a screen off-camera. The lighting is cool-toned, reflecting off her glasses. The setting is a minimalist tech hub with high-end glass partitions and subtle teal accents. The visual style is sharp and dependable, consistent with the YRecall scholarly aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvBwKvWVckXB5SLhqEog5aq69dXlSrrDDd6x98xzV6ecQiNq9lYFb2vp3j8ax11SX5F4zaMY_T0jgGq5x7Vfua8oR30tP02VSZ5dKRGE3y9s8Fnx_AidWsoqm52kCAtwbPxch_-v7V8gAFLiWgrrX3RnZA00eFJqACGR2eFdOplP0LuKvDv22TjLGjGiEXF8bemmUX70qGW5sB_zAqifBdPLh2c0tLFfUQdqZu6fcgmEZkXAYu41NnmkSNDxzEt9eO8Z2S-jOdhfw"/>
+<p class="text-body-sm font-semibold">Sarah J. <span class="font-normal text-on-surface-variant">updated electrical load.</span></p>
+</div>
+<p class="text-[10px] text-on-surface-variant mt-1 italic">"Refined based on bench test #402 results."</p>
+</div>
+<!-- Timeline Item 2 -->
+<div class="relative pl-10 opacity-70">
+<div class="absolute left-2 top-2 w-2 h-2 rounded-full bg-outline"></div>
+<p class="text-xs font-label-caps text-on-surface-variant">OCT 14, 06:15 AM</p>
+<div class="flex items-center gap-2 mt-1">
+<img class="w-5 h-5 rounded-full" data-alt="Alex R. is depicted in a candid medium shot, holding a tablet while discussing data with an unseen colleague. His expression is academic and focused. The background features a clean, white-toned architectural design with precise grid patterns and warm-wood furniture. High-trust, professional minimalism." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuW8GCuDsblQv4lyoXN8OJ5ZLEApUV6UDFVoYl1rKCGxMKdSfysLls6nyUoZcouuSPddjaQBNrNz_uUNvFKgICSBRj0Z5Kllue4ft8vFegsX8k2ucXktWZeN-KWr0UXuNepXjMF-87Dz1NLbUAPDE7M1V1J_F9RFraMsbg-2JqBxgWba-QobIMYckewt4FKKUg9c7nmm4hnAoQx2FIcPKhzUzEeryN49u3ETlcfKg6uQNTk0BSQhkfmH9GnKSdqLYuL24wYFFQjK8"/>
+<p class="text-body-sm font-semibold">Alex R. <span class="font-normal text-on-surface-variant">drafted initial specs.</span></p>
+</div>
+</div>
+<!-- Timeline Item 3 -->
+<div class="relative pl-10 opacity-50">
+<div class="absolute left-2 top-2 w-2 h-2 rounded-full bg-outline"></div>
+<p class="text-xs font-label-caps text-on-surface-variant">OCT 12, 04:00 PM</p>
+<div class="flex items-center gap-2 mt-1">
+<div class="w-5 h-5 rounded-full bg-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[10px]" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<p class="text-body-sm font-semibold">AI System <span class="font-normal text-on-surface-variant">initialized node.</span></p>
+</div>
+</div>
+</div>
+<button class="w-full mt-8 py-2 bg-surface-container-high text-on-surface-variant rounded-lg font-label-caps text-[10px] hover:bg-surface-variant transition-colors uppercase">
+                                Full Version History
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Bottom Navigation Bar (Mobile only) -->
+<footer class="fixed bottom-0 w-full z-50 md:hidden bg-surface border-t border-outline-variant/20 shadow-lg">
+<div class="flex justify-around items-center h-20 px-4 pb-safe">
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-label-caps text-label-caps uppercase">Activity</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary">
+<span class="material-symbols-outlined" data-icon="hub">hub</span>
+<span class="font-label-caps text-label-caps uppercase">Graph</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-label-caps text-label-caps uppercase">Members</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-caps text-label-caps uppercase">Settings</span>
+</div>
+</div>
+</footer>
+<!-- Presence Cursors (Interaction Layer) -->
+<div class="pointer-events-none absolute inset-0 overflow-hidden z-[60]" id="cursor-layer">
+<!-- Alex R. Hovering over Version A -->
+<div class="absolute left-1/3 top-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-pulse">
+<div class="w-px h-6 bg-[#3a5f94]"></div>
+<div class="bg-[#3a5f94] text-white px-2 py-0.5 rounded-sm text-[8px] font-bold whitespace-nowrap">Alex R. is viewing</div>
+</div>
+<!-- Sarah J. Hovering over AI Insight -->
+<div class="absolute right-[15%] top-[45%] transform -translate-x-1/2 -translate-y-1/2 opacity-80">
+<div class="w-px h-6 bg-secondary"></div>
+<div class="bg-secondary text-white px-2 py-0.5 rounded-sm text-[8px] font-bold whitespace-nowrap">Sarah J. typing...</div>
+</div>
+</div>
+<script>
+        // Simple micro-interaction for active states
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mousedown', () => {
+                btn.style.transform = 'scale(0.95)';
+            });
+            btn.addEventListener('mouseup', () => {
+                btn.style.transform = 'scale(1)';
+            });
+        });
+
+        // Simulating collaborative cursor movement subtly
+        const layer = document.getElementById('cursor-layer');
+        document.addEventListener('mousemove', (e) => {
+            // Optional: can add logic to move a 'Ghost' cursor here for effect
+        });
+    </script>
+</body></html>

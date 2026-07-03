@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Team Workspace Setup - Steps 3 &amp; 4</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .step-transition {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        body {
+            background-color: #FCFAF7;
+            font-family: 'Public Sans', sans-serif;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed": "#93f2f2",
+                      "on-secondary": "#ffffff",
+                      "tertiary-fixed": "#a3f69c",
+                      "on-primary-fixed": "#001b3c",
+                      "inverse-on-surface": "#f7f0e8",
+                      "primary-container": "#003366",
+                      "error-container": "#ffdad6",
+                      "on-surface-variant": "#43474f",
+                      "tertiary-fixed-dim": "#88d982",
+                      "tertiary": "#002504",
+                      "error": "#ba1a1a",
+                      "on-background": "#1e1b17",
+                      "secondary": "#006a6a",
+                      "surface-container-high": "#eee7df",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-container": "#5ead5c",
+                      "background": "#fff8f1",
+                      "tertiary-container": "#003d0b",
+                      "outline-variant": "#c3c6d1",
+                      "on-tertiary-fixed": "#002204",
+                      "surface": "#fff8f1",
+                      "secondary-fixed-dim": "#76d6d5",
+                      "on-primary": "#ffffff",
+                      "surface-bright": "#fff8f1",
+                      "primary": "#001e40",
+                      "surface-container-highest": "#e8e1da",
+                      "surface-tint": "#3a5f94",
+                      "on-secondary-fixed-variant": "#004f4f",
+                      "on-secondary-fixed": "#002020",
+                      "inverse-surface": "#33302b",
+                      "surface-container-low": "#faf3eb",
+                      "secondary-container": "#90efef",
+                      "surface-variant": "#e8e1da",
+                      "on-secondary-container": "#006e6e",
+                      "inverse-primary": "#a7c8ff",
+                      "outline": "#737780",
+                      "surface-container": "#f4ede5",
+                      "on-error-container": "#93000a",
+                      "on-surface": "#1e1b17",
+                      "primary-fixed": "#d5e3ff",
+                      "on-tertiary-fixed-variant": "#005312",
+                      "on-primary-fixed-variant": "#1f477b",
+                      "on-error": "#ffffff",
+                      "on-primary-container": "#799dd6",
+                      "surface-dim": "#e0d9d1",
+                      "primary-fixed-dim": "#a7c8ff",
+                      "on-tertiary": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-mobile": "20px",
+                      "lg": "24px",
+                      "gutter": "16px",
+                      "base": "8px",
+                      "xxl": "48px",
+                      "margin-desktop": "40px",
+                      "xs": "4px",
+                      "sm": "8px",
+                      "xl": "32px",
+                      "md": "16px"
+              },
+              "fontFamily": {
+                      "body-md": ["Public Sans"],
+                      "label-xs": ["Public Sans"],
+                      "caption-sm": ["Public Sans"],
+                      "display-lg": ["Public Sans"],
+                      "headline-md": ["Public Sans"],
+                      "title-sm": ["Public Sans"]
+              },
+              "fontSize": {
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "caption-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                      "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- Top Navigation Bar (Simplified for Setup) -->
+<header class="fixed top-0 left-0 w-full z-40 flex items-center justify-between px-margin-mobile lg:px-margin-desktop h-20 bg-surface/80 backdrop-blur-md">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary text-headline-md">hub</span>
+<span class="font-headline-md text-title-sm font-bold text-primary">Team Workspace</span>
+</div>
+<div class="flex items-center gap-sm">
+<div class="hidden lg:flex flex-col items-end mr-md">
+<span class="text-label-xs font-bold uppercase tracking-wider text-outline">Setup Wizard</span>
+<span class="text-body-md text-on-surface-variant">Step 4 of 5</span>
+</div>
+<div class="h-10 w-10 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional studio portrait of a young AI product manager named Alex, with a warm friendly expression, wearing a minimalist neutral sweater. The lighting is soft and editorial, set against a clean warm white background to match the elegant UI aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmiwUSDNduL5COVoTejGRCMm1B7UVGTsUnu-rWTzWuYgWdb2r_OwA-aPvSErt_FJSQ52g2OVQmoB9IpCKoANxWu4gPbVt4Hc_W8zEya4EjCh_0Ck828p1EPQqMfhVEvyeSE7FG_ke2_lidgUhhEfRp88yoTexyBB2Gh8CnDZrfrFRni8_aUT39Mcfpwp2LhBA0CONTvcoPZQc9KXxSy8xqsNAET3g2Fd2SOfEulVgz7qy8B09W7eZmI4Q2stq2I9z7buBnB3uo2nw"/>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-xxl px-margin-mobile lg:px-margin-desktop max-w-5xl mx-auto">
+<!-- Progress Indicator -->
+<div class="mb-xl">
+<div class="flex justify-between items-center mb-xs px-1">
+<span class="text-label-xs font-bold text-primary uppercase">Workspace Configuration</span>
+<span class="text-label-xs font-bold text-primary">80% Complete</span>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary w-4/5 transition-all duration-1000 ease-out" id="progress-bar"></div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-xl">
+<!-- Left Column: Settings & Import -->
+<div class="lg:col-span-7 space-y-lg">
+<!-- Section 3: AI Intelligence Layer -->
+<section class="p-xl rounded-2xl bg-white shadow-sm border border-surface-container-highest animate-fade-in">
+<div class="flex items-center gap-sm mb-md">
+<span class="material-symbols-outlined text-on-tertiary-container bg-tertiary-fixed rounded-lg p-2" style="font-variation-settings: 'FILL' 1;">psychology</span>
+<h2 class="font-title-sm text-title-sm text-primary">Intelligence Architecture</h2>
+</div>
+<p class="text-body-md text-on-surface-variant mb-lg">Define how the AI processes and retains team knowledge. Shared Memory enables collective learning across all members.</p>
+<div class="space-y-md">
+<!-- Toggle Group -->
+<div class="flex flex-col gap-sm">
+<label class="flex items-start p-md rounded-xl border border-outline-variant cursor-pointer hover:bg-surface-container-low transition-colors group" id="toggle-shared">
+<input checked="" class="mt-1 text-primary focus:ring-primary h-5 w-5" name="ai_layer" type="radio"/>
+<div class="ml-md">
+<span class="font-title-sm text-body-md block font-bold text-on-surface">Shared Memory Layer</span>
+<span class="text-caption-sm text-on-surface-variant">The AI learns from all team interactions, creating a central repository of wisdom accessible to everyone.</span>
+</div>
+<span class="ml-auto material-symbols-outlined text-tertiary-fixed-dim opacity-0 group-hover:opacity-100 transition-opacity">info</span>
+</label>
+<label class="flex items-start p-md rounded-xl border border-outline-variant cursor-pointer hover:bg-surface-container-low transition-colors group" id="toggle-private">
+<input class="mt-1 text-primary focus:ring-primary h-5 w-5" name="ai_layer" type="radio"/>
+<div class="ml-md">
+<span class="font-title-sm text-body-md block font-bold text-on-surface">Private Sovereignty Layer</span>
+<span class="text-caption-sm text-on-surface-variant">Individual AI instances with zero data leakage. Knowledge is siloed and only shared via explicit broadcast.</span>
+</div>
+<span class="ml-auto material-symbols-outlined text-tertiary-fixed-dim opacity-0 group-hover:opacity-100 transition-opacity">lock</span>
+</label>
+</div>
+</div>
+</section>
+<!-- Section 4: Data Integration -->
+<section class="p-xl rounded-2xl bg-white shadow-sm border border-surface-container-highest">
+<div class="flex items-center gap-sm mb-md">
+<span class="material-symbols-outlined text-primary bg-primary-fixed rounded-lg p-2">database</span>
+<h2 class="font-title-sm text-title-sm text-primary">Knowledge Import</h2>
+</div>
+<p class="text-body-md text-on-surface-variant mb-lg">Sync your existing ecosystem to give the AI context. We never store raw documents, only semantic embeddings.</p>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-md">
+<!-- Notion -->
+<button class="flex flex-col items-center justify-center p-md rounded-2xl border border-outline-variant hover:border-primary hover:bg-surface-container-low transition-all group active:scale-95">
+<div class="w-12 h-12 mb-sm flex items-center justify-center rounded-xl bg-surface-container-highest">
+<span class="material-symbols-outlined text-headline-md text-on-surface">description</span>
+</div>
+<span class="text-label-xs font-bold text-primary">NOTION</span>
+<span class="text-[10px] text-on-surface-variant mt-1">Connect Workspace</span>
+</button>
+<!-- Slack -->
+<button class="flex flex-col items-center justify-center p-md rounded-2xl border border-outline-variant hover:border-primary hover:bg-surface-container-low transition-all group active:scale-95">
+<div class="w-12 h-12 mb-sm flex items-center justify-center rounded-xl bg-surface-container-highest">
+<span class="material-symbols-outlined text-headline-md text-on-surface">forum</span>
+</div>
+<span class="text-label-xs font-bold text-primary">SLACK</span>
+<span class="text-[10px] text-on-surface-variant mt-1">Ingest Channels</span>
+</button>
+<!-- Google Drive -->
+<button class="flex flex-col items-center justify-center p-md rounded-2xl border border-outline-variant hover:border-primary hover:bg-surface-container-low transition-all group active:scale-95">
+<div class="w-12 h-12 mb-sm flex items-center justify-center rounded-xl bg-surface-container-highest">
+<span class="material-symbols-outlined text-headline-md text-on-surface">cloud_upload</span>
+</div>
+<span class="text-label-xs font-bold text-primary">G-DRIVE</span>
+<span class="text-[10px] text-on-surface-variant mt-1">Select Folders</span>
+</button>
+</div>
+</section>
+</div>
+<!-- Right Column: Visual Preview & Action -->
+<div class="lg:col-span-5 flex flex-col gap-lg">
+<!-- AI Visualizer Card -->
+<div class="rounded-3xl overflow-hidden relative h-64 lg:h-80 shadow-xl group">
+
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent flex flex-col justify-end p-xl">
+<span class="text-white font-title-sm text-title-sm mb-xs">Neural Network Syncing...</span>
+<div class="flex items-center gap-xs">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full border-2 border-primary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A portrait of a diverse team member, high-end photography, soft bokeh background, matching the warm white UI theme." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrrlq7VXqOyEgvgmouKz7dtM2LA5SLB3t2rJN8afe26z-Q2mPnrILmx3ioT0z8C56km9KbRsRuMAVO786dItQoamj8Ja9qQwfLjH7qxppwKInzO04txvrz-YUG-NukJgrrdC8yDBglhS9a_dKQtxkBs3fg3DLLAtlZLTmKYFFk0AkGni7HanDjytEHenGzGxEhb8ijRs13swCi6v5eVZ44icTrx_ml7Uiviy3Sx2Lmmk-1xff4zSuXBoC0VodnAiZUNpcWeILju1k"/>
+</div>
+<div class="w-6 h-6 rounded-full border-2 border-primary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A close up of a focused designer working in a brightly lit modern office, light mode aesthetic, pristine high resolution." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9pv5MO2454nj_5SXXZqx-hVlgMSsiKCixrm785PkU6Sf7a5slDvr9Wa8wVuGUGwMxTVDVfPlO3FXq-1212j7etIe1WuB5FCr_1rz3zbZIRvfCBKp7j5KX-RDgQNr_yRFYQ71ccXLDlkDyTXFuM9TNnWn2Z-uGAeFeOLHSvsJ6rYFdJ72Knk6I9L7y08J4nXDcfDf25tqysQXj1AfWQJyV3Rfd8hx7oFQ5sJRDdwQYxfsiuxVu6fv1mxCYKDwZHbuACYa1999qc9A"/>
+</div>
+<div class="w-6 h-6 rounded-full border-2 border-primary bg-primary-container text-[8px] flex items-center justify-center text-white">+12</div>
+</div>
+<span class="text-white/80 text-caption-sm ml-sm">Connecting Engineering &amp; Design...</span>
+</div>
+</div>
+</div>
+<!-- Action Card -->
+<div class="p-xl rounded-2xl bg-secondary-container/30 border border-secondary-fixed flex flex-col gap-lg">
+<div>
+<h3 class="font-title-sm text-title-sm text-on-secondary-container mb-xs">Almost there, Alex</h3>
+<p class="text-body-md text-on-secondary-fixed-variant">By choosing <strong>Shared Memory</strong>, your team will see a 40% reduction in repeated questions within the first 48 hours.</p>
+</div>
+<div class="space-y-sm">
+<button class="w-full h-14 bg-primary text-white rounded-2xl font-bold flex items-center justify-center gap-sm hover:bg-primary-container transition-all active:scale-[0.98] shadow-lg shadow-primary/20">
+                            Finalize Workspace
+                            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="w-full h-12 bg-transparent text-primary rounded-2xl font-medium flex items-center justify-center hover:bg-surface-container-high transition-all">
+                            Save and Exit
+                        </button>
+</div>
+</div>
+<!-- Status Chip -->
+<div class="flex items-center justify-between px-md py-sm bg-surface-container rounded-full">
+<div class="flex items-center gap-xs">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+<span class="text-label-xs font-bold text-on-surface-variant uppercase">AI Core Status: Ready</span>
+</div>
+<span class="text-label-xs text-on-surface-variant font-medium">Latency: 24ms</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation (Mobile Only Shell) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 flex justify-around items-center h-20 px-4 pb-safe bg-surface border-t border-outline-variant">
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">analytics</span>
+<span class="text-label-xs mt-1">Activity</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-label-xs mt-1">Settings</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">groups</span>
+<span class="text-label-xs mt-1">Members</span>
+</div>
+</nav>
+<script>
+        // Micro-interactions
+        document.querySelectorAll('label').forEach(label => {
+            label.addEventListener('click', () => {
+                // Clear all
+                document.querySelectorAll('label').forEach(l => {
+                    l.classList.remove('bg-primary-container/10', 'border-primary');
+                    l.classList.add('border-outline-variant');
+                });
+                // Highlight active
+                label.classList.add('bg-primary-container/10', 'border-primary');
+                label.classList.remove('border-outline-variant');
+            });
+        });
+
+        // Initialize progress bar width animation
+        window.onload = () => {
+            const pb = document.getElementById('progress-bar');
+            pb.style.width = '0%';
+            setTimeout(() => {
+                pb.style.width = '80%';
+            }, 300);
+        };
+    </script>
+</body></html>
