@@ -5,6 +5,7 @@ interface TopAppBarProps {
   greeting: string;
   name: string;
   onNotificationPress: () => void;
+  onProfilePress?: () => void;
   avatarUrl?: string;
 }
 
@@ -12,20 +13,23 @@ export default function TopAppBar({
   greeting,
   name,
   onNotificationPress,
+  onProfilePress,
   avatarUrl,
 }: TopAppBarProps) {
   return (
     <View className="bg-surface">
       <View className="h-[64px] flex-row items-center justify-between px-margin-mobile">
         <View className="flex-row items-center gap-3">
-          {avatarUrl ? (
-            <Image
-              source={{ uri: avatarUrl }}
-              className="h-10 w-10 rounded-full"
-            />
-          ) : (
-            <View className="h-10 w-10 rounded-full bg-primary-fixed" />
-          )}
+          <Pressable onPress={onProfilePress}>
+            {avatarUrl ? (
+              <Image
+                source={{ uri: avatarUrl }}
+                className="h-10 w-10 rounded-full"
+              />
+            ) : (
+              <View className="h-10 w-10 rounded-full bg-primary-fixed" />
+            )}
+          </Pressable>
           <View>
             <Text className="font-label-xs text-on-surface-variant">
               {greeting}

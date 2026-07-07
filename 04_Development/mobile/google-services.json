@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "55044011139",
+    "project_id": "yrecall-c35ed",
+    "storage_bucket": "yrecall-c35ed.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:55044011139:android:505456046f6e4ebe7297b6",
+        "android_client_info": {
+          "package_name": "com.lyfspot.yrecall"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "55044011139-6ms1l3i06har1c41jkekmdtilffp52vr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lyfspot.yrecall",
+            "certificate_hash": "53ef60804632ae02e526c2ee34b0cdd294ef2a69"
+          }
+        },
+        {
+          "client_id": "55044011139-jmh5ec01sl5d67hcdjhkfcsudo9k6i5e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMMI83j_JXrDBNnFaQQ5ShUYY203Dv6sw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "55044011139-jmh5ec01sl5d67hcdjhkfcsudo9k6i5e.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "55044011139-huk6rac6lurveac7og0vigo2d0jcmkc1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lyfspot.yrecall"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

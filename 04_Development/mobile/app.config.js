@@ -1,4 +1,3 @@
-// app.config.js (plain JS, no TypeScript syntax)
 module.exports = {
   name: "YRecall",
   slug: "yrecall",
@@ -11,6 +10,7 @@ module.exports = {
   ios: {
     supportsTablet: true,
     bundleIdentifier: "com.lyfspot.yrecall",
+    googleServicesFile: "./GoogleService-Info.plist",
   },
   
   android: {
@@ -22,6 +22,7 @@ module.exports = {
     },
     package: "com.lyfspot.yrecall",
     predictiveBackGestureEnabled: true,
+    googleServicesFile: "./google-services.json",
   },
   
   web: {
@@ -34,6 +35,8 @@ module.exports = {
     "expo-secure-store",
     "expo-localization",
     "expo-font",
+    "@react-native-google-signin/google-signin",
+    "expo-audio"
   ],
   
   experiments: {
@@ -43,5 +46,8 @@ module.exports = {
   extra: {
     apiUrl: process.env.EXPO_PUBLIC_API_URL,
     appEnv: process.env.EXPO_PUBLIC_APP_ENV,
+    eas: {
+      projectId: "a7181c21-2faf-4311-af67-aa7d0c981afa"
+    }
   },
 };
