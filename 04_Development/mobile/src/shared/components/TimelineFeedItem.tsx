@@ -30,7 +30,7 @@ export function TimelineFeedItem({
     
     let icon = 'edit-note';
     let bg = 'bg-white';
-    let iconColor = colors.primary;
+    let iconColor: string = colors.primary;
     let shadow = 'shadow-sm border border-outline-variant';
 
     if (isAI) {

@@ -66,12 +66,12 @@ export default function ProactiveExecutionHub() {
                 </Text>
                 
                 <View className="mb-6">
-                  <ConfidenceBadge score={94} />
+                  <ConfidenceBadge confidence={94} />
                 </View>
 
                 <View className="flex-row flex-wrap gap-4">
-                  <Button variant="primary" icon="bolt">Execute Order</Button>
-                  <Button variant="outline">Review Details</Button>
+                  <Button variant="primary" icon="bolt" label="Execute Order" />
+                  <Button variant="outline" label="Review Details" />
                 </View>
               </View>
               
@@ -102,12 +102,12 @@ export default function ProactiveExecutionHub() {
                 </Text>
                 
                 <View className="mb-6">
-                  <ConfidenceBadge score={82} />
+                  <ConfidenceBadge confidence={82} />
                 </View>
 
                 <View className="flex-row flex-wrap gap-4">
-                  <Button variant="primary" icon="check-circle">Update Schedule</Button>
-                  <Button variant="outline">Adjust Buffer</Button>
+                  <Button variant="primary" icon="check-circle" label="Update Schedule" />
+                  <Button variant="outline" label="Adjust Buffer" />
                 </View>
               </View>
               

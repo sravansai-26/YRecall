@@ -87,7 +87,7 @@ export default function PremiumSuccess() {
           </TouchableOpacity>
           <TouchableOpacity 
             className="bg-surface-container-high h-14 rounded-xl items-center justify-center  transition-colors"
-            onPress={() => router.push('/(tabs)')}
+            onPress={() => router.push('/(main)/(tabs)')}
           >
             <Text className="text-primary font-bold text-base">Back to Home</Text>
           </TouchableOpacity>

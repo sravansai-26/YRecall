@@ -93,7 +93,7 @@ export default function TeamsStartWorkspace() {
             {/* Team Workspace (Highlighted) */}
             <TouchableOpacity 
               className="flex-1 bg-white p-6 rounded-[24px] shadow-sm border-2 border-primary relative overflow-hidden"
-              onPress={() => router.push('/teams/identity')}
+              onPress={() => router.push('/(teams)/identity')}
             >
               <View className="absolute top-0 right-0 w-32 h-32 bg-secondary-container/20 blur-3xl -z-10" />
               

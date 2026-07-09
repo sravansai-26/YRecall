@@ -71,7 +71,7 @@ export default function TeamsInvite() {
                   variant="primary" 
                   label="Send Invitations" 
                   icon="send"
-                  onPress={() => router.push('/teams/join')} 
+                  onPress={() => router.push('/(teams)/join')} 
                 />
               </View>
             </View>

@@ -97,7 +97,7 @@ export default function TeamsJoin() {
             variant="primary" 
             label="Get Started" 
             icon="arrow-forward"
-            onPress={() => router.push('/teams/shared')} 
+            onPress={() => router.push('/(teams)/shared')} 
           />
           <Text className="text-caption-sm text-on-surface-variant text-center">
             By entering, you agree to the Nova Workspace Protocol 2.4.

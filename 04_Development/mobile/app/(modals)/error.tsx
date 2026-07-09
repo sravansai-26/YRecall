@@ -52,7 +52,7 @@ export default function ConnectionError() {
           {/* Local Search Card */}
           <View className="flex-1 bg-white/70 p-6 rounded-[24px] shadow-sm border border-white flex-col items-start">
             <View className="w-12 h-12 bg-secondary-container rounded-xl flex items-center justify-center mb-4">
-              <MaterialIcons name="database" size={24} color={colors['on-secondary-container']} />
+              <MaterialIcons name="storage" size={24} color={colors['on-secondary-container']} />
             </View>
             <Text className="font-title-sm text-xl font-bold text-primary mb-2">Local Memory</Text>
             <Text className="font-body-md text-base text-on-surface-variant leading-relaxed">

@@ -9,6 +9,8 @@ import {
   PublicSans_600SemiBold,
   PublicSans_700Bold,
 } from '@expo-google-fonts/public-sans';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import '../src/global.css';
 import { AuthProvider } from '../src/shared/providers/AuthProvider';
 import { useAuthStore } from '../src/shared/store/useAuthStore';
@@ -32,7 +34,7 @@ function RootNavigationHandler() {
 
     const inAuthGroup = segments[0] === '(auth)';
     const inOnboardingGroup = segments[0] === '(onboarding)';
-    const isRoot = segments.length === 0;
+    const isRoot = (segments as string[]).length === 0;
 
     // Full fledged onboarding process:
     // 1. Splash Screen -> handled by Expo Splash Screen
@@ -86,12 +88,16 @@ export default function RootLayout() {
   }
 
   return (
-    <SafeAreaProvider>
-      <QueryProvider>
-        <AuthProvider>
-          <RootNavigationHandler />
-        </AuthProvider>
-      </QueryProvider>
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <BottomSheetModalProvider>
+          <QueryProvider>
+            <AuthProvider>
+              <RootNavigationHandler />
+            </AuthProvider>
+          </QueryProvider>
+        </BottomSheetModalProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }

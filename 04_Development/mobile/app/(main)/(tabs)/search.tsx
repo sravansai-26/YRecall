@@ -45,10 +45,10 @@ export default function SearchIndex() {
             placeholderTextColor={colors['outline-variant']}
             value={query}
             onChangeText={setQuery}
-            onSubmitEditing={() => router.push('/(tabs)/search/results')}
+            onSubmitEditing={() => router.push('/(main)/search-results')}
           />
           <View className="absolute inset-y-0 right-0 pr-md justify-center z-10">
-            <TouchableOpacity onPress={() => router.push('/(tabs)/search/filters')}>
+            <TouchableOpacity onPress={() => require('react-native').Alert.alert('Coming Soon', 'Search filters coming soon')}>
               <MaterialIcons name="tune" size={24} color={colors.primary} />
             </TouchableOpacity>
           </View>
@@ -84,7 +84,7 @@ export default function SearchIndex() {
             <MaterialIcons name="auto-awesome" size={18} color={colors.secondary} />
           </View>
           <View className="flex-col md:flex-row gap-md">
-            <TouchableOpacity className="bg-white/70 p-lg rounded-2xl border-l-4 border-l-secondary-fixed-dim" onPress={() => router.push('/(tabs)/search/results')}>
+            <TouchableOpacity className="bg-white/70 p-lg rounded-2xl border-l-4 border-l-secondary-fixed-dim" onPress={() => router.push('/(main)/search-results')}>
               <Text className="font-body-md text-primary">"What did I talk about with Sarah yesterday?"</Text>
               <View className="mt-md flex-row items-center gap-xs">
                 <MaterialIcons name="history-edu" size={16} color={colors.outline} />
@@ -92,7 +92,7 @@ export default function SearchIndex() {
               </View>
             </TouchableOpacity>
             
-            <TouchableOpacity className="bg-white/70 p-lg rounded-2xl border-l-4 border-l-tertiary-fixed-dim" onPress={() => router.push('/(tabs)/search/results')}>
+            <TouchableOpacity className="bg-white/70 p-lg rounded-2xl border-l-4 border-l-tertiary-fixed-dim" onPress={() => router.push('/(main)/search-results')}>
               <Text className="font-body-md text-primary">"Find the document about the solar project."</Text>
               <View className="mt-md flex-row items-center gap-xs">
                 <MaterialIcons name="description" size={16} color={colors.outline} />

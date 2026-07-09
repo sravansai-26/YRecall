@@ -1,0 +1,43 @@
+# Git
+.git
+.github
+
+# IDE
+.vscode
+.idea
+
+# Python
+venv
+__pycache__
+*.pyc
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# Documentation
+docs
+README.md
+
+# Tests
+coverage
+__tests__
+
+# Backend (outside mobile app)
+../backend
+
+# Design files
+design
+designs
+figma
+screenshots
+mockups
+
+# Build outputs
+dist
+build
+
+# OS files
+.DS_Store
+Thumbs.db

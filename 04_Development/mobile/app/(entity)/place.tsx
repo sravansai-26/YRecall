@@ -8,7 +8,7 @@ export default function PlaceProfile() {
   const router = useRouter();
 
   return (
-    <Screen scrollable={true} edges={[]}>
+    <Screen scrollable={true}>
       {/* Top Navigation */}
       <View className="absolute top-0 w-full z-50 bg-black/20 h-24 pt-10 flex-row justify-between items-center px-margin-mobile">
         <TouchableOpacity 
@@ -55,7 +55,7 @@ export default function PlaceProfile() {
             </View>
             <View className="flex-row items-center justify-between p-4 bg-surface-container-low rounded-xl">
                <View className="flex-row items-center gap-3">
-                 <MaterialIcons name="partly-cloudy-day" size={32} color={colors.secondary} />
+                 <MaterialIcons name="cloud" size={32} color={colors.secondary} />
                  <View>
                    <Text className="font-bold text-on-surface text-base">68°F</Text>
                    <Text className="text-caption-sm text-on-surface-variant">Partly Cloudy</Text>

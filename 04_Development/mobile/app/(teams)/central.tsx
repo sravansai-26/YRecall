@@ -40,7 +40,7 @@ export default function TeamsCentral() {
           </View>
           <View className="flex-row gap-3">
             <Button variant="primary" label="Add Project" />
-            <Button variant="outline" label="Invite Team" onPress={() => router.push('/teams/invite')} />
+            <Button variant="outline" label="Invite Team" onPress={() => router.push('/(teams)/invite')} />
           </View>
         </View>
 

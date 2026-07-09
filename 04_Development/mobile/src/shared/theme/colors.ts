@@ -46,4 +46,7 @@ export const colors = {
   background: '#fff8f1',
   'on-background': '#1e1b17',
   'surface-variant': '#e8e1da',
+  white: '#ffffff',
+  black: '#000000',
+  transparent: 'transparent',
 } as const;

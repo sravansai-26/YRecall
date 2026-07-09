@@ -219,7 +219,7 @@ export default function SecurityPrivacyDashboard() {
           <View className="flex-col md:flex-row gap-4">
             
             <View className="bg-secondary-container/20 border border-secondary/20 p-6 rounded-[24px] flex-row items-start gap-4 flex-1">
-              <MaterialIcons name="stars" size={24} color={colors['secondary-fixed-variant']} />
+              <MaterialIcons name="stars" size={24} color={colors['on-secondary-fixed-variant']} />
               <View className="flex-col flex-1">
                 <Text className="font-title-sm text-base text-primary font-bold mb-1">Update Biometrics</Text>
                 <Text className="text-caption-sm text-xs text-on-surface-variant">It's been 6 months since your last scan calibration.</Text>

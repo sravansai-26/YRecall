@@ -117,7 +117,7 @@ export default function TeamsIdentity() {
             <Button 
               variant="primary" 
               label="Create Workspace"
-              onPress={() => router.push('/teams/central')} 
+              onPress={() => router.push('/(teams)/central')} 
             />
             <Button 
               variant="outline" 

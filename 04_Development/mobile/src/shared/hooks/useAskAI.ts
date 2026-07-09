@@ -13,7 +13,8 @@ export interface AIMessage {
   role: 'user' | 'assistant';
   content: string;
   created_at: string;
-  citations?: Citation[]; // Only attached when returning from chat mutation in our current backend, but good to have
+  citations?: Citation[];
+  status?: 'sending' | 'streaming' | 'completed' | 'failed';
 }
 
 export interface AIConversation {
@@ -63,38 +64,61 @@ export function useChat() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ message, conversationId }: { message: string; conversationId: string | null }) => {
+    mutationFn: async ({ message, conversationId }: { message: string; conversationId: string | null; optimisticId?: string }) => {
       const response = await apiClient.post<ApiResponse<ChatResponse>>('/ai/chat', {
         message,
         conversation_id: conversationId,
       });
       return response.data.data;
     },
-    onSuccess: (data, variables) => {
-      // Invalidate conversations list to update updated_at or insert new conversation
-      queryClient.invalidateQueries({ queryKey: aiKeys.conversations() });
+    onMutate: async ({ message, conversationId, optimisticId }) => {
+      if (!conversationId) return { previousMessages: [] };
       
-      // Update messages cache
-      const activeConversationId = data.conversation_id;
+      await queryClient.cancelQueries({ queryKey: aiKeys.messages(conversationId) });
+      const previousMessages = queryClient.getQueryData<AIMessage[]>(aiKeys.messages(conversationId));
       
-      queryClient.setQueryData(aiKeys.messages(activeConversationId), (old: AIMessage[] | undefined) => {
-        const newAssistantMsg: AIMessage = {
-          ...data.message,
-          citations: data.citations
-        };
-        
-        // Ensure user message is also there (usually optimistic update handles this, but just in case)
-        if (old) {
-           return [...old, newAssistantMsg];
-        }
-        // If it was a new conversation, we might need to invalidate or set fresh array
-        return [
-           // Mock the user message since the backend doesn't return the user message object directly in the response,
-           // just the assistant's. The real user message is stored, so invalidate is safer.
-        ];
+      const userMessage: AIMessage = {
+        id: optimisticId || Date.now().toString(),
+        role: 'user',
+        content: message,
+        created_at: new Date().toISOString(),
+        status: 'completed'
+      };
+
+      const assistantPlaceholder: AIMessage = {
+        id: `assistant-${optimisticId || Date.now()}`,
+        role: 'assistant',
+        content: '',
+        created_at: new Date().toISOString(),
+        status: 'sending'
+      };
+      
+      queryClient.setQueryData<AIMessage[]>(aiKeys.messages(conversationId), (old) => {
+        return [...(old || []), userMessage, assistantPlaceholder];
       });
       
-      // The safest way is to just invalidate the messages query for this conversation
+      return { previousMessages };
+    },
+    onError: (err, newMsg, context) => {
+      if (newMsg.conversationId) {
+        queryClient.setQueryData<AIMessage[]>(aiKeys.messages(newMsg.conversationId), (old) => {
+          if (!old) return old;
+          // Mark the last assistant message as failed
+          const updated = [...old];
+          const lastMsg = updated[updated.length - 1];
+          if (lastMsg && lastMsg.role === 'assistant' && lastMsg.status === 'sending') {
+            lastMsg.status = 'failed';
+          }
+          return updated;
+        });
+      }
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: aiKeys.conversations() });
+      
+      const activeConversationId = data.conversation_id;
+      
+      // We safely invalidate to get the true server state including the user message ID
       queryClient.invalidateQueries({ queryKey: aiKeys.messages(activeConversationId) });
     },
   });

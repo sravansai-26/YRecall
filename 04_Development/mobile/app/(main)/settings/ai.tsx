@@ -67,8 +67,8 @@ export default function AIPersonalization() {
                       onPress={() => setActivePersona(persona)}
                       className={`flex-1 p-4 rounded-xl border-2 transition-all flex-col ${isActive ? 'border-primary bg-primary/5' : 'border-outline-variant '}`}
                     >
-                      <Text className="font-bold text-base mb-1 capitalize text-on-surface">{labels[persona].title}</Text>
-                      <Text className="font-caption-sm text-xs text-on-surface-variant">{labels[persona].desc}</Text>
+                      <Text className="font-bold text-base mb-1 capitalize text-on-surface">{labels[persona as keyof typeof labels]?.title}</Text>
+                      <Text className="font-caption-sm text-xs text-on-surface-variant">{labels[persona as keyof typeof labels]?.desc}</Text>
                     </TouchableOpacity>
                   );
                 })}

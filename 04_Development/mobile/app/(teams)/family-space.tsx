@@ -83,7 +83,7 @@ export default function FamilySpace() {
                 <Text className="text-sm font-medium">Wedding Anniversary</Text>
               </View>
               <View className="absolute bg-secondary-container p-4 rounded-full shadow-xl border-2 border-secondary items-center justify-center">
-                <MaterialIcons name="family-history" size={32} color={colors['on-secondary-container']} />
+                <MaterialIcons name="groups" size={32} color={colors['on-secondary-container']} />
               </View>
             </View>
           </View>

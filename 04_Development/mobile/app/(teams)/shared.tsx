@@ -171,7 +171,7 @@ export default function TeamsSharedSetup() {
                   variant="primary" 
                   label="Finalize Workspace" 
                   icon="arrow-forward"
-                  onPress={() => router.push('/teams/central')} 
+                  onPress={() => router.push('/(teams)/central')} 
                 />
                 <Button 
                   variant="outline" 

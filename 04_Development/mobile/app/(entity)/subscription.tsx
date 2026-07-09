@@ -149,7 +149,7 @@ export default function SubscriptionEntity() {
 
             <View className="flex-row items-center justify-between">
               <View className="flex-row items-center gap-3">
-                <MaterialIcons name="monitoring" size={24} color={colors['on-surface-variant']} />
+                <MaterialIcons name="monitor" size={24} color={colors['on-surface-variant']} />
                 <View>
                   <Text className="text-body-md text-on-surface font-bold">Usage Monitoring</Text>
                   <Text className="text-caption-sm text-on-surface-variant">Analyze screentime data</Text>

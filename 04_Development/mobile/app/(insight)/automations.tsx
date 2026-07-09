@@ -49,7 +49,7 @@ export default function AutomationsHub() {
                   <Text className="font-headline-md text-xl font-bold text-primary mb-1">Workflow Builder</Text>
                   <Text className="text-body-sm text-on-surface-variant">Create a new neural trigger</Text>
                 </View>
-                <Button variant="primary" icon="add">ACTIVATE</Button>
+                <Button variant="primary" icon="add" label="ACTIVATE" />
               </View>
 
               <View className="flex-col md:flex-row gap-lg">

@@ -1,8 +1,10 @@
 import { MaterialIcons } from '@expo/vector-icons';
-import { Pressable, Text, View, StyleSheet } from 'react-native';
+import { Pressable, Text, StyleSheet, Platform, View } from 'react-native';
+import Animated, { useAnimatedKeyboard, useAnimatedStyle, withTiming, interpolate, Extrapolation, runOnJS } from 'react-native-reanimated';
+import { useSegments } from 'expo-router';
 import { colors } from '../theme/colors';
 
-export type BottomNavRoute = 'home' | 'timeline' | 'ask' | 'search' | 'settings' | 'profile';
+export type BottomNavRoute = 'home' | 'timeline' | 'ask' | 'search' | 'profile' | 'capture';
 
 interface BottomNavBarProps {
   activeRoute: BottomNavRoute;
@@ -13,91 +15,153 @@ export default function BottomNavBar({
   activeRoute,
   onNavigate,
 }: BottomNavBarProps) {
-  const routes = [
+  const keyboard = useAnimatedKeyboard();
+  const segments = useSegments();
+  
+  // Only hide on the ask screen natively to prevent layout jumps on other tabs
+  const isAskScreen = segments[segments.length - 1] === 'ask';
+
+  const animatedStyle = useAnimatedStyle(() => {
+    if (!isAskScreen) return {};
+    const keyboardHeight = keyboard.height.value;
+    
+    return {
+      transform: [{ 
+        translateY: interpolate(keyboardHeight, [0, 50], [0, 100], Extrapolation.CLAMP) 
+      }],
+      opacity: interpolate(keyboardHeight, [0, 50], [1, 0], Extrapolation.CLAMP),
+      position: keyboardHeight > 0 ? 'absolute' : 'relative',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      zIndex: -1,
+    };
+  });
+
+  const routesLeft = [
     { id: 'home', label: 'Home', icon: 'home' },
-    { id: 'timeline', label: 'Timeline', icon: 'timeline' },
-    { id: 'ask', label: 'Ask', icon: 'chat-bubble' },
-    { id: 'search', label: 'Search', icon: 'search' },
-    { id: 'settings', label: 'Settings', icon: 'settings' },
+    { id: 'timeline', label: 'Recall', icon: 'timeline' },
+  ] as const;
+
+  const routesRight = [
+    { id: 'ask', label: 'Ask AI', icon: 'auto-awesome' },
     { id: 'profile', label: 'Graph', icon: 'hub' },
   ] as const;
 
-  return (
-    <View style={styles.container}>
-      {routes.map((route) => {
-        const isActive = activeRoute === route.id;
+  const renderRoute = (route: any) => {
+    const isActive = activeRoute === route.id;
+    return (
+      <Pressable
+        key={route.id}
+        onPress={() => onNavigate(route.id)}
+        style={[
+          styles.navItem,
+          isActive && styles.navItemActive,
+        ]}
+      >
+        <MaterialIcons
+          name={route.icon as any}
+          size={24}
+          color={
+            isActive
+              ? colors['on-secondary-container']
+              : colors['on-surface-variant']
+          }
+        />
+        <Text
+          style={[
+            styles.navText,
+            isActive ? styles.navTextActive : styles.navTextInactive,
+          ]}
+          numberOfLines={1}
+        >
+          {route.label}
+        </Text>
+      </Pressable>
+    );
+  };
 
-        return (
-          <Pressable
-            key={route.id}
-            onPress={() => onNavigate(route.id)}
-            style={[
-              styles.navItem,
-              isActive && styles.navItemActive,
-            ]}
-          >
-            <MaterialIcons
-              name={route.icon as any}
-              size={24}
-              color={
-                isActive
-                  ? colors['on-secondary-container']
-                  : colors['on-surface-variant']
-              }
-            />
-            <Text
-              style={[
-                styles.navText,
-                isActive ? styles.navTextActive : styles.navTextInactive,
-              ]}
-              numberOfLines={1}
-            >
-              {route.label}
-            </Text>
-          </Pressable>
-        );
-      })}
-    </View>
+  return (
+    <Animated.View style={[styles.container, animatedStyle]}>
+      <View style={styles.sideContainer}>
+        {routesLeft.map(renderRoute)}
+      </View>
+      
+      <Pressable 
+        style={styles.captureButtonWrapper}
+        onPress={() => onNavigate('capture')}
+      >
+        <View style={styles.captureButton}>
+          <MaterialIcons name="add" size={32} color={colors['on-primary']} />
+        </View>
+      </Pressable>
+      
+      <View style={styles.sideContainer}>
+        {routesRight.map(renderRoute)}
+      </View>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-around',
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
+    justifyContent: 'space-between',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
     backgroundColor: colors['surface-container-low'],
+    paddingBottom: 28,
+    paddingTop: 12,
     paddingHorizontal: 8,
-    paddingBottom: 32,
-    paddingTop: 16,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: -1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 5,
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 10,
+    position: 'relative',
+  },
+  sideContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  captureButtonWrapper: {
+    top: -24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
+  },
+  captureButton: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
   },
   navItem: {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingVertical: 6,
     flex: 1,
   },
   navItemActive: {
-    transform: [{ scale: 0.9 }],
-    borderRadius: 9999,
+    transform: [{ scale: 0.95 }],
+    borderRadius: 16,
     backgroundColor: colors['secondary-container'],
   },
   navText: {
-    fontFamily: 'PublicSans_500Medium',
-    fontSize: 9,
+    fontFamily: 'PublicSans_600SemiBold',
+    fontSize: 10,
     marginTop: 4,
   },
   navTextActive: {
