@@ -1,9 +1,45 @@
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, TextInput, ActivityIndicator, Alert } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Screen } from '../../src/shared/components';
 import { colors } from '../../src/shared/theme/colors';
+import { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiClient } from '../../src/services/api/client';
+import { useRouter } from 'expo-router';
 
 export default function CaptureScreen() {
+  const [text, setText] = useState('');
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (captureText: string) => {
+      const res = await apiClient.post('/captures', {
+        type: 'text',
+        content_text: captureText,
+      });
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['captures'] });
+      router.back();
+    },
+    onError: (error: any) => {
+      if (!error.response) {
+        Alert.alert('Error', 'No internet connection.');
+      } else if (error.response.status === 401) {
+        Alert.alert('Error', 'Session expired.\nPlease sign in again.');
+      } else {
+        Alert.alert('Error', 'Unable to save memory.');
+      }
+    }
+  });
+
+  const handleSave = () => {
+    if (!text.trim()) return;
+    mutate(text);
+  };
+
   return (
     <Screen scrollable={false}>
       {/* Top Header */}
@@ -14,8 +50,8 @@ export default function CaptureScreen() {
           </View>
           <Text className="font-headline-md font-bold text-primary">YRecall</Text>
         </View>
-        <TouchableOpacity onPress={() => require('react-native').Alert.alert('Coming Soon', 'Backend integration pending')} className="w-10 h-10 items-center justify-center rounded-full ">
-          <MaterialIcons name="notifications" size={24} color={colors.primary} />
+        <TouchableOpacity onPress={() => router.back()} className="w-10 h-10 items-center justify-center rounded-full ">
+          <MaterialIcons name="close" size={24} color={colors.primary} />
         </TouchableOpacity>
       </View>
 
@@ -26,11 +62,17 @@ export default function CaptureScreen() {
           <Text className="text-on-surface-variant font-body-md text-center">Capture everything, YRecall handles the rest.</Text>
         </View>
 
-        {/* Waveform placeholder */}
-        <View className="w-full max-w-md h-32 flex-row items-center justify-center gap-[6px] mb-xxl">
-          {[16, 24, 40, 32, 48, 56, 44, 36, 20, 12, 28, 40].map((height, i) => (
-            <View key={i} className="w-[6px] bg-secondary rounded-full opacity-80" style={{ height }} />
-          ))}
+        {/* Text Input replacing Waveform */}
+        <View className="w-full max-w-md min-h-[128px] justify-center mb-xxl bg-surface-container-low rounded-2xl p-4 border border-outline-variant/30">
+          <TextInput
+            className="font-body-md text-primary text-center flex-1"
+            placeholder="Type your memory here..."
+            placeholderTextColor={colors.outline}
+            multiline
+            value={text}
+            onChangeText={setText}
+            editable={!isPending}
+          />
         </View>
 
         {/* Capture Grid */}
@@ -54,12 +96,22 @@ export default function CaptureScreen() {
           ))}
         </View>
 
-        {/* Tactile Button */}
+        {/* Tactile Button -> Save Button */}
         <View className="items-center gap-md">
-          <TouchableOpacity onPress={() => require('react-native').Alert.alert('Coming Soon', 'Backend integration pending')} className="w-24 h-24 rounded-full bg-primary items-center justify-center shadow-lg border-4 border-white/20">
-            <MaterialIcons name="center-focus-strong" size={40} color={colors.white} />
+          <TouchableOpacity 
+            onPress={handleSave}
+            disabled={isPending || !text.trim()}
+            className={`w-24 h-24 rounded-full ${text.trim() ? 'bg-primary' : 'bg-surface-variant'} items-center justify-center shadow-lg border-4 border-white/20`}
+          >
+            {isPending ? (
+              <ActivityIndicator color={colors.white} size="large" />
+            ) : (
+              <MaterialIcons name="check" size={40} color={text.trim() ? colors.white : colors.outline} />
+            )}
           </TouchableOpacity>
-          <Text className="font-label-xs font-bold text-primary uppercase tracking-widest mt-4">Hold to Quick Capture</Text>
+          <Text className="font-label-xs font-bold text-primary uppercase tracking-widest mt-4">
+            {isPending ? 'Saving...' : (text.trim() ? 'Press to Save' : 'Hold to Quick Capture')}
+          </Text>
         </View>
       </ScrollView>
     </Screen>

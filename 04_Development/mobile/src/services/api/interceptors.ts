@@ -1,8 +1,6 @@
 import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
-import { STORAGE_KEYS } from '@/config/app';
-import { getSecureItem } from '@/lib/secure-store';
-
+import { auth } from '@/shared/lib/firebase';
 import { apiClient } from './client';
 
 type RequestConfig = InternalAxiosRequestConfig & {
@@ -15,7 +13,7 @@ export function setupApiInterceptors(): void {
       return config;
     }
 
-    const token = await getSecureItem(STORAGE_KEYS.ACCESS_TOKEN);
+    const token = await auth.currentUser?.getIdToken();
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;

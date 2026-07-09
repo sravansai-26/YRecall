@@ -32,7 +32,7 @@ class AIEmbedding(Base):
     capture_id = Column(UUID(as_uuid=True), ForeignKey("captures.id", ondelete="CASCADE"), nullable=True, index=True)
     message_id = Column(UUID(as_uuid=True), ForeignKey("ai_messages.id", ondelete="CASCADE"), nullable=True, index=True)
     
-    # 768 dimensions for Gemini text-embedding-004
-    embedding = Column(Vector(768), nullable=False)
+    # 3072 dimensions for Gemini embedding 2
+    embedding = Column(Vector(3072), nullable=False)
     
     created_at = Column(DateTime(timezone=True), server_default=func.now())

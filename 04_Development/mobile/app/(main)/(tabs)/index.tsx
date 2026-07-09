@@ -1,13 +1,23 @@
-import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Screen, TopAppBar, InsightCard } from '../../../src/shared/components';
 import { colors } from '../../../src/shared/theme/colors';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '../../../src/shared/store/useAuthStore';
+import { useQuery } from '@tanstack/react-query';
+import { apiClient } from '../../../src/services/api/client';
 
 export default function HomeDailyBriefing() {
   const router = useRouter();
   const { user } = useAuthStore();
+
+  const { data: capturesData, isLoading } = useQuery({
+    queryKey: ['captures'],
+    queryFn: async () => {
+      const res = await apiClient.get('/captures');
+      return res.data;
+    },
+  });
 
   return (
     <Screen scrollable={false}>
@@ -80,42 +90,32 @@ export default function HomeDailyBriefing() {
         </View>
 
         <View className="flex-col md:flex-row gap-gutter mb-xl flex-wrap">
-          {/* Memory: Photo */}
-          <View className="bg-white rounded-[24px] shadow-sm overflow-hidden flex-col flex-1 w-full mb-4">
-            <View className="h-48 relative bg-surface-container-high items-center justify-center">
-               <MaterialIcons name="landscape" size={48} color={colors['outline-variant']} />
-               <View className="absolute top-4 right-4 bg-white/80 px-3 py-1 rounded-full flex-row items-center gap-1">
-                 <MaterialIcons name="image" size={14} color={colors.primary} />
-                 <Text className="font-label-xs text-[10px] text-primary">Captured 2h ago</Text>
-               </View>
+          {isLoading ? (
+            <View className="w-full py-xl items-center justify-center">
+              <ActivityIndicator color={colors.primary} />
             </View>
-            <View className="p-lg">
-              <Text className="font-body-md text-on-surface mb-2 font-medium">Architecture Inspo</Text>
-              <Text className="font-caption-sm text-on-surface-variant">Saved from your walk through the Venice District. The light on these facades is perfect for the upcoming project.</Text>
+          ) : capturesData?.data?.length === 0 ? (
+            <View className="w-full py-xl items-center justify-center bg-surface-container-low rounded-2xl border border-outline-variant/30 border-dashed">
+              <Text className="text-on-surface-variant font-body-md">No recent memories found.</Text>
             </View>
-          </View>
-
-          {/* Memory: Link */}
-          <TouchableOpacity onPress={() => router.push('/(insight)/detail')} className="bg-white rounded-[24px] shadow-sm p-lg border border-transparent flex-col flex-1 w-full mb-4">
-            <View className="flex-row items-center gap-3 mb-4">
-              <View className="w-10 h-10 bg-secondary-container items-center justify-center rounded-xl">
-                <MaterialIcons name="link" size={20} color={colors['on-secondary-container']} />
+          ) : (
+            capturesData?.data?.slice(0, 2).map((capture: any) => (
+              <View key={capture.id} className="bg-white rounded-[24px] shadow-sm overflow-hidden flex-col flex-1 w-full mb-4 border border-transparent">
+                <View className="p-lg flex-row gap-3">
+                  <View className="w-10 h-10 bg-secondary-container items-center justify-center rounded-xl">
+                    <MaterialIcons name={capture.type === 'voice' ? 'mic' : 'edit-note'} size={20} color={colors['on-secondary-container']} />
+                  </View>
+                  <View className="flex-1">
+                    <Text className="font-label-xs text-[10px] text-on-surface-variant uppercase tracking-wider">{capture.type} Capture</Text>
+                    <Text className="font-body-md font-bold text-primary mb-1" numberOfLines={1}>
+                      {capture.content_text ? capture.content_text.substring(0, 40) + '...' : 'Media Capture'}
+                    </Text>
+                    <Text className="font-caption-sm text-on-surface-variant" numberOfLines={2}>{capture.content_text}</Text>
+                  </View>
+                </View>
               </View>
-              <View>
-                <Text className="font-label-xs text-[10px] text-on-surface-variant uppercase tracking-wider">Article Summary</Text>
-                <Text className="font-body-md font-bold text-primary">The Future of AI Interfaces</Text>
-              </View>
-            </View>
-            <Text className="font-body-md text-on-surface-variant mb-4">A deep dive into how large action models will replace traditional app navigation. Focuses on intent-based UI.</Text>
-            <View className="flex-row flex-wrap gap-2">
-              <View className="bg-tertiary/10 px-3 py-1 rounded-full">
-                <Text className="text-on-tertiary-container font-label-xs text-[10px]">#TechTrends</Text>
-              </View>
-              <View className="bg-tertiary/10 px-3 py-1 rounded-full">
-                <Text className="text-on-tertiary-container font-label-xs text-[10px]">#Design</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
+            ))
+          )}
         </View>
         
         {/* Ongoing Projects */}

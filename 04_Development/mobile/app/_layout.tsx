@@ -61,6 +61,12 @@ function RootNavigationHandler() {
   return <Stack screenOptions={{ headerShown: false }} />;
 }
 
+import { QueryProvider } from '../src/providers/QueryProvider';
+import { setupApiInterceptors } from '../src/services/api/interceptors';
+
+// Initialize API interceptors to attach Firebase tokens
+setupApiInterceptors();
+
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     PublicSans_400Regular,
@@ -81,9 +87,11 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
-      <AuthProvider>
-        <RootNavigationHandler />
-      </AuthProvider>
+      <QueryProvider>
+        <AuthProvider>
+          <RootNavigationHandler />
+        </AuthProvider>
+      </QueryProvider>
     </SafeAreaProvider>
   );
 }
