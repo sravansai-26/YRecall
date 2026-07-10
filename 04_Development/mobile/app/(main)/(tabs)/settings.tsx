@@ -69,6 +69,31 @@ export default function SettingsHub() {
         {/* Main Categories */}
         <View className="flex-col gap-8 pt-6">
           
+          {/* The Brain / Knowledge Graph (Premium Section) */}
+          <View className="flex-col gap-4">
+            <Text className="font-label-xs text-xs text-on-surface-variant font-bold uppercase tracking-widest px-1">Neural Network</Text>
+            <TouchableOpacity 
+              onPress={() => router.push('/(main)/knowledge-graph')} 
+              className="bg-surface-container-lowest rounded-[24px] overflow-hidden shadow-sm border border-primary/20"
+            >
+              <View className="w-full flex-row items-center justify-between p-6 bg-white relative">
+                <View className="absolute inset-0 bg-primary/5" />
+                <View className="flex-row items-center gap-4 z-10">
+                  <View className="w-12 h-12 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20">
+                    <MaterialIcons name="hub" size={28} color={colors.primary} />
+                  </View>
+                  <View className="flex-col">
+                    <Text className="font-headline-sm text-lg font-bold text-primary">Knowledge Graph</Text>
+                    <Text className="font-caption-sm text-xs text-on-surface-variant mt-0.5">Explore your connected memories</Text>
+                  </View>
+                </View>
+                <View className="z-10 bg-primary/10 rounded-full p-2">
+                  <MaterialIcons name="chevron-right" size={24} color={colors.primary} />
+                </View>
+              </View>
+            </TouchableOpacity>
+          </View>
+          
           {/* Personalization (AI Focus) */}
           <View className="flex-col gap-4">
             <Text className="font-label-xs text-xs text-on-surface-variant font-bold uppercase tracking-widest px-1">Intelligence & Experience</Text>
@@ -111,20 +136,6 @@ export default function SettingsHub() {
                   <View className="flex-col">
                     <Text className="font-body-md text-base font-bold text-primary">Memory Filters</Text>
                     <Text className="font-caption-sm text-xs text-on-surface-variant">Only include positive sentiments</Text>
-                  </View>
-                </View>
-                <MaterialIcons name="chevron-right" size={24} color={colors.outline} />
-              </TouchableOpacity>
-              <View className="h-[1px] bg-outline-variant/20 mx-6" />
-              
-              <TouchableOpacity onPress={() => router.push('/(main)/knowledge-graph')} className="w-full flex-row items-center justify-between p-6 bg-white ">
-                <View className="flex-row items-center gap-4">
-                  <View className="w-10 h-10 items-center justify-center rounded-xl bg-secondary/10">
-                    <MaterialIcons name="hub" size={24} color={colors.secondary} />
-                  </View>
-                  <View className="flex-col">
-                    <Text className="font-body-md text-base font-bold text-primary">Knowledge Graph</Text>
-                    <Text className="font-caption-sm text-xs text-on-surface-variant">View your memory network</Text>
                   </View>
                 </View>
                 <MaterialIcons name="chevron-right" size={24} color={colors.outline} />

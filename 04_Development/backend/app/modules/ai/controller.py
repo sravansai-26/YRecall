@@ -187,3 +187,27 @@ def delete_conversation(
         raise
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+from ...core.rate_limit import RateLimiter
+from .reflection_service import generate_reflection
+
+reflect_limiter = RateLimiter(max_requests=4, window_seconds=86400) # 4 per day
+
+class ReflectRequest(BaseModel):
+    timeframe: str = "daily" # daily, weekly, monthly
+
+@router.post("/reflect", response_model=dict)
+def reflect_endpoint(
+    req: ReflectRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(reflect_limiter)
+):
+    try:
+        reflection_data = generate_reflection(db, str(current_user.id), req.timeframe)
+        return {
+            "success": True,
+            "message": f"{req.timeframe.capitalize()} reflection generated.",
+            "data": reflection_data
+        }
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))

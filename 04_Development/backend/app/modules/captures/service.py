@@ -19,6 +19,8 @@ supabase: Client = None
 if settings.SUPABASE_URL and settings.SUPABASE_SERVICE_KEY:
     supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_SERVICE_KEY)
 
+from ...modules.graph.entity_resolver import async_extract_with_retry
+
 def create_text_capture(db: Session, user: User, capture_in: CaptureCreateText, background_tasks: BackgroundTasks) -> Capture:
     new_capture = Capture(
         user_id=user.id,
@@ -32,6 +34,7 @@ def create_text_capture(db: Session, user: User, capture_in: CaptureCreateText, 
     db.refresh(new_capture)
     
     background_tasks.add_task(generate_and_store_embedding, db, new_capture.id, new_capture.content_text)
+    background_tasks.add_task(async_extract_with_retry, str(new_capture.id), user.id)
     return new_capture
 
 def create_note_capture(db: Session, user: User, capture_in: CaptureCreateNote, background_tasks: BackgroundTasks) -> Capture:
@@ -55,6 +58,7 @@ def create_note_capture(db: Session, user: User, capture_in: CaptureCreateNote, 
     db.refresh(new_capture)
     
     background_tasks.add_task(generate_and_store_embedding, db, new_capture.id, new_capture.content_text)
+    background_tasks.add_task(async_extract_with_retry, str(new_capture.id), user.id)
     return new_capture
 
 def create_url_capture(db: Session, user: User, capture_in: CaptureCreateURL, background_tasks: BackgroundTasks) -> Capture:
@@ -76,6 +80,7 @@ def create_url_capture(db: Session, user: User, capture_in: CaptureCreateURL, ba
     
     # Background task to fetch OG tags, markdown, and then embed
     background_tasks.add_task(process_url_capture, db, new_capture.id)
+    background_tasks.add_task(async_extract_with_retry, str(new_capture.id), user.id)
     return new_capture
 
 def create_location_capture(db: Session, user: User, capture_in: CaptureCreateLocation, background_tasks: BackgroundTasks) -> Capture:
@@ -100,6 +105,7 @@ def create_location_capture(db: Session, user: User, capture_in: CaptureCreateLo
     
     # Background task for reverse geocoding and embeddings
     background_tasks.add_task(process_location_capture, db, new_capture.id)
+    background_tasks.add_task(async_extract_with_retry, str(new_capture.id), user.id)
     return new_capture
 
 def create_media_capture(db: Session, user: User, file: UploadFile, type_str: str, background_tasks: BackgroundTasks) -> Capture:
@@ -138,6 +144,7 @@ def create_media_capture(db: Session, user: User, file: UploadFile, type_str: st
     
     # Background task for processing (OCR/Transcript/Summary/Embedding)
     background_tasks.add_task(process_media_capture, db, new_capture.id)
+    background_tasks.add_task(async_extract_with_retry, str(new_capture.id), user.id)
     return new_capture
 
 def transcribe_audio_sync(db: Session, user: User, file: UploadFile) -> str:

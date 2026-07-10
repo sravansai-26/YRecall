@@ -22,9 +22,11 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 from app.core.database import Base, db_url
-from app.modules.users.models import User
-from app.modules.captures.models import Capture
-from app.modules.ai.models import AIConversation, AIMessage, AIEmbedding
+from app.modules.users import models as users_models
+from app.modules.captures import models as captures_models
+from app.modules.ai import models as ai_models
+from app.modules.home import models as home_models
+from app.modules.graph import models as graph_models
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,

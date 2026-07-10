@@ -1,17 +1,30 @@
-import { View, Text, ScrollView, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
-import { Screen, TopAppBar, InsightCard } from '../../../src/shared/components';
+import React, { useCallback, useState, useEffect } from 'react';
+import { View, Text, ScrollView, Image, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
+import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Screen } from '../../../src/shared/components';
 import { colors } from '../../../src/shared/theme/colors';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { useAuthStore } from '../../../src/shared/store/useAuthStore';
+import { useDashboard, useGenerateReflection } from '../../../src/modules/home/hooks';
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '../../../src/services/api/client';
-import { useCallback, useState } from 'react';
 
-export default function HomeDailyBriefing() {
+export default function HomeDashboard() {
   const router = useRouter();
   const { user } = useAuthStore();
   const [backPressCount, setBackPressCount] = useState(0);
+
+  const { data: dashboardData, isLoading, refetch, isRefetching } = useDashboard();
+  const { mutate: generateReflection, isPending: isReflecting } = useGenerateReflection();
+
+  // Fetch recent memories to fallback if dashboard is loading or empty
+  const { data: capturesData, isLoading: capturesLoading } = useQuery({
+    queryKey: ['captures'],
+    queryFn: async () => {
+      const res = await apiClient.get('/captures');
+      return res.data;
+    },
+  });
 
   useFocusEffect(
     useCallback(() => {
@@ -20,26 +33,16 @@ export default function HomeDailyBriefing() {
           setBackPressCount(1);
           require('react-native').ToastAndroid?.show('Press back again to exit', require('react-native').ToastAndroid.SHORT);
           setTimeout(() => setBackPressCount(0), 2000);
-          return true; // Prevent default behavior
+          return true;
         } else {
           require('react-native').BackHandler.exitApp();
           return true;
         }
       };
-
       const subscription = require('react-native').BackHandler.addEventListener('hardwareBackPress', onBackPress);
-
       return () => subscription.remove();
     }, [backPressCount])
   );
-
-  const { data: capturesData, isLoading } = useQuery({
-    queryKey: ['captures'],
-    queryFn: async () => {
-      const res = await apiClient.get('/captures');
-      return res.data;
-    },
-  });
 
   return (
     <Screen scrollable={false}>
@@ -70,19 +73,63 @@ export default function HomeDailyBriefing() {
         </View>
       </View>
 
-      <ScrollView className="flex-1 w-full max-w-7xl mx-auto mt-4 px-margin-mobile" contentContainerStyle={{ paddingBottom: 24 }}>
-        {/* Daily Briefing */}
+      <ScrollView 
+        className="flex-1 w-full max-w-7xl mx-auto mt-4 px-margin-mobile" 
+        contentContainerStyle={{ paddingBottom: 100 }}
+        refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor={colors.primary} />}
+      >
+        {/* Daily Briefing & AI Reflection */}
         <View className="bg-surface-dim p-lg rounded-[24px] shadow-sm overflow-hidden mb-xl">
           <View className="absolute top-0 right-0 p-4 opacity-20 pointer-events-none">
             <MaterialIcons name="auto-awesome" size={80} color={colors.primary} />
           </View>
-          <View className="flex-row items-center gap-2 mb-3">
-            <MaterialIcons name="auto-awesome" size={20} color={colors.secondary} />
-            <Text className="font-headline-md text-[20px] text-primary">Today's Briefing</Text>
+          
+          <View className="flex-row justify-between items-start mb-3">
+            <View className="flex-row items-center gap-2">
+              <MaterialIcons name="auto-awesome" size={20} color={colors.secondary} />
+              <Text className="font-headline-md text-[20px] text-primary">Today's Briefing</Text>
+            </View>
+            <TouchableOpacity 
+              onPress={() => generateReflection('daily')}
+              disabled={isReflecting || isLoading}
+            >
+              <MaterialIcons name={isReflecting ? "hourglass-empty" : "refresh"} size={24} color={colors.primary} />
+            </TouchableOpacity>
           </View>
-          <Text className="font-body-md text-on-surface-variant leading-relaxed">
-            You have a design review at 10 AM. Key takeaways from yesterday: the client preferred the minimalist layout and mentioned a need for a darker "Deep Recall" mode. Remember to mention the new bento grid pattern.
-          </Text>
+
+          {isLoading ? (
+            <View className="py-4">
+              <View className="h-4 w-full bg-surface-container-high rounded-full mb-2 animate-pulse" />
+              <View className="h-4 w-5/6 bg-surface-container-high rounded-full mb-2 animate-pulse" />
+              <View className="h-4 w-2/3 bg-surface-container-high rounded-full animate-pulse" />
+            </View>
+          ) : isReflecting ? (
+            <View className="py-4 items-center justify-center">
+              <ActivityIndicator color={colors.primary} size="small" />
+              <Text className="font-body-sm text-on-surface-variant mt-2">AI is analyzing your memories...</Text>
+            </View>
+          ) : dashboardData?.daily_brief?.summary_text ? (
+            <Text className="font-body-md text-on-surface-variant leading-relaxed mb-4">
+              {dashboardData.daily_brief.summary_text}
+            </Text>
+          ) : (
+            <Text className="font-body-md text-on-surface-variant leading-relaxed mb-4">
+              You haven't generated a briefing today. Tap the refresh icon to let AI reflect on your recent memories!
+            </Text>
+          )}
+
+          {/* Render Insights if any */}
+          {dashboardData?.insights?.length > 0 && !isLoading && !isReflecting && (
+            <View className="mt-2 border-t border-outline-variant/30 pt-3">
+              <Text className="font-label-md text-secondary font-bold mb-2">AI Insights</Text>
+              {dashboardData.insights.map((insight: any) => (
+                <View key={insight.id} className="flex-row items-start gap-2 mb-2">
+                  <MaterialCommunityIcons name="lightbulb-on" size={16} color={colors.tertiary} style={{marginTop: 2}} />
+                  <Text className="font-body-sm text-on-surface-variant flex-1 leading-tight">{insight.text}</Text>
+                </View>
+              ))}
+            </View>
+          )}
         </View>
 
         {/* Quick Actions */}
@@ -108,11 +155,13 @@ export default function HomeDailyBriefing() {
         {/* Recent Memories */}
         <View className="mb-md flex-row justify-between items-end">
           <Text className="font-title-sm text-primary">Recent Memories</Text>
-          <Text className="text-secondary font-label-xs text-[13px]">See All</Text>
+          <TouchableOpacity onPress={() => router.push('/(main)/(tabs)/recall')}>
+            <Text className="text-secondary font-label-xs text-[13px]">See All</Text>
+          </TouchableOpacity>
         </View>
 
         <View className="flex-col md:flex-row gap-gutter mb-xl flex-wrap">
-          {isLoading ? (
+          {capturesLoading ? (
             <View className="w-full py-xl items-center justify-center">
               <ActivityIndicator color={colors.primary} />
             </View>
@@ -121,21 +170,21 @@ export default function HomeDailyBriefing() {
               <Text className="text-on-surface-variant font-body-md">No recent memories found.</Text>
             </View>
           ) : (
-            capturesData?.data?.slice(0, 2).map((capture: any) => (
-              <View key={capture.id} className="bg-white rounded-[24px] shadow-sm overflow-hidden flex-col flex-1 w-full mb-4 border border-transparent">
+            capturesData?.data?.slice(0, 3).map((capture: any) => (
+              <TouchableOpacity key={capture.id} onPress={() => router.push(`/(main)/memory/${capture.id}`)} className="bg-white rounded-[24px] shadow-sm overflow-hidden flex-col w-full mb-4 border border-transparent">
                 <View className="p-lg flex-row gap-3">
                   <View className="w-10 h-10 bg-secondary-container items-center justify-center rounded-xl">
-                    <MaterialIcons name={capture.type === 'voice' ? 'mic' : 'edit-note'} size={20} color={colors['on-secondary-container']} />
+                    <MaterialIcons name={capture.type === 'voice' ? 'mic' : capture.type === 'image' ? 'image' : 'edit-note'} size={20} color={colors['on-secondary-container']} />
                   </View>
                   <View className="flex-1">
                     <Text className="font-label-xs text-[10px] text-on-surface-variant uppercase tracking-wider">{capture.type} Capture</Text>
                     <Text className="font-body-md font-bold text-primary mb-1" numberOfLines={1}>
-                      {capture.content_text ? capture.content_text.substring(0, 40) + '...' : 'Media Capture'}
+                      {capture.title || (capture.content_text ? capture.content_text.substring(0, 40) : 'Media Capture')}
                     </Text>
-                    <Text className="font-caption-sm text-on-surface-variant" numberOfLines={2}>{capture.content_text}</Text>
+                    <Text className="font-caption-sm text-on-surface-variant" numberOfLines={2}>{capture.summary || capture.content_text || 'View details'}</Text>
                   </View>
                 </View>
-              </View>
+              </TouchableOpacity>
             ))
           )}
         </View>
@@ -143,14 +192,14 @@ export default function HomeDailyBriefing() {
         {/* Ongoing Projects */}
         <Text className="font-title-sm text-primary mb-md">Ongoing Projects</Text>
         <View className="space-y-sm">
-          <TouchableOpacity onPress={() => router.push('/(entity)/project')} className="bg-surface-container-low rounded-xl p-md flex-row items-center justify-between mb-2">
+          <TouchableOpacity onPress={() => {}} className="bg-surface-container-low rounded-xl p-md flex-row items-center justify-between mb-2">
             <View className="flex-row items-center gap-4">
               <View className="w-12 h-12 bg-white rounded-full items-center justify-center shadow-sm">
                 <MaterialIcons name="folder-open" size={24} color={colors.primary} />
               </View>
               <View>
                 <Text className="font-body-md font-bold text-primary">Redesign Project: Q3</Text>
-                <Text className="font-caption-sm text-on-surface-variant">12 related memories • Active now</Text>
+                <Text className="font-caption-sm text-on-surface-variant">Active now</Text>
               </View>
             </View>
           </TouchableOpacity>

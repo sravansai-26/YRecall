@@ -5,7 +5,7 @@ import { colors } from '../../../../src/shared/theme/colors';
 import { Capture } from '../../captures/services/api';
 import { format } from 'date-fns';
 import { AudioPlayer } from '../../../shared/components/AudioPlayer';
-import Markdown from 'react-native-markdown-display';
+import Markdown from 'react-native-markdown-display'; // Reverted for timeline feed
 
 interface TimelineCardProps {
   capture: Capture;
@@ -68,11 +68,9 @@ export function TimelineCard({ capture, onPress }: TimelineCardProps) {
             </View>
           )}
           {capture.summary && (
-            <View className="markdown-container">
-              <Markdown style={markdownStyles}>
-                {capture.summary}
-              </Markdown>
-            </View>
+            <Text className="text-body-md text-on-surface" numberOfLines={3}>
+              {capture.summary}
+            </Text>
           )}
         </View>
       );
@@ -127,11 +125,9 @@ export function TimelineCard({ capture, onPress }: TimelineCardProps) {
              </Text>
           </View>
           {capture.summary && (
-            <View className="markdown-container">
-              <Markdown style={markdownStyles}>
-                {capture.summary}
-              </Markdown>
-            </View>
+            <Text className="text-body-md text-on-surface-variant" numberOfLines={3}>
+              {capture.summary}
+            </Text>
           )}
         </View>
       );
@@ -154,11 +150,9 @@ export function TimelineCard({ capture, onPress }: TimelineCardProps) {
              </View>
           </View>
           {capture.summary && (
-            <View className="markdown-container">
-              <Markdown style={markdownStyles}>
-                {capture.summary}
-              </Markdown>
-            </View>
+            <Text className="text-body-md text-on-surface-variant" numberOfLines={3}>
+              {capture.summary}
+            </Text>
           )}
         </View>
       );
@@ -168,11 +162,9 @@ export function TimelineCard({ capture, onPress }: TimelineCardProps) {
     return (
       <View className="mb-2">
         {capture.content_text && (
-          <View className="markdown-container">
-            <Markdown style={markdownStyles}>
-              {capture.content_text}
-            </Markdown>
-          </View>
+          <Text className="text-body-md text-on-surface leading-relaxed" numberOfLines={4}>
+            {capture.content_text}
+          </Text>
         )}
       </View>
     );
@@ -208,9 +200,19 @@ export function TimelineCard({ capture, onPress }: TimelineCardProps) {
               </View>
             )}
             {capture.entities && capture.entities.slice(0, 3).map((entity: any, i: number) => (
-              <View key={i} className="bg-secondary-container/50 px-3 py-1.5 rounded-lg border border-secondary/10">
+              <TouchableOpacity 
+                key={i} 
+                onPress={(e) => {
+                  e.stopPropagation();
+                  // We route to global search with the entity value for now, 
+                  // as global Graph entity IDs are mapped separately.
+                  // router.push(`/(main)/search?q=${encodeURIComponent(entity.entity_value)}`)
+                }}
+                className="bg-secondary-container/50 px-3 py-1.5 rounded-lg border border-secondary/10 flex-row items-center gap-1"
+              >
+                <MaterialIcons name="hub" size={10} color={colors.secondary} />
                 <Text className="text-secondary text-[10px] font-bold uppercase tracking-wider">{entity.entity_value}</Text>
-              </View>
+              </TouchableOpacity>
             ))}
           </View>
         </View>
@@ -218,22 +220,3 @@ export function TimelineCard({ capture, onPress }: TimelineCardProps) {
     </View>
   );
 }
-
-const markdownStyles = StyleSheet.create({
-  body: {
-    color: colors['on-surface'],
-    fontSize: 15,
-    lineHeight: 22,
-  },
-  strong: {
-    fontWeight: '700',
-    color: colors.primary,
-  },
-  em: {
-    fontStyle: 'italic',
-  },
-  paragraph: {
-    marginTop: 0,
-    marginBottom: 0,
-  }
-});
