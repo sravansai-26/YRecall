@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy import desc, asc
-from typing import List
+from typing import List, Optional
 from uuid import UUID
 from .schemas import ChatRequest, ChatResponse, ConversationListResponse, ConversationResponse, MessageResponse
 from . import service
@@ -18,7 +18,10 @@ def list_conversations(
     current_user: User = Depends(get_current_user)
 ):
     try:
-        conversations = db.query(AIConversation).filter(AIConversation.user_id == current_user.id).order_by(desc(AIConversation.updated_at)).all()
+        conversations = db.query(AIConversation).filter(
+            AIConversation.user_id == current_user.id,
+            AIConversation.deleted_at.is_(None)
+        ).order_by(desc(AIConversation.is_pinned), desc(AIConversation.updated_at)).all()
         return {
             "success": True,
             "message": "Conversations retrieved.",
@@ -26,6 +29,8 @@ def list_conversations(
                 {
                     "id": str(c.id),
                     "title": c.title,
+                    "is_pinned": c.is_pinned,
+                    "is_archived": c.is_archived,
                     "created_at": c.created_at.isoformat(),
                     "updated_at": c.updated_at.isoformat()
                 } for c in conversations
@@ -54,6 +59,8 @@ def get_messages(
                     "id": str(m.id),
                     "role": m.role,
                     "content": m.content,
+                    "status": m.status,
+                    "attachments": m.attachments,
                     "created_at": m.created_at.isoformat()
                 } for m in messages
             ]
@@ -85,6 +92,8 @@ def chat_endpoint(
                     "id": str(message.id),
                     "role": message.role,
                     "content": message.content,
+                    "status": message.status,
+                    "attachments": message.attachments,
                     "created_at": message.created_at.isoformat()
                 },
                 "citations": [
@@ -101,3 +110,80 @@ def chat_endpoint(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)
         )
+
+from pydantic import BaseModel
+class ConversationUpdate(BaseModel):
+    title: Optional[str] = None
+    is_pinned: Optional[bool] = None
+    is_archived: Optional[bool] = None
+
+@router.patch("/conversations/{conversation_id}", response_model=dict)
+def update_conversation(
+    conversation_id: UUID,
+    update_data: ConversationUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    try:
+        conversation = db.query(AIConversation).filter(
+            AIConversation.id == conversation_id, 
+            AIConversation.user_id == current_user.id
+        ).first()
+        if not conversation:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Conversation not found")
+            
+        if update_data.title is not None:
+            conversation.title = update_data.title
+        if update_data.is_pinned is not None:
+            conversation.is_pinned = update_data.is_pinned
+        if update_data.is_archived is not None:
+            conversation.is_archived = update_data.is_archived
+            
+        db.commit()
+        db.refresh(conversation)
+        
+        return {
+            "success": True,
+            "message": "Conversation updated.",
+            "data": {
+                "id": str(conversation.id),
+                "title": conversation.title,
+                "is_pinned": conversation.is_pinned,
+                "is_archived": conversation.is_archived,
+                "created_at": conversation.created_at.isoformat(),
+                "updated_at": conversation.updated_at.isoformat()
+            }
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+from datetime import datetime
+
+@router.delete("/conversations/{conversation_id}", response_model=dict)
+def delete_conversation(
+    conversation_id: UUID,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    try:
+        conversation = db.query(AIConversation).filter(
+            AIConversation.id == conversation_id, 
+            AIConversation.user_id == current_user.id
+        ).first()
+        if not conversation:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Conversation not found")
+            
+        # Soft delete
+        conversation.deleted_at = datetime.utcnow()
+        db.commit()
+        
+        return {
+            "success": True,
+            "message": "Conversation deleted."
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))

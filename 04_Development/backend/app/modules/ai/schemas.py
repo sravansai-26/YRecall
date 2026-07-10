@@ -6,6 +6,8 @@ from datetime import datetime
 class ChatRequest(BaseModel):
     conversation_id: Optional[UUID] = None
     message: str
+    attached_capture_ids: List[UUID] = []
+    stream: bool = False
 
 class Citation(BaseModel):
     capture_id: UUID
@@ -16,6 +18,8 @@ class MessageResponse(BaseModel):
     id: UUID
     role: str
     content: str
+    status: str
+    attachments: Optional[List[UUID]] = None
     created_at: datetime
     
     model_config = {"from_attributes": True}
@@ -28,6 +32,8 @@ class ChatResponse(BaseModel):
 class ConversationResponse(BaseModel):
     id: UUID
     title: Optional[str]
+    is_pinned: bool
+    is_archived: bool
     created_at: datetime
     updated_at: datetime
 

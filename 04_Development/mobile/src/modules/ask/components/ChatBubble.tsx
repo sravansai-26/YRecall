@@ -1,8 +1,12 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Markdown from 'react-native-markdown-display';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { colors } from '../../../../src/shared/theme/colors';
 import { CitationCard } from './CitationCard';
+import { MaterialIcons } from '@expo/vector-icons';
+import * as Clipboard from 'expo-clipboard';
+import { useState } from 'react';
+import { format } from 'date-fns';
 
 interface Citation {
   content: string;
@@ -12,10 +16,23 @@ interface ChatBubbleProps {
   role: 'user' | 'assistant';
   content: string;
   citations?: Citation[];
+  timestamp?: string;
+  onRetry?: () => void;
+  onEdit?: () => void;
 }
 
-export function ChatBubble({ role, content, citations }: ChatBubbleProps) {
+export function ChatBubble({ role, content, citations, timestamp, onRetry, onEdit }: ChatBubbleProps) {
   const isUser = role === 'user';
+  const [feedback, setFeedback] = useState<'up' | 'down' | null>(null);
+  
+  const handleCopy = async () => {
+    await Clipboard.setStringAsync(content);
+  };
+
+  const handleLike = () => setFeedback(prev => prev === 'up' ? null : 'up');
+  const handleDislike = () => setFeedback(prev => prev === 'down' ? null : 'down');
+
+  const formattedTime = timestamp ? format(new Date(timestamp), 'h:mm a') : '';
 
   return (
     <Animated.View entering={FadeInUp.duration(400).springify()} style={[styles.container, isUser ? styles.containerUser : styles.containerAssistant]}>
@@ -47,6 +64,41 @@ export function ChatBubble({ role, content, citations }: ChatBubbleProps) {
         {/* Citations */}
         {!isUser && citations && citations.length > 0 && (
           <CitationCard citations={citations} />
+        )}
+      </View>
+      
+      {/* Footer Actions & Timestamp */}
+      <View style={[styles.footer, isUser ? styles.footerUser : styles.footerAssistant]}>
+        {isUser ? (
+          <>
+            <Text style={styles.timestamp}>{formattedTime}</Text>
+            <View style={styles.actions}>
+              <TouchableOpacity onPress={onEdit} style={styles.actionButton}>
+                <MaterialIcons name="edit" size={14} color={colors.outline} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleCopy} style={styles.actionButton}>
+                <MaterialIcons name="content-copy" size={14} color={colors.outline} />
+              </TouchableOpacity>
+            </View>
+          </>
+        ) : (
+          <>
+            <View style={styles.actions}>
+              <TouchableOpacity onPress={handleLike} style={[styles.actionButton, feedback === 'up' && styles.actionButtonActive]}>
+                <MaterialIcons name="thumb-up" size={14} color={feedback === 'up' ? colors.primary : colors.outline} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleDislike} style={[styles.actionButton, feedback === 'down' && styles.actionButtonActive]}>
+                <MaterialIcons name="thumb-down" size={14} color={feedback === 'down' ? colors.error : colors.outline} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleCopy} style={styles.actionButton}>
+                <MaterialIcons name="content-copy" size={14} color={colors.outline} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={onRetry} style={styles.actionButton}>
+                <MaterialIcons name="refresh" size={14} color={colors.outline} />
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.timestamp}>{formattedTime}</Text>
+          </>
         )}
       </View>
     </Animated.View>
@@ -87,5 +139,36 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     color: colors['on-secondary-container'],
+  },
+  footer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 4,
+    paddingHorizontal: 8,
+  },
+  footerUser: {
+    justifyContent: 'flex-end',
+  },
+  footerAssistant: {
+    justifyContent: 'flex-start',
+  },
+  timestamp: {
+    fontFamily: 'PublicSans_400Regular',
+    fontSize: 12,
+    color: colors.outline,
+    marginHorizontal: 8,
+  },
+  actions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  actionButton: {
+    padding: 6,
+    marginHorizontal: 2,
+    borderRadius: 16,
+    backgroundColor: colors['surface-container'],
+  },
+  actionButtonActive: {
+    backgroundColor: colors['surface-container-high'],
   }
 });

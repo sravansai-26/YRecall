@@ -2,14 +2,36 @@ import { View, Text, ScrollView, Image, TouchableOpacity, ActivityIndicator } fr
 import { MaterialIcons } from '@expo/vector-icons';
 import { Screen, TopAppBar, InsightCard } from '../../../src/shared/components';
 import { colors } from '../../../src/shared/theme/colors';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { useAuthStore } from '../../../src/shared/store/useAuthStore';
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '../../../src/services/api/client';
+import { useCallback, useState } from 'react';
 
 export default function HomeDailyBriefing() {
   const router = useRouter();
   const { user } = useAuthStore();
+  const [backPressCount, setBackPressCount] = useState(0);
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        if (backPressCount === 0) {
+          setBackPressCount(1);
+          require('react-native').ToastAndroid?.show('Press back again to exit', require('react-native').ToastAndroid.SHORT);
+          setTimeout(() => setBackPressCount(0), 2000);
+          return true; // Prevent default behavior
+        } else {
+          require('react-native').BackHandler.exitApp();
+          return true;
+        }
+      };
+
+      const subscription = require('react-native').BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => subscription.remove();
+    }, [backPressCount])
+  );
 
   const { data: capturesData, isLoading } = useQuery({
     queryKey: ['captures'],
@@ -48,7 +70,7 @@ export default function HomeDailyBriefing() {
         </View>
       </View>
 
-      <ScrollView className="flex-1 w-full max-w-7xl mx-auto mt-4 px-margin-mobile" contentContainerStyle={{ paddingBottom: 100 }}>
+      <ScrollView className="flex-1 w-full max-w-7xl mx-auto mt-4 px-margin-mobile" contentContainerStyle={{ paddingBottom: 24 }}>
         {/* Daily Briefing */}
         <View className="bg-surface-dim p-lg rounded-[24px] shadow-sm overflow-hidden mb-xl">
           <View className="absolute top-0 right-0 p-4 opacity-20 pointer-events-none">
@@ -69,15 +91,15 @@ export default function HomeDailyBriefing() {
             <MaterialIcons name="chat-bubble" size={20} color={colors['on-primary']} />
             <Text className="font-label-xs text-[14px] text-on-primary">Ask Anything</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push('/(modals)/capture')} className="flex-row items-center gap-2 px-lg py-3 bg-surface-container-low border border-outline-variant rounded-full">
+          <TouchableOpacity onPress={() => router.push('/(main)/capture/camera')} className="flex-row items-center gap-2 px-lg py-3 bg-surface-container-low border border-outline-variant rounded-full">
             <MaterialIcons name="document-scanner" size={20} color={colors['on-surface']} />
             <Text className="font-label-xs text-[14px] text-on-surface">Scan Doc</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push('/(modals)/capture')} className="flex-row items-center gap-2 px-lg py-3 bg-surface-container-low border border-outline-variant rounded-full">
+          <TouchableOpacity onPress={() => router.push('/(main)/capture/voice')} className="flex-row items-center gap-2 px-lg py-3 bg-surface-container-low border border-outline-variant rounded-full">
             <MaterialIcons name="mic" size={20} color={colors['on-surface']} />
             <Text className="font-label-xs text-[14px] text-on-surface">Voice Note</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push('/(modals)/capture')} className="flex-row items-center gap-2 px-lg py-3 bg-surface-container-low border border-outline-variant rounded-full">
+          <TouchableOpacity onPress={() => router.push('/(main)/capture/camera')} className="flex-row items-center gap-2 px-lg py-3 bg-surface-container-low border border-outline-variant rounded-full">
             <MaterialIcons name="photo-camera" size={20} color={colors['on-surface']} />
             <Text className="font-label-xs text-[14px] text-on-surface">Snap Photo</Text>
           </TouchableOpacity>

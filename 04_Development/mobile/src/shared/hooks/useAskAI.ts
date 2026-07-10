@@ -15,11 +15,14 @@ export interface AIMessage {
   created_at: string;
   citations?: Citation[];
   status?: 'sending' | 'streaming' | 'completed' | 'failed';
+  attachments?: string[];
 }
 
 export interface AIConversation {
   id: string;
   title: string;
+  is_pinned: boolean;
+  is_archived: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -64,14 +67,15 @@ export function useChat() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ message, conversationId }: { message: string; conversationId: string | null; optimisticId?: string }) => {
+    mutationFn: async ({ message, conversationId, attachedCaptureIds = [] }: { message: string; conversationId: string | null; optimisticId?: string; attachedCaptureIds?: string[] }) => {
       const response = await apiClient.post<ApiResponse<ChatResponse>>('/ai/chat', {
         message,
         conversation_id: conversationId,
+        attached_capture_ids: attachedCaptureIds
       });
       return response.data.data;
     },
-    onMutate: async ({ message, conversationId, optimisticId }) => {
+    onMutate: async ({ message, conversationId, optimisticId, attachedCaptureIds }) => {
       if (!conversationId) return { previousMessages: [] };
       
       await queryClient.cancelQueries({ queryKey: aiKeys.messages(conversationId) });
@@ -121,5 +125,38 @@ export function useChat() {
       // We safely invalidate to get the true server state including the user message ID
       queryClient.invalidateQueries({ queryKey: aiKeys.messages(activeConversationId) });
     },
+  });
+}
+
+// Update a conversation (rename, pin, archive)
+export function useUpdateConversation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, title, isPinned, isArchived }: { id: string; title?: string; isPinned?: boolean; isArchived?: boolean }) => {
+      const response = await apiClient.patch<ApiResponse<AIConversation>>(`/ai/conversations/${id}`, {
+        title,
+        is_pinned: isPinned,
+        is_archived: isArchived
+      });
+      return response.data.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: aiKeys.conversations() });
+    }
+  });
+}
+
+// Delete a conversation
+export function useDeleteConversation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      await apiClient.delete(`/ai/conversations/${id}`);
+    },
+    onSuccess: (_, deletedId) => {
+      queryClient.invalidateQueries({ queryKey: aiKeys.conversations() });
+    }
   });
 }

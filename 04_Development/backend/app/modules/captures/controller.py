@@ -94,6 +94,22 @@ def create_media_capture(
     except ValueError as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@router.post("/transcribe", response_model=dict, status_code=status.HTTP_200_OK)
+def transcribe_audio(
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    try:
+        text = service.transcribe_audio_sync(db, current_user, file)
+        return {
+            "success": True,
+            "message": "Audio transcribed successfully.",
+            "data": {"text": text}
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @router.get("", response_model=dict)
 def get_captures(
     skip: int = 0,

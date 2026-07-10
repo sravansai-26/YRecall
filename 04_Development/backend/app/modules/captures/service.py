@@ -110,7 +110,11 @@ def create_media_capture(db: Session, user: User, file: UploadFile, type_str: st
     file_name = f"{user.id}/{uuid.uuid4()}.{file_ext}"
     
     file_bytes = file.file.read()
-    res = supabase.storage.from_("captures").upload(file_name, file_bytes)
+    res = supabase.storage.from_("captures").upload(
+        file_name, 
+        file_bytes,
+        file_options={"content-type": file.content_type}
+    )
     public_url = supabase.storage.from_("captures").get_public_url(file_name)
     
     new_capture = Capture(
@@ -135,6 +139,33 @@ def create_media_capture(db: Session, user: User, file: UploadFile, type_str: st
     # Background task for processing (OCR/Transcript/Summary/Embedding)
     background_tasks.add_task(process_media_capture, db, new_capture.id)
     return new_capture
+
+def transcribe_audio_sync(db: Session, user: User, file: UploadFile) -> str:
+    """
+    Synchronously transcribes an uploaded audio file using Gemini API.
+    Does not create a Capture record.
+    """
+    if not settings.GEMINI_API_KEY:
+        raise ValueError("GEMINI_API_KEY is not configured")
+        
+    from google import genai
+    from google.genai import types
+    
+    client = genai.Client(api_key=settings.GEMINI_API_KEY)
+    file_bytes = file.file.read()
+    
+    try:
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=[
+                types.Part.from_bytes(data=file_bytes, mime_type=file.content_type),
+                'Please provide a full transcript of this audio. Output ONLY the raw text without any summary or formatting.'
+            ]
+        )
+        return response.text
+    except Exception as e:
+        print(f"Gemini processing error: {e}")
+        raise ValueError("Failed to transcribe audio")
 
 def get_captures(db: Session, user: User, skip: int = 0, limit: int = 20):
     query = db.query(Capture).filter(Capture.user_id == user.id, Capture.deleted_at == None)

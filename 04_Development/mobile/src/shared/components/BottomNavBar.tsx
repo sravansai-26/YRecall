@@ -4,7 +4,7 @@ import Animated, { useAnimatedKeyboard, useAnimatedStyle, withTiming, interpolat
 import { useSegments } from 'expo-router';
 import { colors } from '../theme/colors';
 
-export type BottomNavRoute = 'home' | 'timeline' | 'ask' | 'search' | 'profile' | 'capture';
+export type BottomNavRoute = 'home' | 'timeline' | 'ask' | 'search' | 'profile' | 'settings' | 'capture';
 
 interface BottomNavBarProps {
   activeRoute: BottomNavRoute;
@@ -21,22 +21,9 @@ export default function BottomNavBar({
   // Only hide on the ask screen natively to prevent layout jumps on other tabs
   const isAskScreen = segments[segments.length - 1] === 'ask';
 
-  const animatedStyle = useAnimatedStyle(() => {
-    if (!isAskScreen) return {};
-    const keyboardHeight = keyboard.height.value;
-    
-    return {
-      transform: [{ 
-        translateY: interpolate(keyboardHeight, [0, 50], [0, 100], Extrapolation.CLAMP) 
-      }],
-      opacity: interpolate(keyboardHeight, [0, 50], [1, 0], Extrapolation.CLAMP),
-      position: keyboardHeight > 0 ? 'absolute' : 'relative',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      zIndex: -1,
-    };
-  });
+  // The animatedStyle was intentionally removed to ensure the tab bar is always visible.
+  // Using an empty array or object instead of animatedStyle to keep the JSX the same.
+  const animatedStyle = {};
 
   const routesLeft = [
     { id: 'home', label: 'Home', icon: 'home' },
@@ -45,7 +32,7 @@ export default function BottomNavBar({
 
   const routesRight = [
     { id: 'ask', label: 'Ask AI', icon: 'auto-awesome' },
-    { id: 'profile', label: 'Graph', icon: 'hub' },
+    { id: 'settings', label: 'Settings', icon: 'settings' },
   ] as const;
 
   const renderRoute = (route: any) => {
@@ -82,28 +69,34 @@ export default function BottomNavBar({
   };
 
   return (
-    <Animated.View style={[styles.container, animatedStyle]}>
-      <View style={styles.sideContainer}>
-        {routesLeft.map(renderRoute)}
-      </View>
-      
-      <Pressable 
-        style={styles.captureButtonWrapper}
-        onPress={() => onNavigate('capture')}
-      >
-        <View style={styles.captureButton}>
-          <MaterialIcons name="add" size={32} color={colors['on-primary']} />
+    <View style={styles.wrapper}>
+      <Animated.View style={[styles.container, animatedStyle]}>
+        <View style={styles.sideContainer}>
+          {routesLeft.map(renderRoute)}
         </View>
-      </Pressable>
-      
-      <View style={styles.sideContainer}>
-        {routesRight.map(renderRoute)}
-      </View>
-    </Animated.View>
+        <View style={styles.spacer} />
+        <View style={styles.sideContainer}>
+          {routesRight.map(renderRoute)}
+        </View>
+      </Animated.View>
+
+      <Animated.View style={[styles.captureButtonWrapper, animatedStyle]}>
+        <Pressable 
+          onPress={() => onNavigate('capture')}
+        >
+          <View style={styles.captureButton}>
+            <MaterialIcons name="add" size={32} color={colors['on-primary']} />
+          </View>
+        </Pressable>
+      </Animated.View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    backgroundColor: 'transparent',
+  },
   container: {
     width: '100%',
     flexDirection: 'row',
@@ -120,7 +113,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 12,
     elevation: 10,
-    position: 'relative',
+  },
+  spacer: {
+    width: 80, // Space for the floating button
   },
   sideContainer: {
     flex: 1,
@@ -128,10 +123,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   captureButtonWrapper: {
-    top: -24,
-    justifyContent: 'center',
+    position: 'absolute',
+    top: -28,
+    left: 0,
+    right: 0,
     alignItems: 'center',
-    zIndex: 10,
+    justifyContent: 'center',
+    zIndex: 99,
+    elevation: 99,
   },
   captureButton: {
     width: 60,
@@ -144,7 +143,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
-    elevation: 8,
+    elevation: 12,
   },
   navItem: {
     flexDirection: 'column',

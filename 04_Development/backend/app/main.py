@@ -18,9 +18,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from .modules.timeline.controller import router as timeline_router
+
 # Include Routers
 app.include_router(captures_router, prefix="/api/v1/captures", tags=["Captures"])
 app.include_router(ai_router, prefix="/api/v1/ai", tags=["AI"])
+app.include_router(timeline_router, prefix="/api/v1/timeline", tags=["Timeline"])
 
 @app.get("/health")
 def health_check():

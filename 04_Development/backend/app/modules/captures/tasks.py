@@ -1,4 +1,5 @@
 from google import genai
+from google.genai import types
 from sqlalchemy.orm import Session
 from uuid import UUID
 import traceback
@@ -20,7 +21,7 @@ def generate_and_store_embedding(db: Session, capture_id: UUID, text: str):
     try:
         client = genai.Client(api_key=settings.GEMINI_API_KEY)
         result = client.models.embed_content(
-            model="models/gemini-embedding-2",
+            model="gemini-embedding-2",
             contents=text
         )
         
@@ -35,6 +36,8 @@ def generate_and_store_embedding(db: Session, capture_id: UUID, text: str):
     except Exception as e:
         print(f"Error generating embedding for capture {capture_id}: {e}")
         db.rollback()
+        # Graceful failure: capture succeeds even if embedding fails
+        pass
 
 def process_url_capture(db: Session, capture_id: UUID):
     """
@@ -64,7 +67,7 @@ def process_url_capture(db: Session, capture_id: UUID):
             og_desc = soup.find("meta", property="og:description")
             desc = og_desc["content"] if og_desc else None
             
-            author_meta = soup.find("meta", name="author")
+            author_meta = soup.find("meta", attrs={"name": "author"})
             author = author_meta["content"] if author_meta else None
             
             # Update DB
@@ -141,9 +144,9 @@ def process_media_capture(db: Session, capture_id: UUID):
                 # If image, ask Gemini to describe it
                 if mime and mime.startswith('image'):
                     response = client.models.generate_content(
-                        model='models/gemini-2.5-flash',
+                        model='gemini-2.5-flash',
                         contents=[
-                            {'mime_type': mime, 'data': file_content},
+                            types.Part.from_bytes(data=file_content, mime_type=mime),
                             'Describe this image in detail and extract any text present in it.'
                         ]
                     )
@@ -153,9 +156,9 @@ def process_media_capture(db: Session, capture_id: UUID):
                 # If audio, ask Gemini to transcribe
                 elif mime and (mime.startswith('audio') or mime.startswith('video')):
                     response = client.models.generate_content(
-                        model='models/gemini-2.5-flash',
+                        model='gemini-2.5-flash',
                         contents=[
-                            {'mime_type': mime, 'data': file_content},
+                            types.Part.from_bytes(data=file_content, mime_type=mime),
                             'Please provide a full transcript of this audio/video, and then a brief summary.'
                         ]
                     )
@@ -165,9 +168,9 @@ def process_media_capture(db: Session, capture_id: UUID):
                 # If document/pdf
                 elif mime and 'pdf' in mime:
                     response = client.models.generate_content(
-                        model='models/gemini-2.5-flash',
+                        model='gemini-2.5-flash',
                         contents=[
-                            {'mime_type': mime, 'data': file_content},
+                            types.Part.from_bytes(data=file_content, mime_type=mime),
                             'Extract the main text and summarize the document.'
                         ]
                     )

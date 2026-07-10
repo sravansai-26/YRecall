@@ -13,30 +13,46 @@ def chat_with_rag(db: Session, user: User, chat_req: ChatRequest) -> tuple[AICon
         
     client = genai.Client(api_key=settings.GEMINI_API_KEY)
     
-    # 1. Embed user message
-    embed_result = client.models.embed_content(
-        model="models/gemini-embedding-2",
-        contents=chat_req.message
-    )
-    user_query_embedding = embed_result.embeddings[0].values
-    
-    # 2. Retrieve top 5 most similar captures
-    results = db.query(
-        Capture, 
-        AIEmbedding,
-        AIEmbedding.embedding.cosine_distance(user_query_embedding).label("distance")
-    ).join(
-        AIEmbedding, Capture.id == AIEmbedding.capture_id
-    ).filter(
-        Capture.user_id == user.id,
-        Capture.deleted_at == None
-    ).order_by(
-        "distance"
-    ).limit(5).all()
+    # 1. Embed user message if there is text
+    results = []
+    if chat_req.message.strip():
+        embed_result = client.models.embed_content(
+            model="gemini-embedding-2",
+            contents=chat_req.message
+        )
+        user_query_embedding = embed_result.embeddings[0].values
+        
+        # 2. Retrieve top 5 most similar captures
+        results = db.query(
+            Capture, 
+            AIEmbedding,
+            AIEmbedding.embedding.cosine_distance(user_query_embedding).label("distance")
+        ).join(
+            AIEmbedding, Capture.id == AIEmbedding.capture_id
+        ).filter(
+            Capture.user_id == user.id,
+            Capture.deleted_at == None
+        ).order_by(
+            "distance"
+        ).limit(5).all()
     
     citations = []
     context_texts = []
+    
+    # 2.5 Fetch forcefully attached context (e.g. uploaded in chat box)
+    if chat_req.attached_capture_ids:
+        attached_captures = db.query(Capture).filter(
+            Capture.id.in_(chat_req.attached_capture_ids),
+            Capture.user_id == user.id
+        ).all()
+        for capture in attached_captures:
+            context_texts.append(f"[ATTACHED FILE] Date: {capture.created_at.isoformat()}\nContent: {capture.content_text}")
+
     for capture, embedding, distance in results:
+        # Skip if already attached
+        if chat_req.attached_capture_ids and capture.id in chat_req.attached_capture_ids:
+            continue
+            
         similarity_score = 1 - distance # Cosine similarity = 1 - Cosine distance
         citations.append(Citation(
             capture_id=capture.id,
@@ -77,7 +93,9 @@ ALWAYS cite the memories if you use them.
 """
     
     # 5. Generate response with Gemini
-    contents = past_messages + [{"role": "user", "parts": [{"text": chat_req.message}]}]
+    contents = past_messages
+    user_prompt = chat_req.message if chat_req.message.strip() else "Please analyze the attached context."
+    contents.append({"role": "user", "parts": [{"text": user_prompt}]})
     
     response = client.models.generate_content(
         model="gemini-2.5-flash",
@@ -92,7 +110,9 @@ ALWAYS cite the memories if you use them.
     user_msg = AIMessage(
         conversation_id=conversation_id,
         role="user",
-        content=chat_req.message
+        content=chat_req.message,
+        attachments=[str(aid) for aid in chat_req.attached_capture_ids] if chat_req.attached_capture_ids else None,
+        status="completed"
     )
     db.add(user_msg)
     

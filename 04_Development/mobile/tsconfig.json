@@ -3,10 +3,10 @@
   "compilerOptions": {
     "strict": true,
     "noUncheckedIndexedAccess": true,
-    "baseUrl": ".",
+    "module": "ESNext",
     "paths": {
       "@/*": [
-        "src/*"
+        "./src/*"
       ]
     }
   },

@@ -47,22 +47,29 @@ def get_current_user(
     if not firebase_uid:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token payload")
 
-    user = db.query(User).filter(User.firebase_uid == firebase_uid).first()
-    
-    # Auto-create user on first sign-in
-    if not user:
-        email = decoded_token.get("email")
-        display_name = decoded_token.get("name")
-        photo_url = decoded_token.get("picture")
+    try:
+        user = db.query(User).filter(User.firebase_uid == firebase_uid).first()
+        
+        # Auto-create user on first sign-in
+        if not user:
+            email = decoded_token.get("email")
+            display_name = decoded_token.get("name")
+            photo_url = decoded_token.get("picture")
 
-        user = User(
-            firebase_uid=firebase_uid,
-            email=email,
-            display_name=display_name,
-            photo_url=photo_url
+            user = User(
+                firebase_uid=firebase_uid,
+                email=email,
+                display_name=display_name,
+                photo_url=photo_url
+            )
+            db.add(user)
+            db.commit()
+            db.refresh(user)
+
+        return user
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Database error during user authentication."
         )
-        db.add(user)
-        db.commit()
-        db.refresh(user)
-
-    return user

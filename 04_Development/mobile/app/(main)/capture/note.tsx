@@ -31,9 +31,24 @@ export default function NoteCaptureScreen() {
         format: 'markdown'
       });
       console.log("Note saved successfully");
+      require('react-native').ToastAndroid?.show('Note saved successfully', require('react-native').ToastAndroid.SHORT);
       router.back();
     } catch (error) {
-      console.error('Failed to save note:', error);
+      console.error('Failed to save note to API, adding to offline queue:', error);
+      require('../../../src/modules/captures/store/useCaptureQueue').useCaptureQueue.getState().addToQueue({
+        id: Math.random().toString(36).substring(7),
+        type: 'note',
+        payload: {
+          title: title.trim() || null,
+          content_text: content.trim(),
+          rich_text: { raw: content.trim() },
+          format: 'markdown'
+        },
+        timestamp: Date.now(),
+        status: 'failed'
+      });
+      require('react-native').ToastAndroid?.show('Saved offline. Will sync when online.', require('react-native').ToastAndroid.LONG);
+      router.back();
     } finally {
       setIsSaving(false);
     }
@@ -69,7 +84,7 @@ export default function NoteCaptureScreen() {
                 <MaterialIcons name={isFavorite ? "favorite" : "favorite-outline"} size={22} color={isFavorite ? colors.error : colors['on-surface-variant']} />
               </Pressable>
               <Pressable onPress={handleSave} disabled={isSaving || !content.trim()}>
-                <Text className={`font-public-sans-medium text-base ${content.trim() && !isSaving ? 'text-primary' : 'text-neutral-500'}`}>
+                <Text className={`font-public-sans-medium text-base ${content.trim() && !isSaving ? 'text-primary' : 'text-on-surface-variant'}`}>
                   {isSaving ? 'Saving...' : 'Save'}
                 </Text>
               </Pressable>
@@ -83,7 +98,8 @@ export default function NoteCaptureScreen() {
         keyboardShouldPersistTaps="handled"
       >
         <TextInput
-          className="text-3xl font-public-sans-bold text-white mb-4"
+          className="text-3xl font-public-sans-bold mb-4"
+          style={{ color: colors['on-surface'] }}
           placeholder="Title"
           placeholderTextColor={colors['on-surface-variant']}
           value={title}
@@ -93,7 +109,8 @@ export default function NoteCaptureScreen() {
         />
         
         <TextInput
-          className="text-lg font-public-sans text-neutral-200 min-h-[300px]"
+          className="text-lg font-public-sans min-h-[300px]"
+          style={{ color: colors['on-surface'] }}
           placeholder="Start typing..."
           placeholderTextColor={colors['on-surface-variant']}
           value={content}
@@ -106,7 +123,7 @@ export default function NoteCaptureScreen() {
       
       {/* Markdown Toolbar */}
       <View 
-        className="flex-row items-center justify-between px-4 py-3 bg-neutral-900 border-t border-neutral-800"
+        className="flex-row items-center justify-between px-4 py-3 bg-surface-container border-t border-outline-variant/20"
         style={{ paddingBottom: Math.max(insets.bottom, 12) }}
       >
         <Pressable onPress={() => insertMarkdown('**', '**')} className="p-2">

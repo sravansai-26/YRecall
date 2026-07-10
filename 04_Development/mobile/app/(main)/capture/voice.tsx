@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, StyleSheet, Pressable, Text, Animated } from 'react-native';
-import { Audio } from 'expo-av';
+import { useAudioRecorder, useAudioPlayer, RecordingPresets, requestRecordingPermissionsAsync, AudioModule } from 'expo-audio';
 import { Stack as ExpoStack, useRouter } from 'expo-router';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { capturesApi } from '../../../src/modules/captures/services/api';
 import { colors } from '../../../src/shared/theme/colors';
@@ -11,8 +11,8 @@ export default function VoiceCaptureScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   
-  const [recording, setRecording] = useState<Audio.Recording | null>(null);
-  const [sound, setSound] = useState<Audio.Sound | null>(null);
+  const recorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
+  
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [duration, setDuration] = useState(0);
@@ -22,11 +22,12 @@ export default function VoiceCaptureScreen() {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const pulseAnim = useRef(new Animated.Value(1)).current;
 
+  // For playback
+  const player = useAudioPlayer(audioUri);
+
   useEffect(() => {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
-      if (recording) recording.stopAndUnloadAsync();
-      if (sound) sound.unloadAsync();
     };
   }, []);
 
@@ -39,22 +40,18 @@ export default function VoiceCaptureScreen() {
   const startRecording = async () => {
     try {
       if (audioUri) setAudioUri(null);
-      if (sound) {
-        await sound.unloadAsync();
-        setSound(null);
-      }
       
-      await Audio.requestPermissionsAsync();
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
+      const { granted } = await requestRecordingPermissionsAsync();
+      if (!granted) return;
+
+      await AudioModule.setAudioModeAsync({
+        allowsRecording: true,
+        playsInSilentMode: true,
       });
 
-      const { recording } = await Audio.Recording.createAsync(
-        Audio.RecordingOptionsPresets.HIGH_QUALITY
-      );
+      await recorder.prepareToRecordAsync();
+      recorder.record();
       
-      setRecording(recording);
       setIsRecording(true);
       setIsPaused(false);
       setDuration(0);
@@ -75,10 +72,9 @@ export default function VoiceCaptureScreen() {
     }
   };
 
-  const pauseRecording = async () => {
-    if (!recording) return;
+  const pauseRecording = () => {
     try {
-      await recording.pauseAsync();
+      recorder.pause();
       setIsPaused(true);
       if (timerRef.current) clearInterval(timerRef.current);
       pulseAnim.stopAnimation();
@@ -87,10 +83,9 @@ export default function VoiceCaptureScreen() {
     }
   };
   
-  const resumeRecording = async () => {
-    if (!recording) return;
+  const resumeRecording = () => {
     try {
-      await recording.startAsync();
+      recorder.record();
       setIsPaused(false);
       timerRef.current = setInterval(() => {
         setDuration(prev => prev + 1);
@@ -108,30 +103,26 @@ export default function VoiceCaptureScreen() {
   };
 
   const stopRecording = async () => {
-    if (!recording) return;
     try {
       setIsRecording(false);
       setIsPaused(false);
       if (timerRef.current) clearInterval(timerRef.current);
       pulseAnim.stopAnimation();
       
-      await recording.stopAndUnloadAsync();
-      await Audio.setAudioModeAsync({ allowsRecordingIOS: false });
+      recorder.stop();
       
-      const uri = recording.getURI();
+      const uri = recorder.uri;
       setAudioUri(uri);
-      setRecording(null);
+      
     } catch (err) {
       console.error('Failed to stop recording', err);
     }
   };
 
-  const playRecording = async () => {
+  const playRecording = () => {
     if (!audioUri) return;
     try {
-      const { sound } = await Audio.Sound.createAsync({ uri: audioUri });
-      setSound(sound);
-      await sound.playAsync();
+      player.play();
     } catch (err) {
       console.error('Failed to play sound', err);
     }
@@ -140,10 +131,6 @@ export default function VoiceCaptureScreen() {
   const deleteRecording = () => {
     setAudioUri(null);
     setDuration(0);
-    if (sound) {
-      sound.unloadAsync();
-      setSound(null);
-    }
   };
 
   const handleUpload = async () => {
@@ -165,9 +152,11 @@ export default function VoiceCaptureScreen() {
       });
       
       console.log('Voice upload successful');
+      require('react-native').ToastAndroid?.show('Voice note saved successfully', require('react-native').ToastAndroid.SHORT);
       router.back();
     } catch (error) {
       console.error('Failed to upload voice:', error);
+      require('react-native').ToastAndroid?.show('Failed to save voice note', require('react-native').ToastAndroid.LONG);
     } finally {
       setIsUploading(false);
     }

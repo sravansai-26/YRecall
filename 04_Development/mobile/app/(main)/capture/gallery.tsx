@@ -28,7 +28,7 @@ export default function GalleryCaptureScreen() {
   const pickImages = async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        mediaTypes: ['images', 'videos'],
         allowsMultipleSelection: true,
         quality: 1,
       });
@@ -106,7 +106,10 @@ export default function GalleryCaptureScreen() {
     setIsUploading(false);
     
     if (!hasErrors) {
+      require('react-native').ToastAndroid?.show('Gallery items uploaded successfully', require('react-native').ToastAndroid.SHORT);
       setTimeout(() => router.back(), 500);
+    } else {
+      require('react-native').ToastAndroid?.show('Some items failed to upload', require('react-native').ToastAndroid.LONG);
     }
   };
 

@@ -31,10 +31,6 @@ export default function TabsLayout() {
           headerShown: false,
         }}
         tabBar={({ state }) => {
-          // PREMIUM EXPERIENCE FIX: If the keyboard is up, completely unmount the bar 
-          // so the active screen's composer floats flush on top of the keyboard keys.
-          if (isKeyboardVisible) return null;
-
           const routeName = state.routes[state.index]?.name || '';
           
           let activeRoute: BottomNavRoute = 'home';
@@ -42,6 +38,7 @@ export default function TabsLayout() {
           else if (routeName.startsWith('search')) activeRoute = 'search';
           else if (routeName.startsWith('recall')) activeRoute = 'timeline';
           else if (routeName.startsWith('profile')) activeRoute = 'profile';
+          else if (routeName.startsWith('settings')) activeRoute = 'settings';
           
           return (
             <BottomNavBar
@@ -51,12 +48,12 @@ export default function TabsLayout() {
                   captureHubRef.current?.present();
                   return;
                 }
-                
-                if (route === 'home') router.replace('/(main)/(tabs)');
-                if (route === 'ask') router.replace('/(main)/(tabs)/ask');
-                if (route === 'timeline') router.replace('/(main)/(tabs)/recall');
-                if (route === 'profile') router.replace('/(main)/(tabs)/profile');
-                if (route === 'search') router.replace('/(main)/(tabs)/search');
+                if (route === 'home') router.navigate('/(main)/(tabs)');
+                if (route === 'ask') router.navigate('/(main)/(tabs)/ask');
+                if (route === 'timeline') router.navigate('/(main)/(tabs)/recall');
+                if (route === 'profile') router.navigate('/(main)/(tabs)/profile');
+                if (route === 'search') router.navigate('/(main)/(tabs)/search');
+                if (route === 'settings') router.navigate('/(main)/(tabs)/settings');
               }}
             />
           );

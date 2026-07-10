@@ -18,8 +18,8 @@ export default function LinkCaptureScreen() {
   // Auto-paste URL if available
   useEffect(() => {
     const checkClipboard = async () => {
-      const hasUrl = await Clipboard.hasUrlAsync();
-      if (hasUrl) {
+      const hasStr = await Clipboard.hasStringAsync();
+      if (hasStr) {
         const str = await Clipboard.getStringAsync();
         if (str && (str.startsWith('http://') || str.startsWith('https://'))) {
           setUrl(str);

@@ -38,7 +38,7 @@ export default function KnowledgeGraphHub() {
         </View>
       </View>
 
-      <ScrollView className="flex-1 w-full max-w-7xl mx-auto px-margin-mobile pt-6" contentContainerStyle={{ paddingBottom: 100 }}>
+      <ScrollView className="flex-1 w-full max-w-7xl mx-auto px-margin-mobile pt-6" contentContainerStyle={{ paddingBottom: 24 }}>
         {/* Search & Header */}
         <View className="mb-xl flex-col md:flex-row md:items-end justify-between gap-6">
           <View>

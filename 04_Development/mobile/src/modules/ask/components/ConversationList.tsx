@@ -1,4 +1,4 @@
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { useRef, useEffect } from 'react';
 import { FlashList } from '@shopify/flash-list';
 import { ChatBubble } from './ChatBubble';
@@ -55,7 +55,7 @@ export function ConversationList({
   }
 
   const renderItem = ({ item }: { item: any }) => {
-    if (item.status === 'sending') {
+    if (item.status === 'sending' || item.status === 'processing') {
       return (
         <View style={styles.messageWrapper}>
           <TypingBubble />
@@ -69,7 +69,15 @@ export function ConversationList({
           role={item.role as 'user' | 'assistant'}
           content={item.content}
           citations={item.citations}
+          timestamp={item.created_at}
+          onRetry={() => {}}
+          onEdit={() => {}}
         />
+        {item.status === 'failed' && (
+          <View style={styles.failedStatus}>
+            <Text style={styles.failedText}>Failed to send.</Text>
+          </View>
+        )}
       </View>
     );
   };
@@ -101,9 +109,17 @@ const styles = StyleSheet.create({
   contentContainerStyle: {
     paddingHorizontal: 16,
     paddingTop: 24,
-    paddingBottom: 24,
+    paddingBottom: 80,
   },
   messageWrapper: {
     marginBottom: 24,
+  },
+  failedStatus: {
+    marginTop: 4,
+    paddingHorizontal: 16,
+  },
+  failedText: {
+    color: 'red',
+    fontSize: 12,
   }
 });

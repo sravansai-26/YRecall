@@ -17,37 +17,47 @@ export default function LocationCaptureScreen() {
   const [isUploading, setIsUploading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  useEffect(() => {
-    (async () => {
-      setIsFetching(true);
-      try {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          setErrorMsg('Permission to access location was denied');
-          setIsFetching(false);
-          return;
-        }
-
-        let loc = await Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.High
-        });
-        setLocation(loc);
-
-        let reverseGeocode = await Location.reverseGeocodeAsync({
-          latitude: loc.coords.latitude,
-          longitude: loc.coords.longitude
-        });
-
-        if (reverseGeocode && reverseGeocode.length > 0) {
-          setAddress(reverseGeocode[0] || null);
-        }
-      } catch (err) {
-        setErrorMsg('Failed to get location');
-        console.error(err);
-      } finally {
+  const fetchLocation = async () => {
+    setIsFetching(true);
+    setErrorMsg(null);
+    try {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
         setIsFetching(false);
+        return;
       }
-    })();
+
+      // Add a 15 second timeout for getCurrentPositionAsync
+      const locPromise = Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.High
+      });
+      
+      const timeoutPromise = new Promise<Location.LocationObject>((_, reject) => 
+        setTimeout(() => reject(new Error('Location request timed out')), 15000)
+      );
+
+      const loc = await Promise.race([locPromise, timeoutPromise]);
+      setLocation(loc);
+
+      let reverseGeocode = await Location.reverseGeocodeAsync({
+        latitude: loc.coords.latitude,
+        longitude: loc.coords.longitude
+      });
+
+      if (reverseGeocode && reverseGeocode.length > 0) {
+        setAddress(reverseGeocode[0] || null);
+      }
+    } catch (err) {
+      setErrorMsg('Failed to get location. Ensure GPS is enabled.');
+      console.error(err);
+    } finally {
+      setIsFetching(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLocation();
   }, []);
 
   const handleSave = async () => {
@@ -119,6 +129,9 @@ export default function LocationCaptureScreen() {
           <View style={styles.errorContainer}>
             <Ionicons name="warning-outline" size={32} color={colors.error} style={{ marginBottom: 12 }} />
             <Text style={styles.errorText}>{errorMsg}</Text>
+            <Pressable onPress={fetchLocation} style={{ marginTop: 16, padding: 8, backgroundColor: colors.primary, borderRadius: 8 }}>
+              <Text style={{ color: 'white', fontFamily: 'PublicSans_600SemiBold' }}>Retry</Text>
+            </Pressable>
           </View>
         ) : location ? (
           <View style={styles.infoContainer}>

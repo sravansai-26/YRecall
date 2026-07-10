@@ -1,9 +1,11 @@
-import { View, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
+import { View, KeyboardAvoidingView, Platform, StyleSheet, Keyboard } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAskStore } from '../../../../src/shared/store/useAskStore';
 import { useMessages, useChat } from '../../../../src/shared/hooks/useAskAI';
 import { useState, useRef } from 'react';
 
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { HistoryModal, HistoryModalRef } from './HistoryModal';
 import { ChatHeader } from './ChatHeader';
 import { ConversationList } from './ConversationList';
 import { Composer, ComposerRef } from './Composer';
@@ -14,12 +16,14 @@ export function AskScreen() {
   const [optimisticUserMsg, setOptimisticUserMsg] = useState<string | null>(null);
   const composerRef = useRef<ComposerRef>(null);
   
+  const historyModalRef = useRef<HistoryModalRef>(null);
+  
   const { data: messages } = useMessages(activeConversationId);
   const { mutate: sendMessage, isPending } = useChat();
 
-  const handleSend = (messageText: string) => {
+  const handleSend = (messageText: string, attachedCaptureIds: string[] = []) => {
     setOptimisticUserMsg(messageText);
-    sendMessage({ message: messageText, conversationId: activeConversationId }, {
+    sendMessage({ message: messageText, conversationId: activeConversationId, attachedCaptureIds }, {
       onSuccess: (data) => {
         if (!activeConversationId) {
           setActiveConversationId(data.conversation_id);
@@ -54,32 +58,51 @@ export function AskScreen() {
     }, 100);
   };
 
+  const handleOpenHistory = () => {
+    Keyboard.dismiss();
+    setTimeout(() => {
+      historyModalRef.current?.present();
+    }, 150);
+  };
+
+  const handleSelectConversation = (id: string) => {
+    setActiveConversationId(id);
+  };
+
   return (
     <View style={[styles.container, { paddingTop: insets.top }]} className="bg-background">
-      <ChatHeader onNewChat={handleNewChat} />
+      <ChatHeader onNewChat={handleNewChat} onOpenHistory={handleOpenHistory} />
       
       <KeyboardAvoidingView 
+        style={styles.flexContainer}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        // FIX: Remove the 80px offset on Android so it sits perfectly flush (0 gap)
         keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
-        style={styles.container}
       >
         <View style={styles.contentContainer}>
           <ConversationList 
             messages={messages || []}
             optimisticUserMsg={optimisticUserMsg}
             isPending={isPending}
-            onSuggestionSelect={handleSend}
+            onSuggestionSelect={(text) => handleSend(text)}
           />
           <Composer ref={composerRef} onSend={handleSend} isPending={isPending} />
         </View>
       </KeyboardAvoidingView>
+
+      <HistoryModal 
+        ref={historyModalRef} 
+        onSelectConversation={handleSelectConversation}
+        onNewChat={handleNewChat}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  flexContainer: {
     flex: 1,
   },
   contentContainer: {

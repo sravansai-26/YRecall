@@ -95,9 +95,11 @@ export default function CameraCaptureScreen() {
         file: file,
       });
       console.log('Upload successful');
+      require('react-native').ToastAndroid?.show('Photo uploaded successfully', require('react-native').ToastAndroid.SHORT);
       router.back();
     } catch (error) {
       console.error('Failed to upload photo:', error);
+      require('react-native').ToastAndroid?.show('Failed to upload photo', require('react-native').ToastAndroid.LONG);
     } finally {
       setIsUploading(false);
     }
@@ -130,38 +132,38 @@ export default function CameraCaptureScreen() {
         facing={facing} 
         enableTorch={flash === 'on'}
         ref={cameraRef}
-      >
-        {/* Top Controls */}
-        <View style={[styles.topControls, { paddingTop: insets.top + 10 }]}>
-          <Pressable onPress={() => router.back()} style={styles.iconBtn}>
-            <Ionicons name="close" size={28} color="white" />
-          </Pressable>
-          <Pressable onPress={toggleFlash} style={styles.iconBtn}>
-            <Ionicons 
-              name={flash === 'on' ? 'flash' : flash === 'auto' ? 'flash-outline' : 'flash-off'} 
-              size={24} 
-              color="white" 
-            />
-          </Pressable>
-        </View>
+      />
+      
+      {/* Top Controls */}
+      <View style={[styles.topControls, { paddingTop: insets.top + 10 }]} pointerEvents="box-none">
+        <Pressable onPress={() => router.back()} style={styles.iconBtn}>
+          <Ionicons name="close" size={28} color="white" />
+        </Pressable>
+        <Pressable onPress={toggleFlash} style={styles.iconBtn}>
+          <Ionicons 
+            name={flash === 'on' ? 'flash' : flash === 'auto' ? 'flash-outline' : 'flash-off'} 
+            size={24} 
+            color="white" 
+          />
+        </Pressable>
+      </View>
 
-        {/* Bottom Controls */}
-        <View style={[styles.bottomControls, { paddingBottom: insets.bottom + 40 }]}>
-          <View style={styles.placeholderBtn} />
-          
-          <Pressable 
-            onPress={takePicture} 
-            style={[styles.captureBtn, isCapturing && { opacity: 0.5 }]}
-            disabled={isCapturing}
-          >
-            <View style={styles.captureBtnInner} />
-          </Pressable>
-          
-          <Pressable onPress={toggleCameraFacing} style={styles.iconBtn}>
-            <Ionicons name="camera-reverse-outline" size={32} color="white" />
-          </Pressable>
-        </View>
-      </CameraView>
+      {/* Bottom Controls */}
+      <View style={[styles.bottomControls, { paddingBottom: insets.bottom + 40 }]} pointerEvents="box-none">
+        <View style={styles.placeholderBtn} />
+        
+        <Pressable 
+          onPress={takePicture} 
+          style={[styles.captureBtn, isCapturing && { opacity: 0.5 }]}
+          disabled={isCapturing}
+        >
+          <View style={styles.captureBtnInner} />
+        </Pressable>
+        
+        <Pressable onPress={toggleCameraFacing} style={styles.iconBtn}>
+          <Ionicons name="camera-reverse-outline" size={32} color="white" />
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -187,15 +189,25 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   topControls: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
+    zIndex: 10,
   },
   bottomControls: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
     paddingHorizontal: 20,
+    zIndex: 10,
   },
   previewControls: {
     position: 'absolute',

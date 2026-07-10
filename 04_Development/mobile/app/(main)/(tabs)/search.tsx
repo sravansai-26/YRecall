@@ -33,7 +33,7 @@ export default function SearchIndex() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView className="flex-1 w-full max-w-3xl mx-auto px-margin-mobile pt-lg" contentContainerStyle={{ paddingBottom: 100 }}>
+      <ScrollView className="flex-1 w-full max-w-3xl mx-auto px-margin-mobile pt-lg" contentContainerStyle={{ paddingBottom: 24 }}>
         {/* Search Bar */}
         <View className="mb-xl relative">
           <View className="absolute inset-y-0 left-0 pl-md justify-center z-10">
