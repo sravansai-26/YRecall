@@ -8,7 +8,7 @@ from ..captures.models import Capture
 from .models import Entity, Relationship
 
 client = genai.Client(api_key=settings.GEMINI_API_KEY)
-MODEL_NAME = "gemini-2.5-flash"
+MODEL_NAME = "gemini-flash-lite-latest"
 
 def resolve_entities_and_relationships(db: Session, capture_id: str, user_id: str):
     """
@@ -60,12 +60,12 @@ def resolve_entities_and_relationships(db: Session, capture_id: str, user_id: st
         if not name: continue
         
         # Check if exists (simple exact match for now, or alias match)
-        existing = db.query(Entity).filter(Entity.user_id == user_id, Entity.name.ilike(name)).first()
+        existing = db.query(Entity).filter(Entity.user_id == str(user_id), Entity.name.ilike(name)).first()
         if existing:
             entity_map[name] = existing.id
         else:
             new_ent = Entity(
-                user_id=user_id,
+                user_id=str(user_id),
                 name=name,
                 type=ent_data.get("type", "Unknown"),
                 description=ent_data.get("description", "")
@@ -104,27 +104,38 @@ def resolve_entities_and_relationships(db: Session, capture_id: str, user_id: st
 
 from ...core.database import SessionLocal
 
-async def async_extract_with_retry(capture_id: str, user_id: str, max_retries: int = 3):
+# Global lock to strictly enforce the Gemini Free Tier limit (15 Requests Per Minute)
+extraction_lock = asyncio.Lock()
+
+async def async_extract_with_retry(capture_id: str, user_id: str, max_retries: int = 4):
     """
     Async wrapper for BackgroundTasks that retries if extraction fails.
+    Uses a global rate-limiter queue to guarantee we never hit 429 RESOURCE_EXHAUSTED.
     """
     attempt = 0
     while attempt < max_retries:
         try:
             from fastapi.concurrency import run_in_threadpool
             
-            def run_sync():
-                db = SessionLocal()
-                try:
-                    resolve_entities_and_relationships(db, capture_id, user_id)
-                finally:
-                    db.close()
-                    
-            await run_in_threadpool(run_sync)
+            # This lock ensures only ONE background extraction runs at a time globally across the app
+            async with extraction_lock:
+                def run_sync():
+                    db = SessionLocal()
+                    try:
+                        resolve_entities_and_relationships(db, capture_id, user_id)
+                    finally:
+                        db.close()
+                        
+                await run_in_threadpool(run_sync)
+                
+                # To guarantee we never exceed 15 requests/min (which is 1 request every 4 seconds)
+                # we force a 4.5 second cooldown before releasing the lock for the next task.
+                await asyncio.sleep(4.5)
+                
             break
         except Exception as e:
             attempt += 1
             print(f"Extraction failed for {capture_id}, attempt {attempt}/{max_retries}. Error: {e}")
             if attempt >= max_retries:
                 break
-            await asyncio.sleep(2 ** attempt)
+            await asyncio.sleep(15 * attempt)

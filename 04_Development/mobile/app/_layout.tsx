@@ -65,6 +65,7 @@ function RootNavigationHandler() {
 
 import { QueryProvider } from '../src/providers/QueryProvider';
 import { setupApiInterceptors } from '../src/services/api/interceptors';
+import { StatusBar } from 'expo-status-bar';
 
 // Initialize API interceptors to attach Firebase tokens
 setupApiInterceptors();
@@ -89,6 +90,7 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
+      <StatusBar style="dark" backgroundColor="transparent" translucent={true} />
       <SafeAreaProvider>
         <BottomSheetModalProvider>
           <QueryProvider>

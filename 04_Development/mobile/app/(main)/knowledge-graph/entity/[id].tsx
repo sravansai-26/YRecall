@@ -22,7 +22,7 @@ export default function EntityDetailScreen() {
     try {
       setLoading(true);
       const res = await graphApi.getEntityDetail(id);
-      setEntity(res.data);
+      setEntity(res.data.data);
       setError(false);
     } catch (e) {
       console.error(e);

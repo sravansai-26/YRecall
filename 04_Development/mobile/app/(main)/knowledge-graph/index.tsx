@@ -21,7 +21,7 @@ export default function KnowledgeGraphScreen() {
     try {
       setLoading(true);
       const res = await graphApi.getNetwork();
-      setData(res.data);
+      setData(res.data.data);
       setError(false);
     } catch (e) {
       console.error(e);

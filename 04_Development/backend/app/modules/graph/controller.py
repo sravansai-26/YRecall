@@ -17,7 +17,7 @@ def get_knowledge_graph(
 ):
     # Todo: implement 5-minute Redis caching if requested, 
     # but currently using simple direct DB fetch.
-    network = service.get_network(db, current_user.id)
+    network = service.get_network(db, str(current_user.id))
     return {
         "success": True,
         "message": "Graph network retrieved successfully.",
@@ -30,7 +30,7 @@ def get_entity_detail(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    entity = service.get_entity(db, current_user.id, entity_id)
+    entity = service.get_entity(db, str(current_user.id), entity_id)
     if not entity:
         raise HTTPException(status_code=404, detail="Entity not found")
         
