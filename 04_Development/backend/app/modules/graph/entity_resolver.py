@@ -123,6 +123,10 @@ async def async_extract_with_retry(capture_id: str, user_id: str, max_retries: i
                     db = SessionLocal()
                     try:
                         resolve_entities_and_relationships(db, capture_id, user_id)
+                        
+                        # Phase 7: Run Proactive Intelligence Engine for Notifications
+                        from ..notifications.intelligence import evaluate_capture_for_notifications
+                        evaluate_capture_for_notifications(db, capture_id, user_id)
                     finally:
                         db.close()
                         

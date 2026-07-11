@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { colors } from '../../../../src/shared/theme/colors';
@@ -12,7 +12,7 @@ interface TimelineCardProps {
   onPress: (capture: Capture) => void;
 }
 
-export function TimelineCard({ capture, onPress }: TimelineCardProps) {
+export const TimelineCard = memo(({ capture, onPress }: TimelineCardProps) => {
   const time = format(new Date(capture.created_at), 'h:mm a');
 
   const getIcon = () => {
@@ -219,4 +219,4 @@ export function TimelineCard({ capture, onPress }: TimelineCardProps) {
       </TouchableOpacity>
     </View>
   );
-}
+});

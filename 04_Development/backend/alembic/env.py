@@ -27,6 +27,7 @@ from app.modules.captures import models as captures_models
 from app.modules.ai import models as ai_models
 from app.modules.home import models as home_models
 from app.modules.graph import models as graph_models
+from app.modules.notifications import models as notifications_models
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,

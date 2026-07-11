@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Image, Share, Alert } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Screen, TopAppBar } from '../../../src/shared/components';
 import { colors } from '../../../src/shared/theme/colors';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useCapture, useRelatedMemories } from '../../../src/shared/hooks/useTimeline';
+import { useCapture, useRelatedMemories, useDeleteCapture } from '../../../src/shared/hooks/useTimeline';
 import { format } from 'date-fns';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { AudioPlayer } from '../../../src/shared/components/AudioPlayer';
@@ -15,8 +15,47 @@ export default function MemoryDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: capture, isLoading, error } = useCapture(id || '');
   const { data: relatedData } = useRelatedMemories(id || '');
+  const deleteMutation = useDeleteCapture();
   
   const [isFullscreenImage, setIsFullscreenImage] = useState(false);
+
+  const handleShare = async () => {
+    if (!capture) return;
+    try {
+      const message = capture.summary || capture.content_text || capture.title || 'Check out this memory from YRecall!';
+      const url = capture.file_url || undefined;
+      await Share.share({
+        message: url ? `${message}\n${url}` : message,
+        title: capture.title || 'YRecall Memory',
+      });
+    } catch (error: any) {
+      Alert.alert('Error sharing', error.message);
+    }
+  };
+
+  const handleDelete = () => {
+    Alert.alert(
+      "Delete Memory",
+      "Are you sure you want to delete this memory? This cannot be undone.",
+      [
+        { text: "Cancel", style: "cancel" },
+        { 
+          text: "Delete", 
+          style: "destructive",
+          onPress: () => {
+            deleteMutation.mutate(id as string, {
+              onSuccess: () => {
+                router.back();
+              },
+              onError: () => {
+                Alert.alert("Error", "Failed to delete the memory.");
+              }
+            });
+          }
+        }
+      ]
+    );
+  };
 
   if (isLoading) {
     return (
@@ -64,11 +103,15 @@ export default function MemoryDetailScreen() {
         </TouchableOpacity>
         <Text className="font-title-sm font-bold text-primary">Memory Detail</Text>
         <View className="flex-row items-center gap-2">
-          <TouchableOpacity className="w-10 h-10 items-center justify-center rounded-full bg-surface-container">
+          <TouchableOpacity onPress={handleShare} className="w-10 h-10 items-center justify-center rounded-full bg-surface-container">
             <MaterialIcons name="share" size={20} color={colors.primary} />
           </TouchableOpacity>
-          <TouchableOpacity className="w-10 h-10 items-center justify-center rounded-full bg-error-container">
-            <MaterialIcons name="delete-outline" size={20} color={colors.error} />
+          <TouchableOpacity onPress={handleDelete} disabled={deleteMutation.isPending} className="w-10 h-10 items-center justify-center rounded-full bg-error-container">
+            {deleteMutation.isPending ? (
+               <ActivityIndicator size="small" color={colors.error} />
+            ) : (
+               <MaterialIcons name="delete-outline" size={20} color={colors.error} />
+            )}
           </TouchableOpacity>
         </View>
       </View>

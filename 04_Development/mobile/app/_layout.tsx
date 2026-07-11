@@ -24,10 +24,14 @@ configureReanimatedLogger({
 
 SplashScreen.preventAutoHideAsync();
 
+import { usePushNotifications } from '../src/shared/hooks/usePushNotifications';
+
 function RootNavigationHandler() {
   const { user, isLoading, hasCompletedOnboarding } = useAuthStore();
   const segments = useSegments();
   const router = useRouter();
+  
+  const { expoPushToken } = usePushNotifications();
 
   useEffect(() => {
     if (isLoading) return;

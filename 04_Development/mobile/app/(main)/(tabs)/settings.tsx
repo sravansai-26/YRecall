@@ -196,6 +196,21 @@ export default function SettingsHub() {
               
               <View className="h-[1px] bg-outline-variant/20 mx-6" />
               
+              <TouchableOpacity onPress={() => router.push('/settings/notifications')} className="w-full flex-row items-center justify-between p-6 bg-white ">
+                <View className="flex-row items-center gap-4">
+                  <View className="w-10 h-10 items-center justify-center rounded-xl bg-surface-container">
+                    <MaterialIcons name="notifications" size={24} color={colors['on-surface-variant']} />
+                  </View>
+                  <View className="flex-col">
+                    <Text className="font-body-md text-base font-bold text-primary">Notifications</Text>
+                    <Text className="font-caption-sm text-xs text-on-surface-variant">Configure push alerts and reminders</Text>
+                  </View>
+                </View>
+                <MaterialIcons name="chevron-right" size={24} color={colors.outline} />
+              </TouchableOpacity>
+              
+              <View className="h-[1px] bg-outline-variant/20 mx-6" />
+              
               <TouchableOpacity onPress={() => router.push('/settings/storage')} className="w-full flex-row items-center justify-between p-6 bg-white ">
                 <View className="flex-row items-center gap-4">
                   <View className="w-10 h-10 items-center justify-center rounded-xl bg-surface-container">

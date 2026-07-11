@@ -81,6 +81,10 @@ export default function RecallScreen() {
     return result;
   }, [data]);
 
+  const handleCardPress = React.useCallback((c: Capture) => {
+    router.push(`/(main)/memory/${c.id}` as any);
+  }, [router]);
+
   const renderItem = ({ item }: { item: TimelineSection }) => {
     // ...
     if (item.type === 'header') {
@@ -93,7 +97,7 @@ export default function RecallScreen() {
     return (
       <TimelineCard 
         capture={item.capture} 
-        onPress={(c) => router.push(`/(main)/memory/${c.id}` as any)} 
+        onPress={handleCardPress} 
       />
     );
   };

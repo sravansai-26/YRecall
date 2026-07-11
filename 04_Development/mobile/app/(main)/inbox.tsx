@@ -1,158 +1,179 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Screen } from '../../src/shared/components';
 import { colors } from '../../src/shared/theme/colors';
 import { useRouter } from 'expo-router';
-import { useAuthStore } from '../../src/shared/store/useAuthStore';
+import { FlashList } from '@shopify/flash-list';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiClient } from '../../src/services/api/client';
+import { format } from 'date-fns';
 
 export default function InboxScreen() {
   const router = useRouter();
-  const { user } = useAuthStore();
-  const [activeFilter, setActiveFilter] = useState('All');
+  const queryClient = useQueryClient();
+
+  const { data: notificationsData, isLoading, refetch, isRefetching } = useQuery({
+    queryKey: ['notifications'],
+    queryFn: async () => {
+      const { data } = await apiClient.get('/notifications');
+      return data;
+    },
+  });
+
+  const markReadMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await apiClient.post(`/notifications/${id}/read`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+    }
+  });
+  
+  const dismissMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await apiClient.delete(`/notifications/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+    }
+  });
+
+  const handlePress = (item: any) => {
+    if (!item.is_read) {
+      markReadMutation.mutate(item.id);
+    }
+    
+    if (item.action_type === 'open_capture' && item.related_capture_id) {
+      router.push(`/(main)/memory/${item.related_capture_id}`);
+    } else if (item.action_type === 'open_graph') {
+      router.push(`/(main)/(tabs)/knowledge-graph`);
+    }
+  };
+
+  const getIcon = (type: string) => {
+    switch (type) {
+      case 'reminder': return 'alarm';
+      case 'suggestion': return 'lightbulb';
+      case 'insight': return 'auto-awesome';
+      case 'duplicate': return 'control-point-duplicate';
+      default: return 'notifications';
+    }
+  };
+
+  const flattenedData = React.useMemo(() => {
+    if (!notificationsData?.data) return [];
+    
+    const { isToday, isYesterday, isThisWeek, isThisMonth } = require('date-fns');
+    
+    const grouped: Record<string, any[]> = {
+      'Today': [], 'Yesterday': [], 'This Week': [], 'This Month': [], 'Earlier': []
+    };
+    
+    notificationsData.data.forEach((item: any) => {
+      const date = new Date(item.created_at);
+      if (isToday(date)) grouped['Today']!.push(item);
+      else if (isYesterday(date)) grouped['Yesterday']!.push(item);
+      else if (isThisWeek(date)) grouped['This Week']!.push(item);
+      else if (isThisMonth(date)) grouped['This Month']!.push(item);
+      else grouped['Earlier']!.push(item);
+    });
+    
+    const result: any[] = [];
+    ['Today', 'Yesterday', 'This Week', 'This Month', 'Earlier'].forEach(key => {
+      if (grouped[key]!.length > 0) {
+        result.push({ type: 'header', title: key });
+        grouped[key]!.forEach(notif => result.push({ type: 'item', item: notif }));
+      }
+    });
+    return result;
+  }, [notificationsData]);
+
+  const renderItem = ({ item }: { item: any }) => {
+    if (item.type === 'header') {
+      return (
+        <View className="py-2 mt-2 mb-1 px-2">
+          <Text className="font-title-sm text-on-surface-variant font-bold">{item.title}</Text>
+        </View>
+      );
+    }
+    
+    const notif = item.item;
+    return (
+      <TouchableOpacity 
+        activeOpacity={0.7} 
+        onPress={() => handlePress(notif)}
+        className={`mb-3 p-4 rounded-2xl border ${!notif.is_read ? 'bg-primary-container/20 border-primary/20' : 'bg-surface-container-lowest border-outline-variant/20'}`}
+      >
+        <View className="flex-row gap-4">
+          <View className={`w-12 h-12 rounded-full items-center justify-center ${!notif.is_read ? 'bg-primary text-white' : 'bg-surface-container-high'}`}>
+            <MaterialIcons name={getIcon(notif.type)} size={24} color={!notif.is_read ? colors['on-primary'] : colors.primary} />
+          </View>
+          <View className="flex-1">
+            <View className="flex-row justify-between items-start mb-1">
+              <Text className={`font-title-sm flex-1 mr-2 ${!notif.is_read ? 'font-bold text-on-surface' : 'text-on-surface-variant'}`} numberOfLines={1}>
+                {notif.title}
+              </Text>
+              <Text className="text-[10px] text-on-surface-variant uppercase tracking-wider">
+                {format(new Date(notif.created_at), 'h:mm a')}
+              </Text>
+            </View>
+            <Text className={`font-body-sm leading-tight ${!notif.is_read ? 'text-on-surface' : 'text-on-surface-variant/80'}`}>
+              {notif.content}
+            </Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  const hasNotifications = flattenedData.length > 0;
 
   return (
     <Screen scrollable={false}>
-      {/* Top App Bar */}
-      <View className="flex-row justify-between items-center h-16 px-margin-mobile bg-surface/80 z-40">
-        <View className="flex-row items-center gap-4">
-          <TouchableOpacity 
-            className="p-2 rounded-full "
-            onPress={() => router.back()}
-          >
-            <MaterialIcons name="arrow-back" size={24} color={colors['on-surface-variant']} />
+      {/* Header */}
+      <View className="flex-row items-center justify-between px-margin-mobile h-14 bg-surface border-b border-outline-variant/10">
+        <View className="flex-row items-center gap-3">
+          <TouchableOpacity onPress={() => router.back()} className="w-10 h-10 items-center justify-center rounded-full bg-surface-container">
+            <MaterialIcons name="arrow-back" size={24} color={colors.primary} />
           </TouchableOpacity>
-          <Text className="font-headline-md font-bold text-[32px] text-primary tracking-tight">Inbox</Text>
+          <Text className="font-title-sm font-bold text-primary">Inbox</Text>
         </View>
-        <View className="flex-row items-center gap-2">
-          <TouchableOpacity onPress={() => router.push('/(modals)/search')} className="p-2 rounded-full ">
-            <MaterialIcons name="search" size={24} color={colors['on-surface-variant']} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push('/(main)/profile-edit')} className="w-8 h-8 rounded-full overflow-hidden border border-outline-variant bg-surface-container-high items-center justify-center">
-            {user?.photoURL ? (
-              <Image source={{ uri: user.photoURL }} className="w-full h-full" />
-            ) : (
-              <Text className="font-bold text-primary text-[10px]">{user?.displayName?.charAt(0) || 'U'}</Text>
-            )}
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity 
+          className="bg-surface-container-high px-4 py-2 rounded-full"
+          onPress={async () => {
+            await apiClient.post('/notifications/read-all');
+            queryClient.invalidateQueries({ queryKey: ['notifications'] });
+          }}
+        >
+          <Text className="text-on-surface-variant font-label-sm font-bold">Mark all read</Text>
+        </TouchableOpacity>
       </View>
 
-      <ScrollView className="flex-1 w-full max-w-7xl mx-auto px-margin-mobile pb-32" contentContainerStyle={{ paddingBottom: 100 }}>
-        {/* Tabs / Filters */}
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row py-lg mb-4">
-          {['All', 'AI Insights', 'System'].map((filter) => (
-            <TouchableOpacity 
-              key={filter}
-              onPress={() => setActiveFilter(filter)} 
-              className={`px-lg py-2 rounded-full mr-2 ${activeFilter === filter ? 'bg-primary' : 'bg-surface-container'}`}
-            >
-              <Text className={`font-title-sm text-[14px] ${activeFilter === filter ? 'text-on-primary' : 'text-on-surface-variant'}`}>{filter}</Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-
-        {/* Section 1: Proactive Memories */}
-        <View className="mb-xxl">
-          <View className="flex-row items-center gap-2 mb-lg">
-            <MaterialIcons name="auto-awesome" size={24} color={colors.secondary} />
-            <Text className="font-title-sm text-[12px] text-primary uppercase tracking-widest font-bold">Proactive Memories</Text>
+      <View className="flex-1 w-full max-w-7xl mx-auto">
+        {isLoading ? (
+          <View className="flex-1 items-center justify-center">
+            <ActivityIndicator size="large" color={colors.primary} />
           </View>
-          
-          <View className="flex-col md:flex-row gap-md">
-            {/* AI Card 1 */}
-            <View className="flex-1 p-lg rounded-[24px] bg-white border border-secondary/20 shadow-sm relative overflow-hidden">
-              <View className="absolute top-4 right-4 bg-secondary-container px-3 py-1 rounded-full">
-                <Text className="text-on-secondary-container text-[11px] font-bold uppercase tracking-tighter">Priority</Text>
-              </View>
-              <View className="flex-col gap-base">
-                <View className="flex-row items-center gap-2 mb-2">
-                  <MaterialIcons name="smart-toy" size={20} color={colors.secondary} />
-                  <Text className="font-title-sm text-[14px] text-secondary">AI Insight</Text>
-                </View>
-                <Text className="font-body-md text-on-surface leading-relaxed">
-                  You have a meeting with <Text className="font-bold text-primary">Sarah Jenkins</Text> in 30 mins. Re-surfacing notes from your last sync regarding the <Text className="italic">Q4 Roadmap</Text>.
-                </Text>
-                <View className="mt-base flex-row gap-2 mt-4">
-                  <TouchableOpacity onPress={() => require('react-native').Alert.alert('Coming Soon', 'Backend integration pending')} className="px-4 py-2 rounded-xl bg-primary">
-                    <Text className="text-on-primary text-[13px] font-medium">View Notes</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => require('react-native').Alert.alert('Coming Soon', 'Backend integration pending')} className="px-4 py-2 rounded-xl bg-surface-container">
-                    <Text className="text-on-surface-variant text-[13px] font-medium">Dismiss</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-
-            {/* AI Card 2 */}
-            <View className="flex-1 p-lg rounded-[24px] bg-white border border-secondary/20 shadow-sm mt-4 md:mt-0">
-              <View className="flex-col gap-base">
-                <View className="flex-row items-center gap-2 mb-2">
-                  <MaterialIcons name="psychology" size={20} color={colors.secondary} />
-                  <Text className="font-title-sm text-[14px] text-secondary">Pattern Recognition</Text>
-                </View>
-                <Text className="font-body-md text-on-surface leading-relaxed">
-                  Based on your recent browsing, I've compiled a summary of <Text className="font-bold text-primary">Quantum Computing breakthroughs</Text> mentioned in your saved articles.
-                </Text>
-                <View className="mt-base mt-4">
-                  <View className="flex-row -space-x-2">
-                    <View className="w-8 h-8 rounded-full border-2 border-white bg-surface-container-high items-center justify-center">
-                      <MaterialIcons name="article" size={14} color={colors['on-surface-variant']} />
-                    </View>
-                    <View className="w-8 h-8 rounded-full border-2 border-white bg-surface-container-high items-center justify-center">
-                      <MaterialIcons name="link" size={14} color={colors['on-surface-variant']} />
-                    </View>
-                  </View>
-                </View>
-              </View>
-            </View>
+        ) : !hasNotifications ? (
+          <View className="flex-1 items-center justify-center pt-20 px-6">
+            <MaterialIcons name="notifications-none" size={64} color={colors.outline} className="mb-4 opacity-50" />
+            <Text className="font-title-sm text-on-surface-variant text-center">You're all caught up!</Text>
+            <Text className="font-body-md text-on-surface-variant/70 text-center mt-2">
+              The AI Intelligence Engine will notify you here when there are important reminders or insights.
+            </Text>
           </View>
-        </View>
-
-        {/* Section 2: Recent Notifications */}
-        <View>
-          <View className="flex-row items-center justify-between mb-lg">
-            <Text className="font-title-sm text-[12px] text-on-surface-variant uppercase tracking-widest font-bold">Recent Notifications</Text>
-            <TouchableOpacity onPress={() => require('react-native').Alert.alert('Coming Soon', 'Backend integration pending')}>
-              <Text className="text-[12px] font-medium text-primary ">Mark all as read</Text>
-            </TouchableOpacity>
-          </View>
-          
-          <View className="flex-col gap-2">
-            {[
-              {
-                icon: 'cloud-done', color: 'primary', bg: 'surface-container',
-                title: 'Cloud Sync Complete', time: '2m ago',
-                desc: '42 new memories successfully encrypted and synced to your private vault.'
-              },
-              {
-                icon: 'storage', color: 'error', bg: 'error-container',
-                title: 'Storage at 80%', time: '1h ago',
-                desc: 'Your local memory buffer is reaching capacity. Consider offloading to Cold Storage.'
-              },
-              {
-                icon: 'history-edu', color: 'primary', bg: 'surface-container',
-                title: 'New Memory Captured', time: '3h ago',
-                desc: 'Automatic journal entry created for "Afternoon Coffee at Blue Bottle".'
-              }
-            ].map((notif, index) => (
-              <TouchableOpacity onPress={() => require('react-native').Alert.alert('Coming Soon', 'Backend integration pending')} key={index} className="flex-row items-center gap-lg p-lg rounded-[24px] bg-white/50 mb-2">
-                <View className={`w-12 h-12 rounded-full bg-${notif.bg} items-center justify-center shrink-0`}>
-                  <MaterialIcons name={notif.icon as any} size={24} color={colors[notif.color as keyof typeof colors] as string} />
-                </View>
-                <View className="flex-1 ml-4">
-                  <View className="flex-row justify-between items-center mb-1">
-                    <Text className="font-title-sm text-[16px] text-primary">{notif.title}</Text>
-                    <Text className="text-[12px] text-on-surface-variant">{notif.time}</Text>
-                  </View>
-                  <Text className="text-[14px] text-on-surface-variant">{notif.desc}</Text>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
-
-      </ScrollView>
+        ) : (
+          <FlashList
+            data={flattenedData}
+            refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor={colors.primary} />}
+            keyExtractor={(item: any, index: number) => item.type === 'header' ? `header-${item.title}` : `notif-${item.item.id}`}
+            contentContainerStyle={{ padding: 16, paddingBottom: 100 }}
+            estimatedItemSize={100}
+            renderItem={renderItem}
+          />
+        )}
+      </View>
     </Screen>
   );
 }

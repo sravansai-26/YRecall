@@ -140,3 +140,17 @@ def get_capture(
         "message": "Operation completed successfully.",
         "data": CaptureResponse.model_validate(capture).model_dump()
     }
+
+@router.delete("/{id}", response_model=dict)
+def delete_capture(
+    id: uuid.UUID,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    success = service.delete_capture(db, current_user, id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Capture not found or already deleted")
+    return {
+        "success": True,
+        "message": "Capture deleted successfully."
+    }

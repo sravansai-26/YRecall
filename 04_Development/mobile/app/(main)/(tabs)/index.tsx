@@ -6,6 +6,7 @@ import { colors } from '../../../src/shared/theme/colors';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { useAuthStore } from '../../../src/shared/store/useAuthStore';
 import { useDashboard, useGenerateReflection } from '../../../src/modules/home/hooks';
+import { useNotifications } from '../../../src/shared/hooks/useNotifications';
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '../../../src/services/api/client';
 
@@ -14,17 +15,41 @@ export default function HomeDashboard() {
   const { user } = useAuthStore();
   const [backPressCount, setBackPressCount] = useState(0);
 
+  const getGreeting = () => {
+    try {
+      const formatter = new Intl.DateTimeFormat('en-US', {
+        hour: 'numeric',
+        hour12: false,
+        timeZone: 'Asia/Kolkata',
+      });
+      const hour = parseInt(formatter.format(new Date()), 10);
+      if (hour < 12) return 'Good Morning,';
+      if (hour < 17) return 'Good Afternoon,';
+      return 'Good Evening,';
+    } catch (e) {
+      // Fallback if environment doesn't support timeZone
+      const hour = new Date().getHours();
+      if (hour < 12) return 'Good Morning,';
+      if (hour < 17) return 'Good Afternoon,';
+      return 'Good Evening,';
+    }
+  };
+
   const { data: dashboardData, isLoading, refetch, isRefetching } = useDashboard();
   const { mutate: generateReflection, isPending: isReflecting } = useGenerateReflection();
+  const { data: notificationsData } = useNotifications();
 
-  // Fetch recent memories to fallback if dashboard is loading or empty
+  // Fetch only the 3 most recent memories to speed up home screen loading
   const { data: capturesData, isLoading: capturesLoading } = useQuery({
-    queryKey: ['captures'],
+    queryKey: ['captures', 'recent'],
     queryFn: async () => {
-      const res = await apiClient.get('/captures');
+      const res = await apiClient.get('/captures?limit=3');
       return res.data;
     },
+    staleTime: 60000,
   });
+
+  const unreadCount = notificationsData?.meta?.unread_count || 0;
 
   useFocusEffect(
     useCallback(() => {
@@ -58,16 +83,19 @@ export default function HomeDashboard() {
               )}
             </TouchableOpacity>
             <View className="flex-col">
-              <Text className="font-label-xs text-on-surface-variant">Good Morning,</Text>
+              <Text className="font-label-xs text-on-surface-variant">{getGreeting()}</Text>
               <Text className="font-title-sm text-[16px] font-bold text-primary">{user?.displayName?.split(' ')[0] || 'User'}</Text>
             </View>
           </View>
           <View className="flex-row items-center gap-2">
             <TouchableOpacity
-              className="w-10 h-10 items-center justify-center rounded-full"
-              onPress={() => router.push('/inbox')}
+              className="w-10 h-10 items-center justify-center rounded-full relative"
+              onPress={() => router.push('/(main)/inbox' as any)}
             >
               <MaterialIcons name="notifications" size={24} color={colors.primary} />
+              {unreadCount > 0 && (
+                <View className="absolute top-2 right-2 w-3 h-3 rounded-full bg-error border-2 border-surface" />
+              )}
             </TouchableOpacity>
           </View>
         </View>

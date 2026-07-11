@@ -198,3 +198,18 @@ def get_capture(db: Session, user: User, capture_id: uuid.UUID) -> Optional[Capt
         Capture.user_id == user.id, 
         Capture.deleted_at == None
     ).first()
+
+def delete_capture(db: Session, user: User, capture_id: uuid.UUID) -> bool:
+    from datetime import datetime
+    capture = db.query(Capture).filter(
+        Capture.id == capture_id, 
+        Capture.user_id == user.id, 
+        Capture.deleted_at == None
+    ).first()
+    
+    if not capture:
+        return False
+        
+    capture.deleted_at = datetime.utcnow()
+    db.commit()
+    return True

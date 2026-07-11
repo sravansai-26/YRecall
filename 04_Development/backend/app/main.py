@@ -5,6 +5,7 @@ from .modules.ai.controller import router as ai_router
 from .modules.timeline.controller import router as timeline_router
 from .modules.home.controller import router as home_router
 from .modules.graph.controller import router as graph_router
+from .modules.notifications.controller import router as notifications_router
 
 app = FastAPI(
     title="YRecall API",
@@ -27,6 +28,7 @@ app.include_router(ai_router, prefix="/api/v1/ai", tags=["AI"])
 app.include_router(timeline_router, prefix="/api/v1/timeline", tags=["Timeline"])
 app.include_router(home_router, prefix="/api/v1/home", tags=["Home"])
 app.include_router(graph_router, prefix="/api/v1/graph", tags=["Graph"])
+app.include_router(notifications_router, prefix="/api/v1/notifications", tags=["Notifications"])
 
 @app.get("/health")
 def health_check():

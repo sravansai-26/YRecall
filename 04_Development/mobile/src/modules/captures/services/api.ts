@@ -81,5 +81,9 @@ export const capturesApi = {
   createLocation: async (payload: CreateLocationPayload) => {
     const response = await apiClient.post('/captures/location', payload);
     return response.data;
+  },
+  deleteCapture: async (id: string) => {
+    const response = await apiClient.delete(`/captures/${id}`);
+    return response.data;
   }
 };

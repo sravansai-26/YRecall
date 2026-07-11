@@ -63,6 +63,20 @@ def chat_with_rag(db: Session, user: User, chat_req: ChatRequest) -> tuple[AICon
     
     context_str = "\n\n".join(context_texts) if context_texts else "No specific past context found."
     
+    # 2.6 Fetch recent unread notifications for context
+    from ..notifications.models import Notification
+    recent_notifs = db.query(Notification).filter(
+        Notification.user_id == user.id,
+        Notification.is_read == False,
+        Notification.is_archived == False
+    ).order_by(Notification.created_at.desc()).limit(10).all()
+    
+    if recent_notifs:
+        notif_context = "\n--- RECENT UNREAD NOTIFICATIONS ---\n"
+        for notif in recent_notifs:
+            notif_context += f"Type: {notif.type}, Title: {notif.title}, Content: {notif.content}\n"
+        context_str += notif_context
+    
     # 3. Handle Conversation
     conversation_id = chat_req.conversation_id
     past_messages = []

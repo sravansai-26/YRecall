@@ -47,6 +47,8 @@ export function useTimeline(filters: TimelineFilters = {}) {
       return undefined;
     },
     placeholderData: (previousData) => previousData,
+    staleTime: 60000, // 1 minute
+    gcTime: 300000, // 5 minutes
   });
 }
 
@@ -79,5 +81,20 @@ export function useRelatedMemories(id: string) {
       return data.data;
     },
     enabled: !!id
+  });
+}
+
+export function useDeleteCapture() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { data } = await apiClient.delete(`/captures/${id}`);
+      return data;
+    },
+    onSuccess: (_, deletedId) => {
+      queryClient.invalidateQueries({ queryKey: ['timeline'] });
+      queryClient.invalidateQueries({ queryKey: ['capture', deletedId] });
+      queryClient.invalidateQueries({ queryKey: ['timeline-stats'] });
+    }
   });
 }
