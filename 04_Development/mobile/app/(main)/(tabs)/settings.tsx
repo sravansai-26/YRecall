@@ -54,22 +54,20 @@ export default function SettingsHub() {
                   )}
                 </View>
               </View>
-              <View className="flex-col">
-                <View className="flex-row items-center gap-2 mb-1">
-                  <Text className="font-headline-md text-3xl font-bold text-primary leading-tight">{user?.displayName || 'User'}</Text>
-                  <MaterialIcons name="edit" size={20} color={colors.outline} />
-                </View>
-                <Text className="font-body-md text-base text-on-surface-variant mb-1">{user?.email || 'No email'}</Text>
-                <TouchableOpacity onPress={() => router.push('/settings/billing')} className="mt-1">
+                <View className="flex-col">
+                  <Text className="font-headline-md text-3xl font-bold text-primary leading-tight mb-1">{user?.displayName || 'User'}</Text>
+                  <View className="flex-row items-center gap-2 mb-1">
+                    <Text className="font-body-md text-base text-on-surface-variant">{user?.email || 'No email'}</Text>
+                    <View className="-mt-1">
+                      <MaterialIcons name="edit" size={16} color={colors.outline} />
+                    </View>
+                  </View>
+                  <TouchableOpacity onPress={() => router.push('/settings/billing')} className="mt-1">
                   <Text className="font-body-sm text-sm text-secondary font-medium underline">
                     {isPremium ? `Premium Member` : `Basic User - Upgrade to Premium/Pro Plans`}
                   </Text>
                 </TouchableOpacity>
               </View>
-            </View>
-            <View className="self-start md:self-auto">
-              {/* Optional: Add chevron or leave blank since edit is now next to name */}
-              <MaterialIcons name="chevron-right" size={28} color={colors.outline} />
             </View>
           </TouchableOpacity>
         </View>

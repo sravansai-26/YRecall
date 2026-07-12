@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Alert, ActivityIndicator, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 import RazorpayCheckout from 'react-native-razorpay';
@@ -8,11 +8,11 @@ import { format } from 'date-fns';
 import { Screen } from '../../../src/shared/components';
 import { colors } from '../../../src/shared/theme/colors';
 import { useAuthStore } from '../../../src/shared/store/useAuthStore';
-import { 
-  usePlans, 
-  useSubscription, 
-  useCreateOrder, 
-  useVerifyPayment, 
+import {
+  usePlans,
+  useSubscription,
+  useCreateOrder,
+  useVerifyPayment,
   useCancelSubscription,
   useInvoices,
   SubscriptionPlan
@@ -28,33 +28,40 @@ export default function BillingScreen() {
   const { data: plans, isLoading: isLoadingPlans } = usePlans();
   const { data: subscription, isLoading: isLoadingSub } = useSubscription();
   const { data: invoices, isLoading: isLoadingInvoices } = useInvoices();
-  
+
   const createOrder = useCreateOrder();
   const verifyPayment = useVerifyPayment();
   const cancelSubscription = useCancelSubscription();
-  
   const { isPremium } = useEntitlements();
 
+  const handleBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace('/');
+    }
+  };
+
   const handleSubscribe = async (plan: SubscriptionPlan) => {
-    if (plan.id === 'free') return; 
-    
+    if (plan.id === 'free') return;
+
     if (!RazorpayCheckout || !RazorpayCheckout.open) {
       Alert.alert(
-        "Client Build Required", 
-        "Payment integration requires a custom dev client build (expo run:android/ios). It will not work in standard Expo Go."
+        'Client Build Required',
+        'Payment integration requires a custom dev client build. It will not work in standard Expo Go.'
       );
       return;
     }
 
     try {
-      const order = await createOrder.mutateAsync({ 
-        plan_id: plan.id, 
-        billing_cycle: billingCycle 
+      const order = await createOrder.mutateAsync({
+        plan_id: plan.id,
+        billing_cycle: billingCycle
       });
 
       const options = {
         description: `Upgrade to ${plan.name}`,
-        image: 'https://your-logo-url.com/logo.png', // Fallback logo
+        image: 'https://your-logo-url.com/logo.png',
         currency: order.currency,
         key: order.key_id,
         amount: order.amount,
@@ -68,23 +75,25 @@ export default function BillingScreen() {
         theme: { color: colors.primary }
       };
 
-      RazorpayCheckout.open(options).then(async (data: any) => {
-        try {
-          await verifyPayment.mutateAsync({
-            plan_id: plan.id,
-            razorpay_payment_id: data.razorpay_payment_id,
-            razorpay_order_id: data.razorpay_order_id,
-            razorpay_signature: data.razorpay_signature
-          });
-          Alert.alert('Success', `You are now on the ${plan.name} plan!`);
-        } catch (error) {
-          Alert.alert('Error', 'Payment verification failed on our servers.');
-        }
-      }).catch((error: any) => {
-        if (error.code !== 0) {
-            Alert.alert('Payment Failed', error.description || 'Unknown error');
-        }
-      });
+      RazorpayCheckout.open(options)
+        .then(async (data: any) => {
+          try {
+            await verifyPayment.mutateAsync({
+              plan_id: plan.id,
+              razorpay_payment_id: data.razorpay_payment_id,
+              razorpay_order_id: data.razorpay_order_id,
+              razorpay_signature: data.razorpay_signature
+            });
+            Alert.alert('Success', `You are now on the ${plan.name} plan!`);
+          } catch (error) {
+            Alert.alert('Error', 'Payment verification failed on our servers.');
+          }
+        })
+        .catch((error: any) => {
+          if (error?.code !== 0) {
+            Alert.alert('Payment Failed', error?.description || 'Unknown error');
+          }
+        });
     } catch (error) {
       Alert.alert('Error', 'Could not initiate payment. Please try again later.');
     }
@@ -93,11 +102,11 @@ export default function BillingScreen() {
   const handleCancel = () => {
     Alert.alert(
       'Cancel Subscription',
-      'Are you sure you want to cancel your subscription? You will lose access to premium features at the end of your billing cycle.',
+      'Are you sure you want to cancel your subscription?',
       [
         { text: 'No, Keep it', style: 'cancel' },
-        { 
-          text: 'Yes, Cancel', 
+        {
+          text: 'Yes, Cancel',
           style: 'destructive',
           onPress: async () => {
             try {
@@ -116,31 +125,25 @@ export default function BillingScreen() {
     try {
       setDownloadingId(invoiceId);
       const url = `${process.env.EXPO_PUBLIC_API_URL}/billing/invoices/${invoiceId}/download`;
-      
-      const fileUri = FileSystem.documentDirectory + `YRecall_Invoice_${invoiceId.slice(0,8)}.pdf`;
-      
-      // Need Firebase token to authenticate download request
+      const fileUri = FileSystem.documentDirectory + `YRecall_Invoice_${invoiceId.slice(0, 8)}.pdf`;
       const token = await user?.getIdToken();
-      
+
       const { uri } = await FileSystem.downloadAsync(url, fileUri, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+        headers: { Authorization: `Bearer ${token}` }
       });
-      
+
       try {
         const Sharing = require('expo-sharing');
         if (await Sharing.isAvailableAsync()) {
           await Sharing.shareAsync(uri);
         } else {
-          Alert.alert("Downloaded", `Invoice saved successfully to ${uri}`);
+          Alert.alert('Downloaded', `Invoice saved successfully to ${uri}`);
         }
       } catch (e) {
-        // Native module missing or sharing failed
-        Alert.alert("Downloaded", `Invoice saved successfully to ${uri}`);
+        Alert.alert('Downloaded', `Invoice saved successfully to ${uri}`);
       }
     } catch (error) {
-      Alert.alert("Download Failed", "There was an error downloading the invoice. Please check your connection.");
+      Alert.alert('Download Failed', 'There was an error downloading the invoice.');
     } finally {
       setDownloadingId(null);
     }
@@ -149,7 +152,7 @@ export default function BillingScreen() {
   if (isLoadingPlans || isLoadingSub) {
     return (
       <Screen>
-        <View className="flex-1 justify-center items-center bg-surface">
+        <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
       </Screen>
@@ -158,118 +161,104 @@ export default function BillingScreen() {
 
   const currentPlanName = subscription?.plan?.name || 'Free Plan';
   const status = subscription?.status || 'active';
-  
+
   return (
     <Screen>
-      <View className="flex-1 bg-surface">
-        {/* Header */}
-        <View className="w-full sticky top-0 z-40 bg-surface flex-row items-center px-4 h-16 border-b border-outline-variant/10">
-          <TouchableOpacity onPress={() => router.back()} className="p-2 -ml-2 rounded-full">
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={handleBack} style={styles.backButton}>
             <MaterialIcons name="arrow-back" size={24} color={colors.primary} />
           </TouchableOpacity>
-          <Text className="font-headline-sm text-xl text-primary font-bold ml-2">Billing & Subscription</Text>
+          <Text style={styles.headerTitle}>Billing & Subscription</Text>
         </View>
 
-        <ScrollView className="flex-1 px-margin-mobile md:px-margin-desktop mt-4">
-          
-          {/* Current Plan Section */}
-          <View className="bg-surface-container-lowest rounded-3xl p-6 shadow-sm border border-outline-variant/20 mb-8">
-            <Text className="font-label-sm text-xs text-on-surface-variant font-bold uppercase tracking-widest mb-2">Current Plan</Text>
-            <View className="flex-row items-center justify-between">
+        <ScrollView style={styles.scrollContainer}>
+          <View style={styles.currentPlanCard}>
+            <Text style={styles.sectionLabel}>CURRENT PLAN</Text>
+            <View style={styles.currentPlanRow}>
               <View>
-                <Text className="font-headline-md text-3xl font-bold text-primary mb-1">{currentPlanName}</Text>
+                <Text style={styles.currentPlanName}>{currentPlanName}</Text>
                 {subscription?.cancel_at_period_end ? (
-                  <Text className="font-body-sm text-sm text-error">Cancels at period end</Text>
+                  <Text style={styles.statusError}>Cancels at period end</Text>
                 ) : status !== 'active' ? (
-                  <Text className="font-body-sm text-sm text-error capitalize">{status}</Text>
+                  <Text style={styles.statusError}>{status.toUpperCase()}</Text>
                 ) : (
-                  <Text className="font-body-sm text-sm text-secondary">Active</Text>
+                  <Text style={styles.statusActive}>Active</Text>
                 )}
               </View>
               {isPremium && status === 'active' && !subscription?.cancel_at_period_end && (
-                <TouchableOpacity 
-                  onPress={handleCancel}
-                  className="bg-surface-container px-4 py-2 rounded-full border border-outline-variant/20"
-                >
-                  <Text className="font-label-md text-sm text-on-surface font-medium">Cancel Plan</Text>
+                <TouchableOpacity onPress={handleCancel} style={styles.cancelButton}>
+                  <Text style={styles.cancelButtonText}>Cancel Plan</Text>
                 </TouchableOpacity>
               )}
             </View>
           </View>
 
-          {/* Upgrade Section */}
-          <View className="mb-8">
-            <Text className="font-label-sm text-xs text-on-surface-variant font-bold uppercase tracking-widest mb-4 ml-2">Available Plans</Text>
-            
-            <View className="flex-row bg-surface-container rounded-full p-1 mb-6 border border-outline-variant/20 mx-1">
-              <TouchableOpacity 
+          <View style={styles.plansSection}>
+            <Text style={styles.sectionLabel}>AVAILABLE PLANS</Text>
+
+            <View style={styles.billingCycleToggle}>
+              <TouchableOpacity
                 onPress={() => setBillingCycle('monthly')}
-                className={`flex-1 py-2.5 items-center rounded-full ${billingCycle === 'monthly' ? 'bg-white shadow-sm' : ''}`}
+                style={[styles.toggleButton, billingCycle === 'monthly' && styles.toggleButtonActive]}
               >
-                <Text className={`font-label-md text-sm ${billingCycle === 'monthly' ? 'text-primary font-bold' : 'text-on-surface-variant font-medium'}`}>Monthly</Text>
+                <Text style={[styles.toggleText, billingCycle === 'monthly' && styles.toggleTextActive]}>Monthly</Text>
               </TouchableOpacity>
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={() => setBillingCycle('yearly')}
-                className={`flex-1 py-2.5 items-center rounded-full ${billingCycle === 'yearly' ? 'bg-primary shadow-sm' : ''}`}
+                style={[styles.toggleButton, billingCycle === 'yearly' && styles.toggleButtonActivePrimary]}
               >
-                <Text className={`font-label-md text-sm ${billingCycle === 'yearly' ? 'text-white font-bold' : 'text-on-surface-variant font-medium'}`}>Yearly (Save 20%)</Text>
+                <Text style={[styles.toggleText, billingCycle === 'yearly' && styles.toggleTextActiveWhite]}>Yearly (Save 20%)</Text>
               </TouchableOpacity>
             </View>
 
             {plans?.map((plan) => {
               if (plan.id === 'free') return null;
-              
+
               const isCurrentPlan = subscription?.plan_id === plan.id && status === 'active';
               const price = billingCycle === 'yearly' ? plan.price_yearly : plan.price_monthly;
-              const perMonthText = billingCycle === 'yearly' ? `₹${(price/12).toFixed(0)}/mo billed annually` : `₹${price}/mo`;
-              
+              const perMonthText = billingCycle === 'yearly' ? `₹${(price / 12).toFixed(0)}/mo billed annually` : `₹${price}/mo`;
+
               return (
-                <View 
-                  key={plan.id} 
-                  className={`bg-surface-container-lowest rounded-3xl p-6 mb-4 border shadow-sm mx-1 ${isCurrentPlan ? 'border-primary' : 'border-outline-variant/20'}`}
-                >
-                  <View className="flex-row justify-between items-start mb-2">
-                    <Text className="font-headline-sm text-2xl font-bold text-primary">{plan.name}</Text>
+                <View key={plan.id} style={[styles.planCard, isCurrentPlan && styles.planCardCurrent]}>
+                  <View style={styles.planHeader}>
+                    <Text style={styles.planTitle}>{plan.name}</Text>
                     {plan.id === 'pro' && (
-                      <View className="bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
-                         <Text className="font-label-xs text-primary text-[10px] font-bold uppercase">Best Value</Text>
+                      <View style={styles.badge}>
+                        <Text style={styles.badgeText}>BEST VALUE</Text>
                       </View>
                     )}
                   </View>
-                  
-                  <Text className="font-body-sm text-sm text-on-surface-variant mb-6">{plan.description}</Text>
-                  
-                  <View className="flex-row items-end mb-6">
-                    <Text className="font-headline-lg text-4xl font-black text-primary">₹{price}</Text>
-                    <Text className="font-body-md text-base text-on-surface-variant ml-1 mb-1">{billingCycle === 'monthly' ? '/mo' : '/yr'}</Text>
+
+                  <Text style={styles.planDescription}>{plan.description}</Text>
+
+                  <View style={styles.priceRow}>
+                    <Text style={styles.priceAmount}>₹{price}</Text>
+                    <Text style={styles.pricePeriod}>{billingCycle === 'monthly' ? '/mo' : '/yr'}</Text>
                   </View>
-                  
-                  <Text className="font-body-xs text-xs text-secondary mb-6 -mt-4">{perMonthText}</Text>
-                  
-                  <View className="mb-6 space-y-3">
+
+                  <Text style={styles.perMonthText}>{perMonthText}</Text>
+
+                  <View style={styles.featuresList}>
                     {plan.features?.map((feature, idx) => (
-                      <View key={idx} className="flex-row items-center">
+                      <View key={idx} style={styles.featureItem}>
                         <Ionicons name="checkmark-circle" size={20} color={colors.primary} />
-                        <Text className="font-body-md text-sm text-on-surface ml-3">{feature.replace(/_/g, ' ')}</Text>
+                        <Text style={styles.featureText}>{feature.replace(/_/g, ' ')}</Text>
                       </View>
                     ))}
                   </View>
-                  
+
                   <TouchableOpacity
                     disabled={isCurrentPlan || createOrder.isPending}
                     onPress={() => handleSubscribe(plan)}
-                    className={`py-4 rounded-2xl items-center shadow-sm ${
-                      isCurrentPlan 
-                        ? 'bg-surface-container' 
-                        : 'bg-primary'
-                    }`}
+                    style={[styles.subscribeButton, isCurrentPlan && styles.subscribeButtonDisabled]}
                   >
                     {createOrder.isPending ? (
-                       <ActivityIndicator color="white" />
+                      <ActivityIndicator color="white" />
                     ) : (
-                       <Text className={`font-label-lg text-base font-bold ${isCurrentPlan ? 'text-on-surface-variant' : 'text-white'}`}>
-                         {isCurrentPlan ? 'Current Plan' : `Upgrade to ${plan.name}`}
-                       </Text>
+                      <Text style={[styles.subscribeButtonText, isCurrentPlan && styles.subscribeButtonTextDisabled]}>
+                        {isCurrentPlan ? 'Current Plan' : `Upgrade to ${plan.name}`}
+                      </Text>
                     )}
                   </TouchableOpacity>
                 </View>
@@ -277,35 +266,32 @@ export default function BillingScreen() {
             })}
           </View>
 
-          {/* Purchase History & Invoices */}
-          <View className="mb-10 mx-1">
-            <Text className="font-label-sm text-xs text-on-surface-variant font-bold uppercase tracking-widest mb-4 ml-1">Purchase History & Invoices</Text>
-            <View className="bg-surface-container-lowest rounded-3xl p-2 shadow-sm border border-outline-variant/20">
-              
+          <View style={styles.invoicesSection}>
+            <Text style={styles.sectionLabel}>PURCHASE HISTORY</Text>
+            <View style={styles.invoicesCard}>
               {isLoadingInvoices ? (
-                <View className="py-6 items-center">
-                   <ActivityIndicator color={colors.primary} />
+                <View style={styles.invoicesEmpty}>
+                  <ActivityIndicator color={colors.primary} />
                 </View>
               ) : !invoices || invoices.length === 0 ? (
-                <View className="py-8 items-center">
-                  <MaterialIcons name="receipt-long" size={32} color={colors.outline} className="mb-2" />
-                  <Text className="font-body-sm text-sm text-on-surface-variant">No invoices available</Text>
+                <View style={styles.invoicesEmpty}>
+                  <MaterialIcons name="receipt-long" size={32} color={colors.outline} style={{ marginBottom: 8 }} />
+                  <Text style={styles.invoicesEmptyText}>No invoices available</Text>
                 </View>
               ) : (
                 invoices.map((inv, index) => (
                   <View key={inv.id}>
-                    <View className="flex-row items-center justify-between p-4">
-                      <View className="flex-col">
-                        <Text className="font-label-md text-sm font-bold text-on-surface mb-0.5">₹{inv.amount} ({inv.currency})</Text>
-                        <Text className="font-body-xs text-xs text-on-surface-variant">
-                          {format(new Date(inv.created_at), 'MMM dd, yyyy')} • <Text className="capitalize">{inv.status}</Text>
+                    <View style={styles.invoiceRow}>
+                      <View>
+                        <Text style={styles.invoiceAmount}>₹{inv.amount} ({inv.currency})</Text>
+                        <Text style={styles.invoiceDate}>
+                          {format(new Date(inv.created_at), 'MMM dd, yyyy')} • {inv.status}
                         </Text>
                       </View>
-                      
-                      <TouchableOpacity 
+                      <TouchableOpacity
                         disabled={downloadingId === inv.id}
-                        onPress={() => downloadInvoice(inv.id)} 
-                        className="bg-primary/10 p-2 rounded-full"
+                        onPress={() => downloadInvoice(inv.id)}
+                        style={styles.downloadButton}
                       >
                         {downloadingId === inv.id ? (
                           <ActivityIndicator size="small" color={colors.primary} />
@@ -314,16 +300,299 @@ export default function BillingScreen() {
                         )}
                       </TouchableOpacity>
                     </View>
-                    {index < invoices.length - 1 && <View className="h-[1px] bg-outline-variant/20 mx-4" />}
+                    {index < invoices.length - 1 && <View style={styles.divider} />}
                   </View>
                 ))
               )}
-
             </View>
           </View>
-
         </ScrollView>
       </View>
     </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.surface
+  },
+  container: {
+    flex: 1,
+    backgroundColor: colors.surface
+  },
+  header: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    height: 64,
+    backgroundColor: colors.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0,0,0,0.05)',
+  },
+  backButton: {
+    padding: 8,
+    marginLeft: -8,
+    borderRadius: 20
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: colors.primary,
+    marginLeft: 8
+  },
+  scrollContainer: {
+    flex: 1,
+    paddingHorizontal: 16,
+    marginTop: 16
+  },
+  sectionLabel: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: colors.outline,
+    letterSpacing: 1,
+    marginBottom: 8,
+    marginLeft: 4
+  },
+  currentPlanCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    padding: 24,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.05)',
+    marginBottom: 32,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 }
+  },
+  currentPlanRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  currentPlanName: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: colors.primary,
+    marginBottom: 4
+  },
+  statusError: {
+    fontSize: 14,
+    color: colors.error
+  },
+  statusActive: {
+    fontSize: 14,
+    color: colors.secondary
+  },
+  cancelButton: {
+    backgroundColor: '#F3F4F6',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.05)'
+  },
+  cancelButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#374151'
+  },
+  plansSection: {
+    marginBottom: 32
+  },
+  billingCycleToggle: {
+    flexDirection: 'row',
+    backgroundColor: '#F3F4F6',
+    borderRadius: 30,
+    padding: 4,
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.05)'
+  },
+  toggleButton: {
+    flex: 1,
+    paddingVertical: 10,
+    alignItems: 'center',
+    borderRadius: 26
+  },
+  toggleButtonActive: {
+    backgroundColor: '#FFFFFF',
+    elevation: 1,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 1 }
+  },
+  toggleButtonActivePrimary: {
+    backgroundColor: colors.primary,
+    elevation: 1,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 1 }
+  },
+  toggleText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#6B7280'
+  },
+  toggleTextActive: {
+    fontWeight: 'bold',
+    color: colors.primary
+  },
+  toggleTextActiveWhite: {
+    fontWeight: 'bold',
+    color: '#FFFFFF'
+  },
+  planCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    padding: 24,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.05)',
+    marginBottom: 16,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 }
+  },
+  planCardCurrent: {
+    borderColor: colors.primary,
+    borderWidth: 2
+  },
+  planHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 8
+  },
+  planTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: colors.primary
+  },
+  badge: {
+    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(59, 130, 246, 0.2)'
+  },
+  badgeText: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    color: colors.primary
+  },
+  planDescription: {
+    fontSize: 14,
+    color: '#6B7280',
+    marginBottom: 24
+  },
+  priceRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    marginBottom: 4
+  },
+  priceAmount: {
+    fontSize: 36,
+    fontWeight: '900',
+    color: colors.primary
+  },
+  pricePeriod: {
+    fontSize: 16,
+    color: '#6B7280',
+    marginLeft: 4,
+    marginBottom: 6
+  },
+  perMonthText: {
+    fontSize: 12,
+    color: colors.secondary,
+    marginBottom: 24
+  },
+  featuresList: {
+    marginBottom: 24,
+    gap: 12
+  },
+  featureItem: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  featureText: {
+    fontSize: 14,
+    color: '#374151',
+    marginLeft: 12
+  },
+  subscribeButton: {
+    backgroundColor: colors.primary,
+    paddingVertical: 16,
+    borderRadius: 16,
+    alignItems: 'center'
+  },
+  subscribeButtonDisabled: {
+    backgroundColor: '#F3F4F6'
+  },
+  subscribeButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#FFFFFF'
+  },
+  subscribeButtonTextDisabled: {
+    color: '#6B7280'
+  },
+  invoicesSection: {
+    marginBottom: 40
+  },
+  invoicesCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    padding: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.05)',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 }
+  },
+  invoicesEmpty: {
+    paddingVertical: 32,
+    alignItems: 'center'
+  },
+  invoicesEmptyText: {
+    fontSize: 14,
+    color: '#6B7280'
+  },
+  invoiceRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16
+  },
+  invoiceAmount: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#111827',
+    marginBottom: 2
+  },
+  invoiceDate: {
+    fontSize: 12,
+    color: '#6B7280'
+  },
+  downloadButton: {
+    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+    padding: 8,
+    borderRadius: 20
+  },
+  divider: {
+    height: 1,
+    backgroundColor: 'rgba(0,0,0,0.05)',
+    marginHorizontal: 16
+  }
+});
