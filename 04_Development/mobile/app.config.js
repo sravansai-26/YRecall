@@ -6,6 +6,7 @@ module.exports = {
   icon: "./assets/images/icon.png",
   userInterfaceStyle: "automatic",
   scheme: "yrecall",
+  newArchEnabled: true,
   
   ios: {
     supportsTablet: true,
@@ -23,6 +24,7 @@ module.exports = {
     package: "com.lyfspot.yrecall",
     predictiveBackGestureEnabled: true,
     googleServicesFile: "./google-services.json",
+    softwareKeyboardLayoutMode: "pan", // ✅ ADD THIS - Fixes keyboard on Android
   },
   
   web: {
@@ -36,7 +38,18 @@ module.exports = {
     "expo-localization",
     "expo-font",
     "@react-native-google-signin/google-signin",
-    "expo-audio"
+    "expo-audio",
+    [
+      "expo-build-properties",
+      {
+        "android": {
+          "extraGradleProperties": [
+            { "name": "android.useAndroidX", "value": "true" },
+            { "name": "android.enableJetifier", "value": "true" }
+          ]
+        }
+      }
+    ]
   ],
   
   experiments: {
