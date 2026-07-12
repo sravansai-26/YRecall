@@ -8,6 +8,12 @@ from .models import AIConversation, AIMessage, AIEmbedding
 from .schemas import ChatRequest, Citation
 
 def chat_with_rag(db: Session, user: User, chat_req: ChatRequest) -> tuple[AIConversation, AIMessage, list[Citation]]:
+    from fastapi import HTTPException
+    from ..billing import entitlements, quota_service
+    
+    if not entitlements.check_quota(db, user.id, "ai_requests_monthly"):
+        raise HTTPException(status_code=403, detail="Monthly AI request limit reached. Please upgrade to continue chatting.")
+        
     if not settings.GEMINI_API_KEY:
         raise ValueError("GEMINI_API_KEY is not configured")
         
@@ -23,28 +29,43 @@ def chat_with_rag(db: Session, user: User, chat_req: ChatRequest) -> tuple[AICon
         user_query_embedding = embed_result.embeddings[0].values
         
         # 2. Retrieve top 5 most similar captures
-        results = db.query(
+        query = db.query(
             Capture, 
             AIEmbedding,
             AIEmbedding.embedding.cosine_distance(user_query_embedding).label("distance")
         ).join(
             AIEmbedding, Capture.id == AIEmbedding.capture_id
         ).filter(
-            Capture.user_id == user.id,
             Capture.deleted_at == None
-        ).order_by(
-            "distance"
-        ).limit(5).all()
+        )
+        
+        if chat_req.workspace_id:
+            from ..collaboration.models import SharedCapture
+            query = query.join(SharedCapture, SharedCapture.capture_id == Capture.id).filter(
+                SharedCapture.workspace_id == chat_req.workspace_id
+            )
+        else:
+            query = query.filter(Capture.user_id == user.id)
+            
+        results = query.order_by("distance").limit(5).all()
     
     citations = []
     context_texts = []
     
     # 2.5 Fetch forcefully attached context (e.g. uploaded in chat box)
     if chat_req.attached_capture_ids:
-        attached_captures = db.query(Capture).filter(
-            Capture.id.in_(chat_req.attached_capture_ids),
-            Capture.user_id == user.id
-        ).all()
+        query = db.query(Capture).filter(
+            Capture.id.in_(chat_req.attached_capture_ids)
+        )
+        if chat_req.workspace_id:
+            from ..collaboration.models import SharedCapture
+            query = query.join(SharedCapture, SharedCapture.capture_id == Capture.id).filter(
+                SharedCapture.workspace_id == chat_req.workspace_id
+            )
+        else:
+            query = query.filter(Capture.user_id == user.id)
+            
+        attached_captures = query.all()
         for capture in attached_captures:
             context_texts.append(f"[ATTACHED FILE] Date: {capture.created_at.isoformat()}\nContent: {capture.content_text}")
 
@@ -64,24 +85,51 @@ def chat_with_rag(db: Session, user: User, chat_req: ChatRequest) -> tuple[AICon
     context_str = "\n\n".join(context_texts) if context_texts else "No specific past context found."
     
     # 2.6 Fetch recent unread notifications for context
+    # 2.6 Fetch recent unread notifications for context (Skip for workspace AI for now, or fetch workspace notifs)
     from ..notifications.models import Notification
-    recent_notifs = db.query(Notification).filter(
+    query_notifs = db.query(Notification).filter(
         Notification.user_id == user.id,
         Notification.is_read == False,
         Notification.is_archived == False
-    ).order_by(Notification.created_at.desc()).limit(10).all()
+    )
+    if chat_req.workspace_id:
+        query_notifs = query_notifs.filter(Notification.workspace_id == chat_req.workspace_id) if hasattr(Notification, 'workspace_id') else query_notifs.filter(False) # Empty if no workspace notifs yet
+
+    recent_notifs = query_notifs.order_by(Notification.created_at.desc()).limit(10).all()
     
     if recent_notifs:
         notif_context = "\n--- RECENT UNREAD NOTIFICATIONS ---\n"
         for notif in recent_notifs:
             notif_context += f"Type: {notif.type}, Title: {notif.title}, Content: {notif.content}\n"
         context_str += notif_context
+        
+    # 2.7 Fetch active Reminders/Tasks for context
+    from ..automation.models import Reminder
+    query_reminders = db.query(Reminder).filter(
+        Reminder.status == "pending"
+    )
+    if chat_req.workspace_id:
+        query_reminders = query_reminders.filter(Reminder.workspace_id == chat_req.workspace_id) if hasattr(Reminder, 'workspace_id') else query_reminders.filter(False)
+    else:
+        query_reminders = query_reminders.filter(Reminder.user_id == user.id)
+        
+    active_reminders = query_reminders.order_by(Reminder.due_date.asc().nulls_last()).limit(10).all()
+    
+    if active_reminders:
+        reminder_context = "\n--- ACTIVE TASKS & REMINDERS ---\n"
+        for r in active_reminders:
+            reminder_context += f"Task: {r.title}, Priority: {r.priority}, Due: {r.due_date.isoformat() if r.due_date else 'No Date'}\n"
+        context_str += reminder_context
     
     # 3. Handle Conversation
     conversation_id = chat_req.conversation_id
     past_messages = []
     if not conversation_id:
-        conversation = AIConversation(user_id=user.id, title=chat_req.message[:50])
+        conversation = AIConversation(
+            user_id=user.id, 
+            title=chat_req.message[:50],
+            workspace_id=chat_req.workspace_id
+        )
         db.add(conversation)
         db.commit()
         db.refresh(conversation)
@@ -96,15 +144,17 @@ def chat_with_rag(db: Session, user: User, chat_req: ChatRequest) -> tuple[AICon
             role = "user" if msg.role == "user" else "model"
             past_messages.append({"role": role, "parts": [{"text": msg.content}]})
             
-    # 4. Construct prompt
-    system_instruction = f"""You are YRecall, an AI Life Operating System for this user.
-Use the following retrieved context from the user's past notes and memories to answer their query.
+    # 4. Construct prompt using Centralized Persona Engine
+    from ..persona.prompt_builder import build_system_prompt
+    
+    task_context = f"""Use the following retrieved context from the user's past notes and memories to answer their query.
 If the context doesn't contain the answer, you can still be helpful, but prioritize the user's context.
 ALWAYS cite the memories if you use them.
 
 --- RETRIEVED CONTEXT ---
 {context_str}
 """
+    system_instruction = build_system_prompt(db, user, task_context)
     
     # 5. Generate response with Gemini
     contents = past_messages
@@ -135,8 +185,9 @@ ALWAYS cite the memories if you use them.
         role="assistant",
         content=assistant_reply
     )
-    db.add(assistant_msg)
     db.commit()
     db.refresh(assistant_msg)
+    
+    quota_service.increment_ai_requests(db, user.id)
     
     return conversation, assistant_msg, citations

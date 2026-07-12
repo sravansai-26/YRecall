@@ -57,6 +57,17 @@ def mark_all_read(
         "message": "All marked as read."
     }
 
+@router.delete("/all", response_model=dict)
+def clear_all(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    service.clear_all_notifications(db, current_user)
+    return {
+        "success": True,
+        "message": "All notifications cleared."
+    }
+
 @router.delete("/{id}", response_model=dict)
 def archive_notification(
     id: uuid.UUID,

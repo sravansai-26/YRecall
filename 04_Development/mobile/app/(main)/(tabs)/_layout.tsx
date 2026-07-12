@@ -4,11 +4,15 @@ import { BottomNavRoute } from '../../../src/shared/components/BottomNavBar';
 import { View, Keyboard, Platform } from 'react-native';
 import { useState, useEffect, useRef } from 'react';
 import { CaptureHub, CaptureHubRef } from '../../../src/modules/captures/components/CaptureHub';
+import { useWorkspaceSocket } from '../../../src/modules/workspaces/useWorkspaceSocket';
 
 export default function TabsLayout() {
   const router = useRouter();
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const captureHubRef = useRef<CaptureHubRef>(null);
+
+  // Initialize workspace socket connection
+  useWorkspaceSocket();
 
   useEffect(() => {
     // Android triggers 'Did' events, iOS triggers 'Will' events for smooth UI transitions

@@ -10,6 +10,7 @@ class AIConversation(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    workspace_id = Column(UUID(as_uuid=True), ForeignKey("workspaces.id", ondelete="CASCADE"), nullable=True, index=True)
     title = Column(String, nullable=True)
     is_pinned = Column(Boolean, default=False, server_default="false", nullable=False)
     is_archived = Column(Boolean, default=False, server_default="false", nullable=False)

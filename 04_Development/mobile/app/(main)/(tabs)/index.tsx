@@ -9,11 +9,17 @@ import { useDashboard, useGenerateReflection } from '../../../src/modules/home/h
 import { useNotifications } from '../../../src/shared/hooks/useNotifications';
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '../../../src/services/api/client';
+import { useWorkspaceStore } from '../../../src/modules/workspaces/store';
+import { useWorkspaces } from '../../../src/modules/workspaces/api';
 
 export default function HomeDashboard() {
   const router = useRouter();
   const { user } = useAuthStore();
   const [backPressCount, setBackPressCount] = useState(0);
+  const { activeWorkspaceId } = useWorkspaceStore();
+  const { data: workspaces } = useWorkspaces();
+  
+  const activeWorkspace = activeWorkspaceId ? workspaces?.find(w => w.id === activeWorkspaceId) : null;
 
   const getGreeting = () => {
     try {
@@ -35,15 +41,16 @@ export default function HomeDashboard() {
     }
   };
 
-  const { data: dashboardData, isLoading, refetch, isRefetching } = useDashboard();
+  const { data: dashboardData, isLoading, refetch, isRefetching } = useDashboard(activeWorkspaceId);
   const { mutate: generateReflection, isPending: isReflecting } = useGenerateReflection();
   const { data: notificationsData } = useNotifications();
 
   // Fetch only the 3 most recent memories to speed up home screen loading
   const { data: capturesData, isLoading: capturesLoading } = useQuery({
-    queryKey: ['captures', 'recent'],
+    queryKey: ['captures', 'recent', activeWorkspaceId],
     queryFn: async () => {
-      const res = await apiClient.get('/captures?limit=3');
+      const params = activeWorkspaceId ? `&workspace_id=${activeWorkspaceId}` : '';
+      const res = await apiClient.get(`/captures?limit=3${params}`);
       return res.data;
     },
     staleTime: 60000,
@@ -82,10 +89,15 @@ export default function HomeDashboard() {
                 <MaterialIcons name="person" size={24} color={colors.primary} />
               )}
             </TouchableOpacity>
-            <View className="flex-col">
+            <TouchableOpacity onPress={() => router.push('/(main)/workspaces' as any)} className="flex-col">
               <Text className="font-label-xs text-on-surface-variant">{getGreeting()}</Text>
-              <Text className="font-title-sm text-[16px] font-bold text-primary">{user?.displayName?.split(' ')[0] || 'User'}</Text>
-            </View>
+              <View className="flex-row items-center gap-1">
+                <Text className="font-title-sm text-[16px] font-bold text-primary">
+                  {activeWorkspace ? activeWorkspace.name : (user?.displayName?.split(' ')[0] || 'User')}
+                </Text>
+                <MaterialIcons name="keyboard-arrow-down" size={16} color={colors.primary} />
+              </View>
+            </TouchableOpacity>
           </View>
           <View className="flex-row items-center gap-2">
             <TouchableOpacity
@@ -216,21 +228,37 @@ export default function HomeDashboard() {
             ))
           )}
         </View>
-        
-        {/* Ongoing Projects */}
-        <Text className="font-title-sm text-primary mb-md">Ongoing Projects</Text>
-        <View className="space-y-sm">
-          <TouchableOpacity onPress={() => {}} className="bg-surface-container-low rounded-xl p-md flex-row items-center justify-between mb-2">
-            <View className="flex-row items-center gap-4">
-              <View className="w-12 h-12 bg-white rounded-full items-center justify-center shadow-sm">
-                <MaterialIcons name="folder-open" size={24} color={colors.primary} />
-              </View>
-              <View>
-                <Text className="font-body-md font-bold text-primary">Redesign Project: Q3</Text>
-                <Text className="font-caption-sm text-on-surface-variant">Active now</Text>
-              </View>
-            </View>
+        {/* Automation Reminders / Tasks */}
+        <View className="flex-row justify-between items-end mb-md">
+          <Text className="font-title-sm text-primary">Pending Tasks</Text>
+          <TouchableOpacity onPress={() => router.push('/(main)/automation' as any)}>
+            <Text className="text-secondary font-label-xs text-[13px]">Manage All</Text>
           </TouchableOpacity>
+        </View>
+        <View className="space-y-sm mb-10">
+          {dashboardData?.reminders?.length === 0 ? (
+            <View className="py-4 items-center">
+              <Text className="font-body-md text-on-surface-variant">No pending tasks.</Text>
+            </View>
+          ) : (
+            dashboardData?.reminders?.map((reminder: any) => (
+              <TouchableOpacity key={reminder.id} className="bg-surface-container-low border border-outline-variant/30 rounded-xl p-md flex-row items-center justify-between mb-2">
+                <View className="flex-row items-center gap-4">
+                  <View className="w-10 h-10 bg-primary/10 rounded-full items-center justify-center">
+                    <MaterialIcons name="check-box-outline-blank" size={20} color={colors.primary} />
+                  </View>
+                  <View>
+                    <Text className="font-body-md font-bold text-primary">{reminder.title}</Text>
+                    {reminder.due_date ? (
+                      <Text className="font-caption-sm text-on-surface-variant">Due: {new Date(reminder.due_date).toLocaleDateString()}</Text>
+                    ) : (
+                      <Text className="font-caption-sm text-on-surface-variant">No due date</Text>
+                    )}
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))
+          )}
         </View>
 
       </ScrollView>

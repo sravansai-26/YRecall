@@ -164,7 +164,15 @@ export default function ProfileEdit() {
         </View>
 
         <View className="mt-12 pt-6 border-t border-outline-variant/30 flex-col gap-4">
-          <TouchableOpacity onPress={() => router.push('/(main)/(tabs)/settings')} className="flex-row items-center justify-between p-4 bg-surface-container-low rounded-xl">
+          <TouchableOpacity onPress={() => router.push('/(main)/workspaces')} className="flex-row items-center justify-between p-4 bg-surface-container-low rounded-xl mb-2">
+            <View className="flex-row items-center gap-3">
+              <MaterialIcons name="workspaces" size={24} color={colors.primary} />
+              <Text className="font-body-md text-base text-primary font-medium">Workspaces & Teams</Text>
+            </View>
+            <MaterialIcons name="chevron-right" size={24} color={colors.outline} />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => router.push('/(main)/(tabs)/settings')} className="flex-row items-center justify-between p-4 bg-surface-container-low rounded-xl mb-2">
             <View className="flex-row items-center gap-3">
               <MaterialIcons name="settings" size={24} color={colors.primary} />
               <Text className="font-body-md text-base text-primary font-medium">Account Settings</Text>

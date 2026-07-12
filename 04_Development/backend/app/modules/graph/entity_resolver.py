@@ -8,7 +8,7 @@ from ..captures.models import Capture
 from .models import Entity, Relationship
 
 client = genai.Client(api_key=settings.GEMINI_API_KEY)
-MODEL_NAME = "gemini-flash-lite-latest"
+MODEL_NAME = "gemini-2.5-flash"
 
 def resolve_entities_and_relationships(db: Session, capture_id: str, user_id: str):
     """
@@ -20,8 +20,13 @@ def resolve_entities_and_relationships(db: Session, capture_id: str, user_id: st
 
     content = f"Title: {capture.title}\nSummary: {capture.summary}\nContent: {capture.content_text}"
 
-    prompt = f"""
-    You are a Knowledge Graph extraction engine. Extract entities and their relationships from the following text.
+    from ..users.models import User
+    from ..persona.prompt_builder import build_system_prompt
+    
+    user = db.query(User).filter(User.id == user_id).first()
+    
+    task_context = f"""You are a Knowledge Graph extraction engine. Extract entities and their relationships from the following text based on the user's Persona, Goals, and Behavior.
+    Give higher importance/confidence to entities relevant to the user's active goals and occupation.
     
     Entities can be: Person, Organization, Location, Project, Technology, Concept, Event, Document, etc.
     Relationships connect two extracted entities (e.g., WORKS_ON, LOCATED_AT, RELATED_TO, CREATED).
@@ -40,6 +45,8 @@ def resolve_entities_and_relationships(db: Session, capture_id: str, user_id: st
     TEXT TO ANALYZE:
     {content}
     """
+    
+    prompt = build_system_prompt(db, user, task_context)
     
     response = client.models.generate_content(
         model=MODEL_NAME,
@@ -127,6 +134,18 @@ async def async_extract_with_retry(capture_id: str, user_id: str, max_retries: i
                         # Phase 7: Run Proactive Intelligence Engine for Notifications
                         from ..notifications.intelligence import evaluate_capture_for_notifications
                         evaluate_capture_for_notifications(db, capture_id, user_id)
+                        
+                        # Phase 8: Run Behavior Engine Learning
+                        from ..persona.behavior_engine import update_behavior_from_capture
+                        # We need capture_type and title, which we can get since we just resolved it in resolve_entities
+                        c = db.query(Capture).filter(Capture.id == capture_id).first()
+                        if c:
+                            update_behavior_from_capture(db, user_id, c.type, c.title or "")
+                        
+                        # Phase 9: Run Automation / Intent Engine
+                        from ..automation.intent_engine import analyze_capture_intent
+                        analyze_capture_intent(db, capture_id, user_id)
+                            
                     finally:
                         db.close()
                         

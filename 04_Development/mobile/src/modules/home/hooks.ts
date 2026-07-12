@@ -4,12 +4,12 @@ import { homeApi } from './api';
 
 const CACHE_KEY = '@yrecall_dashboard_cache';
 
-export function useDashboard() {
+export function useDashboard(workspaceId?: string | null) {
   return useQuery({
-    queryKey: ['dashboard'],
+    queryKey: ['dashboard', workspaceId],
     queryFn: async () => {
       try {
-        const result = await homeApi.getDashboard();
+        const result = await homeApi.getDashboard(workspaceId);
         // Save to offline cache
         if (result.success && result.data) {
           AsyncStorage.setItem(CACHE_KEY, JSON.stringify(result.data)).catch(() => {});

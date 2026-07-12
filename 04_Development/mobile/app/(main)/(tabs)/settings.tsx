@@ -7,10 +7,12 @@ import React from 'react';
 import { useAuthStore } from '../../../src/shared/store/useAuthStore';
 import { auth } from '../../../src/shared/lib/firebase';
 import { signOut } from 'firebase/auth';
+import { useEntitlements } from '../../../src/modules/billing/store';
 
 export default function SettingsHub() {
   const router = useRouter();
   const { user, profileDetails, setUser } = useAuthStore();
+  const { planId, isPremium } = useEntitlements();
 
   const handleSignOut = async () => {
     try {
@@ -53,15 +55,21 @@ export default function SettingsHub() {
                 </View>
               </View>
               <View className="flex-col">
-                <Text className="font-headline-md text-3xl font-bold text-primary leading-tight">{user?.displayName || 'User'}</Text>
+                <View className="flex-row items-center gap-2 mb-1">
+                  <Text className="font-headline-md text-3xl font-bold text-primary leading-tight">{user?.displayName || 'User'}</Text>
+                  <MaterialIcons name="edit" size={20} color={colors.outline} />
+                </View>
                 <Text className="font-body-md text-base text-on-surface-variant mb-1">{user?.email || 'No email'}</Text>
-                {profileDetails.occupation && (
-                  <Text className="font-body-sm text-sm text-secondary font-medium">{profileDetails.occupation}</Text>
-                )}
+                <TouchableOpacity onPress={() => router.push('/settings/billing')} className="mt-1">
+                  <Text className="font-body-sm text-sm text-secondary font-medium underline">
+                    {isPremium ? `Premium Member` : `Basic User - Upgrade to Premium/Pro Plans`}
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
             <View className="self-start md:self-auto">
-              <MaterialIcons name="edit" size={24} color={colors.outline} />
+              {/* Optional: Add chevron or leave blank since edit is now next to name */}
+              <MaterialIcons name="chevron-right" size={28} color={colors.outline} />
             </View>
           </TouchableOpacity>
         </View>
@@ -136,6 +144,21 @@ export default function SettingsHub() {
                   <View className="flex-col">
                     <Text className="font-body-md text-base font-bold text-primary">Memory Filters</Text>
                     <Text className="font-caption-sm text-xs text-on-surface-variant">Only include positive sentiments</Text>
+                  </View>
+                </View>
+                <MaterialIcons name="chevron-right" size={24} color={colors.outline} />
+              </TouchableOpacity>
+              
+              <View className="h-[1px] bg-outline-variant/20 mx-6" />
+              
+              <TouchableOpacity onPress={() => router.push('/(main)/automation')} className="w-full flex-row items-center justify-between p-6 bg-white ">
+                <View className="flex-row items-center gap-4">
+                  <View className="w-10 h-10 items-center justify-center rounded-xl bg-primary/10">
+                    <MaterialIcons name="smart-toy" size={24} color={colors.primary} />
+                  </View>
+                  <View className="flex-col">
+                    <Text className="font-body-md text-base font-bold text-primary">Automation Center</Text>
+                    <Text className="font-caption-sm text-xs text-on-surface-variant">Workflows, AI Tasks & Reminders</Text>
                   </View>
                 </View>
                 <MaterialIcons name="chevron-right" size={24} color={colors.outline} />

@@ -13,6 +13,7 @@ import { TextInput, ScrollView } from 'react-native';
 import { TimelineCard } from '../../../src/modules/timeline/components/TimelineCard';
 import { Capture } from '../../../src/modules/captures/services/api';
 import { isToday, isYesterday, isThisWeek, isThisMonth } from 'date-fns';
+import { useWorkspaceStore } from '../../../src/modules/workspaces/store';
 
 interface TimelineSection {
   type: 'header' | 'item';
@@ -24,6 +25,7 @@ export default function RecallScreen() {
   const router = useRouter();
   const { user } = useAuthStore();
   const insets = useSafeAreaInsets();
+  const { activeWorkspaceId } = useWorkspaceStore();
 
   const [activeSegment, setActiveSegment] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -42,8 +44,11 @@ export default function RecallScreen() {
       f.start_date = start.toISOString();
       f.end_date = end.toISOString();
     }
+    if (activeWorkspaceId) {
+      f.workspace_id = activeWorkspaceId;
+    }
     return f;
-  }, [activeSegment, searchQuery, selectedDate]);
+  }, [activeSegment, searchQuery, selectedDate, activeWorkspaceId]);
 
   const {
     data,
@@ -147,7 +152,7 @@ export default function RecallScreen() {
         {/* Type Filter Chips */}
         <View className="mb-4">
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, gap: 8 }}>
-            {['All', 'Image', 'Voice', 'Note', 'URL', 'Document'].map((segment) => {
+            {['All', 'Image', 'Voice', 'Note', 'URL', 'Document', 'Automation'].map((segment) => {
               const isActive = activeSegment === segment;
               return (
               <TouchableOpacity 

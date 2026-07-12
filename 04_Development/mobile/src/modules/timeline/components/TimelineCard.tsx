@@ -28,6 +28,7 @@ export const TimelineCard = memo(({ capture, onPress }: TimelineCardProps) => {
       case 'pdf':
       case 'document':
       case 'file': return 'insert-drive-file';
+      case 'automation': return 'smart-toy';
       default: return 'bookmark';
     }
   };
@@ -41,6 +42,7 @@ export const TimelineCard = memo(({ capture, onPress }: TimelineCardProps) => {
       case 'url': return colors.tertiary;
       case 'pdf':
       case 'document': return '#D32F2F'; // Red for PDF
+      case 'automation': return colors.tertiary;
       default: return colors.primary;
     }
   };

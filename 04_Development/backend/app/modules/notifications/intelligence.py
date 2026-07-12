@@ -7,7 +7,7 @@ from ..captures.models import Capture
 
 client = genai.Client(api_key=settings.GEMINI_API_KEY)
 # We use a fast, stable model for background generation
-MODEL_NAME = "gemini-flash-lite-latest" 
+MODEL_NAME = "gemini-2.5-flash" 
 
 def evaluate_capture_for_notifications(db: Session, capture_id: str, user_id: str):
     """
@@ -26,15 +26,18 @@ def evaluate_capture_for_notifications(db: Session, capture_id: str, user_id: st
     # Check for recent identical notifications to prevent spam
     # (Simple check: we don't spam if a similar notification was created in the last day, but let's rely on LLM for now)
 
-    prompt = f"""
-    You are the Proactive Intelligence Engine for an AI Second Brain.
-    A user just saved the following memory:
+    from ..users.models import User
+    from ..persona.prompt_builder import build_system_prompt
+    
+    user = db.query(User).filter(User.id == user_id).first()
+    
+    task_context = f"""A user just saved the following memory:
     
     Title: {capture.title}
     Type: {capture.type}
     Content: {content_to_analyze}
     
-    Evaluate this memory and decide if the user needs a proactive notification. 
+    Evaluate this memory and decide if the user needs a proactive notification based on their Persona, Behaviors, and Goals.
     Types of valid notifications:
     1. 'reminder': E.g., "Submit assignment tomorrow", "Call mom at 5PM".
     2. 'suggestion': E.g., "Continue reading your project notes?", "Add this to your upcoming trip?".
@@ -56,6 +59,8 @@ def evaluate_capture_for_notifications(db: Session, capture_id: str, user_id: st
         ]
     }}
     """
+    
+    prompt = build_system_prompt(db, user, task_context)
     
     try:
         response = client.models.generate_content(

@@ -15,13 +15,21 @@ def get_timeline(
     type_filter: Optional[str] = None,
     start_date: Optional[datetime] = None,
     end_date: Optional[datetime] = None,
-    search_query: Optional[str] = None
+    search_query: Optional[str] = None,
+    workspace_id: Optional[uuid.UUID] = None
 ) -> dict:
     
     query = db.query(Capture).filter(
-        Capture.user_id == user.id, 
         Capture.deleted_at == None
     )
+    
+    if workspace_id:
+        from ..collaboration.models import SharedCapture
+        query = query.join(SharedCapture, SharedCapture.capture_id == Capture.id).filter(
+            SharedCapture.workspace_id == workspace_id
+        )
+    else:
+        query = query.filter(Capture.user_id == user.id)
     
     if type_filter:
         query = query.filter(Capture.type == type_filter)
@@ -45,7 +53,14 @@ def get_timeline(
         )
         
     total_items = query.count()
-    captures = query.order_by(desc(Capture.created_at)).offset(skip).limit(limit).all()
+    from sqlalchemy.orm import selectinload
+    captures = query.options(
+        selectinload(Capture.note_metadata),
+        selectinload(Capture.media_metadata),
+        selectinload(Capture.url_metadata),
+        selectinload(Capture.location_metadata),
+        selectinload(Capture.entities)
+    ).order_by(desc(Capture.created_at)).offset(skip).limit(limit).all()
     
     total_pages = (total_items + limit - 1) // limit if limit > 0 else 1
     page = (skip // limit) + 1 if limit > 0 else 1
@@ -81,7 +96,14 @@ def get_related_memories(db: Session, user: User, capture_id: uuid.UUID, limit: 
         )
     )
     
-    captures = query.order_by(desc(Capture.created_at)).limit(limit).all()
+    from sqlalchemy.orm import selectinload
+    captures = query.options(
+        selectinload(Capture.note_metadata),
+        selectinload(Capture.media_metadata),
+        selectinload(Capture.url_metadata),
+        selectinload(Capture.location_metadata),
+        selectinload(Capture.entities)
+    ).order_by(desc(Capture.created_at)).limit(limit).all()
     
     return {
         "meta": {

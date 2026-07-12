@@ -1,8 +1,9 @@
 import { apiClient } from '../../services/api/client';
 
 export const homeApi = {
-  getDashboard: async () => {
-    const response = await apiClient.get('/home/dashboard');
+  getDashboard: async (workspaceId?: string | null) => {
+    const params = workspaceId ? `?workspace_id=${workspaceId}` : '';
+    const response = await apiClient.get(`/home/dashboard${params}`);
     return response.data;
   },
   

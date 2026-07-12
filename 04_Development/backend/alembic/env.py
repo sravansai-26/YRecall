@@ -28,6 +28,10 @@ from app.modules.ai import models as ai_models
 from app.modules.home import models as home_models
 from app.modules.graph import models as graph_models
 from app.modules.notifications import models as notifications_models
+from app.modules.persona import models as persona_models
+from app.modules.automation import models as automation_models
+from app.modules.collaboration import models as collaboration_models
+from app.modules.billing import models as billing_models
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,

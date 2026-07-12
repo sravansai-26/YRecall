@@ -7,6 +7,7 @@ export interface TimelineFilters {
   search?: string;
   start_date?: string;
   end_date?: string;
+  workspace_id?: string | null;
 }
 
 interface TimelineResponse {
@@ -32,7 +33,8 @@ export function useTimeline(filters: TimelineFilters = {}) {
           type: filters.type,
           search: filters.search,
           start_date: filters.start_date,
-          end_date: filters.end_date
+          end_date: filters.end_date,
+          workspace_id: filters.workspace_id
         }
       });
       return data;
@@ -93,7 +95,6 @@ export function useDeleteCapture() {
     },
     onSuccess: (_, deletedId) => {
       queryClient.invalidateQueries({ queryKey: ['timeline'] });
-      queryClient.invalidateQueries({ queryKey: ['capture', deletedId] });
       queryClient.invalidateQueries({ queryKey: ['timeline-stats'] });
     }
   });

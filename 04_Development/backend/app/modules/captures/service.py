@@ -20,8 +20,15 @@ if settings.SUPABASE_URL and settings.SUPABASE_SERVICE_KEY:
     supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_SERVICE_KEY)
 
 from ...modules.graph.entity_resolver import async_extract_with_retry
+from fastapi import HTTPException
+from ..billing import entitlements, quota_service
+
+def _check_capture_quota(db: Session, user: User):
+    if not entitlements.check_quota(db, user.id, "captures_monthly"):
+        raise HTTPException(status_code=403, detail="Monthly capture limit reached. Please upgrade to save more memories.")
 
 def create_text_capture(db: Session, user: User, capture_in: CaptureCreateText, background_tasks: BackgroundTasks) -> Capture:
+    _check_capture_quota(db, user)
     new_capture = Capture(
         user_id=user.id,
         type="text",
@@ -35,9 +42,11 @@ def create_text_capture(db: Session, user: User, capture_in: CaptureCreateText, 
     
     background_tasks.add_task(generate_and_store_embedding, db, new_capture.id, new_capture.content_text)
     background_tasks.add_task(async_extract_with_retry, str(new_capture.id), user.id)
+    quota_service.increment_captures(db, user.id)
     return new_capture
 
 def create_note_capture(db: Session, user: User, capture_in: CaptureCreateNote, background_tasks: BackgroundTasks) -> Capture:
+    _check_capture_quota(db, user)
     new_capture = Capture(
         user_id=user.id,
         type="note",
@@ -59,9 +68,11 @@ def create_note_capture(db: Session, user: User, capture_in: CaptureCreateNote, 
     
     background_tasks.add_task(generate_and_store_embedding, db, new_capture.id, new_capture.content_text)
     background_tasks.add_task(async_extract_with_retry, str(new_capture.id), user.id)
+    quota_service.increment_captures(db, user.id)
     return new_capture
 
 def create_url_capture(db: Session, user: User, capture_in: CaptureCreateURL, background_tasks: BackgroundTasks) -> Capture:
+    _check_capture_quota(db, user)
     new_capture = Capture(
         user_id=user.id,
         type="url",
@@ -81,9 +92,11 @@ def create_url_capture(db: Session, user: User, capture_in: CaptureCreateURL, ba
     # Background task to fetch OG tags, markdown, and then embed
     background_tasks.add_task(process_url_capture, db, new_capture.id)
     background_tasks.add_task(async_extract_with_retry, str(new_capture.id), user.id)
+    quota_service.increment_captures(db, user.id)
     return new_capture
 
 def create_location_capture(db: Session, user: User, capture_in: CaptureCreateLocation, background_tasks: BackgroundTasks) -> Capture:
+    _check_capture_quota(db, user)
     new_capture = Capture(
         user_id=user.id,
         type="location",
@@ -106,16 +119,35 @@ def create_location_capture(db: Session, user: User, capture_in: CaptureCreateLo
     # Background task for reverse geocoding and embeddings
     background_tasks.add_task(process_location_capture, db, new_capture.id)
     background_tasks.add_task(async_extract_with_retry, str(new_capture.id), user.id)
+    quota_service.increment_captures(db, user.id)
     return new_capture
 
 def create_media_capture(db: Session, user: User, file: UploadFile, type_str: str, background_tasks: BackgroundTasks) -> Capture:
+    _check_capture_quota(db, user)
+    
     if not supabase:
         raise ValueError("Supabase client not initialized")
         
+    file_bytes = file.file.read()
+    file_size = len(file_bytes)
+    
+    # Check storage quota before uploading
+    usage = quota_service.get_usage(db, user.id)
+    new_storage_size = usage.storage_used_bytes + file_size
+    if not entitlements.check_quota(db, user.id, "storage_bytes"):
+         # Wait, we need to check if the NEW size exceeds. Let's just check if it exceeds right now, and maybe a soft limit.
+         # For a stricter check:
+         pass
+         
+    # Stricter storage check:
+    limit = entitlements.FREE_LIMITS.get("storage_bytes", 0)
+    plan_id = entitlements.get_user_plan_id(db, user.id)
+    if plan_id == "free" and new_storage_size > limit:
+        raise HTTPException(status_code=403, detail=f"Storage limit reached ({limit / (1024*1024):.0f} MB). Please upgrade.")
+
     file_ext = file.filename.split('.')[-1] if '.' in file.filename else 'bin'
     file_name = f"{user.id}/{uuid.uuid4()}.{file_ext}"
     
-    file_bytes = file.file.read()
     res = supabase.storage.from_("captures").upload(
         file_name, 
         file_bytes,
@@ -142,9 +174,14 @@ def create_media_capture(db: Session, user: User, file: UploadFile, type_str: st
     db.commit()
     db.refresh(new_capture)
     
+    
     # Background task for processing (OCR/Transcript/Summary/Embedding)
     background_tasks.add_task(process_media_capture, db, new_capture.id)
     background_tasks.add_task(async_extract_with_retry, str(new_capture.id), user.id)
+    
+    quota_service.increment_captures(db, user.id)
+    quota_service.add_storage(db, user.id, file_size)
+    
     return new_capture
 
 def transcribe_audio_sync(db: Session, user: User, file: UploadFile) -> str:

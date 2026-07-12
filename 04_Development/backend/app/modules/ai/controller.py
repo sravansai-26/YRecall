@@ -14,14 +14,27 @@ router = APIRouter()
 
 @router.get("/conversations", response_model=dict)
 def list_conversations(
+    workspace_id: Optional[str] = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     try:
-        conversations = db.query(AIConversation).filter(
+        import uuid
+        query = db.query(AIConversation).filter(
             AIConversation.user_id == current_user.id,
             AIConversation.deleted_at.is_(None)
-        ).order_by(desc(AIConversation.is_pinned), desc(AIConversation.updated_at)).all()
+        )
+        
+        if workspace_id:
+            try:
+                ws_uuid = uuid.UUID(workspace_id)
+                query = query.filter(AIConversation.workspace_id == ws_uuid)
+            except ValueError:
+                raise HTTPException(status_code=400, detail="Invalid workspace ID")
+        else:
+            query = query.filter(AIConversation.workspace_id.is_(None))
+            
+        conversations = query.order_by(desc(AIConversation.is_pinned), desc(AIConversation.updated_at)).all()
         return {
             "success": True,
             "message": "Conversations retrieved.",
@@ -77,6 +90,10 @@ def chat_endpoint(
     current_user: User = Depends(get_current_user)
 ):
     try:
+        if chat_req.workspace_id:
+            from ..collaboration.permissions import require_role, WorkspaceRole
+            require_role(db, chat_req.workspace_id, current_user, WorkspaceRole.VIEWER)
+            
         conversation, message, citations = service.chat_with_rag(db, current_user, chat_req)
         
         # Also update conversation timestamp

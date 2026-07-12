@@ -7,6 +7,7 @@ class ChatRequest(BaseModel):
     conversation_id: Optional[UUID] = None
     message: str
     attached_capture_ids: List[UUID] = []
+    workspace_id: Optional[UUID] = None
     stream: bool = False
 
 class Citation(BaseModel):

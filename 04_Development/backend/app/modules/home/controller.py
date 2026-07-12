@@ -17,11 +17,12 @@ refresh_limiter = RateLimiter(max_requests=3, window_seconds=86400) # 3 per day
 @router.get("/dashboard")
 def get_dashboard(
     request: Request,
+    workspace_id: str = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(dashboard_limiter)
 ):
     """Fetches the aggregated dashboard state."""
-    data = get_dashboard_data(db, str(current_user.id))
+    data = get_dashboard_data(db, str(current_user.id), workspace_id)
     return {"success": True, "data": data}
 
 @router.get("/analytics")
@@ -41,10 +42,9 @@ def refresh_daily_brief(
     db: Session = Depends(get_db),
     current_user: User = Depends(refresh_limiter)
 ):
-    """Forces regeneration of the daily brief."""
-    # In a real scenario, this calls ai/reflection_service
-    # For now we'll trigger a background task or do it synchronously if fast enough.
-    # We will implement the integration in ai module.
-    
-    # Placeholder: we'd call generate_daily_brief(db, current_user.id)
-    return {"success": True, "message": "Daily brief refresh initiated"}
+    from .intelligence import generate_daily_brief
+    try:
+        data = generate_daily_brief(db, str(current_user.id))
+        return {"success": True, "message": "Daily brief generated successfully", "data": data}
+    except Exception as e:
+        return {"success": False, "message": str(e)}

@@ -10,22 +10,29 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import { AudioPlayer } from '../../../src/shared/components/AudioPlayer';
 import Markdown from 'react-native-markdown-display';
 
+import { useShareCaptureToWorkspace, useWorkspaces } from '../../../src/modules/workspaces/api';
+
 export default function MemoryDetailScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: capture, isLoading, error } = useCapture(id || '');
   const { data: relatedData } = useRelatedMemories(id || '');
   const deleteMutation = useDeleteCapture();
+  const shareToWorkspaceMutation = useShareCaptureToWorkspace();
+  const { data: workspaces } = useWorkspaces();
   
   const [isFullscreenImage, setIsFullscreenImage] = useState(false);
+  const [isWorkspaceModalVisible, setIsWorkspaceModalVisible] = useState(false);
 
   const handleShare = async () => {
     if (!capture) return;
     try {
       const message = capture.summary || capture.content_text || capture.title || 'Check out this memory from YRecall!';
-      const url = capture.file_url || undefined;
+      const shareUrl = capture.file_url || '';
+      const shareContent = shareUrl ? `${message}\n\n${shareUrl}` : message;
+      
       await Share.share({
-        message: url ? `${message}\n${url}` : message,
+        message: shareContent,
         title: capture.title || 'YRecall Memory',
       });
     } catch (error: any) {
@@ -55,6 +62,18 @@ export default function MemoryDetailScreen() {
         }
       ]
     );
+  };
+
+  const handleShareToWorkspace = (workspaceId: string) => {
+    shareToWorkspaceMutation.mutate({ workspaceId, captureId: id as string }, {
+      onSuccess: () => {
+        Alert.alert("Success", "Memory shared to workspace!");
+        setIsWorkspaceModalVisible(false);
+      },
+      onError: () => {
+        Alert.alert("Error", "Failed to share memory.");
+      }
+    });
   };
 
   if (isLoading) {
@@ -103,6 +122,9 @@ export default function MemoryDetailScreen() {
         </TouchableOpacity>
         <Text className="font-title-sm font-bold text-primary">Memory Detail</Text>
         <View className="flex-row items-center gap-2">
+          <TouchableOpacity onPress={() => setIsWorkspaceModalVisible(true)} className="w-10 h-10 items-center justify-center rounded-full bg-surface-container">
+            <MaterialIcons name="workspaces" size={20} color={colors.primary} />
+          </TouchableOpacity>
           <TouchableOpacity onPress={handleShare} className="w-10 h-10 items-center justify-center rounded-full bg-surface-container">
             <MaterialIcons name="share" size={20} color={colors.primary} />
           </TouchableOpacity>
@@ -276,6 +298,43 @@ export default function MemoryDetailScreen() {
             className="w-full h-full"
             resizeMode="contain"
           />
+        </View>
+      )}
+
+      {/* Workspace Selection Modal */}
+      {isWorkspaceModalVisible && (
+        <View className="absolute inset-0 bg-black/50 z-50 flex-1 justify-end">
+          <View className="bg-surface rounded-t-3xl p-6 min-h-[300px]">
+            <View className="flex-row items-center justify-between mb-6">
+              <Text className="font-title-lg text-primary">Share to Workspace</Text>
+              <TouchableOpacity onPress={() => setIsWorkspaceModalVisible(false)}>
+                <MaterialIcons name="close" size={24} color={colors.secondary} />
+              </TouchableOpacity>
+            </View>
+            <ScrollView>
+              {workspaces?.map((ws: any) => (
+                <TouchableOpacity 
+                  key={ws.id} 
+                  onPress={() => handleShareToWorkspace(ws.id)}
+                  className="flex-row items-center p-4 bg-surface-container rounded-xl mb-3 border border-outline-variant/30"
+                >
+                  <View className="w-10 h-10 rounded-full items-center justify-center mr-4" style={{ backgroundColor: ws.theme_color || colors.primary }}>
+                    <MaterialIcons name="workspaces" size={20} color="white" />
+                  </View>
+                  <View className="flex-1">
+                    <Text className="font-title-sm text-on-surface">{ws.name}</Text>
+                    <Text className="font-body-sm text-on-surface-variant capitalize">{ws.visibility}</Text>
+                  </View>
+                  <MaterialIcons name="chevron-right" size={20} color={colors.secondary} />
+                </TouchableOpacity>
+              ))}
+              {(!workspaces || workspaces.length === 0) && (
+                <Text className="text-center font-body-md text-on-surface-variant py-8">
+                  You don't have any workspaces yet.
+                </Text>
+              )}
+            </ScrollView>
+          </View>
         </View>
       )}
     </Screen>

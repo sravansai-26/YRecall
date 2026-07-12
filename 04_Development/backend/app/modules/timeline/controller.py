@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Query, HTTPException, status
-from sqlalchemy.orm import Session
 from datetime import datetime, timezone, timedelta
 from typing import Optional
+from sqlalchemy.orm import Session
 
 from ...core.database import get_db
 from ...core.security import get_current_user
@@ -19,13 +19,25 @@ def get_timeline(
     search: Optional[str] = None,
     start_date: Optional[datetime] = None,
     end_date: Optional[datetime] = None,
+    workspace_id: Optional[str] = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    import uuid
+    ws_uuid = None
+    if workspace_id:
+        try:
+            ws_uuid = uuid.UUID(workspace_id)
+            from ..collaboration.permissions import require_role, WorkspaceRole
+            require_role(db, ws_uuid, current_user, WorkspaceRole.VIEWER)
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid workspace ID format")
+
     result = service.get_timeline(
         db, current_user, skip=skip, limit=limit, 
         type_filter=type, search_query=search,
-        start_date=start_date, end_date=end_date
+        start_date=start_date, end_date=end_date,
+        workspace_id=ws_uuid
     )
     return {
         "success": True,

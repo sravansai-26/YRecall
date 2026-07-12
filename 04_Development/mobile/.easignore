@@ -133,56 +133,5 @@ screenshots
 mockups
 *.psd
 *.ai
-*.sketch
-*.fig
-*.xd
-UI
-UX
-../02_Design
-
-# ============================
-# OS FILES
-# ============================
-.DS_Store
-Thumbs.db
-desktop.ini
-*.tmp
-*.temp
-*.log
-*.cache
-
-# ============================
-# MISCELLANEOUS
-# ============================
-*.bak
-*.swp
-*.swo
-*.orig
-*.rej
-TODO.md
-FIXME.md
-notes.md
-TASKS.md
-*.xlsx
-*.xls
-*.csv
-*.pdf
-*.doc
-*.docx
-*.ppt
-*.pptx
-
-# ============================
-# STITCH / DESIGN EXPORTS
-# ============================
-../02_Design
-../stitch_exports
-*.stitch
-
-# ============================
-# GEMINI / AI (Local only)
-# ============================
-*.gemini
-.gemini
-*.prompt
-.ai
+android/
+ios/

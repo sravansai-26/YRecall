@@ -23,6 +23,10 @@ def mark_all_as_read(db: Session, user: User):
     db.query(Notification).filter(Notification.user_id == user.id, Notification.is_read == False).update({"is_read": True})
     db.commit()
 
+def clear_all_notifications(db: Session, user: User):
+    db.query(Notification).filter(Notification.user_id == user.id).delete()
+    db.commit()
+
 def archive_notification(db: Session, user: User, notification_id: uuid.UUID) -> bool:
     notif = db.query(Notification).filter(Notification.id == notification_id, Notification.user_id == user.id).first()
     if notif:

@@ -8,6 +8,8 @@ import { FlashList } from '@shopify/flash-list';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../src/services/api/client';
 import { format } from 'date-fns';
+import { Swipeable } from 'react-native-gesture-handler';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 export default function InboxScreen() {
   const router = useRouter();
@@ -33,6 +35,15 @@ export default function InboxScreen() {
   const dismissMutation = useMutation({
     mutationFn: async (id: string) => {
       await apiClient.delete(`/notifications/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+    }
+  });
+
+  const clearAllMutation = useMutation({
+    mutationFn: async () => {
+      await apiClient.delete('/notifications/all');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
@@ -99,31 +110,47 @@ export default function InboxScreen() {
     }
     
     const notif = item.item;
+    
+    const renderRightActions = () => {
+      return (
+        <TouchableOpacity 
+          className="bg-error items-center justify-center w-20 h-full rounded-2xl mb-3 ml-2"
+          onPress={() => dismissMutation.mutate(notif.id)}
+        >
+          <MaterialIcons name="delete-outline" size={24} color={colors['on-error']} />
+        </TouchableOpacity>
+      );
+    };
+
     return (
-      <TouchableOpacity 
-        activeOpacity={0.7} 
-        onPress={() => handlePress(notif)}
-        className={`mb-3 p-4 rounded-2xl border ${!notif.is_read ? 'bg-primary-container/20 border-primary/20' : 'bg-surface-container-lowest border-outline-variant/20'}`}
-      >
-        <View className="flex-row gap-4">
-          <View className={`w-12 h-12 rounded-full items-center justify-center ${!notif.is_read ? 'bg-primary text-white' : 'bg-surface-container-high'}`}>
-            <MaterialIcons name={getIcon(notif.type)} size={24} color={!notif.is_read ? colors['on-primary'] : colors.primary} />
-          </View>
-          <View className="flex-1">
-            <View className="flex-row justify-between items-start mb-1">
-              <Text className={`font-title-sm flex-1 mr-2 ${!notif.is_read ? 'font-bold text-on-surface' : 'text-on-surface-variant'}`} numberOfLines={1}>
-                {notif.title}
-              </Text>
-              <Text className="text-[10px] text-on-surface-variant uppercase tracking-wider">
-                {format(new Date(notif.created_at), 'h:mm a')}
-              </Text>
+      <Animated.View entering={FadeIn} exiting={FadeOut}>
+        <Swipeable renderRightActions={renderRightActions} overshootRight={false}>
+          <TouchableOpacity 
+            activeOpacity={0.7} 
+            onPress={() => handlePress(notif)}
+            className={`mb-3 p-4 rounded-2xl border ${!notif.is_read ? 'bg-primary-container/20 border-primary/20' : 'bg-surface-container-lowest border-outline-variant/20'}`}
+          >
+            <View className="flex-row gap-4">
+              <View className={`w-12 h-12 rounded-full items-center justify-center ${!notif.is_read ? 'bg-primary text-white' : 'bg-surface-container-high'}`}>
+                <MaterialIcons name={getIcon(notif.type)} size={24} color={!notif.is_read ? colors['on-primary'] : colors.primary} />
+              </View>
+              <View className="flex-1">
+                <View className="flex-row justify-between items-start mb-1">
+                  <Text className={`font-title-sm flex-1 mr-2 ${!notif.is_read ? 'font-bold text-on-surface' : 'text-on-surface-variant'}`} numberOfLines={1}>
+                    {notif.title}
+                  </Text>
+                  <Text className="text-[10px] text-on-surface-variant uppercase tracking-wider">
+                    {format(new Date(notif.created_at), 'h:mm a')}
+                  </Text>
+                </View>
+                <Text className={`font-body-sm leading-tight ${!notif.is_read ? 'text-on-surface' : 'text-on-surface-variant/80'}`}>
+                  {notif.content}
+                </Text>
+              </View>
             </View>
-            <Text className={`font-body-sm leading-tight ${!notif.is_read ? 'text-on-surface' : 'text-on-surface-variant/80'}`}>
-              {notif.content}
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
+          </TouchableOpacity>
+        </Swipeable>
+      </Animated.View>
     );
   };
 
@@ -139,15 +166,28 @@ export default function InboxScreen() {
           </TouchableOpacity>
           <Text className="font-title-sm font-bold text-primary">Inbox</Text>
         </View>
-        <TouchableOpacity 
-          className="bg-surface-container-high px-4 py-2 rounded-full"
-          onPress={async () => {
-            await apiClient.post('/notifications/read-all');
-            queryClient.invalidateQueries({ queryKey: ['notifications'] });
-          }}
-        >
-          <Text className="text-on-surface-variant font-label-sm font-bold">Mark all read</Text>
-        </TouchableOpacity>
+        <View className="flex-row items-center gap-2">
+          <TouchableOpacity 
+            className="p-2"
+            onPress={async () => {
+              await apiClient.post('/notifications/read-all');
+              queryClient.invalidateQueries({ queryKey: ['notifications'] });
+            }}
+          >
+            <MaterialIcons name="done-all" size={22} color={colors.secondary} />
+          </TouchableOpacity>
+          <TouchableOpacity 
+            className="p-2"
+            onPress={() => clearAllMutation.mutate()}
+            disabled={clearAllMutation.isPending}
+          >
+            {clearAllMutation.isPending ? (
+              <ActivityIndicator size="small" color={colors.error} />
+            ) : (
+              <MaterialIcons name="delete-sweep" size={22} color={colors.error} />
+            )}
+          </TouchableOpacity>
+        </View>
       </View>
 
       <View className="flex-1 w-full max-w-7xl mx-auto">
