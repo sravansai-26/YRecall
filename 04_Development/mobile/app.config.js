@@ -24,7 +24,12 @@ module.exports = {
     package: "com.lyfspot.yrecall",
     predictiveBackGestureEnabled: true,
     googleServicesFile: "./google-services.json",
-    softwareKeyboardLayoutMode: "pan", // ✅ ADD THIS - Fixes keyboard on Android
+    softwareKeyboardLayoutMode: "pan", 
+    // Force native properties injection directly through the android platform scope
+    gradleProperties: {
+      "android.useAndroidX": "true",
+      "android.enableJetifier": "true"
+    }
   },
   
   web: {
