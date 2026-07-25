@@ -74,13 +74,13 @@ def seed_default_plans(db: Session):
     # Premium
     if not db.query(SubscriptionPlan).filter(SubscriptionPlan.id == "premium").first():
         db.add(SubscriptionPlan(
-            id="premium", name="Premium", price_monthly=9.99, price_yearly=99.99,
+            id="premium", name="Premium", price_monthly=999.0, price_yearly=9999.0, currency="INR",
             features=["Unlimited AI", "Advanced Graph", "Unlimited captures", "Smart Automations"]
         ))
     # Pro
     if not db.query(SubscriptionPlan).filter(SubscriptionPlan.id == "pro").first():
         db.add(SubscriptionPlan(
-            id="pro", name="Pro", price_monthly=19.99, price_yearly=199.99,
+            id="pro", name="Pro", price_monthly=1999.0, price_yearly=19999.0, currency="INR",
             features=["Everything in Premium", "Teams", "API Access", "Priority AI"]
         ))
     db.commit()

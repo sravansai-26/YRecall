@@ -64,7 +64,12 @@ def create_order(
         
     # Create razorpay order
     receipt = f"rcpt_{current_user.id.hex[:8]}_{plan.id}"
-    order = provider.create_order(amount, plan.currency, receipt)
+    notes = {
+        "user_id": str(current_user.id),
+        "plan_id": plan.id,
+        "billing_cycle": request.billing_cycle
+    }
+    order = provider.create_order(amount, plan.currency, receipt, notes=notes)
     
     # Store billing event for audit
     event = BillingEvent(user_id=current_user.id, event_type="order_created", payload=order)
@@ -101,6 +106,21 @@ def verify_payment(
         db, current_user.id, plan_id, "razorpay", request.razorpay_subscription_id if hasattr(request, 'razorpay_subscription_id') else request.razorpay_payment_id
     )
     
+    # Determine price for invoice
+    plan = subscription_service.get_plan(db, plan_id)
+    amount = plan.price_yearly if request.billing_cycle == "yearly" else plan.price_monthly
+    
+    # Create Invoice record
+    invoice = Invoice(
+        user_id=current_user.id,
+        subscription_id=sub.id,
+        provider_invoice_id=request.razorpay_payment_id,
+        amount=amount,
+        currency=plan.currency,
+        status="paid"
+    )
+    db.add(invoice)
+    
     # Audit log
     event = BillingEvent(user_id=current_user.id, event_type="payment_verified", payload=request.model_dump())
     db.add(event)
@@ -127,11 +147,41 @@ async def provider_webhook(
     # Audit log
     event = BillingEvent(event_type=f"webhook_{event_type}", payload=payload)
     db.add(event)
-    db.commit()
     
-    # Handle specific events (e.g., subscription.charged, subscription.cancelled)
-    # This logic would map provider customer/subscription IDs back to our users
-    # For now, we return 200 OK to acknowledge receipt
+    # Handle specific events
+    if event_type in ("payment.captured", "order.paid"):
+        entity = payload.get("payload", {}).get("payment", {}).get("entity", {})
+        if not entity:
+            entity = payload.get("payload", {}).get("order", {}).get("entity", {})
+            
+        notes = entity.get("notes", {})
+        user_id_str = notes.get("user_id")
+        plan_id = notes.get("plan_id")
+        
+        if user_id_str and plan_id:
+            from uuid import UUID
+            user_id = UUID(user_id_str)
+            
+            # Activate subscription based purely on webhook truth
+            sub = subscription_service.create_or_update_subscription(
+                db, user_id, plan_id, "razorpay", entity.get("id", "webhook_prov_id")
+            )
+            
+            # Create Invoice if not already created by client verify_payment callback
+            provider_payment_id = entity.get("id")
+            existing_invoice = db.query(Invoice).filter(Invoice.provider_invoice_id == provider_payment_id).first()
+            if not existing_invoice:
+                invoice = Invoice(
+                    user_id=user_id,
+                    subscription_id=sub.id,
+                    provider_invoice_id=provider_payment_id,
+                    amount=entity.get("amount", 0) / 100.0,
+                    currency=entity.get("currency", "INR"),
+                    status="paid"
+                )
+                db.add(invoice)
+                
+    db.commit()
     return {"status": "ok"}
 
 @router.post("/cancel", response_model=schemas.SubscriptionResponse)
@@ -172,31 +222,7 @@ def get_user_invoices(
     current_user: User = Depends(get_current_user)
 ):
     """Get all invoices/transactions for the current user."""
-    # Note: If Invoice model is empty, we fallback to generating invoice records from BillingEvent for this MVP
-    # In a fully fleshed system, Invoice records would be written directly on successful payment.
     invoices = db.query(Invoice).filter(Invoice.user_id == current_user.id).order_by(Invoice.created_at.desc()).all()
-    
-    # Check Billing Events if Invoices table is empty (for backward compatibility/testing)
-    if not invoices:
-        events = db.query(BillingEvent).filter(
-            BillingEvent.user_id == current_user.id, 
-            BillingEvent.event_type == "payment_verified"
-        ).order_by(BillingEvent.created_at.desc()).all()
-        
-        mock_invoices = []
-        for event in events:
-            # Try to determine amount from payload
-            payload = event.payload or {}
-            mock_invoices.append({
-                "id": event.id,
-                "user_id": current_user.id,
-                "amount": payload.get("amount", 0), # Fallback
-                "currency": payload.get("currency", "INR"),
-                "status": "paid",
-                "created_at": event.created_at
-            })
-        return mock_invoices
-        
     return invoices
 
 @router.get("/invoices/{invoice_id}/download")
@@ -212,20 +238,12 @@ def download_invoice(
     # Try finding the invoice
     invoice = db.query(Invoice).filter(Invoice.id == invoice_id, Invoice.user_id == current_user.id).first()
     
-    # Fallback to billing event for testing
     if not invoice:
-        event = db.query(BillingEvent).filter(BillingEvent.id == invoice_id, BillingEvent.user_id == current_user.id).first()
-        if not event:
-            raise HTTPException(status_code=404, detail="Invoice not found")
+        raise HTTPException(status_code=404, detail="Invoice not found")
         
-        # Build mock invoice data from event
-        amount = event.payload.get("amount", 0) if event.payload else 0
-        currency = event.payload.get("currency", "INR") if event.payload else "INR"
-        date_str = event.created_at.strftime("%B %d, %Y")
-    else:
-        amount = invoice.amount
-        currency = invoice.currency
-        date_str = invoice.created_at.strftime("%B %d, %Y")
+    amount = invoice.amount
+    currency = invoice.currency
+    date_str = invoice.created_at.strftime("%B %d, %Y")
         
     # Generate PDF
     try:

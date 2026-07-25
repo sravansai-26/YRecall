@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     GEMINI_API_KEY: str
     RAZORPAY_KEY_ID: str
     RAZORPAY_KEY_SECRET: str
+    RAZORPAY_WEBHOOK_SECRET: str = "mock_webhook_secret" # Optional for local dev without tunnel
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 

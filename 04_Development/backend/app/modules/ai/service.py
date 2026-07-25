@@ -28,7 +28,11 @@ def chat_with_rag(db: Session, user: User, chat_req: ChatRequest) -> tuple[AICon
         )
         user_query_embedding = embed_result.embeddings[0].values
         
-        # 2. Retrieve top 5 most similar captures
+        # 2. Retrieve top most similar captures
+        # Apply Memory Filter rules
+        from ..filters.models import MemoryFilterSettings
+        filter_settings = db.query(MemoryFilterSettings).filter(MemoryFilterSettings.user_id == user.id).first()
+        
         query = db.query(
             Capture, 
             AIEmbedding,
@@ -39,6 +43,20 @@ def chat_with_rag(db: Session, user: User, chat_req: ChatRequest) -> tuple[AICon
             Capture.deleted_at == None
         )
         
+        if filter_settings:
+            if filter_settings.hide_workspace_memories and not chat_req.workspace_id:
+                from ..collaboration.models import SharedCapture
+                subq = db.query(SharedCapture.capture_id).subquery()
+                query = query.filter(Capture.id.notin_(subq))
+            
+            if not filter_settings.ai_context_pinned:
+                # If they don't want pinned in AI context explicitly, we just don't boost it.
+                # However, if they have some "hide" rule we would apply it here.
+                pass
+                
+            # Could add a date filter if ai_context_recent is false, but by default we search all.
+            # Realistically, semantic search will find relevant regardless of date unless specifically restricted.
+        
         if chat_req.workspace_id:
             from ..collaboration.models import SharedCapture
             query = query.join(SharedCapture, SharedCapture.capture_id == Capture.id).filter(
@@ -47,7 +65,7 @@ def chat_with_rag(db: Session, user: User, chat_req: ChatRequest) -> tuple[AICon
         else:
             query = query.filter(Capture.user_id == user.id)
             
-        results = query.order_by("distance").limit(5).all()
+        results = query.order_by("distance").limit(10 if (filter_settings and filter_settings.show_important_first) else 5).all()
     
     citations = []
     context_texts = []

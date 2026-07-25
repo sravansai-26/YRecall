@@ -45,6 +45,18 @@ module.exports = {
     "@react-native-google-signin/google-signin",
     "expo-audio",
     [
+      "expo-local-authentication",
+      {
+        "faceIDPermission": "Allow YRecall to use Face ID to authenticate you."
+      }
+    ],
+    [
+      "expo-camera",
+      {
+        "cameraPermission": "Allow YRecall to access your camera to scan barcodes and capture photos."
+      }
+    ],
+    [
       "expo-build-properties",
       {
         "android": {

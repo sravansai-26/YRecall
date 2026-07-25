@@ -11,6 +11,11 @@ class UserPersonaBase(BaseModel):
     productivity_style: Optional[str] = None
     personality: Optional[str] = None
     occupation: Optional[str] = None
+    industry: Optional[str] = None
+    role: Optional[str] = None
+    country: Optional[str] = None
+    age_group: Optional[str] = None
+    education_level: Optional[str] = None
     interests: Optional[List[str]] = None
     preferred_language: Optional[str] = None
     preferred_ai_tone: Optional[str] = None
@@ -21,6 +26,21 @@ class UserPersonaBase(BaseModel):
     memory_goals: Optional[str] = None
     long_term_goals: Optional[str] = None
     preferred_summary_size: Optional[str] = None
+    
+    # Behavior config
+    learning_speed: Optional[str] = None
+    creative_level: Optional[str] = None
+    analytical_level: Optional[str] = None
+    reasoning_depth: Optional[str] = None
+    
+    # Memory config
+    capture_priority: Optional[str] = None
+    relationship_discovery: Optional[str] = None
+    auto_categorization: Optional[str] = None
+    entity_importance: Optional[str] = None
+    memory_retention: Optional[str] = None
+    timeline_preferences: Optional[str] = None
+    graph_expansion: Optional[str] = None
 
 class UserPersonaUpdate(UserPersonaBase):
     pass

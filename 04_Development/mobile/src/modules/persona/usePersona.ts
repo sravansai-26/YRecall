@@ -7,7 +7,7 @@ export function usePersonaProfile() {
         queryKey: ['persona', 'profile'],
         queryFn: async () => {
             const res = await personaApi.getProfile();
-            return res;
+            return res.data;
         }
     });
 }
@@ -18,7 +18,7 @@ export function useUpdatePersona() {
     return useMutation({
         mutationFn: async (data: Partial<UserPersona>) => {
             const res = await personaApi.updatePersona(data);
-            return res.persona;
+            return res.data.persona;
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['persona', 'profile'] });

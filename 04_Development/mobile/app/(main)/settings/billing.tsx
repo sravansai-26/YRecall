@@ -82,7 +82,8 @@ export default function BillingScreen() {
               plan_id: plan.id,
               razorpay_payment_id: data.razorpay_payment_id,
               razorpay_order_id: data.razorpay_order_id,
-              razorpay_signature: data.razorpay_signature
+              razorpay_signature: data.razorpay_signature,
+              billing_cycle: billingCycle
             });
             Alert.alert('Success', `You are now on the ${plan.name} plan!`);
           } catch (error) {

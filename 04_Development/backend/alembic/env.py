@@ -32,6 +32,9 @@ from app.modules.persona import models as persona_models
 from app.modules.automation import models as automation_models
 from app.modules.collaboration import models as collaboration_models
 from app.modules.billing import models as billing_models
+from app.modules.voice import models as voice_models
+from app.modules.filters import models as filters_models
+from app.modules.security import models as security_models
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,

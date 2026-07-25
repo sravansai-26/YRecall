@@ -16,6 +16,11 @@ class UserPersona(Base):
     productivity_style = Column(String, nullable=True)
     personality = Column(String, nullable=True)
     occupation = Column(String, nullable=True)
+    industry = Column(String, nullable=True)
+    role = Column(String, nullable=True)
+    country = Column(String, nullable=True)
+    age_group = Column(String, nullable=True)
+    education_level = Column(String, nullable=True)
     interests = Column(JSONB, nullable=True) # list of strings
     preferred_language = Column(String, nullable=True)
     preferred_ai_tone = Column(String, nullable=True)
@@ -26,6 +31,21 @@ class UserPersona(Base):
     memory_goals = Column(String, nullable=True)
     long_term_goals = Column(String, nullable=True)
     preferred_summary_size = Column(String, nullable=True)
+    
+    # Behavior config
+    learning_speed = Column(String, nullable=True)
+    creative_level = Column(String, nullable=True)
+    analytical_level = Column(String, nullable=True)
+    reasoning_depth = Column(String, nullable=True)
+    
+    # Memory config
+    capture_priority = Column(String, nullable=True)
+    relationship_discovery = Column(String, nullable=True)
+    auto_categorization = Column(String, nullable=True)
+    entity_importance = Column(String, nullable=True)
+    memory_retention = Column(String, nullable=True)
+    timeline_preferences = Column(String, nullable=True)
+    graph_expansion = Column(String, nullable=True)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())

@@ -80,7 +80,7 @@ export default function SettingsHub() {
             <Text className="font-label-xs text-xs text-on-surface-variant font-bold uppercase tracking-widest px-1">Neural Network</Text>
             <TouchableOpacity 
               onPress={() => router.push('/(main)/knowledge-graph')} 
-              className="bg-surface-container-lowest rounded-[24px] overflow-hidden shadow-sm border border-primary/20"
+              className="bg-surface-container-lowest rounded-[24px] overflow-hidden shadow-sm border border-primary/20 mb-4"
             >
               <View className="w-full flex-row items-center justify-between p-6 bg-white relative">
                 <View className="absolute inset-0 bg-primary/5" />
@@ -89,12 +89,32 @@ export default function SettingsHub() {
                     <MaterialIcons name="hub" size={28} color={colors.primary} />
                   </View>
                   <View className="flex-col">
-                    <Text className="font-headline-sm text-lg font-bold text-primary">Knowledge Graph</Text>
+                    <Text className="font-headline-sm text-lg font-bold text-primary">Interactive Graph</Text>
                     <Text className="font-caption-sm text-xs text-on-surface-variant mt-0.5">Explore your connected memories</Text>
                   </View>
                 </View>
                 <View className="z-10 bg-primary/10 rounded-full p-2">
                   <MaterialIcons name="chevron-right" size={24} color={colors.primary} />
+                </View>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              onPress={() => router.push('/settings/knowledge-graph')} 
+              className="bg-surface-container-lowest rounded-[24px] overflow-hidden shadow-sm border border-outline-variant/20"
+            >
+              <View className="w-full flex-row items-center justify-between p-6 bg-white relative">
+                <View className="flex-row items-center gap-4 z-10">
+                  <View className="w-10 h-10 items-center justify-center rounded-xl bg-surface-container">
+                    <MaterialIcons name="settings" size={24} color={colors['on-surface-variant']} />
+                  </View>
+                  <View className="flex-col">
+                    <Text className="font-body-md text-base font-bold text-primary">Graph Settings</Text>
+                    <Text className="font-caption-sm text-xs text-on-surface-variant mt-0.5">AI Preferences & Rules</Text>
+                  </View>
+                </View>
+                <View className="z-10 bg-surface-container-high rounded-full p-2">
+                  <MaterialIcons name="chevron-right" size={24} color={colors.outline} />
                 </View>
               </View>
             </TouchableOpacity>

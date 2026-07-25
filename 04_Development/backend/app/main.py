@@ -10,6 +10,10 @@ from .modules.persona.controller import router as persona_router
 from .modules.automation.controller import router as automation_router
 from .modules.collaboration.controller import router as collaboration_router
 from .modules.billing.controller import router as billing_router
+from .modules.users.controller import router as users_router
+from .modules.voice.controller import router as voice_router
+from .modules.filters.controller import router as filters_router
+from .modules.security.controller import router as security_router
 
 from contextlib import asynccontextmanager
 from .core.database import SessionLocal
@@ -53,7 +57,10 @@ app.include_router(persona_router, prefix="/api/v1/persona", tags=["Persona"])
 app.include_router(automation_router, prefix="/api/v1/automation", tags=["Automation"])
 app.include_router(collaboration_router, prefix="/api/v1/collaboration", tags=["Collaboration"])
 app.include_router(billing_router, prefix="/api/v1/billing", tags=["Billing"])
-
+app.include_router(users_router, prefix="/api/v1/users", tags=["Users"])
+app.include_router(voice_router, prefix="/api/v1/voice", tags=["Voice"])
+app.include_router(filters_router, prefix="/api/v1/filters", tags=["Filters"])
+app.include_router(security_router, prefix="/api/v1/security", tags=["Security"])
 @app.get("/health")
 def health_check():
     return {"status": "ok"}

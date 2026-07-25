@@ -1,0 +1,121 @@
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+from sqlalchemy import func
+from ...core.database import get_db
+from ...core.security import get_current_user
+from .models import User
+from .schemas import UserResponse, UserUpdate
+from typing import Any, Dict
+from datetime import datetime, timezone
+
+try:
+    from ..timeline.models import TimelineEvent
+except ImportError:
+    TimelineEvent = None
+
+try:
+    from ..captures.models import Capture
+except ImportError:
+    Capture = None
+
+try:
+    from ..collaboration.models import Workspace
+except ImportError:
+    Workspace = None
+
+try:
+    from ..persona.models import Persona
+except ImportError:
+    Persona = None
+
+router = APIRouter(tags=["users"])
+
+@router.get("/me", response_model=UserResponse)
+def get_me(current_user: User = Depends(get_current_user)):
+    """Get the current authenticated user's profile."""
+    return current_user
+
+@router.patch("/me", response_model=UserResponse)
+def update_me(
+    user_update: UserUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Update the current user's profile."""
+    update_data = user_update.model_dump(exclude_unset=True)
+    
+    for key, value in update_data.items():
+        setattr(current_user, key, value)
+        
+    db.commit()
+    db.refresh(current_user)
+    return current_user
+
+@router.get("/me/profile")
+def get_full_profile(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+) -> Dict[str, Any]:
+    """Get the full user profile including aggregated statistics."""
+    
+    # Base user dict
+    user_dict = {
+        "id": str(current_user.id),
+        "firebase_uid": current_user.firebase_uid,
+        "email": current_user.email,
+        "display_name": current_user.display_name,
+        "photo_url": current_user.photo_url,
+        "username": current_user.username,
+        "bio": current_user.bio,
+        "timezone": current_user.timezone,
+        "language": current_user.language,
+        "country": current_user.country,
+        "occupation": current_user.occupation,
+        "website": current_user.website,
+        "social_links": current_user.social_links,
+        "birthday": current_user.birthday.isoformat() if current_user.birthday else None,
+        "last_login": current_user.last_login.isoformat() if current_user.last_login else None,
+        "last_sync": current_user.last_sync.isoformat() if current_user.last_sync else None,
+        "current_streak": current_user.current_streak,
+        "created_at": current_user.created_at.isoformat() if current_user.created_at else None,
+        "updated_at": current_user.updated_at.isoformat() if current_user.updated_at else None,
+    }
+    
+    # Calculate statistics
+    stats = {
+        "timeline_memories": 0,
+        "captures_total": 0,
+        "workspaces": 0,
+        "ai_conversations": 0,
+        "knowledge_graph_entities": 0,
+        "storage_used_bytes": 0
+    }
+    
+    if TimelineEvent:
+        stats["timeline_memories"] = db.query(func.count(TimelineEvent.id)).filter(TimelineEvent.user_id == current_user.id).scalar() or 0
+        
+    if Capture:
+        stats["captures_total"] = db.query(func.count(Capture.id)).filter(Capture.user_id == current_user.id).scalar() or 0
+        
+    if Workspace:
+        try:
+            stats["workspaces"] = db.query(func.count(Workspace.id)).filter(Workspace.created_by == current_user.id).scalar() or 0
+        except Exception:
+            pass
+            
+    persona_data = None
+    if Persona:
+        persona = db.query(Persona).filter(Persona.user_id == current_user.id).first()
+        if persona:
+            persona_data = {
+                "name": persona.name if hasattr(persona, "name") else "Your AI",
+                "communication_style": persona.communication_style if hasattr(persona, "communication_style") else "Default",
+                "learning_style": getattr(persona, "learning_style", "Standard"),
+                "productivity_profile": getattr(persona, "productivity_profile", "Standard")
+            }
+            
+    return {
+        "user": user_dict,
+        "statistics": stats,
+        "persona": persona_data
+    }

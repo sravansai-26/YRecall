@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity, Switch, Image, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Alert, TextInput } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Screen } from '../../../src/shared/components';
 import { colors } from '../../../src/shared/theme/colors';
@@ -13,197 +13,202 @@ export default function AIPersonalization() {
   const updatePersona = useUpdatePersona();
   const resetLearning = useResetLearning();
 
-  // Local state for the UI before saving
-  const [activeTone, setActiveTone] = useState<string>('balanced');
-  const [occupation, setOccupation] = useState<string>('');
-  
+  const [form, setForm] = useState<any>({});
+  const [newInterest, setNewInterest] = useState('');
+
   useEffect(() => {
     if (profile?.persona) {
-      setActiveTone(profile.persona.preferred_ai_tone || 'balanced');
-      setOccupation(profile.persona.occupation || '');
+      setForm(profile.persona);
     }
   }, [profile]);
 
   const handleSave = () => {
-    updatePersona.mutate({
-      preferred_ai_tone: activeTone,
-      occupation: occupation
+    updatePersona.mutate(form, {
+      onSuccess: () => Alert.alert('Saved', 'AI Persona updated successfully.')
     });
+  };
+
+  const updateField = (key: string, value: any) => {
+    setForm((prev: any) => ({ ...prev, [key]: value }));
+  };
+
+  const addInterest = () => {
+    if (newInterest.trim().length > 0) {
+      const updatedInterests = [...(form.interests || []), newInterest.trim()];
+      updateField('interests', updatedInterests);
+      setNewInterest('');
+    }
+  };
+
+  const removeInterest = (interest: string) => {
+    const updatedInterests = (form.interests || []).filter((i: string) => i !== interest);
+    updateField('interests', updatedInterests);
   };
 
   if (isLoading) {
     return (
-      <Screen>
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color={colors.primary} />
-        </View>
+      <Screen scrollable={false} className="flex-1 items-center justify-center bg-surface">
+        <ActivityIndicator size="large" color={colors.primary} />
       </Screen>
     );
   }
 
+  const SectionTitle = ({ title, icon }: { title: string, icon: any }) => (
+    <View className="flex-row items-center gap-2 mb-4 mt-8">
+      <View className="bg-primary/10 p-2 rounded-lg">
+        <MaterialIcons name={icon} size={20} color={colors.primary} />
+      </View>
+      <Text className="font-title-sm text-lg font-bold text-on-surface">{title}</Text>
+    </View>
+  );
+
+  const ChoiceSelector = ({ label, options, value, onSelect }: any) => (
+    <View className="mb-6">
+      <Text className="font-label-sm text-xs text-on-surface-variant font-bold mb-2 ml-1">{label}</Text>
+      <View className="flex-row flex-wrap gap-2">
+        {options.map((opt: string) => (
+          <TouchableOpacity 
+            key={opt}
+            onPress={() => onSelect(opt)}
+            className={`px-4 py-2 rounded-full border ${value === opt ? 'bg-primary border-primary' : 'bg-surface-container-lowest border-outline-variant/30'}`}
+          >
+            <Text className={`font-medium text-sm ${value === opt ? 'text-white' : 'text-on-surface'}`}>{opt}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </View>
+  );
+
   return (
-    <Screen scrollable={true} className="pb-32">
-      {/* TopAppBar */}
-      <View className="w-full sticky top-0 z-50 bg-surface/80 flex-row items-center justify-between px-margin-mobile h-16 md:px-margin-desktop">
+    <Screen scrollable={true} className="pb-32 bg-surface">
+      <View className="w-full sticky top-0 z-50 bg-surface/90 flex-row items-center justify-between px-margin-mobile h-16 border-b border-outline-variant/10">
         <View className="flex-row items-center gap-4">
           <TouchableOpacity onPress={() => router.back()} className="p-2 -ml-2 rounded-full ">
             <MaterialIcons name="arrow-back" size={24} color={colors.primary} />
           </TouchableOpacity>
-          <Text className="font-title-sm text-xl text-primary font-bold">Persona Center</Text>
+          <Text className="font-title-sm text-xl text-primary font-bold">AI Persona</Text>
         </View>
+        <TouchableOpacity onPress={handleSave} className="bg-primary px-4 py-1.5 rounded-full">
+          {updatePersona.isPending ? <ActivityIndicator size="small" color="white" /> : <Text className="text-white font-bold text-sm">Save</Text>}
+        </TouchableOpacity>
       </View>
 
-      <View className="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-desktop py-6">
+      <View className="max-w-2xl mx-auto px-margin-mobile w-full pb-20">
         
-        {/* Header Section */}
-        <View className="mb-8">
-          <Text className="font-headline-md text-3xl font-bold text-on-surface mb-2">Persona Engine</Text>
-          <Text className="text-on-surface-variant font-body-md text-base max-w-2xl">
-            This is your AI's understanding of who you are. The Persona Engine continuously learns from your habits to provide personalized insights and recommendations.
+        {/* Intro */}
+        <View className="mt-6 mb-2">
+          <Text className="font-headline-sm text-2xl font-bold text-on-surface mb-2">Configure Your AI</Text>
+          <Text className="text-on-surface-variant font-body-sm text-sm leading-relaxed">
+            These settings govern how the intelligence engine communicates, analyzes, and learns from you. Changes applied here instantly affect your Assistant, Daily Briefs, and Knowledge Graph.
           </Text>
         </View>
 
-        <View className="flex-col lg:flex-row gap-6 items-start">
+        {/* 1. Communication Style */}
+        <SectionTitle title="Communication Profile" icon="chat" />
+        <View className="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/20 shadow-sm">
+          <ChoiceSelector 
+            label="Base Tone" 
+            options={['Concise', 'Balanced', 'Detailed', 'Professional', 'Friendly', 'Coach']} 
+            value={form.preferred_ai_tone || 'Balanced'} 
+            onSelect={(v: string) => updateField('preferred_ai_tone', v)} 
+          />
+          <ChoiceSelector 
+            label="Response Style" 
+            options={['Conversational', 'Direct', 'Socratic', 'Empathetic']} 
+            value={form.communication_style || 'Conversational'} 
+            onSelect={(v: string) => updateField('communication_style', v)} 
+          />
+        </View>
+
+        {/* 2. Cognitive Behavior */}
+        <SectionTitle title="Cognitive Behavior" icon="psychology" />
+        <View className="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/20 shadow-sm">
+          <ChoiceSelector 
+            label="Reasoning Depth" 
+            options={['Surface', 'Detailed', 'Comprehensive']} 
+            value={form.reasoning_depth || 'Detailed'} 
+            onSelect={(v: string) => updateField('reasoning_depth', v)} 
+          />
+          <ChoiceSelector 
+            label="Creativity Level" 
+            options={['Factual', 'Balanced', 'Imaginative']} 
+            value={form.creative_level || 'Balanced'} 
+            onSelect={(v: string) => updateField('creative_level', v)} 
+          />
+          <ChoiceSelector 
+            label="Instruction Style" 
+            options={['Theory First', 'Examples First', 'Step-by-step', 'Hands-on']} 
+            value={form.personality || 'Examples First'} 
+            onSelect={(v: string) => updateField('personality', v)} 
+          />
+        </View>
+
+        {/* 3. Knowledge Focus */}
+        <SectionTitle title="Knowledge Focus" icon="explore" />
+        <View className="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/20 shadow-sm flex-col">
+          <Text className="text-sm text-on-surface-variant mb-5 leading-relaxed">
+            Specify core topics or domains that the AI should prioritize when processing, connecting, and resurfacing your memories.
+          </Text>
           
-          {/* Left Column */}
-          <View className="flex-col gap-6 flex-1 lg:w-[60%] w-full">
-            
-            {/* AI Tone Section */}
-            <View className="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-outline-variant/30">
-              <View className="flex-row items-center gap-2 mb-6">
-                <View className="bg-secondary-container p-2 rounded-lg">
-                  <MaterialIcons name="record-voice-over" size={24} color={colors['on-secondary-container']} />
-                </View>
-                <Text className="font-title-sm text-xl font-bold text-on-surface">AI Tone & Personality</Text>
-              </View>
-              
-              <View className="flex-col md:flex-row gap-4">
-                {['calm', 'balanced', 'analytical', 'creative'].map((tone) => {
-                  const isActive = activeTone === tone;
-                  const labels: Record<string, {title: string, desc: string}> = {
-                    calm: { title: 'Calm', desc: 'Brief, serene, minimizes interruptions.' },
-                    balanced: { title: 'Balanced', desc: 'Conversational and helpful.' },
-                    analytical: { title: 'Analytical', desc: 'Data-driven, logical, cites sources.' },
-                    creative: { title: 'Creative', desc: 'Expressive and explores connections.' }
-                  };
-                  return (
-                    <TouchableOpacity 
-                      key={tone}
-                      onPress={() => setActiveTone(tone)}
-                      className={`flex-1 p-4 rounded-xl border-2 transition-all flex-col ${isActive ? 'border-primary bg-primary/5' : 'border-outline-variant '}`}
-                    >
-                      <Text className="font-bold text-base mb-1 capitalize text-on-surface">{labels[tone as keyof typeof labels]?.title}</Text>
-                      <Text className="font-caption-sm text-xs text-on-surface-variant">{labels[tone as keyof typeof labels]?.desc}</Text>
-                    </TouchableOpacity>
-                  );
-                })}
-              </View>
-            </View>
-
-            {/* AI Learned Behaviors */}
-            <View className="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-outline-variant/30">
-              <View className="flex-row items-center justify-between mb-6">
-                <View className="flex-row items-center gap-2">
-                  <View className="bg-secondary-container p-2 rounded-lg">
-                    <MaterialIcons name="psychology" size={24} color={colors['on-secondary-container']} />
-                  </View>
-                  <Text className="font-title-sm text-xl font-bold text-on-surface">Learned Behaviors</Text>
-                </View>
-                <TouchableOpacity onPress={() => resetLearning.mutate()} className="flex-row items-center gap-1">
-                  <Text className="text-error font-medium ">Reset</Text>
-                  <MaterialIcons name="refresh" size={18} color={colors.error} />
-                </TouchableOpacity>
-              </View>
-
-              <View className="flex-col gap-2">
-                {profile?.behavior?.data && Object.keys(profile.behavior.data).length > 0 ? (
-                  Object.entries(profile.behavior.data).map(([key, val]) => (
-                    <View key={key} className="flex-row items-center justify-between p-4 bg-surface-container-low rounded-lg">
-                       <Text className="font-medium text-base text-on-surface capitalize">{key.replace(/_/g, ' ')}</Text>
-                       <Text className="text-primary font-bold">{String(val)}</Text>
-                    </View>
-                  ))
-                ) : (
-                  <Text className="text-on-surface-variant italic">AI has not yet learned specific behavioral patterns.</Text>
-                )}
-              </View>
-            </View>
-            
-             {/* Active Goals */}
-             <View className="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-outline-variant/30">
-              <View className="flex-row items-center justify-between mb-6">
-                <View className="flex-row items-center gap-2">
-                  <View className="bg-secondary-container p-2 rounded-lg">
-                    <MaterialIcons name="flag" size={24} color={colors['on-secondary-container']} />
-                  </View>
-                  <Text className="font-title-sm text-xl font-bold text-on-surface">Active Goals</Text>
-                </View>
-                <TouchableOpacity onPress={() => Alert.alert('Coming Soon', 'Goal editor API ready, UI coming.')} className="flex-row items-center gap-1">
-                  <Text className="text-secondary font-medium ">Edit</Text>
-                  <MaterialIcons name="edit" size={18} color={colors.secondary} />
-                </TouchableOpacity>
-              </View>
-
-              <View className="flex-col gap-2">
-                {profile?.goals && profile.goals.length > 0 ? (
-                  profile.goals.map(goal => (
-                    <View key={goal.id} className="flex-row items-center justify-between p-4 bg-surface-container-low rounded-lg">
-                       <View>
-                        <Text className="font-medium text-base text-on-surface">{goal.title}</Text>
-                        <Text className="text-on-surface-variant text-xs">{goal.description}</Text>
-                       </View>
-                    </View>
-                  ))
-                ) : (
-                  <Text className="text-on-surface-variant italic">No active goals configured.</Text>
-                )}
-              </View>
-            </View>
-
+          {/* Input Area */}
+          <View className="flex-row items-center border border-outline-variant/40 rounded-xl bg-surface pl-4 pr-2 h-12 mb-5">
+            <MaterialIcons name="local-offer" size={18} color={colors.outline} />
+            <TextInput 
+              value={newInterest}
+              onChangeText={setNewInterest}
+              placeholder="Add a new focus topic..."
+              placeholderTextColor={colors.outline}
+              className="flex-1 font-body-md text-base text-on-surface h-full mx-3"
+              onSubmitEditing={addInterest}
+              returnKeyType="done"
+            />
+            <TouchableOpacity 
+              onPress={addInterest} 
+              disabled={newInterest.trim().length === 0}
+              className={`px-4 py-1.5 rounded-lg ${newInterest.trim().length > 0 ? 'bg-primary' : 'bg-surface-container-high'}`}
+            >
+              <Text className={`font-bold text-sm ${newInterest.trim().length > 0 ? 'text-white' : 'text-outline'}`}>Add</Text>
+            </TouchableOpacity>
           </View>
 
-          {/* Right Column: Dynamic Stats */}
-          <View className="flex-col gap-6 w-full lg:w-[40%] min-w-[300px]">
-            
-            {/* AI Status */}
-            <View className="bg-surface-container-high rounded-xl p-6 relative overflow-hidden h-64 flex-col justify-end">
-              <View className="absolute inset-0 bg-black/40" />
-              <View className="z-10 flex-col">
-                <View className="flex-row items-center gap-2 mb-2">
-                  <View className="bg-tertiary-fixed px-2 py-0.5 rounded-full">
-                    <Text className="text-on-tertiary-fixed font-label-xs text-[10px] font-bold">ACTIVE</Text>
-                  </View>
-                  <Text className="text-white/80 font-label-xs text-xs uppercase tracking-widest font-bold">Persona Engine</Text>
+          {/* Chips Area */}
+          <View className="flex-row flex-wrap gap-2.5">
+            {(form.interests || []).length === 0 ? (
+              <View className="w-full py-6 items-center justify-center border border-dashed border-outline-variant/40 rounded-xl bg-surface-container-lowest">
+                <Text className="text-sm text-on-surface-variant italic">No focus topics defined yet.</Text>
+              </View>
+            ) : (
+              (form.interests || []).map((interest: string) => (
+                <View key={interest} className="bg-secondary-container px-3 py-2 rounded-xl flex-row items-center gap-2 border border-outline-variant/20 shadow-sm">
+                  <Text className="text-on-secondary-container font-medium text-sm">{interest}</Text>
+                  <TouchableOpacity 
+                    onPress={() => removeInterest(interest)}
+                    className="bg-black/5 rounded-full p-1"
+                    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                  >
+                    <MaterialIcons name="close" size={14} color={colors['on-secondary-container']} />
+                  </TouchableOpacity>
                 </View>
-                <Text className="font-title-sm text-xl text-white font-bold">Intelligence Synced</Text>
-                <Text className="text-white/90 text-caption-sm text-xs mt-1">Your interactions shape this identity in real-time across YRecall.</Text>
-              </View>
-            </View>
-
-            {/* Security Disclaimer */}
-            <View className="bg-error-container p-4 rounded-xl flex-row gap-4 items-start">
-              <MaterialIcons name="verified-user" size={24} color={colors['on-error-container']} />
-              <View className="flex-col flex-1">
-                <Text className="font-bold text-caption-sm text-xs uppercase mb-1 text-on-error-container">Strictly Private</Text>
-                <Text className="text-caption-sm text-xs text-on-error-container leading-relaxed">Your persona belongs only to you. No cross-user data leakage. All reasoning is private.</Text>
-              </View>
-            </View>
-
+              ))
+            )}
           </View>
         </View>
 
-        {/* Footer Actions */}
-        <View className="mt-12 pt-6 border-t border-outline-variant/30 flex-col md:flex-row items-center justify-between gap-4">
-          <Text className="text-on-surface-variant font-caption-sm text-xs italic">Identity changes update your Assistant immediately.</Text>
-          <View className="flex-row items-center gap-4 w-full md:w-auto">
-            <TouchableOpacity onPress={handleSave} className="flex-1 md:flex-initial px-8 h-12 rounded-xl bg-primary items-center justify-center">
-              {updatePersona.isPending ? (
-                 <ActivityIndicator color="white" />
-              ) : (
-                <Text className="text-white font-medium text-base">Save Identity</Text>
-              )}
-            </TouchableOpacity>
-          </View>
+        {/* 4. Danger Zone */}
+        <SectionTitle title="Maintenance" icon="build" />
+        <View className="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/20 shadow-sm">
+          <Text className="text-sm text-on-surface-variant mb-4">Reset the automatic behavioral traits the AI has learned from your usage history.</Text>
+          
+          <TouchableOpacity 
+            onPress={() => Alert.alert('Confirm', 'Are you sure you want to reset all learned behavioral traits? This will not delete your data, only the implicit habits the AI has formed.', [
+              { text: 'Cancel', style: 'cancel' },
+              { text: 'Reset Traits', style: 'destructive', onPress: () => resetLearning.mutate() }
+            ])}
+            className="flex-row items-center justify-between p-4 bg-error/10 border border-error/20 rounded-xl"
+          >
+            <Text className="font-bold text-error">Reset Learned Behavior</Text>
+            <MaterialIcons name="restart-alt" size={20} color={colors.error} />
+          </TouchableOpacity>
         </View>
 
       </View>

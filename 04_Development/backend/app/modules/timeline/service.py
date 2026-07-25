@@ -19,10 +19,25 @@ def get_timeline(
     workspace_id: Optional[uuid.UUID] = None
 ) -> dict:
     
+    # 1. Fetch user memory filter settings
+    from ..filters.models import MemoryFilterSettings
+    settings = db.query(MemoryFilterSettings).filter(MemoryFilterSettings.user_id == user.id).first()
+    
     query = db.query(Capture).filter(
         Capture.deleted_at == None
     )
     
+    # 2. Apply Visibility Rules
+    if settings:
+        if settings.hide_workspace_memories and not workspace_id:
+            from ..collaboration.models import SharedCapture
+            subq = db.query(SharedCapture.capture_id).subquery()
+            query = query.filter(Capture.id.notin_(subq))
+            
+        if settings.hide_temporary:
+            query = query.filter(Capture.status != "processing")
+
+    # 3. Handle Workspace Filter
     if workspace_id:
         from ..collaboration.models import SharedCapture
         query = query.join(SharedCapture, SharedCapture.capture_id == Capture.id).filter(
@@ -31,6 +46,24 @@ def get_timeline(
     else:
         query = query.filter(Capture.user_id == user.id)
     
+    # 4. Apply Category Rules
+    if settings and settings.enabled_categories and not type_filter:
+        valid_types = []
+        cat_map = {
+            "notes": ["note", "text", "clipboard"],
+            "voice": ["voice", "audio"],
+            "images": ["image", "screenshot"],
+            "videos": ["video"],
+            "pdfs": ["pdf", "document"],
+            "links": ["url"],
+            "locations": ["location"]
+        }
+        for cat in settings.enabled_categories:
+            if cat in cat_map:
+                valid_types.extend(cat_map[cat])
+        if valid_types:
+            query = query.filter(Capture.type.in_(valid_types))
+
     if type_filter:
         query = query.filter(Capture.type == type_filter)
         
@@ -54,13 +87,21 @@ def get_timeline(
         
     total_items = query.count()
     from sqlalchemy.orm import selectinload
+    
+    # 5. Apply Timeline Sort Defaults
+    order_clause = desc(Capture.created_at)
+    if settings and not search_query: # Search query overrides default sort (usually relevance)
+        if settings.default_timeline_sort == "pinned_first":
+            query = query.outerjoin(CaptureNote, CaptureNote.capture_id == Capture.id)
+            order_clause = desc(CaptureNote.is_pinned).nulls_last()
+            
     captures = query.options(
         selectinload(Capture.note_metadata),
         selectinload(Capture.media_metadata),
         selectinload(Capture.url_metadata),
         selectinload(Capture.location_metadata),
         selectinload(Capture.entities)
-    ).order_by(desc(Capture.created_at)).offset(skip).limit(limit).all()
+    ).order_by(order_clause, desc(Capture.created_at)).offset(skip).limit(limit).all()
     
     total_pages = (total_items + limit - 1) // limit if limit > 0 else 1
     page = (skip // limit) + 1 if limit > 0 else 1

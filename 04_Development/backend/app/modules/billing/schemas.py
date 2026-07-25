@@ -78,6 +78,7 @@ class VerifyPaymentRequest(BaseModel):
     razorpay_payment_id: str
     razorpay_order_id: str
     razorpay_signature: str
+    billing_cycle: str = Field("monthly", pattern="^(monthly|yearly)$")
 
 class EntitlementCheckResponse(BaseModel):
     feature: str

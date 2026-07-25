@@ -7,6 +7,11 @@ export interface UserPersona {
     productivity_style?: string;
     personality?: string;
     occupation?: string;
+    industry?: string;
+    role?: string;
+    country?: string;
+    age_group?: string;
+    education_level?: string;
     interests?: string[];
     preferred_language?: string;
     preferred_ai_tone?: string;
@@ -17,6 +22,21 @@ export interface UserPersona {
     memory_goals?: string;
     long_term_goals?: string;
     preferred_summary_size?: string;
+    
+    // Behavior config
+    learning_speed?: string;
+    creative_level?: string;
+    analytical_level?: string;
+    reasoning_depth?: string;
+    
+    // Memory config
+    capture_priority?: string;
+    relationship_discovery?: string;
+    auto_categorization?: string;
+    entity_importance?: string;
+    memory_retention?: string;
+    timeline_preferences?: string;
+    graph_expansion?: string;
 }
 
 export interface UserGoal {
