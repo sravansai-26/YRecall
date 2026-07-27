@@ -241,26 +241,33 @@ export default function DataProtectionCenter() {
  <ToggleSetting label="Integrity Checks" description="Verify backup consistency." value={form.backup_integrity_checks} onToggle={(v: boolean) => updateField('backup_integrity_checks', v)} />
  </View>
 
- {/* 10. Data Lifecycle */}
- <SectionTitle title="Data Lifecycle Pipeline" icon="timeline" />
- <View className="bg-surface-container-lowest p-4 rounded-2xl py-6 items-center">
- {[
- { title: 'Capture Memory', icon: 'lens' },
- { title: 'Local Encryption', icon: 'lock' },
- { title: 'Secure Transfer', icon: 'flight-takeoff' },
- { title: 'Cloud Indexing', icon: 'dns' },
- ].map((step, index) => (
- <React.Fragment key={step.title}>
- <View className="flex-row items-center gap-3 w-48">
- <View className="bg-primary/10 p-2 rounded-full">
- <MaterialIcons name={step.icon as any} size={20} color={colors.primary} />
- </View>
- <Text className="font-bold text-sm text-on-surface">{step.title}</Text>
- </View>
- {index < 3 && <View className="h-6 border-l-2 border-primary/30 my-1 w-48 ml-4" />}
- </React.Fragment>
- ))}
- </View>
+  {/* 10. Data Lifecycle */}
+  <SectionTitle title="Data Lifecycle Pipeline" icon="timeline" />
+  <View className="bg-surface-container-lowest rounded-3xl p-6 py-8 mb-4 shadow-sm">
+  <View className="relative">
+  {/* Vertical Line Background */}
+  <View className="absolute left-6 top-6 bottom-6 w-[2px] bg-primary/20" />
+  
+  {[
+  { title: 'Capture Memory', icon: 'lens', desc: 'Raw data is recorded locally on device' },
+  { title: 'Local Encryption', icon: 'lock', desc: 'Encrypted with AES-256 local keys' },
+  { title: 'Secure Transfer', icon: 'flight-takeoff', desc: 'Transferred via pinned TLS 1.3' },
+  { title: 'Cloud Vault', icon: 'dns', desc: 'Encrypted at rest in secure servers' },
+  ].map((step, index) => (
+  <View key={step.title} className="flex-row items-start gap-5 mb-8 last:mb-0 relative z-10">
+  <View className="bg-surface-container-lowest border-4 border-surface-container-lowest w-12 h-12 rounded-full items-center justify-center">
+  <View className="bg-primary/10 w-10 h-10 rounded-full items-center justify-center">
+  <MaterialIcons name={step.icon as any} size={20} color={colors.primary} />
+  </View>
+  </View>
+  <View className="flex-1 mt-1">
+  <Text className="font-bold text-base text-on-surface mb-0.5">{step.title}</Text>
+  <Text className="text-sm text-on-surface-variant leading-5">{step.desc}</Text>
+  </View>
+  </View>
+  ))}
+  </View>
+  </View>
 
  {/* 11 & 12. Audit & Diagnostics */}
  <SectionTitle title="Diagnostics & Audit" icon="bug-report" />

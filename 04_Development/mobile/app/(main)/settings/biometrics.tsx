@@ -122,30 +122,30 @@ export default function IdentitySecurityCenterScreen() {
  </View>
 
  {/* 1. Security Overview */}
- <View className="bg-primary/10 rounded-3xl p-6 mb-8 border border-primary/20">
+ <View className="bg-primary p-5 rounded-[24px] mt-2 mb-8 shadow-sm">
  <View className="flex-row items-center gap-4 mb-4">
+ <View className="bg-secondary p-3 rounded-full">
  <MaterialCommunityIcons 
  name={isBiometricActive ? "shield-check-outline" : "shield-alert-outline"} 
- size={32} 
- color={isBiometricActive ? colors.primary : colors.error} 
+ size={28} 
+ color="white" 
  />
+ </View>
  <View>
- <Text className="text-on-surface font-bold text-lg">
+ <Text className="text-white/70 text-xs font-bold uppercase tracking-wider">Overall Status</Text>
+ <Text className="text-white text-xl font-bold">
  {isBiometricActive ? 'High Security' : 'Basic Security'}
- </Text>
- <Text className="text-on-surface-variant text-sm">
- {isBiometricActive ? 'Your account is strongly protected.' : 'Enable biometrics to enhance security.'}
  </Text>
  </View>
  </View>
  <View className="flex-row gap-4 mt-2">
- <View className="bg-surface-container-lowest/50 px-3 py-2 rounded-xl flex-1 ">
- <Text className="text-xs text-on-surface-variant uppercase font-bold mb-1">Active Sessions</Text>
- <Text className="text-lg font-bold text-on-surface">{sessions?.length ?? 0}</Text>
+ <View className="bg-white/10 px-3 py-2 rounded-xl flex-1 ">
+ <Text className="text-white/70 text-xs uppercase font-bold mb-1">Active Sessions</Text>
+ <Text className="text-lg font-bold text-white">{sessions?.length ?? 0}</Text>
  </View>
- <View className="bg-surface-container-lowest/50 px-3 py-2 rounded-xl flex-1 ">
- <Text className="text-xs text-on-surface-variant uppercase font-bold mb-1">Protected Areas</Text>
- <Text className="text-lg font-bold text-on-surface">{settings?.protected_categories?.length ?? 0}</Text>
+ <View className="bg-white/10 px-3 py-2 rounded-xl flex-1 ">
+ <Text className="text-white/70 text-xs uppercase font-bold mb-1">Protected Areas</Text>
+ <Text className="text-lg font-bold text-white">{settings?.protected_categories?.length ?? 0}</Text>
  </View>
  </View>
  </View>
