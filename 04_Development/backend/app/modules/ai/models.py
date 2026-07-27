@@ -4,6 +4,7 @@ from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.sql import func
 from pgvector.sqlalchemy import Vector
 from ...core.database import Base
+from ...modules.collaboration.models import Workspace # Required for FK resolution
 
 class AIConversation(Base):
     __tablename__ = "ai_conversations"

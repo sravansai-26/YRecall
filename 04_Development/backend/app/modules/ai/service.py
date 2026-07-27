@@ -203,6 +203,7 @@ ALWAYS cite the memories if you use them.
         role="assistant",
         content=assistant_reply
     )
+    db.add(assistant_msg)
     db.commit()
     db.refresh(assistant_msg)
     
