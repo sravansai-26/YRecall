@@ -62,6 +62,48 @@ def update_security_settings(
     )
     return settings
 
+from .models import EncryptionSettings
+
+@router.get("/encryption-settings", response_model=schemas.EncryptionSettingsResponse)
+def get_encryption_settings(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    settings = db.query(EncryptionSettings).filter(EncryptionSettings.user_id == current_user.id).first()
+    if not settings:
+        settings = EncryptionSettings(user_id=current_user.id)
+        db.add(settings)
+        db.commit()
+        db.refresh(settings)
+    return settings
+
+@router.put("/encryption-settings", response_model=schemas.EncryptionSettingsResponse)
+def update_encryption_settings(
+    settings_update: schemas.EncryptionSettingsUpdate,
+    request: Request,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    settings = db.query(EncryptionSettings).filter(EncryptionSettings.user_id == current_user.id).first()
+    if not settings:
+        settings = EncryptionSettings(user_id=current_user.id)
+        db.add(settings)
+    
+    update_data = settings_update.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(settings, key, value)
+        
+    db.commit()
+    db.refresh(settings)
+    
+    log_security_event(
+        db, current_user.id, "encryption_settings_changed", 
+        ip_address=request.client.host,
+        details={"changes": update_data}
+    )
+    return settings
+
+
 @router.get("/sessions", response_model=List[schemas.DeviceSessionResponse])
 def get_sessions(
     db: Session = Depends(get_db),

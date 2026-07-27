@@ -222,14 +222,14 @@ export default function SettingsHub() {
           <View className="flex-col gap-4">
             <Text className="font-label-xs text-xs text-on-surface-variant font-bold uppercase tracking-widest px-1">System</Text>
             <View className="bg-surface-container-lowest rounded-[24px] overflow-hidden shadow-sm border border-outline-variant/20">
-              <TouchableOpacity onPress={() => router.push('/settings/accessibility')} className="w-full flex-row items-center justify-between p-6 bg-white ">
+              <TouchableOpacity onPress={() => router.push('/settings/experience')} className="w-full flex-row items-center justify-between p-6 bg-white ">
                 <View className="flex-row items-center gap-4">
                   <View className="w-10 h-10 items-center justify-center rounded-xl bg-surface-container">
                     <MaterialIcons name="palette" size={24} color={colors['on-surface-variant']} />
                   </View>
                   <View className="flex-col">
-                    <Text className="font-body-md text-base font-bold text-primary">Appearance & Accessibility</Text>
-                    <Text className="font-caption-sm text-xs text-on-surface-variant">Light Mode • System Font Scale</Text>
+                    <Text className="font-body-md text-base font-bold text-primary">Experience & Appearance</Text>
+                    <Text className="font-caption-sm text-xs text-on-surface-variant">Themes, Language & Accessibility</Text>
                   </View>
                 </View>
                 <MaterialIcons name="chevron-right" size={24} color={colors.outline} />

@@ -1,5 +1,6 @@
 import uuid
-from sqlalchemy import Column, String, DateTime, Integer
+from sqlalchemy import Column, String, DateTime, Integer, ForeignKey, Boolean
+from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.sql import func
 from ...core.database import Base
@@ -37,3 +38,36 @@ class User(Base):
     )
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+class ExperienceSettings(Base):
+    __tablename__ = "experience_settings"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), unique=True, nullable=False)
+    
+    # Appearance & Theme
+    theme = Column(String, default="system") # light, dark, system
+    accent_color = Column(String, default="default")
+    
+    # Typography
+    font_size = Column(String, default="medium") # small, medium, large, x-large
+    display_density = Column(String, default="comfortable") # compact, comfortable, spacious
+    
+    # Localization & Language
+    language = Column(String, default="en") # en, hi, te, ta, kn, ml, bn, mr, gu, pa, or, as, ur, es, fr, de, it, pt, ru, ar, tr, ja, ko, zh-CN, zh-TW, id, ms, vi, th, pl, nl
+    
+    # Reading Experience
+    reading_mode = Column(Boolean, default=False)
+    
+    # Motion & Animation
+    reduce_motion = Column(Boolean, default=False)
+    
+    # Accessibility
+    high_contrast = Column(Boolean, default=False)
+    color_blind_friendly = Column(Boolean, default=False)
+    screen_reader_optimization = Column(Boolean, default=False)
+    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+    user = relationship("User")

@@ -93,7 +93,7 @@ export default function IdentitySecurityCenterScreen() {
 
   if (loadingSettings) {
     return (
-      <Screen className="items-center justify-center">
+      <Screen scrollable={false} className="items-center justify-center">
         <ActivityIndicator size="large" color={colors.primary} />
       </Screen>
     );

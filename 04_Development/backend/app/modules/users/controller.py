@@ -119,3 +119,38 @@ def get_full_profile(
         "statistics": stats,
         "persona": persona_data
     }
+
+from .models import ExperienceSettings
+from .schemas import ExperienceSettingsResponse, ExperienceSettingsUpdate
+
+@router.get("/experience", response_model=ExperienceSettingsResponse)
+def get_experience_settings(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    settings = db.query(ExperienceSettings).filter(ExperienceSettings.user_id == current_user.id).first()
+    if not settings:
+        settings = ExperienceSettings(user_id=current_user.id)
+        db.add(settings)
+        db.commit()
+        db.refresh(settings)
+    return settings
+
+@router.put("/experience", response_model=ExperienceSettingsResponse)
+def update_experience_settings(
+    settings_update: ExperienceSettingsUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    settings = db.query(ExperienceSettings).filter(ExperienceSettings.user_id == current_user.id).first()
+    if not settings:
+        settings = ExperienceSettings(user_id=current_user.id)
+        db.add(settings)
+    
+    update_data = settings_update.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(settings, key, value)
+        
+    db.commit()
+    db.refresh(settings)
+    return settings

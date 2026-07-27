@@ -66,3 +66,54 @@ class SecurityAuditLog(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     user = relationship("User")
+
+class EncryptionSettings(Base):
+    __tablename__ = "encryption_settings"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), unique=True, nullable=False)
+    
+    # Local Device Protection
+    secure_local_storage = Column(Boolean, default=True)
+    encrypted_cache = Column(Boolean, default=True)
+    encrypted_temp_files = Column(Boolean, default=True)
+    offline_encryption = Column(Boolean, default=True)
+    local_db_protection = Column(Boolean, default=True)
+    secure_file_storage = Column(Boolean, default=True)
+    auto_cache_cleanup = Column(Boolean, default=True)
+
+    # Cloud Protection
+    encrypted_uploads = Column(Boolean, default=True)
+    protected_cloud_storage = Column(Boolean, default=True)
+    encrypted_metadata = Column(Boolean, default=False)
+    protected_sync = Column(Boolean, default=True)
+    secure_api = Column(Boolean, default=True)
+
+    # Sensitive Data Protection
+    enhanced_protection_categories = Column(JSONB, server_default='["financial", "identity", "medical", "passwords", "voice"]')
+
+    # Encryption Policies
+    default_protection_level = Column(String, default="standard") # standard, high, maximum
+    sensitive_data_policy = Column(String, default="strict") # strict, relaxed
+    export_protection = Column(Boolean, default=True)
+    sharing_protection = Column(Boolean, default=True)
+    temp_file_lifetime_hours = Column(Integer, default=24)
+    
+    # Secure Sharing
+    encrypted_sharing = Column(Boolean, default=True)
+    workspace_encryption = Column(Boolean, default=False)
+    protected_shared_links = Column(Boolean, default=True)
+    share_expiration_days = Column(Integer, default=7)
+    access_restrictions = Column(Boolean, default=True)
+    
+    # Secure Backups
+    encrypted_backup = Column(Boolean, default=True)
+    backup_verification = Column(Boolean, default=True)
+    auto_backup_validation = Column(Boolean, default=True)
+    backup_integrity_checks = Column(Boolean, default=True)
+    restore_verification = Column(Boolean, default=True)
+    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+    user = relationship("User")

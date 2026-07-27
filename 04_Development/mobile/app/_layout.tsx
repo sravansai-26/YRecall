@@ -83,6 +83,7 @@ function RootNavigationHandler() {
 import { QueryProvider } from '../src/providers/QueryProvider';
 import { setupApiInterceptors } from '../src/services/api/interceptors';
 import { StatusBar } from 'expo-status-bar';
+import { ExperienceProvider } from '../src/shared/providers/ExperienceProvider';
 
 setupApiInterceptors();
 
@@ -105,17 +106,19 @@ export default function RootLayout() {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <StatusBar style="dark" backgroundColor="transparent" translucent={true} />
-      <SafeAreaProvider>
-        <BottomSheetModalProvider>
-          <QueryProvider>
-            <AuthProvider>
-              <RootNavigationHandler />
-            </AuthProvider>
-          </QueryProvider>
-        </BottomSheetModalProvider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <QueryProvider>
+      <AuthProvider>
+        <ExperienceProvider>
+          <BottomSheetModalProvider>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <SafeAreaProvider>
+                <RootNavigationHandler />
+                <StatusBar style="auto" />
+              </SafeAreaProvider>
+            </GestureHandlerRootView>
+          </BottomSheetModalProvider>
+        </ExperienceProvider>
+      </AuthProvider>
+    </QueryProvider>
   );
 }
