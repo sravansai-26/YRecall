@@ -8,11 +8,13 @@ import { useAuthStore } from '../../../src/shared/store/useAuthStore';
 import { auth } from '../../../src/shared/lib/firebase';
 import { signOut } from 'firebase/auth';
 import { useEntitlements } from '../../../src/modules/billing/store';
+import { useTranslation } from 'react-i18next';
 
 export default function SettingsHub() {
   const router = useRouter();
   const { user, profileDetails, setUser } = useAuthStore();
   const { planId, isPremium } = useEntitlements();
+  const { t } = useTranslation();
 
   const handleSignOut = async () => {
     try {
@@ -32,7 +34,7 @@ export default function SettingsHub() {
           <TouchableOpacity onPress={() => router.back()} className="p-2 -ml-2 rounded-full ">
             <MaterialIcons name="arrow-back" size={24} color={colors.primary} />
           </TouchableOpacity>
-          <Text className="font-title-sm text-xl text-primary font-bold">Settings</Text>
+          <Text className="font-title-sm text-xl text-primary font-bold">{t('settings.title')}</Text>
         </View>
         <TouchableOpacity onPress={() => router.push('/(modals)/search')} className="p-2 rounded-full ">
           <MaterialIcons name="search" size={24} color={colors.primary} />
@@ -43,10 +45,10 @@ export default function SettingsHub() {
         
         {/* User Profile Card */}
         <View className="w-full">
-          <TouchableOpacity onPress={() => router.push('/(main)/profile-edit')} className="bg-surface-container-lowest rounded-[24px] p-6 shadow-sm flex-col md:flex-row md:items-center justify-between gap-4 border border-outline-variant/10 ">
+          <TouchableOpacity onPress={() => router.push('/(main)/profile-edit')} className="bg-surface-container-lowest rounded-[24px] p-6 shadow-sm flex-col md:flex-row md:items-center justify-between gap-4">
             <View className="flex-row items-center gap-6">
               <View className="relative">
-                <View className="w-20 h-20 rounded-full overflow-hidden border-2 border-primary/10 items-center justify-center bg-primary/10">
+                <View className="w-20 h-20 rounded-full overflow-hidden border border-outline-variant/20 items-center justify-center bg-primary/10">
                   {user?.photoURL ? (
                     <Image source={{ uri: user.photoURL }} className="w-full h-full" />
                   ) : (
@@ -64,7 +66,7 @@ export default function SettingsHub() {
                   </View>
                   <TouchableOpacity onPress={() => router.push('/settings/billing')} className="mt-1">
                   <Text className="font-body-sm text-sm text-secondary font-medium underline">
-                    {isPremium ? `Premium Member` : `Basic User - Upgrade to Premium/Pro Plans`}
+                    {isPremium ? t('settings.premiumMember') : t('settings.basicUser')}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -77,20 +79,20 @@ export default function SettingsHub() {
           
           {/* The Brain / Knowledge Graph (Premium Section) */}
           <View className="flex-col gap-4">
-            <Text className="font-label-xs text-xs text-on-surface-variant font-bold uppercase tracking-widest px-1">Neural Network</Text>
+            <Text className="font-label-xs text-xs text-on-surface-variant font-bold uppercase tracking-widest px-1">{t('settings.neuralNetwork')}</Text>
             <TouchableOpacity 
               onPress={() => router.push('/(main)/knowledge-graph')} 
-              className="bg-surface-container-lowest rounded-[24px] overflow-hidden shadow-sm border border-primary/20 mb-4"
+              className="bg-surface-container-lowest rounded-[24px] overflow-hidden shadow-sm mb-4"
             >
               <View className="w-full flex-row items-center justify-between p-6 bg-white relative">
                 <View className="absolute inset-0 bg-primary/5" />
                 <View className="flex-row items-center gap-4 z-10">
-                  <View className="w-12 h-12 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20">
+                  <View className="w-12 h-12 items-center justify-center rounded-2xl bg-primary/10">
                     <MaterialIcons name="hub" size={28} color={colors.primary} />
                   </View>
                   <View className="flex-col">
-                    <Text className="font-headline-sm text-lg font-bold text-primary">Interactive Graph</Text>
-                    <Text className="font-caption-sm text-xs text-on-surface-variant mt-0.5">Explore your connected memories</Text>
+                    <Text className="font-headline-sm text-lg font-bold text-primary">{t('settings.interactiveGraph')}</Text>
+                    <Text className="font-caption-sm text-xs text-on-surface-variant mt-0.5">{t('settings.exploreGraph')}</Text>
                   </View>
                 </View>
                 <View className="z-10 bg-primary/10 rounded-full p-2">
@@ -101,7 +103,7 @@ export default function SettingsHub() {
 
             <TouchableOpacity 
               onPress={() => router.push('/settings/knowledge-graph')} 
-              className="bg-surface-container-lowest rounded-[24px] overflow-hidden shadow-sm border border-outline-variant/20"
+              className="bg-surface-container-lowest rounded-[24px] overflow-hidden shadow-sm"
             >
               <View className="w-full flex-row items-center justify-between p-6 bg-white relative">
                 <View className="flex-row items-center gap-4 z-10">
@@ -109,8 +111,8 @@ export default function SettingsHub() {
                     <MaterialIcons name="settings" size={24} color={colors['on-surface-variant']} />
                   </View>
                   <View className="flex-col">
-                    <Text className="font-body-md text-base font-bold text-primary">Graph Settings</Text>
-                    <Text className="font-caption-sm text-xs text-on-surface-variant mt-0.5">AI Preferences & Rules</Text>
+                    <Text className="font-body-md text-base font-bold text-primary">{t('settings.graphSettings')}</Text>
+                    <Text className="font-caption-sm text-xs text-on-surface-variant mt-0.5">{t('settings.graphSettingsDesc')}</Text>
                   </View>
                 </View>
                 <View className="z-10 bg-surface-container-high rounded-full p-2">
@@ -122,16 +124,16 @@ export default function SettingsHub() {
           
           {/* Personalization (AI Focus) */}
           <View className="flex-col gap-4">
-            <Text className="font-label-xs text-xs text-on-surface-variant font-bold uppercase tracking-widest px-1">Intelligence & Experience</Text>
-            <View className="bg-surface-container-lowest rounded-[24px] overflow-hidden shadow-sm border border-outline-variant/20">
+            <Text className="font-label-xs text-xs text-on-surface-variant font-bold uppercase tracking-widest px-1">{t('settings.intelligenceExp')}</Text>
+            <View className="bg-surface-container-lowest rounded-[24px] overflow-hidden shadow-sm">
               <TouchableOpacity onPress={() => router.push('/settings/ai')} className="w-full flex-row items-center justify-between p-6 bg-white ">
                 <View className="flex-row items-center gap-4">
                   <View className="w-10 h-10 items-center justify-center rounded-xl bg-secondary/10">
                     <MaterialIcons name="auto-awesome" size={24} color={colors.secondary} />
                   </View>
                   <View className="flex-col">
-                    <Text className="font-body-md text-base font-bold text-primary">AI Persona</Text>
-                    <Text className="font-caption-sm text-xs text-on-surface-variant">Sophisticated & Academic</Text>
+                    <Text className="font-body-md text-base font-bold text-primary">{t('settings.aiPersona')}</Text>
+                    <Text className="font-caption-sm text-xs text-on-surface-variant">{t('settings.aiPersonaDesc')}</Text>
                   </View>
                 </View>
                 <MaterialIcons name="chevron-right" size={24} color={colors.outline} />
@@ -145,8 +147,8 @@ export default function SettingsHub() {
                     <MaterialIcons name="record-voice-over" size={24} color={colors.secondary} />
                   </View>
                   <View className="flex-col">
-                    <Text className="font-body-md text-base font-bold text-primary">Voice</Text>
-                    <Text className="font-caption-sm text-xs text-on-surface-variant">Natural British (Female)</Text>
+                    <Text className="font-body-md text-base font-bold text-primary">{t('settings.voice')}</Text>
+                    <Text className="font-caption-sm text-xs text-on-surface-variant">{t('settings.voiceDesc')}</Text>
                   </View>
                 </View>
                 <MaterialIcons name="chevron-right" size={24} color={colors.outline} />
@@ -160,8 +162,8 @@ export default function SettingsHub() {
                     <MaterialIcons name="filter-alt" size={24} color={colors.secondary} />
                   </View>
                   <View className="flex-col">
-                    <Text className="font-body-md text-base font-bold text-primary">Memory Filters</Text>
-                    <Text className="font-caption-sm text-xs text-on-surface-variant">Only include positive sentiments</Text>
+                    <Text className="font-body-md text-base font-bold text-primary">{t('settings.memoryFilters')}</Text>
+                    <Text className="font-caption-sm text-xs text-on-surface-variant">{t('settings.memoryFiltersDesc')}</Text>
                   </View>
                 </View>
                 <MaterialIcons name="chevron-right" size={24} color={colors.outline} />
@@ -175,8 +177,8 @@ export default function SettingsHub() {
                     <MaterialIcons name="smart-toy" size={24} color={colors.primary} />
                   </View>
                   <View className="flex-col">
-                    <Text className="font-body-md text-base font-bold text-primary">Automation Center</Text>
-                    <Text className="font-caption-sm text-xs text-on-surface-variant">Workflows, AI Tasks & Reminders</Text>
+                    <Text className="font-body-md text-base font-bold text-primary">{t('settings.automationCenter')}</Text>
+                    <Text className="font-caption-sm text-xs text-on-surface-variant">{t('settings.automationDesc')}</Text>
                   </View>
                 </View>
                 <MaterialIcons name="chevron-right" size={24} color={colors.outline} />
@@ -186,16 +188,16 @@ export default function SettingsHub() {
 
           {/* Privacy & Safety */}
           <View className="flex-col gap-4">
-            <Text className="font-label-xs text-xs text-on-surface-variant font-bold uppercase tracking-widest px-1">Security</Text>
-            <View className="bg-surface-container-lowest rounded-[24px] overflow-hidden shadow-sm border border-outline-variant/20">
+            <Text className="font-label-xs text-xs text-on-surface-variant font-bold uppercase tracking-widest px-1">{t('settings.security')}</Text>
+            <View className="bg-surface-container-lowest rounded-[24px] overflow-hidden shadow-sm">
               <TouchableOpacity onPress={() => router.push('/settings/biometrics')} className="w-full flex-row items-center justify-between p-6 bg-white ">
                 <View className="flex-row items-center gap-4">
                   <View className="w-10 h-10 items-center justify-center rounded-xl bg-surface-container">
                     <MaterialIcons name="fingerprint" size={24} color={colors['on-surface-variant']} />
                   </View>
                   <View className="flex-col">
-                    <Text className="font-body-md text-base font-bold text-primary">Biometrics</Text>
-                    <Text className="font-caption-sm text-xs text-on-surface-variant">Enabled for app entry</Text>
+                    <Text className="font-body-md text-base font-bold text-primary">{t('settings.biometrics')}</Text>
+                    <Text className="font-caption-sm text-xs text-on-surface-variant">{t('settings.biometricsDesc')}</Text>
                   </View>
                 </View>
                 <MaterialIcons name="chevron-right" size={24} color={colors.outline} />
@@ -209,8 +211,8 @@ export default function SettingsHub() {
                     <MaterialIcons name="lock" size={24} color={colors['on-surface-variant']} />
                   </View>
                   <View className="flex-col">
-                    <Text className="font-body-md text-base font-bold text-primary">Data Encryption</Text>
-                    <Text className="font-caption-sm text-xs text-on-surface-variant">End-to-end active</Text>
+                    <Text className="font-body-md text-base font-bold text-primary">{t('settings.encryption')}</Text>
+                    <Text className="font-caption-sm text-xs text-on-surface-variant">{t('settings.encryptionDesc')}</Text>
                   </View>
                 </View>
                 <MaterialIcons name="chevron-right" size={24} color={colors.outline} />
@@ -220,16 +222,16 @@ export default function SettingsHub() {
 
           {/* System */}
           <View className="flex-col gap-4">
-            <Text className="font-label-xs text-xs text-on-surface-variant font-bold uppercase tracking-widest px-1">System</Text>
-            <View className="bg-surface-container-lowest rounded-[24px] overflow-hidden shadow-sm border border-outline-variant/20">
+            <Text className="font-label-xs text-xs text-on-surface-variant font-bold uppercase tracking-widest px-1">{t('settings.system')}</Text>
+            <View className="bg-surface-container-lowest rounded-[24px] overflow-hidden shadow-sm">
               <TouchableOpacity onPress={() => router.push('/settings/experience')} className="w-full flex-row items-center justify-between p-6 bg-white ">
                 <View className="flex-row items-center gap-4">
                   <View className="w-10 h-10 items-center justify-center rounded-xl bg-surface-container">
                     <MaterialIcons name="palette" size={24} color={colors['on-surface-variant']} />
                   </View>
                   <View className="flex-col">
-                    <Text className="font-body-md text-base font-bold text-primary">Experience & Appearance</Text>
-                    <Text className="font-caption-sm text-xs text-on-surface-variant">Themes, Language & Accessibility</Text>
+                    <Text className="font-body-md text-base font-bold text-primary">{t('settings.experience')}</Text>
+                    <Text className="font-caption-sm text-xs text-on-surface-variant">{t('settings.experienceDesc')}</Text>
                   </View>
                 </View>
                 <MaterialIcons name="chevron-right" size={24} color={colors.outline} />
@@ -243,8 +245,8 @@ export default function SettingsHub() {
                     <MaterialIcons name="notifications" size={24} color={colors['on-surface-variant']} />
                   </View>
                   <View className="flex-col">
-                    <Text className="font-body-md text-base font-bold text-primary">Notifications</Text>
-                    <Text className="font-caption-sm text-xs text-on-surface-variant">Configure push alerts and reminders</Text>
+                    <Text className="font-body-md text-base font-bold text-primary">{t('settings.notifications')}</Text>
+                    <Text className="font-caption-sm text-xs text-on-surface-variant">{t('settings.notificationsDesc')}</Text>
                   </View>
                 </View>
                 <MaterialIcons name="chevron-right" size={24} color={colors.outline} />
@@ -258,8 +260,8 @@ export default function SettingsHub() {
                     <MaterialIcons name="cloud-sync" size={24} color={colors['on-surface-variant']} />
                   </View>
                   <View className="flex-col">
-                    <Text className="font-body-md text-base font-bold text-primary">Data & Storage</Text>
-                    <Text className="font-caption-sm text-xs text-on-surface-variant">Cloud Sync active • 1.2GB stored</Text>
+                    <Text className="font-body-md text-base font-bold text-primary">{t('settings.dataStorage')}</Text>
+                    <Text className="font-caption-sm text-xs text-on-surface-variant">{t('settings.dataStorageDesc')}</Text>
                   </View>
                 </View>
                 <MaterialIcons name="chevron-right" size={24} color={colors.outline} />
@@ -273,8 +275,8 @@ export default function SettingsHub() {
                     <MaterialIcons name="import-export" size={24} color={colors['on-surface-variant']} />
                   </View>
                   <View className="flex-col">
-                    <Text className="font-body-md text-base font-bold text-primary">Import / Export</Text>
-                    <Text className="font-caption-sm text-xs text-on-surface-variant">Data portability</Text>
+                    <Text className="font-body-md text-base font-bold text-primary">{t('settings.importExport')}</Text>
+                    <Text className="font-caption-sm text-xs text-on-surface-variant">{t('settings.importExportDesc')}</Text>
                   </View>
                 </View>
                 <MaterialIcons name="chevron-right" size={24} color={colors.outline} />
@@ -288,8 +290,8 @@ export default function SettingsHub() {
                     <MaterialIcons name="widgets" size={24} color={colors['on-surface-variant']} />
                   </View>
                   <View className="flex-col">
-                    <Text className="font-body-md text-base font-bold text-primary">Widget Configuration</Text>
-                    <Text className="font-caption-sm text-xs text-on-surface-variant">System widgets setup</Text>
+                    <Text className="font-body-md text-base font-bold text-primary">{t('settings.widgetConfig')}</Text>
+                    <Text className="font-caption-sm text-xs text-on-surface-variant">{t('settings.widgetConfigDesc')}</Text>
                   </View>
                 </View>
                 <MaterialIcons name="chevron-right" size={24} color={colors.outline} />
@@ -303,8 +305,8 @@ export default function SettingsHub() {
                     <MaterialIcons name="payment" size={24} color={colors['on-surface-variant']} />
                   </View>
                   <View className="flex-col">
-                    <Text className="font-body-md text-base font-bold text-primary">Billing & Subscription</Text>
-                    <Text className="font-caption-sm text-xs text-on-surface-variant">Manage plans and history</Text>
+                    <Text className="font-body-md text-base font-bold text-primary">{t('settings.billing')}</Text>
+                    <Text className="font-caption-sm text-xs text-on-surface-variant">{t('settings.billingDesc')}</Text>
                   </View>
                 </View>
                 <MaterialIcons name="chevron-right" size={24} color={colors.outline} />
@@ -315,16 +317,16 @@ export default function SettingsHub() {
           {/* Help/Danger Zone */}
           <View className="pt-6 flex-col gap-4 items-center mb-10">
             <TouchableOpacity onPress={() => router.push('/support')} className="w-full max-w-sm py-4 items-center">
-              <Text className="font-body-md text-base font-bold text-primary">Help & Support</Text>
+              <Text className="font-body-md text-base font-bold text-primary">{t('settings.help')}</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => require('react-native').Alert.alert('Coming Soon', 'Backend integration pending')} className="w-full max-w-sm py-4 items-center">
-              <Text className="font-body-md text-base font-bold text-primary">Restore Purchases</Text>
+            <TouchableOpacity onPress={() => require('react-native').Alert.alert(t('common.comingSoon'), t('common.backendPending'))} className="w-full max-w-sm py-4 items-center">
+              <Text className="font-body-md text-base font-bold text-primary">{t('settings.restorePurchases')}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={handleSignOut} className="w-full max-w-sm py-4 items-center">
-              <Text className="font-body-md text-base font-bold text-error">Sign Out</Text>
+              <Text className="font-body-md text-base font-bold text-error">{t('settings.signOut')}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => router.push('/settings/account')} className="w-full max-w-sm py-4 items-center">
-              <Text className="font-body-md text-base font-bold text-error">Delete Account</Text>
+              <Text className="font-body-md text-base font-bold text-error">{t('settings.deleteAccount')}</Text>
             </TouchableOpacity>
             <Text className="font-label-xs text-xs text-outline pt-4">YRecall v4.2.0 • Build 992</Text>
           </View>

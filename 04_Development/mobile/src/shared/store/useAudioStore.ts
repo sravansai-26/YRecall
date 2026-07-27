@@ -5,11 +5,11 @@ import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 // so other players know to stop.
 
 interface AudioStore {
-  activePlayerUrl: string | null;
-  setActivePlayerUrl: (url: string | null) => void;
+ activePlayerUrl: string | null;
+ setActivePlayerUrl: (url: string | null) => void;
 }
 
 export const useAudioStore = create<AudioStore>((set) => ({
-  activePlayerUrl: null,
-  setActivePlayerUrl: (url) => set({ activePlayerUrl: url }),
+ activePlayerUrl: null,
+ setActivePlayerUrl: (url) => set({ activePlayerUrl: url }),
 }));

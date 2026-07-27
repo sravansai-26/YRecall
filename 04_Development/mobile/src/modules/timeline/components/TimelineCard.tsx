@@ -54,16 +54,16 @@ export const TimelineCard = memo(({ capture, onPress }: TimelineCardProps) => {
           {capture.file_url ? (
             <Image 
               source={{ uri: capture.file_url }} 
-              className="w-full h-56 rounded-2xl bg-surface-variant mb-3 border border-outline-variant/10"
+              className="w-full h-56 rounded-2xl bg-surface-variant mb-3"
               resizeMode="cover"
             />
           ) : (
-            <View className="w-full h-56 rounded-2xl bg-surface-variant mb-3 items-center justify-center border border-outline-variant/10">
+            <View className="w-full h-56 rounded-2xl bg-surface-variant mb-3 items-center justify-center">
               <MaterialIcons name={capture.type === 'video' ? "videocam" : "image"} size={48} color={colors.outline} />
             </View>
           )}
           {capture.ocr_text && (
-            <View className="bg-surface-variant/30 p-3 rounded-xl mb-3 border border-outline-variant/10">
+            <View className="bg-surface-variant/30 p-3 rounded-xl mb-3">
               <Text className="text-body-sm text-on-surface-variant italic" numberOfLines={2}>
                 "{capture.ocr_text}"
               </Text>
@@ -84,7 +84,7 @@ export const TimelineCard = memo(({ capture, onPress }: TimelineCardProps) => {
           {capture.file_url ? (
             <AudioPlayer url={capture.file_url} />
           ) : (
-             <View className="flex-row items-center gap-3 bg-surface-variant/50 p-3 rounded-2xl mb-3 border border-outline-variant/10">
+             <View className="flex-row items-center gap-3 bg-surface-variant/50 p-3 rounded-2xl mb-3">
                <View className="w-10 h-10 rounded-full bg-outline-variant items-center justify-center">
                  <MaterialIcons name="mic-off" size={24} color={colors.surface} />
                </View>
@@ -92,7 +92,7 @@ export const TimelineCard = memo(({ capture, onPress }: TimelineCardProps) => {
              </View>
           )}
           {capture.transcript && (
-            <View className="bg-surface-variant/30 p-3 rounded-xl border border-outline-variant/10">
+            <View className="bg-surface-variant/30 p-3 rounded-xl">
               <Text className="text-body-md text-on-surface italic" numberOfLines={3}>
                 "{capture.transcript}"
               </Text>
@@ -105,7 +105,7 @@ export const TimelineCard = memo(({ capture, onPress }: TimelineCardProps) => {
     if (capture.type === 'location') {
       return (
         <View className="mb-2">
-          <View className="w-full h-32 bg-surface-variant/50 rounded-2xl items-center justify-center mb-3 border border-outline-variant/10">
+          <View className="w-full h-32 bg-surface-variant/50 rounded-2xl items-center justify-center mb-3">
              <MaterialIcons name="map" size={40} color={colors.outline} />
           </View>
           <Text className="text-body-md text-on-surface" numberOfLines={2}>
@@ -118,7 +118,7 @@ export const TimelineCard = memo(({ capture, onPress }: TimelineCardProps) => {
     if (capture.type === 'url') {
       return (
         <View className="mb-2">
-          <View className="flex-row items-center gap-3 bg-surface-variant/50 p-3 rounded-2xl mb-3 border border-outline-variant/10">
+          <View className="flex-row items-center gap-3 bg-surface-variant/50 p-3 rounded-2xl mb-3">
              <View className="w-10 h-10 rounded-full bg-tertiary-container items-center justify-center">
                <MaterialIcons name="link" size={20} color={colors.tertiary} />
              </View>
@@ -138,7 +138,7 @@ export const TimelineCard = memo(({ capture, onPress }: TimelineCardProps) => {
     if (capture.type === 'pdf' || capture.type === 'document' || capture.type === 'file') {
       return (
         <View className="mb-2">
-          <View className="flex-row items-center gap-4 bg-surface-variant/50 p-4 rounded-2xl mb-3 border border-outline-variant/10">
+          <View className="flex-row items-center gap-4 bg-surface-variant/50 p-4 rounded-2xl mb-3">
              <View className="w-12 h-12 rounded-xl bg-error-container items-center justify-center shadow-sm">
                <MaterialIcons name="picture-as-pdf" size={24} color={colors.error} />
              </View>
@@ -177,7 +177,7 @@ export const TimelineCard = memo(({ capture, onPress }: TimelineCardProps) => {
       <TouchableOpacity 
         activeOpacity={0.7} 
         onPress={() => onPress(capture)}
-        className="bg-surface/80 rounded-[28px] p-5 shadow-sm border border-outline-variant/20 overflow-hidden"
+        className="bg-surface-container-lowest rounded-[28px] p-5 shadow-sm overflow-hidden"
       >
         <View className="flex-row justify-between items-start mb-3">
           <View className="flex-row items-center gap-2 flex-1 mr-4">
@@ -197,7 +197,7 @@ export const TimelineCard = memo(({ capture, onPress }: TimelineCardProps) => {
         <View className="flex-row justify-between items-center mt-3">
           <View className="flex-row items-center gap-2 flex-1 flex-wrap">
             {capture.status === 'processing' && (
-              <View className="bg-surface-container-high px-3 py-1.5 rounded-lg border border-outline-variant/20">
+              <View className="bg-surface-container-high px-3 py-1.5 rounded-lg">
                 <Text className="text-[10px] uppercase font-bold text-outline tracking-wider">Processing</Text>
               </View>
             )}

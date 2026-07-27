@@ -6,17 +6,17 @@ import { SafeAreaProviderWrapper } from './SafeAreaProviderWrapper';
 import { ThemeProvider } from './ThemeProvider';
 
 type AppProvidersProps = {
-  children: React.ReactNode;
+ children: React.ReactNode;
 };
 
 bootstrapApp();
 
 export function AppProviders({ children }: AppProvidersProps) {
-  return (
-    <SafeAreaProviderWrapper>
-      <QueryProvider>
-        <ThemeProvider>{children}</ThemeProvider>
-      </QueryProvider>
-    </SafeAreaProviderWrapper>
-  );
+ return (
+ <SafeAreaProviderWrapper>
+ <QueryProvider>
+ <ThemeProvider>{children}</ThemeProvider>
+ </QueryProvider>
+ </SafeAreaProviderWrapper>
+ );
 }

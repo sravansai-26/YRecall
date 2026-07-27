@@ -5,7 +5,7 @@ import { theme, type Theme } from '@/theme';
 const ThemeContext = createContext<Theme>(theme);
 
 export function useThemeContext(): Theme {
-  return useContext(ThemeContext);
+ return useContext(ThemeContext);
 }
 
 export { ThemeContext };

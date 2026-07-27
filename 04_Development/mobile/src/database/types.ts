@@ -1,12 +1,12 @@
 export type DatabaseRecord = {
-  key: string;
-  value: string;
+ key: string;
+ value: string;
 };
 
 export type DatabaseAdapter = {
-  get: (key: string) => string | undefined;
-  set: (key: string, value: string) => void;
-  remove: (key: string) => void;
-  clear: () => void;
-  getAllKeys: () => string[];
+ get: (key: string) => string | undefined;
+ set: (key: string, value: string) => void;
+ remove: (key: string) => void;
+ clear: () => void;
+ getAllKeys: () => string[];
 };

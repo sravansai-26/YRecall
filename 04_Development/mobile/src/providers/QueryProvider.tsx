@@ -4,9 +4,9 @@ import type { ReactNode } from 'react';
 import { queryClient } from '@/lib/react-query';
 
 type QueryProviderProps = {
-  children: ReactNode;
+ children: ReactNode;
 };
 
 export function QueryProvider({ children }: QueryProviderProps) {
-  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+ return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 }

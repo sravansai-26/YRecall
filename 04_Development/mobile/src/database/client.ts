@@ -5,23 +5,23 @@ import type { DatabaseAdapter } from './types';
 const storage = getDefaultMmkvStorage();
 
 export const database: DatabaseAdapter = {
-  get(key) {
-    return storage.getString(key);
-  },
+ get(key) {
+ return storage.getString(key);
+ },
 
-  set(key, value) {
-    storage.set(key, value);
-  },
+ set(key, value) {
+ storage.set(key, value);
+ },
 
-  remove(key) {
-    storage.remove(key);
-  },
+ remove(key) {
+ storage.remove(key);
+ },
 
-  clear() {
-    storage.clearAll();
-  },
+ clear() {
+ storage.clearAll();
+ },
 
-  getAllKeys() {
-    return storage.getAllKeys();
-  },
+ getAllKeys() {
+ return storage.getAllKeys();
+ },
 };

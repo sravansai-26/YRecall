@@ -4,16 +4,16 @@ import { auth } from '../lib/firebase';
 import { useAuthStore } from '../store/useAuthStore';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const { setUser, setLoading } = useAuthStore();
+ const { setUser, setLoading } = useAuthStore();
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-      setLoading(false);
-    });
+ useEffect(() => {
+ const unsubscribe = onAuthStateChanged(auth, (user) => {
+ setUser(user);
+ setLoading(false);
+ });
 
-    return () => unsubscribe();
-  }, [setUser, setLoading]);
+ return () => unsubscribe();
+ }, [setUser, setLoading]);
 
-  return <>{children}</>;
+ return <>{children}</>;
 }

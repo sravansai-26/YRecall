@@ -3,10 +3,10 @@ import { setupApiInterceptors } from '@/services/api';
 let isBootstrapped = false;
 
 export function bootstrapApp(): void {
-  if (isBootstrapped) {
-    return;
-  }
+ if (isBootstrapped) {
+ return;
+ }
 
-  setupApiInterceptors();
-  isBootstrapped = true;
+ setupApiInterceptors();
+ isBootstrapped = true;
 }

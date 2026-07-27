@@ -3,11 +3,11 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import {
-  useFonts,
-  PublicSans_400Regular,
-  PublicSans_500Medium,
-  PublicSans_600SemiBold,
-  PublicSans_700Bold,
+ useFonts,
+ PublicSans_400Regular,
+ PublicSans_500Medium,
+ PublicSans_600SemiBold,
+ PublicSans_700Bold,
 } from '@expo-google-fonts/public-sans';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
@@ -18,21 +18,21 @@ import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 cssInterop(MaterialIcons, {
-  className: { target: 'style' },
+ className: { target: 'style' },
 });
 cssInterop(Ionicons, {
-  className: { target: 'style' },
+ className: { target: 'style' },
 });
 cssInterop(SafeAreaView, {
-  className: { target: 'style' },
+ className: { target: 'style' },
 });
 import { AuthProvider } from '../src/shared/providers/AuthProvider';
 import { useAuthStore } from '../src/shared/store/useAuthStore';
 import { configureReanimatedLogger, ReanimatedLogLevel } from 'react-native-reanimated';
 
 configureReanimatedLogger({
-  level: ReanimatedLogLevel.warn,
-  strict: false,
+ level: ReanimatedLogLevel.warn,
+ strict: false,
 });
 
 SplashScreen.preventAutoHideAsync();
@@ -40,44 +40,44 @@ SplashScreen.preventAutoHideAsync();
 import { usePushNotifications } from '../src/shared/hooks/usePushNotifications';
 
 function RootNavigationHandler() {
-  const { user, isLoading, hasCompletedOnboarding } = useAuthStore();
-  const segments = useSegments();
-  const router = useRouter();
+ const { user, isLoading, hasCompletedOnboarding } = useAuthStore();
+ const segments = useSegments();
+ const router = useRouter();
 
-  const { expoPushToken } = usePushNotifications();
+ const { expoPushToken } = usePushNotifications();
 
-  useEffect(() => {
-    if (isLoading) return;
+ useEffect(() => {
+ if (isLoading) return;
 
-    const inAuthGroup = segments[0] === '(auth)';
-    const inOnboardingGroup = segments[0] === '(onboarding)';
-    const isRoot = (segments as string[]).length === 0;
+ const inAuthGroup = segments[0] === '(auth)';
+ const inOnboardingGroup = segments[0] === '(onboarding)';
+ const isRoot = (segments as string[]).length === 0;
 
-    const navigate = () => {
-      if (!hasCompletedOnboarding) {
-        if (!inOnboardingGroup) {
-          router.replace('/(onboarding)/intro-1');
-        }
-        return;
-      }
+ const navigate = () => {
+ if (!hasCompletedOnboarding) {
+ if (!inOnboardingGroup) {
+ router.replace('/(onboarding)/intro-1');
+ }
+ return;
+ }
 
-      if (!user) {
-        if (!inAuthGroup) {
-          router.replace('/(auth)');
-        }
-        return;
-      }
+ if (!user) {
+ if (!inAuthGroup) {
+ router.replace('/(auth)');
+ }
+ return;
+ }
 
-      if (inAuthGroup || inOnboardingGroup || isRoot) {
-        router.replace('/(main)/(tabs)');
-      }
-    };
+ if (inAuthGroup || inOnboardingGroup || isRoot) {
+ router.replace('/(main)/(tabs)');
+ }
+ };
 
-    const timeoutId = setTimeout(navigate, 0);
-    return () => clearTimeout(timeoutId);
-  }, [user, isLoading, hasCompletedOnboarding, segments]);
+ const timeoutId = setTimeout(navigate, 0);
+ return () => clearTimeout(timeoutId);
+ }, [user, isLoading, hasCompletedOnboarding, segments]);
 
-  return <Stack screenOptions={{ headerShown: false }} />;
+ return <Stack screenOptions={{ headerShown: false }} />;
 }
 
 import { QueryProvider } from '../src/providers/QueryProvider';
@@ -88,37 +88,37 @@ import { ExperienceProvider } from '../src/shared/providers/ExperienceProvider';
 setupApiInterceptors();
 
 export default function RootLayout() {
-  const [loaded, error] = useFonts({
-    PublicSans_400Regular,
-    PublicSans_500Medium,
-    PublicSans_600SemiBold,
-    PublicSans_700Bold,
-  });
+ const [loaded, error] = useFonts({
+ PublicSans_400Regular,
+ PublicSans_500Medium,
+ PublicSans_600SemiBold,
+ PublicSans_700Bold,
+ });
 
-  useEffect(() => {
-    if (loaded || error) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded, error]);
+ useEffect(() => {
+ if (loaded || error) {
+ SplashScreen.hideAsync();
+ }
+ }, [loaded, error]);
 
-  if (!loaded && !error) {
-    return null;
-  }
+ if (!loaded && !error) {
+ return null;
+ }
 
-  return (
-    <QueryProvider>
-      <AuthProvider>
-        <ExperienceProvider>
-          <BottomSheetModalProvider>
-            <GestureHandlerRootView style={{ flex: 1 }}>
-              <SafeAreaProvider>
-                <RootNavigationHandler />
-                <StatusBar style="auto" />
-              </SafeAreaProvider>
-            </GestureHandlerRootView>
-          </BottomSheetModalProvider>
-        </ExperienceProvider>
-      </AuthProvider>
-    </QueryProvider>
-  );
+ return (
+ <QueryProvider>
+ <AuthProvider>
+ <ExperienceProvider>
+ <BottomSheetModalProvider>
+ <GestureHandlerRootView style={{ flex: 1 }}>
+ <SafeAreaProvider>
+ <RootNavigationHandler />
+ <StatusBar style="auto" />
+ </SafeAreaProvider>
+ </GestureHandlerRootView>
+ </BottomSheetModalProvider>
+ </ExperienceProvider>
+ </AuthProvider>
+ </QueryProvider>
+ );
 }
