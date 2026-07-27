@@ -109,14 +109,14 @@ export default function RootLayout() {
  <QueryProvider>
  <AuthProvider>
  <ExperienceProvider>
- <BottomSheetModalProvider>
  <GestureHandlerRootView style={{ flex: 1 }}>
+ <BottomSheetModalProvider>
  <SafeAreaProvider>
  <RootNavigationHandler />
  <StatusBar style="auto" />
  </SafeAreaProvider>
- </GestureHandlerRootView>
  </BottomSheetModalProvider>
+ </GestureHandlerRootView>
  </ExperienceProvider>
  </AuthProvider>
  </QueryProvider>

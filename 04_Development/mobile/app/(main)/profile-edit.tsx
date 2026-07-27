@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Image, Alert, ActivityIndicator, RefreshControl } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, Alert, ActivityIndicator, RefreshControl, Linking } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Screen } from '../../src/shared/components';
@@ -267,7 +267,7 @@ export default function ProfileSettings() {
  />
  </View>
  <View className="flex-col gap-2 flex-1">
- <Text className="font-title-sm text-on-surface font-bold">Social Handles</Text>
+ <Text className="font-title-sm text-on-surface font-bold">Social Media URLs</Text>
  <TextInput
  value={formData.social_links}
  onChangeText={(text) => setFormData(prev => ({ ...prev, social_links: text }))}
@@ -275,7 +275,7 @@ export default function ProfileSettings() {
  className="w-full h-14 px-4 bg-surface-container-low rounded-xl font-body-md text-base"
  style={{ color: colors['on-surface'] }}
  placeholderTextColor={colors['outline-variant']}
- placeholder="e.g. @alexthorne on X"
+ placeholder="e.g. https://x.com/alexthorne"
  />
  </View>
  </View>
@@ -355,26 +355,32 @@ export default function ProfileSettings() {
  </View>
  )}
  {formData.website && (
- <View className="flex-row items-center p-4 ">
+ <TouchableOpacity 
+    className="flex-row items-center p-4 " 
+    onPress={() => Linking.openURL(formData.website.startsWith('http') ? formData.website : `https://${formData.website}`).catch(() => Alert.alert('Invalid URL', 'Cannot open this website.'))}
+  >
  <View className="w-10 h-10 items-center justify-center bg-surface-container rounded-full mr-4">
  <MaterialIcons name="language" size={20} color={colors['on-surface-variant']} />
  </View>
- <View>
+ <View className="flex-1">
  <Text className="text-xs text-outline font-medium">Website</Text>
- <Text className="text-primary font-bold text-base">{formData.website}</Text>
+ <Text className="text-primary font-bold text-base text-blue-500 underline" numberOfLines={1}>{formData.website}</Text>
  </View>
- </View>
+ </TouchableOpacity>
  )}
  {formData.social_links && (
- <View className="flex-row items-center p-4">
+ <TouchableOpacity 
+    className="flex-row items-center p-4"
+    onPress={() => Linking.openURL(formData.social_links.startsWith('http') ? formData.social_links : `https://${formData.social_links}`).catch(() => Alert.alert('Invalid URL', 'Cannot open this link. Please provide a full URL.'))}
+  >
  <View className="w-10 h-10 items-center justify-center bg-surface-container rounded-full mr-4">
  <MaterialIcons name="share" size={20} color={colors['on-surface-variant']} />
  </View>
- <View>
- <Text className="text-xs text-outline font-medium">Social Handles</Text>
- <Text className="text-primary font-bold text-base">{formData.social_links}</Text>
+ <View className="flex-1">
+ <Text className="text-xs text-outline font-medium">Social Links</Text>
+ <Text className="text-primary font-bold text-base text-blue-500 underline" numberOfLines={1}>{formData.social_links}</Text>
  </View>
- </View>
+ </TouchableOpacity>
  )}
  </View>
  </View>
