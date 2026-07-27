@@ -38,6 +38,7 @@ export const Composer = forwardRef<ComposerRef, ComposerProps>(({ onSend, isPend
  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
  const textInputRef = useRef<TextInput>(null);
  const { t } = useTranslation();
+ const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
 
  useImperativeHandle(ref, () => ({
  focus: () => {
@@ -72,11 +73,9 @@ export const Composer = forwardRef<ComposerRef, ComposerProps>(({ onSend, isPend
  playsInSilentMode: true,
  });
 
- const newRecording = new AudioRecorder(RecordingPresets.HIGH_QUALITY);
- await newRecording.prepareToRecordAsync();
- newRecording.record();
+ await audioRecorder.prepareToRecordAsync();
+ audioRecorder.record();
  
- (textInputRef as any).currentRecorder = newRecording;
  setRecordingMode(mode);
  setRecordingDuration(0);
  
@@ -97,21 +96,19 @@ export const Composer = forwardRef<ComposerRef, ComposerProps>(({ onSend, isPend
  };
 
  const stopRecording = async (expectedMode: 'tap' | 'hold', cancel: boolean = false) => {
- const activeRecorder = (textInputRef as any).currentRecorder as AudioRecorder;
- if (!activeRecorder || !activeRecorder.isRecording) return;
+ if (!audioRecorder || !audioRecorder.isRecording) return;
  
  // Clear timer
  if (timerRef.current) clearInterval(timerRef.current);
  timerRef.current = null;
  
- (textInputRef as any).currentRecorder = null;
  setRecordingMode(null);
  
  try {
- await activeRecorder.stop();
+ await audioRecorder.stop();
  if (cancel) return;
 
- const uri = activeRecorder.uri;
+ const uri = audioRecorder.uri;
  if (!uri) return;
 
  const fileInfo = await FileSystem.getInfoAsync(uri);
