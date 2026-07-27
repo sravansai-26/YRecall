@@ -244,6 +244,8 @@ export const Composer = forwardRef<ComposerRef, ComposerProps>(({ onSend, isPend
  transform: [{ scale: scale.value }]
  }));
 
+ const isRecording = !!recordingMode;
+
  return (
  <View style={styles.outerContainer}>
  {/* Attachments Preview */}
@@ -282,7 +284,7 @@ export const Composer = forwardRef<ComposerRef, ComposerProps>(({ onSend, isPend
  </TouchableOpacity>
  
  {/* Input Field or Recording State */}
- {!recording && !isProcessingAudio ? (
+ {!isRecording && !isProcessingAudio ? (
  <TextInput
  ref={textInputRef}
  style={styles.textInput}
@@ -317,25 +319,25 @@ export const Composer = forwardRef<ComposerRef, ComposerProps>(({ onSend, isPend
  <TouchableOpacity 
  style={styles.iconButton}
  onPress={() => {
- if (recording && recordingMode === 'tap') {
+ if (isRecording && recordingMode === 'tap') {
  stopRecording('tap');
- } else if (!recording && !isProcessingAudio) {
+ } else if (!isRecording && !isProcessingAudio) {
  startRecording('tap');
  }
  }}
  onLongPress={() => {
- if (!recording && !isProcessingAudio) {
+ if (!isRecording && !isProcessingAudio) {
  startRecording('hold');
  }
  }}
  onPressOut={() => {
- if (recording && recordingMode === 'hold') {
+ if (isRecording && recordingMode === 'hold') {
  stopRecording('hold');
  }
  }}
  delayLongPress={300}
  >
- <MaterialIcons name={recording ? "stop" : "mic"} size={24} color={recording ? colors.error : colors.outline} />
+ <MaterialIcons name={isRecording ? "stop" : "mic"} size={24} color={isRecording ? colors.error : colors.outline} />
  </TouchableOpacity>
  ) : (
  <Animated.View style={animatedSendStyle}>
