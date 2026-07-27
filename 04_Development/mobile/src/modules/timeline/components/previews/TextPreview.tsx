@@ -20,7 +20,7 @@ export const TextPreview: React.ComponentType<PreviewProps> = ({ capture, varian
         </Text>
       )}
       {capture.summary && capture.content_text !== capture.summary && (
-        <View className="bg-surface-variant/30 p-4 rounded-xl mt-2 border border-outline-variant/10">
+        <View className="bg-surface-variant/30 p-4 rounded-xl mt-2">
           <Text className="text-body-sm text-on-surface-variant font-medium mb-1">AI SUMMARY</Text>
           <Text className="text-body-md text-on-surface" numberOfLines={isCompact ? 3 : undefined}>
             {capture.summary}

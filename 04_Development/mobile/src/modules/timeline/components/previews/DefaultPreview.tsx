@@ -9,7 +9,7 @@ export const DefaultPreview: React.ComponentType<PreviewProps> = ({ capture, var
 
   return (
     <View className="mb-2">
-      <View className={`flex-row items-center gap-3 bg-surface-variant/30 p-4 rounded-2xl border border-outline-variant/10 ${isCompact ? 'mb-3' : 'mb-4'}`}>
+      <View className={`flex-row items-center gap-3 bg-surface-variant/30 p-4 rounded-2xl ${isCompact ? 'mb-3' : 'mb-4'}`}>
          <View className="w-10 h-10 rounded-full bg-surface-variant items-center justify-center">
            <MaterialIcons name="bookmark" size={20} color={colors.primary} />
          </View>

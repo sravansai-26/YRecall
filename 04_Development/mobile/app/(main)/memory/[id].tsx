@@ -9,7 +9,7 @@ import { format } from 'date-fns';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { AudioPlayer } from '../../../src/shared/components/AudioPlayer';
 import Markdown from 'react-native-markdown-display';
-import { MemoryRenderer } from '../../../modules/timeline/components/previews';
+import { MemoryRenderer } from '../../../src/modules/timeline/components/previews';
 
 import { useShareCaptureToWorkspace, useWorkspaces } from '../../../src/modules/workspaces/api';
 

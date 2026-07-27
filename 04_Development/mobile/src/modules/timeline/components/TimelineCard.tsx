@@ -89,7 +89,7 @@ export const TimelineCard = memo(({ capture, onPress }: TimelineCardProps) => {
                   // as global Graph entity IDs are mapped separately.
                   // router.push(`/(main)/search?q=${encodeURIComponent(entity.entity_value)}`)
                 }}
-                className="bg-secondary-container/50 px-3 py-1.5 rounded-lg border border-secondary/10 flex-row items-center gap-1"
+                className="bg-secondary-container/50 px-3 py-1.5 rounded-lg flex-row items-center gap-1"
               >
                 <MaterialIcons name="hub" size={10} color={colors.secondary} />
                 <Text className="text-secondary text-[10px] font-bold uppercase tracking-wider">{entity.entity_value}</Text>

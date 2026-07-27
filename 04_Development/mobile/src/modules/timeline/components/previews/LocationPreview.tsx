@@ -34,7 +34,7 @@ export const LocationPreview: React.ComponentType<PreviewProps> = ({ capture, va
 
   return (
     <TouchableOpacity onPress={handleOpenMaps} activeOpacity={0.8} className="mb-2">
-      <View className={`bg-surface-variant/30 rounded-2xl overflow-hidden border border-outline-variant/10 ${isCompact ? 'mb-3' : 'mb-4'}`}>
+      <View className={`bg-surface-variant/30 rounded-2xl overflow-hidden ${isCompact ? 'mb-3' : 'mb-4'}`}>
         
         {/* Map Visual Placeholder (Abstracted) */}
         <View className={`w-full ${isCompact ? 'h-32' : 'h-48'} bg-tertiary-container/30 items-center justify-center relative overflow-hidden`}>

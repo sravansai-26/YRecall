@@ -71,7 +71,7 @@ export const URLPreview: React.ComponentType<PreviewProps> = ({ capture, variant
 
   return (
     <TouchableOpacity onPress={handlePress} activeOpacity={0.8} className="mb-2">
-      <View className={`bg-surface-variant/30 rounded-2xl overflow-hidden border border-outline-variant/10 ${isCompact ? 'mb-3' : 'mb-4'}`}>
+      <View className={`bg-surface-variant/30 rounded-2xl overflow-hidden ${isCompact ? 'mb-3' : 'mb-4'}`}>
         {ogImage ? (
           <Image 
             source={{ uri: ogImage }} 
@@ -95,7 +95,7 @@ export const URLPreview: React.ComponentType<PreviewProps> = ({ capture, variant
           <Text className="text-body-lg text-on-surface font-bold mb-1" numberOfLines={isCompact ? 1 : 2}>
             {title || url || 'Link Capture'}
           </Text>
-          {!isCompact && capture.summary && (
+          {isCompact && capture.summary && (
              <Text className="text-body-md text-on-surface-variant mt-2" numberOfLines={3}>
                {capture.summary}
              </Text>

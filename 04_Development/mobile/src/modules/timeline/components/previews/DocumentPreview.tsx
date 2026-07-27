@@ -20,7 +20,7 @@ export const DocumentPreview: React.ComponentType<PreviewProps> = ({ capture, va
   if (isCompact) {
     return (
       <TouchableOpacity onPress={handleOpenNative} activeOpacity={0.8} className="mb-2">
-        <View className="flex-row items-center gap-4 bg-surface-variant/30 p-4 rounded-2xl mb-3 border border-outline-variant/10">
+        <View className="flex-row items-center gap-4 bg-surface-variant/30 p-4 rounded-2xl mb-3">
           <View className="w-12 h-12 rounded-xl bg-error-container/20 items-center justify-center shadow-sm">
             <MaterialIcons name="picture-as-pdf" size={24} color={colors.error} />
           </View>
@@ -66,7 +66,7 @@ export const DocumentPreview: React.ComponentType<PreviewProps> = ({ capture, va
         </TouchableOpacity>
       </View>
       
-      <View className="flex-1 w-full bg-white rounded-2xl overflow-hidden border border-outline-variant/20 shadow-sm min-h-[500px]">
+      <View className="flex-1 w-full bg-white rounded-2xl overflow-hidden shadow-sm min-h-[500px]">
         <WebView 
           source={webViewSource}
           style={{ flex: 1, width: '100%', height: '100%' }}
