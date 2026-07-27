@@ -162,7 +162,7 @@ export default function KnowledgeGraphHub() {
  {/* Connection Card 1 */}
  <TouchableOpacity onPress={() => router.push('/(entity)/person')} className="bg-white p-lg rounded-[24px] shadow-sm ">
  <View className="flex-row items-center gap-4 mb-4">
- <View className="w-12 h-12 rounded-full overflow-hidden border-2 border-surface-container">
+ <View className="w-12 h-12 rounded-full overflow-hidden border border-outline-variant/20">
  <Image 
  source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAElTwkpunw7Ymlm-Pd7D9bAIDUqvPsQ9k_neD7lujOZ6PM8x7KMZ7-Y5diyFgB_clIg-ZOPwDvCpbHmINNxh2YONGuW9IOTgANSHAqfaJZiKpMVPl3nIZhUAP9tGZuHgIjsaI6tTyF17B4lolK_VLSozDjMf93qW3EhGYtSJfVLZZGFmWwI2hxNkWoMbap5QOycaeWb0TMFaTxd2NClpuLoWy1fBE04sOL-IPHQ1O-jePapiF_Lul2y61S8fHko3pum7ppAUg4_so' }} 
  className="w-full h-full"

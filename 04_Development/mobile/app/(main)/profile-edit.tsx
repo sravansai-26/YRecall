@@ -136,7 +136,7 @@ export default function ProfileSettings() {
  {/* Profile Header (Read-only / Top Section) */}
  <View className="flex-col md:flex-row md:items-start gap-8 mb-8 pb-8">
  <View className="relative self-start">
- <View className="w-32 h-32 rounded-full border-4 overflow-hidden items-center justify-center bg-primary/5">
+ <View className="w-32 h-32 rounded-full border border-outline-variant/20 overflow-hidden items-center justify-center bg-primary/5">
  {user?.photoURL || dbUser?.photo_url ? (
  <Image source={{ uri: user?.photoURL || dbUser?.photo_url }} className="w-full h-full" />
  ) : (
