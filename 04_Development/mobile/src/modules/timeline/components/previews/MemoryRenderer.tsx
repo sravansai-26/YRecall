@@ -31,12 +31,8 @@ export const MemoryRenderer: React.FC<PreviewProps> = ({ capture, variant, onPre
       {/* We only render these here if we want a unified text layout. 
           For compact mode, some renderers might want custom text placement, but a unified approach is cleaner. */}
       
-      {/* Transcript / OCR / Scanned Text (Full Mode Only) */}
-      {!isCompact && (
-        (capture.type === 'voice' || capture.type === 'audio' ? capture.transcript : null) || 
-        (capture.type === 'document' || capture.type === 'pdf' ? capture.ocr_text : null) || 
-        (capture.type === 'text' || capture.type === 'note' ? capture.content_text : null)
-      ) && (
+      {/* Transcript / OCR / Scanned Text / Content (Full Mode Only) */}
+      {!isCompact && (capture.transcript || capture.ocr_text || capture.content_text) && (
         <View className="bg-surface-container-lowest p-6 rounded-[28px] mb-6 shadow-sm">
           <Text className="font-title-sm font-bold text-primary mb-3">
             {capture.transcript ? 'Transcript' : capture.ocr_text ? 'Scanned Text' : 'Content'}
@@ -44,17 +40,6 @@ export const MemoryRenderer: React.FC<PreviewProps> = ({ capture, variant, onPre
           <View className="markdown-container">
             <Markdown style={markdownStyles}>
               {capture.transcript || capture.ocr_text || capture.content_text || ''}
-            </Markdown>
-          </View>
-        </View>
-      )}
-
-      {/* Full Note Content (Full Mode Only for specific 'note' type if rich text is needed, else generic text) */}
-      {!isCompact && capture.type === 'note' && capture.content_text && (
-        <View className="bg-surface-container-lowest p-6 rounded-[28px] mb-6 shadow-sm">
-          <View className="markdown-container">
-            <Markdown style={markdownStyles}>
-              {capture.content_text}
             </Markdown>
           </View>
         </View>

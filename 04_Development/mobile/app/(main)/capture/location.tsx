@@ -50,7 +50,7 @@ export default function LocationCaptureScreen() {
  }
  } catch (err) {
  setErrorMsg('Failed to get location. Ensure GPS is enabled.');
- console.error(err);
+ console.warn(err);
  } finally {
  setIsFetching(false);
  }

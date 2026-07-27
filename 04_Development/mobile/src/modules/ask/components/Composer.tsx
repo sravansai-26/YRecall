@@ -16,7 +16,7 @@ interface ComposerProps {
 import * as ImagePicker from 'expo-image-picker';
 import { capturesApi } from '../../captures/services/api';
 import { Image, ActivityIndicator, Text } from 'react-native';
-import { Audio } from 'expo-av';
+import { useAudioRecorder, RecordingPresets, requestRecordingPermissionsAsync, setAudioModeAsync, AudioRecorder } from 'expo-audio';
 import * as FileSystem from 'expo-file-system/legacy';
 import { useTranslation } from 'react-i18next';
 
@@ -32,7 +32,6 @@ export const Composer = forwardRef<ComposerRef, ComposerProps>(({ onSend, isPend
  const [query, setQuery] = useState('');
  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
  const [attachments, setAttachments] = useState<Attachment[]>([]);
- const [recording, setRecording] = useState<Audio.Recording | null>(null);
  const [recordingMode, setRecordingMode] = useState<'tap' | 'hold' | null>(null);
  const [recordingDuration, setRecordingDuration] = useState(0);
  const [isProcessingAudio, setIsProcessingAudio] = useState(false);
@@ -62,22 +61,22 @@ export const Composer = forwardRef<ComposerRef, ComposerProps>(({ onSend, isPend
 
  const startRecording = async (mode: 'tap' | 'hold') => {
  try {
- const permission = await Audio.requestPermissionsAsync();
+ const permission = await requestRecordingPermissionsAsync();
  if (permission.status !== 'granted') {
  require('react-native').Alert.alert(t('common.permissionNeeded', 'Permission needed'), t('common.grantMic', 'Please grant microphone permissions.'));
  return;
  }
  
- await Audio.setAudioModeAsync({
- allowsRecordingIOS: true,
- playsInSilentModeIOS: true,
+ await setAudioModeAsync({
+ allowsRecording: true,
+ playsInSilentMode: true,
  });
 
- const { recording: newRecording } = await Audio.Recording.createAsync(
- Audio.RecordingOptionsPresets.HIGH_QUALITY
- );
+ const newRecording = new AudioRecorder(RecordingPresets.HIGH_QUALITY);
+ await newRecording.prepareToRecordAsync();
+ newRecording.record();
  
- setRecording(newRecording);
+ (textInputRef as any).currentRecorder = newRecording;
  setRecordingMode(mode);
  setRecordingDuration(0);
  
@@ -98,23 +97,22 @@ export const Composer = forwardRef<ComposerRef, ComposerProps>(({ onSend, isPend
  };
 
  const stopRecording = async (expectedMode: 'tap' | 'hold', cancel: boolean = false) => {
- if (!recording) return;
+ const activeRecorder = (textInputRef as any).currentRecorder as AudioRecorder;
+ if (!activeRecorder || !activeRecorder.isRecording) return;
  
  // Clear timer
  if (timerRef.current) clearInterval(timerRef.current);
  timerRef.current = null;
  
- setRecording(null);
+ (textInputRef as any).currentRecorder = null;
  setRecordingMode(null);
  
  try {
- await recording.stopAndUnloadAsync();
- const uri = recording.getURI();
- 
- if (cancel || !uri) {
- setRecordingDuration(0);
- return;
- }
+ await activeRecorder.stop();
+ if (cancel) return;
+
+ const uri = activeRecorder.uri;
+ if (!uri) return;
 
  const fileInfo = await FileSystem.getInfoAsync(uri);
  if (fileInfo.exists && fileInfo.size > 10 * 1024 * 1024) {

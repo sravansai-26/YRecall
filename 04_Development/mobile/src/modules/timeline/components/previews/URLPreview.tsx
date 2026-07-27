@@ -95,9 +95,9 @@ export const URLPreview: React.ComponentType<PreviewProps> = ({ capture, variant
           <Text className="text-body-lg text-on-surface font-bold mb-1" numberOfLines={isCompact ? 1 : 2}>
             {title || url || 'Link Capture'}
           </Text>
-          {isCompact && capture.summary && (
+          {isCompact && (capture.summary || capture.content_text) && (
              <Text className="text-body-md text-on-surface-variant mt-2" numberOfLines={3}>
-               {capture.summary}
+               {capture.summary || capture.content_text}
              </Text>
           )}
         </View>
