@@ -9,6 +9,7 @@ import { format } from 'date-fns';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { AudioPlayer } from '../../../src/shared/components/AudioPlayer';
 import Markdown from 'react-native-markdown-display';
+import { MemoryRenderer } from '../../../modules/timeline/components/previews';
 
 import { useShareCaptureToWorkspace, useWorkspaces } from '../../../src/modules/workspaces/api';
 
@@ -153,103 +154,8 @@ export default function MemoryDetailScreen() {
  {capture.title || (capture.type.charAt(0).toUpperCase() + capture.type.slice(1) + ' Capture')}
  </Text>
 
- {/* Original Content / Media */}
- {capture.file_url && (
- <View className="mb-6">
- <Text className="font-title-sm font-bold text-primary mb-3">Original Attachment</Text>
- <View className="rounded-[28px] overflow-hidden bg-surface-container-low ">
- {capture.type === 'voice' || capture.type === 'audio' ? (
- <View className="p-6">
- <AudioPlayer url={capture.file_url} />
- </View>
- ) : capture.type === 'image' ? (
- <TouchableOpacity activeOpacity={0.9} onPress={() => setIsFullscreenImage(true)}>
- <Image 
- source={{ uri: capture.file_url }}
- className="w-full"
- style={{ aspectRatio: 4/3 }}
- resizeMode="cover"
- />
- <View className="absolute bottom-4 right-4 bg-black/50 w-8 h-8 rounded-full items-center justify-center backdrop-blur-md">
- <MaterialIcons name="fullscreen" size={20} color={colors.white} />
- </View>
- </TouchableOpacity>
- ) : capture.type === 'video' ? (
- <View className="w-full relative" style={{ aspectRatio: 16/9 }}>
- {/* Placeholder for real native video player integration */}
- <Image 
- source={{ uri: capture.file_url }} // might not work if no thumbnail, fallback
- className="w-full h-full bg-black"
- resizeMode="cover"
- />
- <View className="absolute inset-0 items-center justify-center bg-black/30">
- <View className="w-16 h-16 rounded-full bg-white/20 items-center justify-center backdrop-blur-md border-white/30">
- <MaterialIcons name="play-arrow" size={36} color={colors.white} />
- </View>
- </View>
- </View>
- ) : capture.type === 'pdf' || capture.type === 'document' ? (
- <View className="p-6 flex-row items-center gap-4 bg-surface-variant/30">
- <View className="w-16 h-16 rounded-2xl bg-error-container items-center justify-center">
- <MaterialIcons name="picture-as-pdf" size={32} color={colors.error} />
- </View>
- <View className="flex-1">
- <Text className="font-title-sm text-on-surface font-bold">Document Preview</Text>
- <Text className="text-body-sm text-on-surface-variant mt-1">Tap to open in native viewer</Text>
- </View>
- <TouchableOpacity className="p-3 bg-surface rounded-full shadow-sm">
- <MaterialIcons name="open-in-new" size={20} color={colors.primary} />
- </TouchableOpacity>
- </View>
- ) : null}
- </View>
- </View>
- )}
-
- {/* AI Summary */}
- {capture.summary && (
- <View className="bg-secondary-container/20 p-6 rounded-[28px] mb-6 border-secondary/10 shadow-sm">
- <View className="flex-row items-center gap-2 mb-3">
- <View className="w-8 h-8 rounded-full bg-secondary-container items-center justify-center">
- <MaterialIcons name="auto-awesome" size={16} color={colors.secondary} />
- </View>
- <Text className="font-title-sm font-bold text-secondary">AI Summary</Text>
- </View>
- <View className="markdown-container">
- <Markdown style={markdownStyles}>
- {capture.summary}
- </Markdown>
- </View>
- </View>
- )}
-
- {/* Transcript / OCR / Text Content */}
- {(capture.content_text || capture.transcript || capture.ocr_text) && (
- <View className="bg-surface-container-lowest p-6 rounded-[28px] mb-6 shadow-sm">
- <Text className="font-title-sm font-bold text-primary mb-3">
- {capture.transcript ? 'Transcript' : capture.ocr_text ? 'Scanned Text' : 'Content'}
- </Text>
- <View className="markdown-container">
- <Markdown style={markdownStyles}>
- {capture.content_text || capture.transcript || capture.ocr_text || ''}
- </Markdown>
- </View>
- </View>
- )}
-
- {/* Entities */}
- {capture.entities && capture.entities.length > 0 && (
- <View className="mb-8">
- <Text className="font-title-sm font-bold text-primary mb-3">Extracted Knowledge</Text>
- <View className="flex-row flex-wrap gap-2">
- {capture.entities.map((entity: any, i: number) => (
- <View key={i} className="bg-surface-container-high px-4 py-2.5 rounded-xl ">
- <Text className="text-on-surface-variant font-medium text-label-sm tracking-wide">{entity.entity_value}</Text>
- </View>
- ))}
- </View>
- </View>
- )}
+ {/* Universal Preview Engine - Replaces all piecemeal rendering */}
+ <MemoryRenderer capture={capture} variant="full" />
 
  {/* Related Memories */}
  {relatedMemories.length > 0 && (

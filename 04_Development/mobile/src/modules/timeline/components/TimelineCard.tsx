@@ -5,7 +5,7 @@ import { colors } from '../../../../src/shared/theme/colors';
 import { Capture } from '../../captures/services/api';
 import { format } from 'date-fns';
 import { AudioPlayer } from '../../../shared/components/AudioPlayer';
-import Markdown from 'react-native-markdown-display'; // Reverted for timeline feed
+import { MemoryRenderer } from './previews';
 
 interface TimelineCardProps {
   capture: Capture;
@@ -48,128 +48,7 @@ export const TimelineCard = memo(({ capture, onPress }: TimelineCardProps) => {
   };
 
   const renderContent = () => {
-    if (capture.type === 'image' || capture.type === 'video') {
-      return (
-        <View className="mb-2">
-          {capture.file_url ? (
-            <Image 
-              source={{ uri: capture.file_url }} 
-              className="w-full h-56 rounded-2xl bg-surface-variant mb-3"
-              resizeMode="cover"
-            />
-          ) : (
-            <View className="w-full h-56 rounded-2xl bg-surface-variant mb-3 items-center justify-center">
-              <MaterialIcons name={capture.type === 'video' ? "videocam" : "image"} size={48} color={colors.outline} />
-            </View>
-          )}
-          {capture.ocr_text && (
-            <View className="bg-surface-variant/30 p-3 rounded-xl mb-3">
-              <Text className="text-body-sm text-on-surface-variant italic" numberOfLines={2}>
-                "{capture.ocr_text}"
-              </Text>
-            </View>
-          )}
-          {capture.summary && (
-            <Text className="text-body-md text-on-surface" numberOfLines={3}>
-              {capture.summary}
-            </Text>
-          )}
-        </View>
-      );
-    }
-
-    if (capture.type === 'voice' || capture.type === 'audio') {
-      return (
-        <View className="mb-2">
-          {capture.file_url ? (
-            <AudioPlayer url={capture.file_url} />
-          ) : (
-             <View className="flex-row items-center gap-3 bg-surface-variant/50 p-3 rounded-2xl mb-3">
-               <View className="w-10 h-10 rounded-full bg-outline-variant items-center justify-center">
-                 <MaterialIcons name="mic-off" size={24} color={colors.surface} />
-               </View>
-               <Text className="text-body-sm text-on-surface-variant italic">Audio unavailable</Text>
-             </View>
-          )}
-          {capture.transcript && (
-            <View className="bg-surface-variant/30 p-3 rounded-xl">
-              <Text className="text-body-md text-on-surface italic" numberOfLines={3}>
-                "{capture.transcript}"
-              </Text>
-            </View>
-          )}
-        </View>
-      );
-    }
-
-    if (capture.type === 'location') {
-      return (
-        <View className="mb-2">
-          <View className="w-full h-32 bg-surface-variant/50 rounded-2xl items-center justify-center mb-3">
-             <MaterialIcons name="map" size={40} color={colors.outline} />
-          </View>
-          <Text className="text-body-md text-on-surface" numberOfLines={2}>
-            {capture.content_text || 'Location captured'}
-          </Text>
-        </View>
-      );
-    }
-
-    if (capture.type === 'url') {
-      return (
-        <View className="mb-2">
-          <View className="flex-row items-center gap-3 bg-surface-variant/50 p-3 rounded-2xl mb-3">
-             <View className="w-10 h-10 rounded-full bg-tertiary-container items-center justify-center">
-               <MaterialIcons name="link" size={20} color={colors.tertiary} />
-             </View>
-             <Text className="text-body-md text-on-surface flex-1 font-medium" numberOfLines={1}>
-               {capture.title || capture.content_text || 'Web Link'}
-             </Text>
-          </View>
-          {capture.summary && (
-            <Text className="text-body-md text-on-surface-variant" numberOfLines={3}>
-              {capture.summary}
-            </Text>
-          )}
-        </View>
-      );
-    }
-    
-    if (capture.type === 'pdf' || capture.type === 'document' || capture.type === 'file') {
-      return (
-        <View className="mb-2">
-          <View className="flex-row items-center gap-4 bg-surface-variant/50 p-4 rounded-2xl mb-3">
-             <View className="w-12 h-12 rounded-xl bg-error-container items-center justify-center shadow-sm">
-               <MaterialIcons name="picture-as-pdf" size={24} color={colors.error} />
-             </View>
-             <View className="flex-1">
-               <Text className="text-body-lg text-on-surface font-bold" numberOfLines={1}>
-                 {capture.title || 'Document'}
-               </Text>
-               <Text className="text-body-sm text-on-surface-variant uppercase mt-1 tracking-wider">
-                 {capture.type} • {format(new Date(capture.created_at), 'MMM d, yyyy')}
-               </Text>
-             </View>
-          </View>
-          {capture.summary && (
-            <Text className="text-body-md text-on-surface-variant" numberOfLines={3}>
-              {capture.summary}
-            </Text>
-          )}
-        </View>
-      );
-    }
-
-    // Default Text / Note
-    return (
-      <View className="mb-2">
-        {capture.content_text && (
-          <Text className="text-body-md text-on-surface leading-relaxed" numberOfLines={4}>
-            {capture.content_text}
-          </Text>
-        )}
-      </View>
-    );
+    return <MemoryRenderer capture={capture} variant="compact" onPress={onPress} />;
   };
 
   return (
