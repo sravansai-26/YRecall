@@ -10,15 +10,22 @@ import { updateProfile, signOut } from 'firebase/auth';
 import { auth } from '../../src/shared/lib/firebase';
 import { useUserProfile, useUpdateUserProfile } from '../../src/modules/users/hooks';
 import { useEntitlements } from '../../src/modules/billing/store';
+import { useQueryClient } from '@tanstack/react-query';
+import { useWorkspaceStore } from '../../src/modules/workspaces/store';
+import * as ImagePicker from 'expo-image-picker';
+import { uploadProfilePhoto } from '../../src/modules/users/api';
+import { useAskStore } from '../../src/shared/store/useAskStore';
 
 export default function ProfileSettings() {
  const router = useRouter();
+ const queryClient = useQueryClient();
  const { user, setUser } = useAuthStore();
  const { isPremium, planId } = useEntitlements();
  const { data: profileData, isLoading, isError, refetch, isRefetching } = useUserProfile();
  const updateUserMutation = useUpdateUserProfile();
  
  const [isEditing, setIsEditing] = useState(false);
+ const [isUploading, setIsUploading] = useState(false);
  const [formData, setFormData] = useState({
  username: '',
  display_name: '',
@@ -57,10 +64,54 @@ export default function ProfileSettings() {
  setUser({ ...auth.currentUser });
  }
  
+ // Also push to backend explicitly just to be safe
+ try {
+     await updateUserMutation.mutateAsync({
+         display_name: formData.display_name,
+         username: formData.username,
+         bio: formData.bio,
+         occupation: formData.occupation,
+         country: formData.country,
+         website: formData.website,
+         social_links: { main: formData.social_links }
+     });
+ } catch (backendError) {
+     console.log('Backend sync error:', backendError);
+     // We don't block the UI if backend fails, auth profile is already updated
+ }
+ 
  setIsEditing(false);
  } catch (error: any) {
  Alert.alert('Error', error.message || 'Failed to update profile.');
  }
+ };
+
+ const handleImageUpload = async () => {
+    try {
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 0.5,
+        });
+
+        if (!result.canceled && result.assets[0] && auth.currentUser) {
+            setIsUploading(true);
+            const downloadURL = await uploadProfilePhoto(result.assets[0].uri);
+            
+            await updateProfile(auth.currentUser, {
+                photoURL: downloadURL
+            });
+            setUser({ ...auth.currentUser });
+            
+            // Note: backend is already updated via the /photo endpoint
+            await refetch();
+        }
+    } catch (error: any) {
+        Alert.alert('Upload Error', 'Failed to upload image. ' + (error.message || ''));
+    } finally {
+        setIsUploading(false);
+    }
  };
 
  const handleSignOut = async () => {
@@ -75,8 +126,13 @@ export default function ProfileSettings() {
  onPress: async () => {
  try {
  await signOut(auth);
- useAuthStore.getState().setUser(null);
- router.replace('/(auth)');
+    // Clear local state and cache securely
+    useWorkspaceStore.getState().setActiveWorkspaceId(null);
+    useAskStore.getState().setActiveConversationId(null);
+    queryClient.clear();
+    
+    useAuthStore.getState().setUser(null);
+    router.replace('/(auth)');
  } catch (error) {
  Alert.alert('Error', 'Failed to sign out.');
  }
@@ -136,19 +192,26 @@ export default function ProfileSettings() {
  {/* Profile Header (Read-only / Top Section) */}
  <View className="flex-col md:flex-row md:items-start gap-8 mb-8 pb-8">
  <View className="relative self-start">
- <View className="w-32 h-32 rounded-full border border-outline-variant/20 overflow-hidden items-center justify-center bg-primary/5">
- {user?.photoURL || dbUser?.photo_url ? (
- <Image source={{ uri: user?.photoURL || dbUser?.photo_url }} className="w-full h-full" />
- ) : (
- <Text className="text-4xl font-bold text-primary">{formData.display_name?.charAt(0) || 'U'}</Text>
- )}
- </View>
- {isEditing && (
- <TouchableOpacity className="absolute bottom-0 right-0 p-3 bg-secondary rounded-full shadow-sm border-2 border-surface">
- <MaterialIcons name="photo-camera" size={20} color="#fff" />
- </TouchableOpacity>
- )}
- </View>
+        <TouchableOpacity disabled={!isEditing || isUploading} onPress={handleImageUpload}>
+            <Image 
+                source={{ uri: user?.photoURL || dbUser?.photo_url || 'https://api.dicebear.com/7.x/avataaars/png?seed=' + (dbUser?.id || 'default') }} 
+                className="w-32 h-32 rounded-full border-4 border-surface" 
+            />
+            {isUploading && (
+                <View className="absolute inset-0 bg-black/50 rounded-full items-center justify-center">
+                    <ActivityIndicator color="#fff" />
+                </View>
+            )}
+        </TouchableOpacity>
+        {isEditing && (
+        <TouchableOpacity 
+            onPress={handleImageUpload}
+            className="absolute bottom-0 right-0 p-3 bg-secondary rounded-full shadow-sm border-2 border-surface"
+        >
+            <MaterialIcons name="photo-camera" size={20} color="#fff" />
+        </TouchableOpacity>
+        )}
+      </View>
  
  <View className="flex-col flex-1 justify-center py-2 gap-2">
  <View className="flex-row flex-wrap items-center gap-3">

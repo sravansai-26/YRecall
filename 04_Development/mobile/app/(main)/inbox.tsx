@@ -58,7 +58,7 @@ export default function InboxScreen() {
  if (item.action_type === 'open_capture' && item.related_capture_id) {
  router.push(`/(main)/memory/${item.related_capture_id}`);
  } else if (item.action_type === 'open_graph') {
- router.push(`/(main)/(tabs)/knowledge-graph`);
+ router.push(`/(main)/(tabs)/knowledge-graph` as any);
  }
  };
 

@@ -50,7 +50,7 @@ export function HorizontalDateNavigator({ selectedDate, onSelectDate }: Horizont
  onPress={() => onSelectDate(date)}
  className={`h-16 min-w-[64px] items-center justify-center rounded-2xl px-3 ${isSelected ? 'bg-primary' : 'bg-surface-container-low'}`}
  >
- <Text className={`font-label-xs mb-1 uppercase tracking-wider ${isSelected ? 'text-on-primary/80' : 'text-on-surface-variant/70'}`}>
+ <Text className={`font-label-xs mb-1 uppercase tracking-wider ${isSelected ? 'text-on-primary' : 'text-on-surface-variant'}`}>
  {isToday ? 'Today' : format(date, 'EEE')}
  </Text>
  <Text className={`font-title-lg font-bold ${isSelected ? 'text-on-primary' : 'text-on-surface'}`}>

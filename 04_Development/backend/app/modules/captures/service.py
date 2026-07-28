@@ -14,6 +14,8 @@ from .tasks import (
     process_media_capture
 )
 
+from ..notifications.service import create_notification
+
 # Initialize Supabase client
 supabase: Client = None
 if settings.SUPABASE_URL and settings.SUPABASE_SERVICE_KEY:
@@ -26,6 +28,20 @@ from ..billing import entitlements, quota_service
 def _check_capture_quota(db: Session, user: User):
     if not entitlements.check_quota(db, user.id, "captures_monthly"):
         raise HTTPException(status_code=403, detail="Monthly capture limit reached. Please upgrade to save more memories.")
+
+def _notify_capture_created(db: Session, user: User, capture: Capture):
+    try:
+        create_notification(
+            db=db,
+            user_id=str(user.id),
+            title="Memory Captured",
+            content=f"Your {capture.type} capture has been saved and is being processed.",
+            type="activity",
+            category="Capture",
+            related_capture_id=str(capture.id)
+        )
+    except Exception:
+        pass
 
 def create_text_capture(db: Session, user: User, capture_in: CaptureCreateText, background_tasks: BackgroundTasks) -> Capture:
     _check_capture_quota(db, user)
@@ -43,6 +59,7 @@ def create_text_capture(db: Session, user: User, capture_in: CaptureCreateText, 
     background_tasks.add_task(generate_and_store_embedding, db, new_capture.id, new_capture.content_text)
     background_tasks.add_task(async_extract_with_retry, str(new_capture.id), user.id)
     quota_service.increment_captures(db, user.id)
+    _notify_capture_created(db, user, new_capture)
     return new_capture
 
 def create_note_capture(db: Session, user: User, capture_in: CaptureCreateNote, background_tasks: BackgroundTasks) -> Capture:
@@ -69,6 +86,7 @@ def create_note_capture(db: Session, user: User, capture_in: CaptureCreateNote, 
     background_tasks.add_task(generate_and_store_embedding, db, new_capture.id, new_capture.content_text)
     background_tasks.add_task(async_extract_with_retry, str(new_capture.id), user.id)
     quota_service.increment_captures(db, user.id)
+    _notify_capture_created(db, user, new_capture)
     return new_capture
 
 def create_url_capture(db: Session, user: User, capture_in: CaptureCreateURL, background_tasks: BackgroundTasks) -> Capture:
@@ -93,6 +111,7 @@ def create_url_capture(db: Session, user: User, capture_in: CaptureCreateURL, ba
     background_tasks.add_task(process_url_capture, db, new_capture.id)
     background_tasks.add_task(async_extract_with_retry, str(new_capture.id), user.id)
     quota_service.increment_captures(db, user.id)
+    _notify_capture_created(db, user, new_capture)
     return new_capture
 
 def create_location_capture(db: Session, user: User, capture_in: CaptureCreateLocation, background_tasks: BackgroundTasks) -> Capture:
@@ -120,6 +139,7 @@ def create_location_capture(db: Session, user: User, capture_in: CaptureCreateLo
     background_tasks.add_task(process_location_capture, db, new_capture.id)
     background_tasks.add_task(async_extract_with_retry, str(new_capture.id), user.id)
     quota_service.increment_captures(db, user.id)
+    _notify_capture_created(db, user, new_capture)
     return new_capture
 
 def create_media_capture(db: Session, user: User, file: UploadFile, type_str: str, background_tasks: BackgroundTasks) -> Capture:

@@ -65,6 +65,44 @@ def get_current_user(
             db.add(user)
             db.commit()
             db.refresh(user)
+            
+            try:
+                from ..modules.notifications.service import create_notification
+                create_notification(
+                    db=db,
+                    user_id=str(user.id),
+                    title="Welcome to YRecall!",
+                    content=f"Hi {display_name or 'there'},\n\nWelcome to YRecall, your AI Life Operating System. Your digital brain is ready to be populated.",
+                    type="system",
+                    category="Account",
+                    is_critical=True
+                )
+            except Exception as e:
+                pass # Non-blocking
+
+        else:
+            # Handle login alerts
+            auth_time = decoded_token.get("auth_time")
+            last_login_ts = user.last_login.timestamp() if user.last_login else 0
+            
+            if auth_time and auth_time > (last_login_ts + 300):
+                from datetime import datetime, timezone
+                user.last_login = datetime.fromtimestamp(auth_time, tz=timezone.utc)
+                db.commit()
+                
+                try:
+                    from ..modules.notifications.service import create_notification
+                    create_notification(
+                        db=db,
+                        user_id=str(user.id),
+                        title="New Login Detected",
+                        content=f"Hi {user.display_name or 'there'},\n\nWe detected a new login to your YRecall account. If this was you, you can safely ignore this email.",
+                        type="security",
+                        category="Account",
+                        is_critical=True
+                    )
+                except Exception:
+                    pass
 
         return user
     except Exception as e:

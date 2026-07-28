@@ -2,6 +2,7 @@ import uuid
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
+from pydantic import BaseModel
 
 from . import service
 from . import schemas
@@ -83,33 +84,58 @@ def archive_notification(
         "message": "Notification archived."
     }
 
+class TestNotificationRequest(BaseModel):
+    category: str
+
+@router.post("/test", response_model=dict)
+def test_notification(
+    req: TestNotificationRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    notif = service.create_notification(
+        db=db,
+        user_id=str(current_user.id),
+        title=f"Test: {req.category}",
+        content=f"This is a simulated {req.category} notification from the Intelligent Notification Center.",
+        type="system",
+        category=req.category,
+        is_critical=False
+    )
+    
+    if not notif:
+        raise HTTPException(status_code=400, detail=f"{req.category} notifications are currently disabled in your settings.")
+        
+    return {
+        "success": True,
+        "message": "Test notification sent."
+    }
+
 @router.get("/settings", response_model=dict)
 def get_notification_settings(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    settings = service.get_notification_settings(db, current_user)
     return {
         "success": True,
-        "data": current_user.notification_preferences or {
-            "reminders": True,
-            "insights": True,
-            "relationships": True,
-            "system": True
-        }
+        "data": schemas.NotificationSettingsResponse.model_validate(settings).model_dump()
     }
 
-@router.put("/settings", response_model=dict)
+@router.patch("/settings", response_model=dict)
 def update_notification_settings(
     settings_data: schemas.NotificationSettingsUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    current_user.notification_preferences = settings_data.model_dump()
-    db.commit()
+    settings = service.update_notification_settings(db, current_user, settings_data.model_dump(exclude_unset=True))
     return {
         "success": True,
-        "message": "Settings updated successfully."
+        "message": "Notification settings updated.",
+        "data": schemas.NotificationSettingsResponse.model_validate(settings).model_dump()
     }
+
+
 
 @router.put("/fcm-token", response_model=dict)
 def update_fcm_token(

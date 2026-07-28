@@ -3,6 +3,7 @@ import { initializeAuth } from 'firebase/auth';
 // @ts-ignore - The react-native subpath was removed in recent versions. We pull it directly from firebase/auth.
 import { getReactNativePersistence } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getStorage } from 'firebase/storage';
 
 // REPLACE THESE WITH YOUR ACTUAL FIREBASE CONFIG KEYS
 const firebaseConfig = {
@@ -27,4 +28,6 @@ const auth = initializeAuth(app, {
  persistence: getReactNativePersistence(AsyncStorage)
 });
 
-export { app, auth };
+const storage = getStorage(app);
+
+export { app, auth, storage };

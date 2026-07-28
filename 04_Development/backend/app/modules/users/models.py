@@ -38,6 +38,9 @@ class User(Base):
     )
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    
+    # Relationships
+    migration_jobs = relationship("MigrationJob", back_populates="user", cascade="all, delete-orphan")
 
 class ExperienceSettings(Base):
     __tablename__ = "experience_settings"

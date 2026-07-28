@@ -47,3 +47,23 @@ export const updateUserProfile = async (updates: Partial<UserProfileData['user']
  const { data } = await apiClient.patch('/users/me', updates);
  return data;
 };
+
+export const uploadProfilePhoto = async (uri: string): Promise<string> => {
+    const formData = new FormData();
+    const filename = uri.split('/').pop() || 'photo.jpg';
+    
+    // @ts-ignore - React Native FormData expects this shape
+    formData.append('file', {
+        uri,
+        name: filename,
+        type: 'image/jpeg'
+    });
+    
+    const { data } = await apiClient.post('/users/me/photo', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
+    
+    return data.photo_url;
+};

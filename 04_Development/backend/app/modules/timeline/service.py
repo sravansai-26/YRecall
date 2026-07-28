@@ -24,6 +24,7 @@ def get_timeline(
     settings = db.query(MemoryFilterSettings).filter(MemoryFilterSettings.user_id == user.id).first()
     
     query = db.query(Capture).filter(
+        Capture.user_id == user.id,
         Capture.deleted_at == None
     )
     

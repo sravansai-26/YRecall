@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Switch, ActivityIndicator, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Screen } from '../../../src/shared/components';
 import { colors } from '../../../src/shared/theme/colors';
@@ -7,123 +7,80 @@ import { useRouter } from 'expo-router';
 import { apiClient } from '../../../src/services/api/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
-export default function NotificationSettingsScreen() {
- const router = useRouter();
- const queryClient = useQueryClient();
+import { OverviewTab } from '../../../src/modules/notifications/components/OverviewTab';
+import { CategoriesTab } from '../../../src/modules/notifications/components/CategoriesTab';
+import { BehaviorTab } from '../../../src/modules/notifications/components/BehaviorTab';
+import { useNotifications } from '../../../src/shared/hooks/useNotifications';
 
- const { data: settingsData, isLoading } = useQuery({
- queryKey: ['notificationSettings'],
- queryFn: async () => {
- const { data } = await apiClient.get('/notifications/settings');
- return data;
- }
- });
+type Tab = 'Overview' | 'Categories' | 'Behavior';
 
- const mutation = useMutation({
- mutationFn: async (newSettings: any) => {
- await apiClient.put('/notifications/settings', newSettings);
- },
- onSuccess: () => {
- queryClient.invalidateQueries({ queryKey: ['notificationSettings'] });
- }
- });
+export default function NotificationCenterScreen() {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const [activeTab, setActiveTab] = useState<Tab>('Overview');
 
- const [settings, setSettings] = useState({
- reminders: true,
- insights: true,
- relationships: true,
- system: true
- });
+  const { data: settingsData, isLoading: settingsLoading } = useQuery({
+    queryKey: ['notificationSettings'],
+    queryFn: async () => {
+      const { data } = await apiClient.get('/notifications/settings');
+      return data.data;
+    }
+  });
 
- useEffect(() => {
- if (settingsData?.data) {
- setSettings(settingsData.data);
- }
- }, [settingsData]);
+  const { data: notificationsResponse, isLoading: notifsLoading } = useNotifications();
+  const notificationsData = notificationsResponse?.data || [];
 
- const toggleSetting = (key: string) => {
- const newSettings = { ...settings, [key]: !settings[key as keyof typeof settings] };
- setSettings(newSettings);
- mutation.mutate(newSettings);
- };
+  const mutation = useMutation({
+    mutationFn: async (newSettings: any) => {
+      await apiClient.patch('/notifications/settings', newSettings);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notificationSettings'] });
+    }
+  });
 
- return (
- <Screen scrollable={false}>
- {/* Header */}
- <View className="flex-row items-center gap-3 px-margin-mobile h-14 bg-surface ">
- <TouchableOpacity onPress={() => router.back()} className="w-10 h-10 items-center justify-center rounded-full bg-surface-container">
- <MaterialIcons name="arrow-back" size={24} color={colors.primary} />
- </TouchableOpacity>
- <Text className="font-title-sm font-bold text-primary">Notification Settings</Text>
- </View>
+  const handleUpdate = (partialUpdate: any) => {
+    mutation.mutate(partialUpdate);
+  };
 
- {isLoading ? (
- <View className="flex-1 items-center justify-center">
- <ActivityIndicator size="large" color={colors.primary} />
- </View>
- ) : (
- <ScrollView className="flex-1 px-margin-mobile pt-4">
- <Text className="font-body-md text-on-surface-variant mb-6">
- Control which types of insights and reminders the AI Intelligence Engine sends you.
- </Text>
+  const isLoading = settingsLoading || notifsLoading;
 
- {/* Setting Items */}
- <SettingToggle 
- title="Smart Reminders" 
- description="Time-sensitive tasks, follow-ups, and calendar reminders extracted from your memories."
- icon="alarm"
- value={settings.reminders}
- onValueChange={() => toggleSetting('reminders')}
- />
+  return (
+    <Screen scrollable={false}>
+      {/* Header */}
+      <View className="flex-row items-center gap-3 px-margin-mobile h-14 bg-surface">
+        <TouchableOpacity onPress={() => router.back()} className="w-10 h-10 items-center justify-center rounded-full bg-surface-container">
+          <MaterialIcons name="arrow-back" size={24} color={colors.primary} />
+        </TouchableOpacity>
+        <Text className="font-title-sm font-bold text-primary">Intelligent Notification Center</Text>
+      </View>
 
- <SettingToggle 
- title="AI Insights & Summaries" 
- description="Daily briefs, suggestions, and intelligent insights generated from your captures."
- icon="auto-awesome"
- value={settings.insights}
- onValueChange={() => toggleSetting('insights')}
- />
+      {/* Tabs */}
+      <View className="flex-row border-b border-outline-variant/30 px-margin-mobile">
+        {(['Overview', 'Categories', 'Behavior'] as Tab[]).map((tab) => (
+          <TouchableOpacity
+            key={tab}
+            onPress={() => setActiveTab(tab)}
+            className={`flex-1 py-3 items-center border-b-2 ${activeTab === tab ? 'border-primary' : 'border-transparent'}`}
+          >
+            <Text className={`font-title-sm ${activeTab === tab ? 'text-primary font-bold' : 'text-on-surface-variant'}`}>
+              {tab}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
 
- <SettingToggle 
- title="Knowledge Relationships" 
- description="Alerts when the AI discovers new connections between your people, projects, and ideas."
- icon="hub"
- value={settings.relationships}
- onValueChange={() => toggleSetting('relationships')}
- />
-
- <SettingToggle 
- title="System Updates" 
- description="App updates, sync status, and storage alerts."
- icon="settings-system-daydream"
- value={settings.system}
- onValueChange={() => toggleSetting('system')}
- />
- </ScrollView>
- )}
- </Screen>
- );
-}
-
-function SettingToggle({ title, description, icon, value, onValueChange }: any) {
- return (
- <View className="flex-row items-center justify-between py-4 ">
- <View className="flex-1 flex-row gap-4">
- <View className="w-10 h-10 rounded-full bg-surface-container-high items-center justify-center mt-1">
- <MaterialIcons name={icon} size={20} color={colors.primary} />
- </View>
- <View className="flex-1 pr-4">
- <Text className="font-title-sm font-bold text-on-surface mb-1">{title}</Text>
- <Text className="font-body-sm text-on-surface-variant leading-tight">{description}</Text>
- </View>
- </View>
- <Switch
- trackColor={{ false: colors['surface-container-highest'], true: colors.primary }}
- thumbColor={value ? '#fff' : '#f4f3f4'}
- ios_backgroundColor={colors['surface-container-highest']}
- onValueChange={onValueChange}
- value={value}
- />
- </View>
- );
+      {isLoading ? (
+        <View className="flex-1 items-center justify-center">
+          <ActivityIndicator size="large" color={colors.primary} />
+        </View>
+      ) : (
+        <View className="flex-1 bg-surface px-margin-mobile">
+          {activeTab === 'Overview' && <OverviewTab notifications={notificationsData} />}
+          {activeTab === 'Categories' && <CategoriesTab settings={settingsData || {}} onUpdate={handleUpdate} />}
+          {activeTab === 'Behavior' && <BehaviorTab settings={settingsData || {}} onUpdate={handleUpdate} />}
+        </View>
+      )}
+    </Screen>
+  );
 }

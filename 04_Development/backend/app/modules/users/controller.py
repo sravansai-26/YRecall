@@ -9,11 +9,6 @@ from typing import Any, Dict
 from datetime import datetime, timezone
 
 try:
-    from ..timeline.models import TimelineEvent
-except ImportError:
-    TimelineEvent = None
-
-try:
     from ..captures.models import Capture
 except ImportError:
     Capture = None
@@ -49,7 +44,63 @@ def update_me(
         
     db.commit()
     db.refresh(current_user)
+    
+    # Trigger Notification
+    try:
+        from ..notifications.service import create_notification
+        create_notification(
+            db=db,
+            user_id=str(current_user.id),
+            title="Profile Updated",
+            content="Your account profile has been updated successfully.",
+            type="system",
+            category="Account",
+            is_critical=False
+        )
+    except Exception as e:
+        pass # Non-blocking
+        
     return current_user
+
+from fastapi import UploadFile, File
+from ...core.config import settings
+
+@router.post("/me/photo", response_model=dict)
+def upload_profile_photo(
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Upload a profile photo to Supabase storage and update the user's profile."""
+    try:
+        from supabase import create_client
+        if not settings.SUPABASE_URL or not settings.SUPABASE_SERVICE_KEY:
+            raise HTTPException(status_code=500, detail="Supabase not configured")
+            
+        supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_SERVICE_KEY)
+        
+        file_ext = file.filename.split('.')[-1] if '.' in file.filename else 'jpg'
+        file_name = f"profiles/{current_user.id}_{int(datetime.now().timestamp())}.{file_ext}"
+        file_bytes = file.file.read()
+        
+        # We can reuse the captures bucket, or assume a profiles bucket exists.
+        # Captures bucket is guaranteed to exist. We'll use a profiles/ folder inside it.
+        supabase.storage.from_("captures").upload(
+            file_name, 
+            file_bytes,
+            file_options={"content-type": file.content_type}
+        )
+        
+        public_url = supabase.storage.from_("captures").get_public_url(file_name)
+        
+        # Update user
+        current_user.photo_url = public_url
+        db.commit()
+        db.refresh(current_user)
+        
+        return {"success": True, "photo_url": public_url}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to upload photo: {str(e)}")
 
 @router.get("/me/profile")
 def get_full_profile(
@@ -91,10 +142,8 @@ def get_full_profile(
         "storage_used_bytes": 0
     }
     
-    if TimelineEvent:
-        stats["timeline_memories"] = db.query(func.count(TimelineEvent.id)).filter(TimelineEvent.user_id == current_user.id).scalar() or 0
-        
     if Capture:
+        stats["timeline_memories"] = db.query(func.count(Capture.id)).filter(Capture.user_id == current_user.id).scalar() or 0
         stats["captures_total"] = db.query(func.count(Capture.id)).filter(Capture.user_id == current_user.id).scalar() or 0
         
     if Workspace:
