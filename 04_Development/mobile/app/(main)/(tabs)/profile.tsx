@@ -25,18 +25,18 @@ export default function KnowledgeGraphHub() {
  <TouchableOpacity onPress={() => require('react-native').Alert.alert(t('common.comingSoon', 'Coming Soon'), t('common.backendPending', 'Backend integration pending'))} className="p-2 rounded-full ">
  <MaterialIcons name="notifications" size={24} color={colors['on-surface-variant']} />
  </TouchableOpacity>
- <TouchableOpacity onPress={() => router.push('/(main)/profile-edit')} className="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden">
- {user?.photoURL ? (
- <Image 
- source={{ uri: user.photoURL }} 
- className="w-full h-full"
- />
- ) : (
- <View className="w-full h-full bg-primary/20 items-center justify-center">
- <Text className="font-bold text-primary">{user?.displayName?.charAt(0) || 'U'}</Text>
- </View>
- )}
- </TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/(main)/profile-edit')} className="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border border-outline/20">
+                {user?.photoURL ? (
+                    <Image 
+                        source={{ uri: user.photoURL }} 
+                        className="w-full h-full"
+                    />
+                ) : (
+                    <View className="w-full h-full bg-primary/20 items-center justify-center">
+                        <Text className="font-bold text-primary">{user?.displayName?.charAt(0) || 'U'}</Text>
+                    </View>
+                )}
+            </TouchableOpacity>
  </View>
  </View>
 

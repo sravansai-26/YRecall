@@ -1,4 +1,4 @@
-import { api } from '../../../src/services/api/client';
+import { apiClient } from '../../../src/services/api/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 export interface MigrationJob {
@@ -34,7 +34,7 @@ export const useMigrationJobs = () => {
     return useQuery<MigrationJob[]>({
         queryKey: ['migration_jobs'],
         queryFn: async () => {
-            const res = await api.get('/migration/jobs');
+            const res = await apiClient.get('/migration/jobs');
             return res.data;
         },
         refetchInterval: (query) => {
@@ -50,7 +50,7 @@ export const useCreateExport = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (req: ExportRequest) => {
-            const res = await api.post('/migration/export', req);
+            const res = await apiClient.post('/migration/export', req);
             return res.data;
         },
         onSuccess: () => {
@@ -63,7 +63,20 @@ export const useConfirmImport = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (req: ImportConfirmRequest) => {
-            const res = await api.post('/migration/import', req);
+            const res = await apiClient.post('/migration/import', req);
+            return res.data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['migration_jobs'] });
+        }
+    });
+};
+
+export const useDeleteMigrationJob = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (jobId: string) => {
+            const res = await apiClient.delete(`/migration/jobs/${jobId}`);
             return res.data;
         },
         onSuccess: () => {

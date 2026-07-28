@@ -195,7 +195,7 @@ export default function ProfileSettings() {
         <TouchableOpacity disabled={!isEditing || isUploading} onPress={handleImageUpload}>
             <Image 
                 source={{ uri: user?.photoURL || dbUser?.photo_url || 'https://api.dicebear.com/7.x/avataaars/png?seed=' + (dbUser?.id || 'default') }} 
-                className="w-32 h-32 rounded-full border-4 border-surface" 
+                className="w-32 h-32 rounded-full border border-outline/20" 
             />
             {isUploading && (
                 <View className="absolute inset-0 bg-black/50 rounded-full items-center justify-center">

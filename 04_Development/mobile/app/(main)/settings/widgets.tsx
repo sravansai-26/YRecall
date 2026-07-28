@@ -3,15 +3,48 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { Screen } from '../../../src/shared/components';
 import { colors } from '../../../src/shared/theme/colors';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useWidgetPreferences, useUpdateWidgetPreferences } from '../../../src/modules/widgets/api';
+import { WidgetPreview } from 'react-native-android-widget';
+import { QuickCaptureWidget } from '../../../src/modules/widgets/components/QuickCaptureWidget';
+import { DailyBriefWidget } from '../../../src/modules/widgets/components/DailyBriefWidget';
+import { SearchWidget } from '../../../src/modules/widgets/components/SearchWidget';
+import { TimelineWidget } from '../../../src/modules/widgets/components/TimelineWidget';
+import { ActivityIndicator, Alert } from 'react-native';
 
-export default function WidgetSettings() {
+ export default function WidgetSettings() {
  const router = useRouter();
  
+ const { data: preferences, isLoading } = useWidgetPreferences();
+ const updatePreferences = useUpdateWidgetPreferences();
+
  const [widgetStyle, setWidgetStyle] = useState('compact');
  const [mainAction, setMainAction] = useState('quick');
  const [showAiInsights, setShowAiInsights] = useState(true);
  const [privacyMasking, setPrivacyMasking] = useState(false);
+
+ useEffect(() => {
+     if (preferences?.global_config) {
+         setWidgetStyle(preferences.global_config.style || 'compact');
+         setMainAction(preferences.global_config.main_action || 'quick');
+         setShowAiInsights(preferences.global_config.show_ai_insights ?? true);
+         setPrivacyMasking(preferences.global_config.privacy_masking ?? false);
+     }
+ }, [preferences]);
+
+ const handleSave = async () => {
+     try {
+         await updatePreferences.mutateAsync({
+             style: widgetStyle,
+             main_action: mainAction,
+             show_ai_insights: showAiInsights,
+             privacy_masking: privacyMasking
+         });
+         Alert.alert('Saved', 'Widget configuration saved to the engine. Active widgets will refresh on their next cycle.');
+     } catch (e) {
+         Alert.alert('Error', 'Failed to save configuration');
+     }
+ };
 
  const actions = {
  'quick': { icon: 'bolt', title: 'Quick Capture', desc: 'Instant text entry with AI auto-tagging' },
@@ -19,6 +52,14 @@ export default function WidgetSettings() {
  'photo': { icon: 'camera-enhance', title: 'Photo Scan', desc: 'OCR and image intelligence capture' },
  'smart': { icon: 'subject', title: 'Smart Text', desc: 'Analyze clipboard content automatically' },
  } as const;
+
+ if (isLoading) {
+     return (
+         <Screen scrollable={false} className="items-center justify-center">
+             <ActivityIndicator size="large" color={colors.primary} />
+         </Screen>
+     );
+ }
 
  return (
  <Screen scrollable={true} className="pb-24">
@@ -127,8 +168,8 @@ export default function WidgetSettings() {
  </View>
  </View>
  
- <TouchableOpacity onPress={() => require('react-native').Alert.alert('Coming Soon', 'Backend integration pending')} className="w-full mt-4 h-14 bg-primary rounded-2xl flex-row items-center justify-center gap-2 shadow-md">
- <Text className="font-bold text-white text-base">Apply Widget Configuration</Text>
+ <TouchableOpacity onPress={handleSave} disabled={updatePreferences.isPending} className={`w-full mt-4 h-14 rounded-2xl flex-row items-center justify-center gap-2 shadow-md ${updatePreferences.isPending ? 'bg-surface-variant' : 'bg-primary'}`}>
+ {updatePreferences.isPending ? <ActivityIndicator color={colors['on-surface-variant']} /> : <Text className={`font-bold text-base ${updatePreferences.isPending ? 'text-on-surface-variant' : 'text-white'}`}>Apply Widget Configuration</Text>}
  </TouchableOpacity>
 
  </View>
@@ -147,33 +188,18 @@ export default function WidgetSettings() {
  </View>
 
  {/* Widget Preview */}
- <View className="mt-12 bg-white/70 rounded-[24px] p-4 shadow-xl border-white/40">
- <View className="flex-row items-center justify-between mb-4">
- <View className="flex-row items-center gap-2">
- <View className="w-8 h-8 rounded-lg bg-primary-container items-center justify-center">
- <MaterialIcons name="history" size={16} color="#ffffff" />
- </View>
- <Text className="text-xs font-bold text-primary">YRecall</Text>
- </View>
- <Text className="text-[10px] font-medium text-on-surface-variant opacity-60 uppercase">Widget</Text>
- </View>
- 
- <View className="flex-col gap-2">
- <View className="w-full h-12 bg-primary rounded-xl flex-row items-center justify-center gap-2 shadow-sm">
- <MaterialIcons name={actions[mainAction as keyof typeof actions].icon as any} size={20} color="#ffffff" />
- <Text className="font-semibold text-white text-sm">{actions[mainAction as keyof typeof actions].title}</Text>
- </View>
-
- {showAiInsights && (
- <View className="p-3 bg-secondary/10 rounded-lg border-secondary/20 mt-2">
- <View className="flex-row items-center gap-1 mb-1">
- <MaterialIcons name="auto-awesome" size={12} color={colors.secondary} />
- <Text className="text-[10px] font-bold text-secondary uppercase tracking-tight">AI Insight</Text>
- </View>
- <Text className="text-xs text-on-surface opacity-80 leading-snug">"You mentioned a meeting with Sarah today at 3 PM."</Text>
- </View>
- )}
- </View>
+ <View className="mt-12 w-full px-4 items-center">
+     <WidgetPreview
+         renderWidget={() => <QuickCaptureWidget widgetInfo={{ widgetName: 'QuickCaptureWidget', widgetId: 0, widgetDimensions: { width: 300, height: 120 } }} />}
+         width={280}
+         height={120}
+     />
+     <View className="mt-4" />
+     <WidgetPreview
+         renderWidget={() => <SearchWidget widgetInfo={{ widgetName: 'SearchWidget', widgetId: 0, widgetDimensions: { width: 300, height: 60 } }} />}
+         width={280}
+         height={60}
+     />
  </View>
  
  {/* Mock bottom icons */}

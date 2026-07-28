@@ -23,8 +23,8 @@ class LocalFileSystemProvider(StorageProvider):
     async def upload_file(self, file_path: str, destination_name: str) -> str:
         dest_path = os.path.join(self.base_dir, destination_name)
         shutil.copy2(file_path, dest_path)
-        # Return a fake URL that the backend can serve statically or intercept
-        return f"file://{dest_path}"
+        # Return just the filename so the backend can serve it via a download endpoint
+        return destination_name
 
     async def download_file(self, url: str, local_destination: str) -> str:
         if url.startswith("file://"):

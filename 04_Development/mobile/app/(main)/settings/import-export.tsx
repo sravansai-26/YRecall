@@ -4,14 +4,17 @@ import { Screen } from '../../../src/shared/components';
 import { colors } from '../../../src/shared/theme/colors';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { useMigrationJobs, useCreateExport } from '../../../src/modules/migration/api';
-import * as FileSystem from 'expo-file-system';
+import { useMigrationJobs, useCreateExport, useDeleteMigrationJob } from '../../../src/modules/migration/api';
+import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
+import { env } from '../../../src/config/env';
+import { auth } from '../../../src/shared/lib/firebase';
 
 export default function MigrationHub() {
     const router = useRouter();
     const { data: jobs, isLoading: isLoadingJobs } = useMigrationJobs();
     const createExport = useCreateExport();
+    const deleteJob = useDeleteMigrationJob();
     
     const [exportFormat, setExportFormat] = useState('ZIP');
 
@@ -48,14 +51,26 @@ export default function MigrationHub() {
             const filename = `yrecall_export_${Date.now()}.${format.toLowerCase()}`;
             const destPath = `${FileSystem.documentDirectory}${filename}`;
             
+            let downloadUrl = fileUrl;
+            
+            // Handle legacy backend paths (e.g. file:///tmp/yrecall_exports/export_xxx.json)
             if (fileUrl.startsWith('file://')) {
-                // Already local, just copy
-                await FileSystem.copyAsync({ from: fileUrl, to: destPath });
-            } else {
-                // Remote, download it
-                const result = await FileSystem.downloadAsync(fileUrl, destPath);
-                if (result.status !== 200) throw new Error('Download failed');
+                const parts = fileUrl.split(/[\/\\]/);
+                const rawFilename = parts[parts.length - 1];
+                downloadUrl = `${env.apiUrl}/migration/download/${rawFilename}`;
+            } else if (!fileUrl.startsWith('http')) {
+                // If it's just a filename (e.g., export_d10e...json), prepend the download endpoint
+                downloadUrl = `${env.apiUrl}/migration/download/${fileUrl}`;
             }
+
+            // Remote, download it via HTTP
+            const token = await auth.currentUser?.getIdToken();
+            const result = await FileSystem.downloadAsync(downloadUrl, destPath, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+            if (result.status !== 200) throw new Error('Download failed. Make sure you are authenticated.');
             
             // Share or Save
             const canShare = await Sharing.isAvailableAsync();
@@ -227,16 +242,21 @@ export default function MigrationHub() {
                                                 {job.current_stage && <Text className="text-xs text-on-surface-variant capitalize mt-0.5">Stage: {job.current_stage}</Text>}
                                             </View>
                                         </View>
-                                        {job.status === 'completed' && job.file_url && (
-                                            <TouchableOpacity onPress={() => handleDownload(job.file_url!, job.archive_format || 'ZIP')} className="px-4 py-2 bg-surface-container rounded-lg items-center justify-center active:bg-surface-container-high">
-                                                <Text className="font-bold text-primary text-sm">Download</Text>
+                                        <View className="flex-row items-center gap-2">
+                                            {job.status === 'completed' && job.file_url && (
+                                                <TouchableOpacity onPress={() => handleDownload(job.file_url!, job.archive_format || 'ZIP')} className="px-4 py-2 bg-surface-container rounded-lg items-center justify-center active:bg-surface-container-high">
+                                                    <Text className="font-bold text-primary text-sm">Download</Text>
+                                                </TouchableOpacity>
+                                            )}
+                                            {job.status === 'failed' && (
+                                                <View className="px-4 py-2 bg-error-container rounded-lg items-center justify-center">
+                                                    <Text className="font-bold text-on-error-container text-sm">Failed</Text>
+                                                </View>
+                                            )}
+                                            <TouchableOpacity onPress={() => deleteJob.mutate(job.id)} className="w-10 h-10 bg-surface-container-high rounded-full items-center justify-center active:bg-surface-variant">
+                                                <MaterialIcons name="close" size={20} color={colors.on_surface_variant} />
                                             </TouchableOpacity>
-                                        )}
-                                        {job.status === 'failed' && (
-                                            <View className="px-4 py-2 bg-error-container rounded-lg items-center justify-center">
-                                                <Text className="font-bold text-on-error-container text-sm">Failed</Text>
-                                            </View>
-                                        )}
+                                        </View>
                                     </View>
                                 ))
                             )}

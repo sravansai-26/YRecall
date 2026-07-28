@@ -10,7 +10,7 @@ from .models import MigrationJob
 from .schemas import MigrationJobResponse, ExportRequest, ImportPreviewRequest, ImportPreviewResponse, ImportConfirmRequest
 from .engine import execute_export_task, execute_import_task
 
-router = APIRouter(prefix="/api/v1/migration", tags=["migration"])
+router = APIRouter()
 
 @router.post("/export", response_model=MigrationJobResponse)
 async def create_export_job(
@@ -72,6 +72,17 @@ async def confirm_import(
     background_tasks.add_task(execute_import_task, job.id)
     return job
 
+from fastapi.responses import FileResponse
+import os
+
+@router.get("/download/{filename}")
+async def download_export_file(filename: str, current_user: User = Depends(get_current_user)):
+    """Downloads an export file from the local storage."""
+    file_path = os.path.join("/tmp/yrecall_exports", filename)
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="File not found")
+    return FileResponse(file_path, filename=filename)
+
 @router.get("/jobs", response_model=List[MigrationJobResponse])
 def list_jobs(
     db: Session = Depends(get_db),
@@ -79,3 +90,20 @@ def list_jobs(
 ):
     """List all migration jobs for the user."""
     return db.query(MigrationJob).filter(MigrationJob.user_id == current_user.id).order_by(MigrationJob.created_at.desc()).all()
+
+@router.delete("/jobs/{job_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_job(
+    job_id: UUID,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Deletes a migration job record."""
+    job = db.query(MigrationJob).filter(MigrationJob.id == job_id, MigrationJob.user_id == current_user.id).first()
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    
+    # Optionally delete the file from storage here as well, if we have a file_url.
+    # For now, just deleting the DB record is enough to remove it from the history.
+    db.delete(job)
+    db.commit()
+    return None

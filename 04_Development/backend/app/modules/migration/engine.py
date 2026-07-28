@@ -41,8 +41,10 @@ async def execute_export_task(job_id: UUID):
             export_data["captures"] = [
                 {
                     "id": str(c.id),
-                    "content": c.content,
-                    "metadata": c.metadata_info,
+                    "title": c.title,
+                    "type": c.type,
+                    "content": c.content_text,
+                    "summary": c.summary,
                     "created_at": c.created_at.isoformat() if c.created_at else None,
                 } for c in captures
             ]

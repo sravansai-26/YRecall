@@ -66,6 +66,45 @@ module.exports = {
           ]
         }
       }
+    ],
+    [
+      "react-native-android-widget",
+      {
+        "widgets": [
+          {
+            "name": "QuickCaptureWidget",
+            "label": "YRecall Quick Capture",
+            "minWidth": "250dp",
+            "minHeight": "110dp",
+            "description": "Capture memories instantly",
+            "previewImage": "./assets/images/icon.png"
+          },
+          {
+            "name": "DailyBriefWidget",
+            "label": "YRecall Daily Brief",
+            "minWidth": "250dp",
+            "minHeight": "200dp",
+            "description": "Your morning AI summary",
+            "previewImage": "./assets/images/icon.png"
+          },
+          {
+            "name": "SearchWidget",
+            "label": "YRecall Search",
+            "minWidth": "250dp",
+            "minHeight": "60dp",
+            "description": "Search your memory graph",
+            "previewImage": "./assets/images/icon.png"
+          },
+          {
+            "name": "TimelineWidget",
+            "label": "YRecall Timeline",
+            "minWidth": "250dp",
+            "minHeight": "300dp",
+            "description": "Latest memories & AI insights",
+            "previewImage": "./assets/images/icon.png"
+          }
+        ]
+      }
     ]
   ],
   
