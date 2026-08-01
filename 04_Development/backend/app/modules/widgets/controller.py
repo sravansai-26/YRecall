@@ -4,7 +4,7 @@ from typing import List
 from uuid import UUID
 from app.core.database import get_db
 from app.modules.users.models import User
-from app.modules.auth.dependencies import get_current_user
+from app.core.security import get_current_user
 from .models import WidgetInstance, WidgetPreference
 from .schemas import WidgetInstanceCreate, WidgetInstanceUpdate, WidgetInstanceResponse, WidgetPreferenceUpdate, WidgetPreferenceResponse
 

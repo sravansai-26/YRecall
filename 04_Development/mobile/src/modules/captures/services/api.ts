@@ -85,5 +85,11 @@ export const capturesApi = {
  deleteCapture: async (id: string) => {
  const response = await apiClient.delete(`/captures/${id}`);
  return response.data;
+ },
+ searchCaptures: async (q: string, skip: number = 0, limit: number = 20) => {
+ const response = await apiClient.get('/captures/search', {
+     params: { q, skip, limit }
+ });
+ return response.data;
  }
 };

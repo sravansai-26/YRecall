@@ -17,6 +17,7 @@ from .modules.filters.controller import router as filters_router
 from .modules.security.controller import router as security_router
 from app.modules.migration.controller import router as migration_router
 from app.modules.widgets.controller import router as widgets_router
+from app.modules.support.controller import router as support_router
 
 from contextlib import asynccontextmanager
 from .core.database import SessionLocal
@@ -66,7 +67,8 @@ app.include_router(migration_router, prefix="/api/v1/migration", tags=["Migratio
 app.include_router(voice_router, prefix="/api/v1/voice", tags=["Voice"])
 app.include_router(filters_router, prefix="/api/v1/filters", tags=["Filters"])
 app.include_router(security_router, prefix="/api/v1/security", tags=["Security"])
-app.include_router(widgets_router, prefix="/api/v1/widgets", tags=["Widgets"])
+app.include_router(widgets_router, prefix="/api/v1", tags=["Widgets"])
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
+app.include_router(support_router, prefix="/api/v1", tags=["Support"])

@@ -110,6 +110,22 @@ def transcribe_audio(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@router.get("/search", response_model=dict)
+def search_captures(
+    q: str,
+    skip: int = 0,
+    limit: int = 20,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    result = service.search_captures(db, current_user, q, skip, limit)
+    return {
+        "success": True,
+        "message": "Search completed successfully.",
+        "data": [CaptureResponse.model_validate(c).model_dump() for c in result["data"]],
+        "meta": result["meta"]
+    }
+
 @router.get("", response_model=dict)
 def get_captures(
     skip: int = 0,

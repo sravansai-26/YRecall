@@ -54,8 +54,8 @@ export default function Screen({
  }
 
  return (
- <SafeAreaView className="flex-1 bg-background" edges={['top']}>
+ <View style={{ flex: 1, paddingTop: insets.top }} className="bg-background">
  {wrappedContent}
- </SafeAreaView>
+ </View>
  );
 }

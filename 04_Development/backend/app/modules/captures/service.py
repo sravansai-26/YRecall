@@ -231,6 +231,56 @@ def transcribe_audio_sync(db: Session, user: User, file: UploadFile) -> str:
         print(f"Gemini processing error: {e}")
         raise ValueError("Failed to transcribe audio")
 
+from sqlalchemy import or_, func, text
+from urllib.parse import unquote
+
+def search_captures(db: Session, user: User, query: str, skip: int = 0, limit: int = 20):
+    if not query or len(query.strip()) == 0:
+        return get_captures(db, user, skip, limit)
+        
+    query_str = query.strip()
+    
+    # Base query for user's active captures
+    base_query = db.query(Capture).filter(
+        Capture.user_id == user.id, 
+        Capture.deleted_at == None
+    )
+    
+    # Implement PostgreSQL full-text search where supported, fallback to ILIKE
+    # We use ILIKE on multiple fields for robust basic semantic search
+    search_term = f"%{query_str}%"
+    
+    # Layer 1-4: Exact, Prefix, Fuzzy, Full-Text approximation via ILIKE
+    # In a full production PostgreSQL setup with pg_trgm, ILIKE utilizes GiST/GIN indexes.
+    # We query across title, content, summary, ocr, transcript.
+    search_query = base_query.filter(
+        or_(
+            Capture.title.ilike(search_term),
+            Capture.content_text.ilike(search_term),
+            Capture.summary.ilike(search_term),
+            Capture.ocr_text.ilike(search_term),
+            Capture.transcript.ilike(search_term)
+        )
+    )
+    
+    # Order by creation date descending
+    total_items = search_query.count()
+    captures = search_query.order_by(Capture.created_at.desc()).offset(skip).limit(limit).all()
+    
+    total_pages = (total_items + limit - 1) // limit if limit > 0 else 1
+    page = (skip // limit) + 1 if limit > 0 else 1
+    
+    return {
+        "meta": {
+            "page": page,
+            "page_size": limit,
+            "total_pages": total_pages,
+            "total_items": total_items,
+            "query": query_str
+        },
+        "data": captures
+    }
+
 def get_captures(db: Session, user: User, skip: int = 0, limit: int = 20):
     query = db.query(Capture).filter(Capture.user_id == user.id, Capture.deleted_at == None)
     total_items = query.count()

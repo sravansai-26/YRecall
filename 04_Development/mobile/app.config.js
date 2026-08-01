@@ -74,15 +74,15 @@ module.exports = {
           {
             "name": "QuickCaptureWidget",
             "label": "YRecall Quick Capture",
-            "minWidth": "250dp",
-            "minHeight": "110dp",
+            "minWidth": "300dp",
+            "minHeight": "140dp",
             "description": "Capture memories instantly",
             "previewImage": "./assets/images/icon.png"
           },
           {
             "name": "DailyBriefWidget",
             "label": "YRecall Daily Brief",
-            "minWidth": "250dp",
+            "minWidth": "300dp",
             "minHeight": "200dp",
             "description": "Your morning AI summary",
             "previewImage": "./assets/images/icon.png"
@@ -90,7 +90,7 @@ module.exports = {
           {
             "name": "SearchWidget",
             "label": "YRecall Search",
-            "minWidth": "250dp",
+            "minWidth": "300dp",
             "minHeight": "60dp",
             "description": "Search your memory graph",
             "previewImage": "./assets/images/icon.png"
@@ -98,7 +98,7 @@ module.exports = {
           {
             "name": "TimelineWidget",
             "label": "YRecall Timeline",
-            "minWidth": "250dp",
+            "minWidth": "300dp",
             "minHeight": "300dp",
             "description": "Latest memories & AI insights",
             "previewImage": "./assets/images/icon.png"

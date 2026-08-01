@@ -37,6 +37,7 @@ from app.modules.voice import models as voice_models
 from app.modules.filters import models as filters_models
 from app.modules.security import models as security_models
 from app.modules.widgets import models as widgets_models
+from app.modules.support import models as support_models
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,

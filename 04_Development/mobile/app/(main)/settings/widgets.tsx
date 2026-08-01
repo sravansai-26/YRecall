@@ -5,11 +5,6 @@ import { colors } from '../../../src/shared/theme/colors';
 import { useRouter } from 'expo-router';
 import React, { useState, useEffect } from 'react';
 import { useWidgetPreferences, useUpdateWidgetPreferences } from '../../../src/modules/widgets/api';
-import { WidgetPreview } from 'react-native-android-widget';
-import { QuickCaptureWidget } from '../../../src/modules/widgets/components/QuickCaptureWidget';
-import { DailyBriefWidget } from '../../../src/modules/widgets/components/DailyBriefWidget';
-import { SearchWidget } from '../../../src/modules/widgets/components/SearchWidget';
-import { TimelineWidget } from '../../../src/modules/widgets/components/TimelineWidget';
 import { ActivityIndicator, Alert } from 'react-native';
 
  export default function WidgetSettings() {
@@ -188,18 +183,35 @@ import { ActivityIndicator, Alert } from 'react-native';
  </View>
 
  {/* Widget Preview */}
- <View className="mt-12 w-full px-4 items-center">
-     <WidgetPreview
-         renderWidget={() => <QuickCaptureWidget widgetInfo={{ widgetName: 'QuickCaptureWidget', widgetId: 0, widgetDimensions: { width: 300, height: 120 } }} />}
-         width={280}
-         height={120}
-     />
-     <View className="mt-4" />
-     <WidgetPreview
-         renderWidget={() => <SearchWidget widgetInfo={{ widgetName: 'SearchWidget', widgetId: 0, widgetDimensions: { width: 300, height: 60 } }} />}
-         width={280}
-         height={60}
-     />
+ <View className="mt-12 bg-white/70 rounded-[24px] p-4 shadow-xl border-white/40">
+ <View className="flex-row items-center justify-between mb-4">
+ <View className="flex-row items-center gap-2">
+ <View className="w-8 h-8 rounded-lg bg-primary-container items-center justify-center">
+ <MaterialIcons name="history" size={16} color="#ffffff" />
+ </View>
+ <Text className="text-xs font-bold text-primary">YRecall</Text>
+ </View>
+ <Text className="text-[10px] font-medium text-on-surface-variant opacity-60 uppercase">Widget</Text>
+ </View>
+ 
+ <View className="flex-col gap-2">
+ <View className="w-full h-12 bg-primary rounded-xl flex-row items-center justify-center gap-2 shadow-sm">
+ <MaterialIcons name={actions[mainAction as keyof typeof actions].icon as any} size={20} color="#ffffff" />
+ <Text className="font-semibold text-white text-sm">{actions[mainAction as keyof typeof actions].title}</Text>
+ </View>
+
+ {showAiInsights && (
+ <View className="p-3 bg-secondary/10 rounded-lg border-secondary/20 mt-2">
+ <View className="flex-row items-center gap-1 mb-1">
+ <MaterialIcons name="auto-awesome" size={12} color={colors.secondary} />
+ <Text className="text-[10px] font-bold text-secondary uppercase tracking-tight">AI Insight</Text>
+ </View>
+ <Text className="text-xs text-on-surface opacity-80 leading-snug">
+ {privacyMasking ? "Content hidden due to privacy settings." : "\"You mentioned a meeting with Sarah today at 3 PM.\""}
+ </Text>
+ </View>
+ )}
+ </View>
  </View>
  
  {/* Mock bottom icons */}
