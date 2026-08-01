@@ -33,7 +33,7 @@ export default function BottomNavBar({
  ] as const;
 
  const routesRight = [
- { id: 'ask', label: t('tabs.knowledge'), icon: 'auto-awesome' },
+ { id: 'ask', label: t('tabs.knowledge'), icon: 'chat-bubble' },
  { id: 'settings', label: t('tabs.settings'), icon: 'settings' },
  ] as const;
 

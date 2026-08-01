@@ -10,9 +10,7 @@ from ..captures.models import Capture
 from ..users.models import User
 from ..persona.prompt_builder import build_system_prompt
 
-client = genai.Client(api_key=settings.GEMINI_API_KEY)
-# We need structured output, gemini-2.5-flash is good for this
-MODEL_NAME = "gemini-2.5-flash"
+from ...core.ai.router import ai_router
 
 def analyze_capture_intent(db: Session, capture_id: str, user_id: str):
     """
@@ -60,16 +58,13 @@ def analyze_capture_intent(db: Session, capture_id: str, user_id: str):
     prompt = build_system_prompt(db, user, system_instructions)
     
     try:
-        response = client.models.generate_content(
-            model=MODEL_NAME,
-            contents=[prompt, f"CAPTURE TEXT: {text_content}"]
+        data = ai_router.generate_json(
+            task="background",
+            prompt=f"CAPTURE TEXT: {text_content}",
+            system_prompt=prompt
         )
         
-        raw_text = response.text
-        if "```json" in raw_text:
-            raw_text = raw_text.split("```json")[1].split("```")[0].strip()
-            
-        data = json.loads(raw_text)
+
         intents = data.get("intents", [])
         
         from .action_executor import execute_intent

@@ -51,6 +51,13 @@ export function useTimeline(filters: TimelineFilters = {}) {
  placeholderData: (previousData) => previousData,
  staleTime: 60000, // 1 minute
  gcTime: 300000, // 5 minutes
+ refetchInterval: (query) => {
+    // Poll every 3 seconds if any loaded capture is still "processing"
+    const hasProcessing = query.state.data?.pages.some(page => 
+        page.data.some(c => c.status === 'processing')
+    );
+    return hasProcessing ? 3000 : false;
+ }
  });
 }
 
@@ -71,7 +78,11 @@ export function useCapture(id: string) {
  const { data } = await apiClient.get(`/captures/${id}`);
  return data.data as Capture;
  },
- enabled: !!id
+ enabled: !!id,
+ refetchInterval: (query) => {
+    // Poll every 2 seconds if the specific capture is "processing"
+    return query.state.data?.status === 'processing' ? 2000 : false;
+ }
  });
 }
 
@@ -87,15 +98,23 @@ export function useRelatedMemories(id: string) {
 }
 
 export function useDeleteCapture() {
- const queryClient = useQueryClient();
- return useMutation({
- mutationFn: async (id: string) => {
- const { data } = await apiClient.delete(`/captures/${id}`);
- return data;
- },
- onSuccess: (_, deletedId) => {
- queryClient.invalidateQueries({ queryKey: ['timeline'] });
- queryClient.invalidateQueries({ queryKey: ['timeline-stats'] });
+  const queryClient = useQueryClient();
+  return useMutation({
+  mutationFn: async (id: string) => {
+  try {
+    const { data } = await apiClient.delete(`/captures/${id}`);
+    return data;
+  } catch (error: any) {
+    if (error.response?.status === 404) {
+      return { success: true };
+    }
+    throw error;
+  }
+  },
+  onSuccess: (_, deletedId) => {
+  queryClient.invalidateQueries({ queryKey: ['timeline'] });
+  queryClient.invalidateQueries({ queryKey: ['timeline-stats'] });
+  queryClient.invalidateQueries({ queryKey: ['captures'] });
+  }
+  });
  }
- });
-}

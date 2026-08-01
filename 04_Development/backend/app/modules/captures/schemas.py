@@ -104,3 +104,6 @@ class CaptureCreateLocation(BaseModel):
     longitude: float
     altitude: Optional[float] = None
     accuracy: Optional[float] = None
+
+class CaptureUpdateTitle(BaseModel):
+    title: str

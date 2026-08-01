@@ -297,3 +297,40 @@ def download_invoice(
         )
     except ImportError:
         raise HTTPException(status_code=500, detail="PDF generation library not installed")
+
+from pydantic import BaseModel
+class RestoreRequest(BaseModel):
+    receipt_token: str = None
+    platform: str = None
+
+@router.post("/restore", response_model=schemas.SubscriptionResponse)
+def restore_purchases(
+    request: RestoreRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+    provider: PaymentProviderInterface = Depends(get_payment_provider)
+):
+    """
+    Restore purchases from App Store / Google Play or re-sync with payment provider.
+    """
+    # In a real app using RevenueCat or native IAP, we would validate the receipt_token here.
+    # For now, we will check if the user has an active subscription in our DB and return it.
+    sub = subscription_service.get_user_subscription(db, current_user.id)
+    
+    if not sub:
+        # User has no active premium subscription in our DB.
+        # Fall back to returning the free plan schema.
+        free_plan = subscription_service.get_plan(db, "free")
+        return {
+            "id": current_user.id, 
+            "user_id": current_user.id,
+            "plan_id": "free",
+            "status": "active",
+            "provider": request.platform or "system",
+            "created_at": current_user.created_at,
+            "updated_at": current_user.created_at,
+            "plan": free_plan
+        }
+        
+    return sub
+

@@ -22,7 +22,7 @@ class FeatureEnum(str, enum.Enum):
 FREE_LIMITS = {
     "ai_requests_monthly": 100,
     "workspaces_count": 1,
-    "storage_bytes": 100 * 1024 * 1024, # 100 MB
+    "storage_bytes": 5 * 1024 * 1024 * 1024, # 5 GB
     "captures_monthly": 50
 }
 

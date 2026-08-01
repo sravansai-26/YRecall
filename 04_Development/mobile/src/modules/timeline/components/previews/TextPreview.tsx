@@ -5,6 +5,12 @@ import { PreviewProps } from './types';
 export const TextPreview: React.ComponentType<PreviewProps> = ({ capture, variant }) => {
   const isCompact = variant === 'compact';
 
+  // MemoryRenderer natively handles Text/Note layout for full variant.
+  // We only render something here if it's compact mode.
+  if (!isCompact) {
+    return null;
+  }
+
   if (!capture.content_text && !capture.summary) {
     return null;
   }
@@ -19,14 +25,7 @@ export const TextPreview: React.ComponentType<PreviewProps> = ({ capture, varian
           {capture.content_text}
         </Text>
       )}
-      {capture.summary && capture.content_text !== capture.summary && (
-        <View className="bg-surface-variant/30 p-4 rounded-xl mt-2">
-          <Text className="text-body-sm text-on-surface-variant font-medium mb-1">AI SUMMARY</Text>
-          <Text className="text-body-md text-on-surface" numberOfLines={isCompact ? 3 : undefined}>
-            {capture.summary}
-          </Text>
-        </View>
-      )}
+
     </View>
   );
 };

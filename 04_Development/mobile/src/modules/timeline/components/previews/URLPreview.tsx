@@ -67,7 +67,33 @@ export const URLPreview: React.ComponentType<PreviewProps> = ({ capture, variant
     }
   };
 
-  const isCompact = variant === 'compact';
+  const isTimeline = variant === 'timeline';
+  const isCompact = variant === 'compact' || isTimeline;
+
+  // In timeline mode, we only render the cover graphic. MemoryRenderer handles the title/summary.
+  if (isTimeline) {
+    return (
+      <View className="w-full bg-surface-variant overflow-hidden rounded-t-[32px] rounded-b-none">
+        {ogImage ? (
+          <Image 
+            source={{ uri: ogImage }} 
+            className="w-full h-48 bg-surface-variant"
+            resizeMode="cover"
+          />
+        ) : (
+          <View className="w-full h-48 bg-surface-variant items-center justify-center">
+            {isLoading ? (
+               <ActivityIndicator color={colors.primary} />
+            ) : (
+               <View className="w-16 h-16 rounded-2xl bg-surface-container items-center justify-center shadow-sm">
+                 <MaterialIcons name="link" size={32} color={colors.primary} />
+               </View>
+            )}
+          </View>
+        )}
+      </View>
+    );
+  }
 
   return (
     <TouchableOpacity onPress={handlePress} activeOpacity={0.8} className="mb-2">

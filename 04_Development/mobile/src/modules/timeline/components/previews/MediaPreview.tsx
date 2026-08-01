@@ -4,53 +4,73 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { colors } from '../../../../../src/shared/theme/colors';
 import { AudioPlayer } from '../../../../shared/components/AudioPlayer';
 import { PreviewProps } from './types';
+import { useVideoPlayer, VideoView } from 'expo-video';
 
 export const MediaPreview: React.ComponentType<PreviewProps> = ({ capture, variant }) => {
   const isCompact = variant === 'compact';
+  const isTimeline = variant === 'timeline';
   const [isFullscreenImage, setIsFullscreenImage] = useState(false);
 
-  if (capture.type === 'image' || capture.type === 'video') {
+  const player = useVideoPlayer(capture.type === 'video' ? (capture.file_url || null) : null, player => {
+    player.loop = true;
+    player.pause();
+  });
+
+  if (capture.type === 'image' || capture.type === 'video' || capture.type === 'location') {
     return (
-      <View className="mb-2">
+      <View className={isTimeline ? "" : "mb-2"}>
         {capture.file_url ? (
-          isCompact ? (
-            <Image 
-              source={{ uri: capture.file_url }} 
-              className="w-full h-56 rounded-2xl bg-surface-variant mb-3"
-              resizeMode="cover"
-            />
+          isCompact || isTimeline ? (
+            <View className={isTimeline ? "w-full h-56 bg-surface-variant relative" : "w-full h-56 rounded-2xl bg-surface-variant mb-3 relative"}>
+              {capture.type === 'video' ? (
+                <View className="w-full h-full" pointerEvents="none">
+                  <VideoView 
+                    style={{ width: '100%', height: '100%' }} 
+                    player={player} 
+                    nativeControls={false}
+                    contentFit="cover"
+                  />
+                  <View className="absolute inset-0 items-center justify-center bg-black/10">
+                    <View className="w-12 h-12 rounded-full bg-white/30 items-center justify-center backdrop-blur-md">
+                      <MaterialIcons name="play-arrow" size={24} color={colors.white} />
+                    </View>
+                  </View>
+                </View>
+              ) : (
+                <Image 
+                  source={{ uri: capture.file_url }} 
+                  className="w-full h-full"
+                  resizeMode="cover"
+                />
+              )}
+            </View>
           ) : (
             <>
-              <TouchableOpacity activeOpacity={0.9} onPress={() => setIsFullscreenImage(true)}>
+              {capture.type === 'video' ? (
                 <View className="rounded-[28px] overflow-hidden bg-surface-container-low mb-6">
-                  {capture.type === 'video' ? (
-                    <View className="w-full relative" style={{ aspectRatio: 16/9 }}>
-                      <Image 
-                        source={{ uri: capture.file_url }}
-                        className="w-full h-full bg-black"
-                        resizeMode="cover"
-                      />
-                      <View className="absolute inset-0 items-center justify-center bg-black/30">
-                        <View className="w-16 h-16 rounded-full bg-white/20 items-center justify-center backdrop-blur-md border-white/30">
-                          <MaterialIcons name="play-arrow" size={36} color={colors.white} />
-                        </View>
-                      </View>
-                    </View>
-                  ) : (
-                    <>
-                      <Image 
-                        source={{ uri: capture.file_url }}
-                        className="w-full"
-                        style={{ aspectRatio: 4/3 }}
-                        resizeMode="cover"
-                      />
-                      <View className="absolute bottom-4 right-4 bg-black/50 w-8 h-8 rounded-full items-center justify-center backdrop-blur-md">
-                        <MaterialIcons name="fullscreen" size={20} color={colors.white} />
-                      </View>
-                    </>
-                  )}
+                  <View className="w-full relative rounded-[28px] overflow-hidden" style={{ aspectRatio: 16/9 }}>
+                    <VideoView 
+                      style={{ width: '100%', height: '100%', backgroundColor: 'black' }} 
+                      player={player} 
+                      allowsPictureInPicture 
+                    />
+                  </View>
                 </View>
-              </TouchableOpacity>
+              ) : (
+                <TouchableOpacity activeOpacity={0.9} onPress={() => setIsFullscreenImage(true)}>
+                  <View className="rounded-[28px] overflow-hidden bg-surface-container-low mb-6">
+                    <Image 
+                      source={{ uri: capture.file_url }}
+                      className="w-full"
+                      style={{ aspectRatio: 4/3 }}
+                      resizeMode="cover"
+                    />
+                    <View className="absolute bottom-4 right-4 bg-black/50 w-8 h-8 rounded-full items-center justify-center backdrop-blur-md">
+                      <MaterialIcons name="fullscreen" size={20} color={colors.white} />
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              )}
 
               <Modal visible={isFullscreenImage} transparent={true} animationType="fade">
                 <View className="flex-1 bg-black">
@@ -70,23 +90,9 @@ export const MediaPreview: React.ComponentType<PreviewProps> = ({ capture, varia
             </>
           )
         ) : (
-          <View className={`w-full ${isCompact ? 'h-56' : 'h-72'} rounded-2xl bg-surface-variant mb-3 items-center justify-center`}>
-            <MaterialIcons name={capture.type === 'video' ? "videocam" : "image"} size={48} color={colors.outline} />
+          <View className={`w-full ${isCompact || isTimeline ? 'h-56' : 'h-72'} ${isTimeline ? '' : 'rounded-2xl mb-3'} bg-surface-variant items-center justify-center`}>
+            <MaterialIcons name={capture.type === 'video' ? "videocam" : capture.type === 'location' ? "map" : "image"} size={48} color={colors.outline} style={{ opacity: 0.5 }} />
           </View>
-        )}
-        
-        {/* Only render OCR and Summary in compact mode. MemoryRenderer handles full mode. */}
-        {isCompact && capture.ocr_text && (
-          <View className="bg-surface-variant/30 p-3 rounded-xl mb-3">
-            <Text className="text-body-sm text-on-surface-variant italic" numberOfLines={2}>
-              "{capture.ocr_text}"
-            </Text>
-          </View>
-        )}
-        {isCompact && capture.summary && (
-          <Text className="text-body-md text-on-surface" numberOfLines={3}>
-            {capture.summary}
-          </Text>
         )}
       </View>
     );
@@ -96,7 +102,7 @@ export const MediaPreview: React.ComponentType<PreviewProps> = ({ capture, varia
     return (
       <View className="mb-2">
         {capture.file_url ? (
-          isCompact ? (
+          isCompact || isTimeline ? (
             <AudioPlayer url={capture.file_url} />
           ) : (
             <View className="mb-6 rounded-[28px] overflow-hidden bg-surface-container-low p-6">
@@ -110,19 +116,6 @@ export const MediaPreview: React.ComponentType<PreviewProps> = ({ capture, varia
              </View>
              <Text className="text-body-sm text-on-surface-variant italic">Audio unavailable</Text>
            </View>
-        )}
-        {/* Only render Transcript and Summary in compact mode. MemoryRenderer handles full mode. */}
-        {isCompact && capture.transcript && (
-          <View className="bg-surface-variant/30 p-4 rounded-xl mt-3">
-            <Text className="text-body-md text-on-surface italic" numberOfLines={3}>
-              "{capture.transcript}"
-            </Text>
-          </View>
-        )}
-        {isCompact && capture.summary && (
-          <Text className="text-body-md text-on-surface mt-3">
-            {capture.summary}
-          </Text>
         )}
       </View>
     );

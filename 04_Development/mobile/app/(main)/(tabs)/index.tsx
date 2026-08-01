@@ -12,6 +12,7 @@ import { apiClient } from '../../../src/services/api/client';
 import { useWorkspaceStore } from '../../../src/modules/workspaces/store';
 import { useWorkspaces } from '../../../src/modules/workspaces/api';
 import { useTranslation } from 'react-i18next';
+import { TimelineCard } from '../../../src/modules/timeline/components/TimelineCard';
 
 export default function HomeDashboard() {
  const router = useRouter();
@@ -200,7 +201,7 @@ export default function HomeDashboard() {
  </TouchableOpacity>
  </View>
 
- <View className="flex-col md:flex-row gap-gutter mb-xl flex-wrap">
+ <View className="flex-col w-full mb-xl">
  {capturesLoading ? (
  <View className="w-full py-xl items-center justify-center">
  <ActivityIndicator color={colors.primary} />
@@ -211,20 +212,11 @@ export default function HomeDashboard() {
  </View>
  ) : (
  capturesData?.data?.slice(0, 3).map((capture: any) => (
- <TouchableOpacity key={capture.id} onPress={() => router.push(`/(main)/memory/${capture.id}` as any)} className="bg-surface-container-lowest rounded-[24px] shadow-sm overflow-hidden flex-col w-full mb-4">
- <View className="p-4 flex-row gap-3">
- <View className="w-10 h-10 bg-secondary-container items-center justify-center rounded-xl">
- <MaterialIcons name={capture.type === 'voice' ? 'mic' : capture.type === 'image' ? 'image' : 'edit-note'} size={20} color={colors['on-secondary-container']} />
- </View>
- <View className="flex-1">
- <Text className="font-label-xs text-[10px] text-on-surface-variant uppercase tracking-wider">{capture.type} Capture</Text>
- <Text className="font-body-md font-bold text-primary mb-1" numberOfLines={1}>
- {capture.title || (capture.content_text ? capture.content_text.substring(0, 40) : 'Media Capture')}
- </Text>
- <Text className="font-caption-sm text-on-surface-variant" numberOfLines={2}>{capture.summary || capture.content_text || 'View details'}</Text>
- </View>
- </View>
- </TouchableOpacity>
+  <TimelineCard 
+    key={capture.id}
+    capture={capture}
+    onPress={() => router.push(`/(main)/memory/${capture.id}` as any)}
+  />
  ))
  )}
  </View>

@@ -9,6 +9,7 @@ import {
  PublicSans_600SemiBold,
  PublicSans_700Bold,
 } from '@expo-google-fonts/public-sans';
+import { Pacifico_400Regular } from '@expo-google-fonts/pacifico';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import '../src/global.css';
@@ -93,6 +94,7 @@ export default function RootLayout() {
  PublicSans_500Medium,
  PublicSans_600SemiBold,
  PublicSans_700Bold,
+ Pacifico_400Regular,
  });
 
  useEffect(() => {
@@ -113,7 +115,7 @@ export default function RootLayout() {
  <BottomSheetModalProvider>
  <SafeAreaProvider>
  <RootNavigationHandler />
- <StatusBar style="auto" />
+ <StatusBar style="dark" />
  </SafeAreaProvider>
  </BottomSheetModalProvider>
  </GestureHandlerRootView>

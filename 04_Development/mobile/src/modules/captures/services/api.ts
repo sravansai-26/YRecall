@@ -27,9 +27,15 @@ export interface CreateNotePayload {
  format: string;
 }
 
+export interface CreateTextPayload {
+ content_text: string;
+}
+
 export interface CreateMediaPayload {
  type: string;
  file: any; // React Native File/Blob object
+ upload_id?: string;
+ title?: string;
 }
 
 export interface CreateUrlPayload {
@@ -44,6 +50,10 @@ export interface CreateLocationPayload {
 }
 
 export const capturesApi = {
+ createText: async (payload: CreateTextPayload) => {
+ const response = await apiClient.post('/captures/text', payload);
+ return response.data;
+ },
  createNote: async (payload: CreateNotePayload) => {
  const response = await apiClient.post('/captures/note', payload);
  return response.data;
@@ -52,14 +62,18 @@ export const capturesApi = {
  const formData = new FormData();
  formData.append('type', payload.type);
  formData.append('file', payload.file as any);
+ if (payload.upload_id) {
+     formData.append('upload_id', payload.upload_id);
+ }
+ if (payload.title) {
+     formData.append('title', payload.title);
+ }
  
  const response = await apiClient.post('/captures/media', formData, {
- headers: {
- // Let Axios automatically set the Content-Type with the boundary
- 'Content-Type': 'multipart/form-data',
- },
- transformRequest: (data) => data, // Prevent Axios from stringifying FormData in RN
- });
+  headers: {
+      'Content-Type': 'multipart/form-data',
+  },
+  });
  return response.data;
  },
  transcribeMedia: async (payload: { file: any }) => {
@@ -67,11 +81,10 @@ export const capturesApi = {
  formData.append('file', payload.file as any);
  
  const response = await apiClient.post('/captures/transcribe', formData, {
- headers: {
- 'Content-Type': 'multipart/form-data',
- },
- transformRequest: (data) => data,
- });
+  headers: {
+      'Content-Type': 'multipart/form-data',
+  },
+  });
  return response.data;
  },
  createUrl: async (payload: CreateUrlPayload) => {

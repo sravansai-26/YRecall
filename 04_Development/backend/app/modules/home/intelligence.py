@@ -1,16 +1,13 @@
 import json
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
-from google import genai
 
 from ...core.config import settings
 from ..users.models import User
 from ..captures.models import Capture
 from ..persona.prompt_builder import build_system_prompt
 from .models import DailyBrief, UserInsight
-
-client = genai.Client(api_key=settings.GEMINI_API_KEY)
-MODEL_NAME = "gemini-2.5-flash"
+from ...core.ai.router import ai_router
 
 def generate_daily_brief(db: Session, user_id: str) -> dict:
     """
@@ -58,18 +55,13 @@ def generate_daily_brief(db: Session, user_id: str) -> dict:
     }}
     """
     
-    prompt = build_system_prompt(db, user, task_context)
+    system_prompt = build_system_prompt(db, user, "")
     
-    response = client.models.generate_content(
-        model=MODEL_NAME,
-        contents=prompt
+    data = ai_router.generate_json(
+        task="background",
+        prompt=task_context,
+        system_prompt=system_prompt
     )
-    
-    text = response.text
-    if "```json" in text:
-        text = text.split("```json")[1].split("```")[0].strip()
-        
-    data = json.loads(text)
     
     # Save to database
     existing_brief = db.query(DailyBrief).filter(DailyBrief.user_id == user_id, DailyBrief.date == today).first()

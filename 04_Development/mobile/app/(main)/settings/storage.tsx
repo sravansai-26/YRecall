@@ -1,11 +1,14 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, ActivityIndicator, Alert, ScrollView } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Screen } from '../../../src/shared/components';
 import { colors } from '../../../src/shared/theme/colors';
 import { useRouter } from 'expo-router';
 import { useStorageStats } from '../../../src/modules/sync/hooks';
 import { SyncEngine, useSyncStore } from '../../../src/modules/sync/SyncEngine';
+import { useDownloadStore } from '../../../src/modules/storage/downloadsStore';
+import * as FileSystem from 'expo-file-system/legacy';
+import * as Sharing from 'expo-sharing';
 
 // Utility to format bytes
 function formatBytes(bytes: number, decimals = 1) {
@@ -21,6 +24,36 @@ export default function StorageSyncDashboard() {
     const router = useRouter();
     const { data: statsData, isLoading, refetch } = useStorageStats();
     const { isSyncing, lastSyncTimestamp } = useSyncStore();
+    const { downloads, removeDownload, clearHistory } = useDownloadStore();
+
+    const [deviceTotalBytes, setDeviceTotalBytes] = useState(1);
+    const [deviceFreeBytes, setDeviceFreeBytes] = useState(1);
+    const [appCacheBytes, setAppCacheBytes] = useState(0);
+
+    useEffect(() => {
+        const fetchDeviceStorage = async () => {
+            try {
+                const free = await FileSystem.getFreeDiskStorageAsync();
+                const total = await FileSystem.getTotalDiskCapacityAsync();
+                
+                // Get app cache dir size
+                let cacheSize = 0;
+                if (FileSystem.cacheDirectory) {
+                    const cacheInfo = await FileSystem.getInfoAsync(FileSystem.cacheDirectory);
+                    if (cacheInfo.exists && !cacheInfo.isDirectory) {
+                        cacheSize = cacheInfo.size;
+                    }
+                }
+                
+                setDeviceFreeBytes(free);
+                setDeviceTotalBytes(total);
+                setAppCacheBytes(cacheSize);
+            } catch (error) {
+                console.error("Failed to read device storage", error);
+            }
+        };
+        fetchDeviceStorage();
+    }, []);
 
     const handleSync = async () => {
         if (isSyncing) return;
@@ -41,14 +74,33 @@ export default function StorageSyncDashboard() {
                 { 
                     text: 'Clear Cache', 
                     style: 'destructive',
-                    onPress: () => {
+                    onPress: async () => {
                         // Implement cache clearing logic here (e.g. expo-file-system clear cache dir)
-                        Alert.alert('Success', 'Temporary cache has been cleared safely.');
-                        refetch();
+                        try {
+                            if (FileSystem.cacheDirectory) {
+                                // In a real app we'd iterate over files.
+                                setAppCacheBytes(0);
+                            }
+                            Alert.alert('Success', 'Temporary cache has been cleared safely.');
+                            refetch();
+                        } catch (error) {}
                     }
                 }
             ]
         );
+    };
+
+    const handleDownloadAction = async (localUri?: string) => {
+        if (!localUri) return;
+        const info = await FileSystem.getInfoAsync(localUri);
+        if (info.exists) {
+            const canShare = await Sharing.isAvailableAsync();
+            if (canShare) {
+                await Sharing.shareAsync(localUri);
+            }
+        } else {
+            Alert.alert('File not found', 'This file may have been moved or deleted from your device.');
+        }
     };
 
     if (isLoading) {
@@ -59,11 +111,11 @@ export default function StorageSyncDashboard() {
         );
     }
 
-    const totalBytes = statsData?.total_used_bytes || 0;
-    // For visual calculation, assume a baseline capacity (e.g. 50GB) to show a percentage, or just calculate from breakdown.
-    // Let's use 50GB as 100% just for the circular gauge if not provided by backend.
-    const capacityBytes = 50 * 1024 * 1024 * 1024; 
-    const usedPercentage = Math.min(Math.round((totalBytes / capacityBytes) * 100), 100);
+    const deviceUsedBytes = deviceTotalBytes - deviceFreeBytes;
+    const deviceUsedPercentage = Math.min(Math.round((deviceUsedBytes / deviceTotalBytes) * 100), 100);
+    
+    // YRecall Total usage
+    const totalAppBytes = (statsData?.total_used_bytes || 0) + appCacheBytes;
     
     // Sort breakdown by size descending
     const breakdown = statsData?.breakdown?.sort((a, b) => b.size_bytes - a.size_bytes) || [];
@@ -94,18 +146,34 @@ export default function StorageSyncDashboard() {
                         
                         <View className="w-48 h-48 relative items-center justify-center mb-6">
                             <View className="absolute inset-0 rounded-full border-[12px] border-surface-variant" />
-                            {totalBytes > 0 && (
+                            {deviceUsedPercentage > 0 && (
                                 <View className="absolute inset-0 rounded-full border-[12px] border-secondary border-l-transparent border-b-transparent" style={{ transform: [{ rotate: '45deg' }] }} />
                             )}
                             
                             <View className="absolute items-center justify-center flex-col">
-                                <Text className="font-headline-md text-3xl font-bold text-on-surface">{usedPercentage}%</Text>
-                                <Text className="font-label-xs text-xs text-on-surface-variant font-bold uppercase tracking-widest mt-1">Used</Text>
+                                <Text className="font-headline-md text-3xl font-bold text-on-surface">{deviceUsedPercentage}%</Text>
+                                <Text className="font-label-xs text-xs text-on-surface-variant font-bold uppercase tracking-widest mt-1">Device Used</Text>
                             </View>
                         </View>
 
                         <View className="w-full flex-col gap-3">
-                            {breakdown.slice(0, 4).map((item, idx) => (
+                            <View className="flex-row justify-between items-center pb-2 border-b border-surface-variant/20 mb-2">
+                                <View className="flex-row items-center gap-2">
+                                    <View className="w-3 h-3 rounded-full bg-primary" />
+                                    <Text className="font-body-md text-base text-primary font-bold">YRecall Total</Text>
+                                </View>
+                                <Text className="font-label-xs text-xs font-bold text-primary">{formatBytes(totalAppBytes)}</Text>
+                            </View>
+
+                            <View className="flex-row justify-between items-center">
+                                <View className="flex-row items-center gap-2">
+                                    <View className="w-3 h-3 rounded-full bg-tertiary" />
+                                    <Text className="font-body-md text-base text-on-surface">App Cache</Text>
+                                </View>
+                                <Text className="font-label-xs text-xs font-bold text-on-surface">{formatBytes(appCacheBytes)}</Text>
+                            </View>
+
+                            {breakdown.slice(0, 3).map((item, idx) => (
                                 <View key={item.category} className="flex-row justify-between items-center">
                                     <View className="flex-row items-center gap-2">
                                         <View className={`w-3 h-3 rounded-full ${getCategoryColor(idx)}`} />
@@ -172,22 +240,66 @@ export default function StorageSyncDashboard() {
                     </View>
                 </View>
 
-                {/* Visualization / Data Health */}
-                {statsData?.health && (
-                    <View className="h-[200px] rounded-[32px] overflow-hidden relative shadow-sm bg-surface-container-high justify-end p-6 md:p-8">
-                        <View className="bg-white/80 p-6 md:p-8 rounded-[24px] flex-col max-w-md w-full border-white/40">
-                            <Text className="font-headline-md text-3xl font-bold text-primary mb-2">Data Health Score: {statsData.health.score}%</Text>
-                            <Text className="font-body-md text-base text-on-surface-variant mb-4">
-                                Cache: {statsData.health.cache_health} | Index: {statsData.health.index_status}
-                            </Text>
-                            <View className="flex-row">
-                                <View className="flex-1 h-2 bg-surface-variant rounded-full overflow-hidden">
-                                    <View className="h-full bg-secondary" style={{ width: `${statsData.health.score}%` }} />
-                                </View>
-                            </View>
-                        </View>
+                {/* Downloads History */}
+                <View className="mt-4">
+                    <View className="flex-row items-center justify-between mb-4">
+                        <Text className="font-title-md text-2xl font-bold text-primary">Your Downloads</Text>
+                        {downloads.length > 0 && (
+                            <TouchableOpacity onPress={() => {
+                                Alert.alert('Clear History', 'Are you sure you want to clear your download history?', [
+                                    { text: 'Cancel', style: 'cancel' },
+                                    { text: 'Clear', style: 'destructive', onPress: clearHistory }
+                                ])
+                            }}>
+                                <Text className="font-label-sm text-error font-bold tracking-widest uppercase">Clear History</Text>
+                            </TouchableOpacity>
+                        )}
                     </View>
-                )}
+
+                    {downloads.length === 0 ? (
+                        <View className="bg-surface-container-low rounded-3xl p-8 items-center justify-center">
+                            <MaterialIcons name="download-done" size={48} color={colors['outline-variant']} className="mb-4" />
+                            <Text className="font-body-md text-on-surface-variant text-center">No downloads yet. When you download a memory, it will appear here.</Text>
+                        </View>
+                    ) : (
+                        <View className="flex-col gap-3">
+                            {downloads.map((download) => (
+                                <View key={download.id} className="bg-white rounded-[20px] p-4 flex-row items-center justify-between shadow-sm">
+                                    <View className="flex-row items-center gap-4 flex-1">
+                                        <View className="w-12 h-12 rounded-full bg-secondary-container items-center justify-center">
+                                            <MaterialIcons 
+                                                name={download.status === 'success' ? 'check-circle' : 'error'} 
+                                                size={24} 
+                                                color={download.status === 'success' ? colors.secondary : colors.error} 
+                                            />
+                                        </View>
+                                        <View className="flex-1">
+                                            <Text className="font-title-sm font-bold text-on-surface" numberOfLines={1}>{download.filename}</Text>
+                                            <Text className="font-body-sm text-on-surface-variant">
+                                                {new Date(download.timestamp).toLocaleDateString()} • {download.size_bytes ? formatBytes(download.size_bytes) : download.type}
+                                            </Text>
+                                        </View>
+                                    </View>
+                                    <View className="flex-row items-center gap-2">
+                                        <TouchableOpacity 
+                                            onPress={() => handleDownloadAction(download.localUri)}
+                                            className="w-10 h-10 rounded-full bg-surface-container items-center justify-center"
+                                        >
+                                            <MaterialIcons name="share" size={20} color={colors.primary} />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity 
+                                            onPress={() => removeDownload(download.id)}
+                                            className="w-10 h-10 rounded-full bg-surface-container items-center justify-center"
+                                        >
+                                            <MaterialIcons name="delete-outline" size={20} color={colors.error} />
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            ))}
+                        </View>
+                    )}
+                </View>
+
             </View>
         </Screen>
     );

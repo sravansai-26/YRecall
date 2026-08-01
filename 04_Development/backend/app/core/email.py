@@ -176,6 +176,11 @@ async def _send_email_core(db: Session, to_email: str, subject: str, html: str, 
 # REUSABLE EMAIL SERVICE METHODS
 # ====================================================
 
+async def send_email(db: Session, to_email: str, subject: str, html: str, template_name: str, reply_to: str = None) -> bool:
+    """Public wrapper to dispatch a generic HTML email."""
+    html_with_base = get_base_html(html) if "<html" not in html.lower() else html
+    return await _send_email_core(db, to_email, subject, html_with_base, template_name, reply_to)
+
 async def send_auto_reply(db: Session, to_email: str, name: str, ticket_id: str, subject: str):
     """Sends an automatic acknowledgement to the user for Support/Contact forms."""
     content = f"""

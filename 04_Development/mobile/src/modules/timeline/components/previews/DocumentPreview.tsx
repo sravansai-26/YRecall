@@ -8,6 +8,7 @@ import { PreviewProps } from './types';
 
 export const DocumentPreview: React.ComponentType<PreviewProps> = ({ capture, variant }) => {
   const isCompact = variant === 'compact';
+  const isTimeline = variant === 'timeline';
   const fileUrl = capture.file_url;
 
   const handleOpenNative = () => {
@@ -16,7 +17,20 @@ export const DocumentPreview: React.ComponentType<PreviewProps> = ({ capture, va
     }
   };
 
-  // Compact View (Timeline) - Render as a card, not an embedded webview to save performance
+  // In timeline mode, we only render the cover graphic. MemoryRenderer handles the title/summary.
+  if (isTimeline) {
+    // We use a large, beautiful document icon on a soft background as the cover.
+    return (
+      <View className="w-full h-48 bg-surface-variant overflow-hidden rounded-t-[32px] rounded-b-none items-center justify-center">
+         <View className="w-20 h-20 rounded-3xl bg-error-container/20 items-center justify-center shadow-sm border border-error-container/30">
+           <MaterialIcons name="picture-as-pdf" size={40} color={colors.error} />
+         </View>
+         <Text className="text-on-surface-variant font-bold mt-3 uppercase tracking-widest text-xs">Document Preview</Text>
+      </View>
+    );
+  }
+
+  // Compact View - Render as a small horizontal list item
   if (isCompact) {
     return (
       <TouchableOpacity onPress={handleOpenNative} activeOpacity={0.8} className="mb-2">

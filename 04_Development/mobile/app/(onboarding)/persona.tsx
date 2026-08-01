@@ -67,8 +67,8 @@ export default function OnboardingPersona() {
  key={persona.id}
  onPress={() => setSelectedId(persona.id)}
  activeOpacity={0.8}
- className={`flex-1 p-lg rounded-[24px] bg-white ${
- isActive ? 'border-secondary bg-[#f0fafa]' : 'border-transparent'
+ className={`flex-1 p-lg rounded-[24px] border-2 ${
+ isActive ? 'border-secondary bg-secondary/5' : 'border-transparent bg-white'
  }`}
  style={{
  shadowColor: '#000',
@@ -78,15 +78,22 @@ export default function OnboardingPersona() {
  elevation: 2,
  }}
  >
- <View className="w-12 h-12 rounded-xl bg-secondary/10 items-center justify-center mb-md">
+ <View className="flex-row justify-between items-start mb-md">
+ <View className="w-12 h-12 rounded-xl bg-secondary/10 items-center justify-center">
  <MaterialIcons name={persona.icon as any} size={32} color={colors.secondary} />
+ </View>
+ {isActive && (
+ <View className="w-6 h-6 rounded-full bg-secondary items-center justify-center">
+ <MaterialIcons name="check" size={16} color={colors['on-secondary']} />
+ </View>
+ )}
  </View>
  <Text className="font-title-sm text-primary mb-sm">{persona.title}</Text>
  <Text className="font-body-md text-on-surface-variant flex-1">
  {persona.desc}
  </Text>
  <View className="mt-lg self-start bg-secondary/10 px-3 py-1 rounded-full">
- <Text className="text-on-secondary-container font-label-xs">
+ <Text className="text-secondary font-label-xs font-bold">
  {persona.badge}
  </Text>
  </View>

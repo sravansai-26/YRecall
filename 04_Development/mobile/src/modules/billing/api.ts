@@ -125,6 +125,24 @@ export const useCancelSubscription = () => {
  });
 };
 
+export const useRestorePurchases = () => {
+ const queryClient = useQueryClient();
+ const { user } = useAuthStore();
+ const { setSubscription } = useBillingStore();
+ 
+ return useMutation({
+ mutationFn: async (data: { receipt_token?: string; platform?: string } = {}) => {
+ const res = await apiClient.post('/billing/restore', data);
+ const subData = res.data as Subscription;
+ setSubscription(subData);
+ return subData;
+ },
+ onSuccess: () => {
+ queryClient.invalidateQueries({ queryKey: ['billing-subscription', user?.id] });
+ }
+ });
+};
+
 export interface Invoice {
  id: string;
  amount: number;

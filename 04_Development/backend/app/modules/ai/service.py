@@ -6,6 +6,7 @@ from ...modules.users.models import User
 from ..captures.models import Capture
 from .models import AIConversation, AIMessage, AIEmbedding
 from .schemas import ChatRequest, Citation
+from ...core.ai.router import ai_router
 
 def chat_with_rag(db: Session, user: User, chat_req: ChatRequest) -> tuple[AIConversation, AIMessage, list[Citation]]:
     from fastapi import HTTPException
@@ -17,16 +18,10 @@ def chat_with_rag(db: Session, user: User, chat_req: ChatRequest) -> tuple[AICon
     if not settings.GEMINI_API_KEY:
         raise ValueError("GEMINI_API_KEY is not configured")
         
-    client = genai.Client(api_key=settings.GEMINI_API_KEY)
-    
     # 1. Embed user message if there is text
     results = []
     if chat_req.message.strip():
-        embed_result = client.models.embed_content(
-            model="gemini-embedding-2",
-            contents=chat_req.message
-        )
-        user_query_embedding = embed_result.embeddings[0].values
+        user_query_embedding = ai_router.generate_embedding(text=chat_req.message)
         
         # 2. Retrieve top most similar captures
         # Apply Memory Filter rules
@@ -174,19 +169,16 @@ ALWAYS cite the memories if you use them.
 """
     system_instruction = build_system_prompt(db, user, task_context)
     
-    # 5. Generate response with Gemini
+    # 5. Generate response with AIRouter
     contents = past_messages
     user_prompt = chat_req.message if chat_req.message.strip() else "Please analyze the attached context."
-    contents.append({"role": "user", "parts": [{"text": user_prompt}]})
+    contents.append({"role": "user", "content": user_prompt})
     
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=contents,
-        config=genai.types.GenerateContentConfig(
-            system_instruction=system_instruction
-        )
+    assistant_reply = ai_router.generate_chat(
+        task="ask",
+        messages=contents,
+        system_prompt=system_instruction
     )
-    assistant_reply = response.text
     
     # 6. Store messages
     user_msg = AIMessage(

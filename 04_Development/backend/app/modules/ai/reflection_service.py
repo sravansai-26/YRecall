@@ -1,15 +1,11 @@
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
-from google import genai
 import json
 
 from ...core.config import settings
 from ..captures.models import Capture
 from ..home.models import DailyBrief, UserInsight
-
-client = genai.Client(api_key=settings.GEMINI_API_KEY)
-# Requirement: Use Gemini 2.5 Flash
-MODEL_NAME = "gemini-2.5-flash"
+from ...core.ai.router import ai_router
 
 def generate_reflection(db: Session, user_id: str, timeframe: str) -> dict:
     """Generates an AI reflection based on captures from the given timeframe."""
@@ -33,32 +29,20 @@ def generate_reflection(db: Session, user_id: str, timeframe: str) -> dict:
         if c.summary:
             context_lines.append(f"  Summary: {c.summary}")
             
-    prompt = f"""
-    You are an AI Second Brain assistant. Analyze the user's captures over the past {timeframe} and provide a reflection.
-    
-    Format the output strictly as JSON with this structure:
-    {{
-      "summary": "A cohesive paragraph reflecting on their activity.",
-      "achievements": ["achievement 1", "achievement 2"],
-      "insights": ["pattern insight 1", "productivity insight 2"]
-    }}
-    
-    Captures:
-    {chr(10).join(context_lines)}
-    """
-    
     try:
-        response = client.models.generate_content(
-            model=MODEL_NAME,
-            contents=prompt,
+        parsed = ai_router.generate_json(
+            task="reflection",
+            prompt=f"Captures:\n{chr(10).join(context_lines)}",
+            system_prompt="""
+            You are an AI Second Brain assistant. Analyze the user's captures and provide a reflection.
+            Format the output strictly as JSON with this structure:
+            {
+              "summary": "A cohesive paragraph reflecting on their activity.",
+              "achievements": ["achievement 1", "achievement 2"],
+              "insights": ["pattern insight 1", "productivity insight 2"]
+            }
+            """
         )
-        
-        # Parse JSON
-        text = response.text
-        if "```json" in text:
-            text = text.split("```json")[1].split("```")[0].strip()
-        
-        parsed = json.loads(text)
         
         # Save insights
         if parsed.get("insights"):

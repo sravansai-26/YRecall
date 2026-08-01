@@ -67,3 +67,8 @@ export const uploadProfilePhoto = async (uri: string): Promise<string> => {
     
     return data.photo_url;
 };
+
+export const deleteMyAccount = async (): Promise<{ success: boolean; deletion_scheduled_at: string }> => {
+    const { data } = await apiClient.post('/users/me/delete');
+    return data;
+};

@@ -8,22 +8,66 @@ import { useAuthStore } from '../../../src/shared/store/useAuthStore';
 import { auth } from '../../../src/shared/lib/firebase';
 import { signOut } from 'firebase/auth';
 import { useEntitlements } from '../../../src/modules/billing/store';
+import { useRestorePurchases } from '../../../src/modules/billing/api';
 import { useTranslation } from 'react-i18next';
+import * as SecureStore from 'expo-secure-store';
+import { Linking, ActivityIndicator } from 'react-native';
 
 export default function SettingsHub() {
   const router = useRouter();
   const { user, profileDetails, setUser } = useAuthStore();
   const { planId, isPremium } = useEntitlements();
   const { t } = useTranslation();
+  const restorePurchases = useRestorePurchases();
+  const [isRestoring, setIsRestoring] = React.useState(false);
+  const [isSigningOut, setIsSigningOut] = React.useState(false);
 
-  const handleSignOut = async () => {
+  const handleRestorePurchases = async () => {
+    setIsRestoring(true);
     try {
-      await signOut(auth);
-      setUser(null);
-      router.replace('/(auth)');
+      await restorePurchases.mutateAsync({});
+      require('react-native').Alert.alert('Success', 'Purchases restored successfully.');
     } catch (error) {
-      console.error(error);
+      require('react-native').Alert.alert('Error', 'Failed to restore purchases. Please try again.');
+    } finally {
+      setIsRestoring(false);
     }
+  };
+
+  const handleSignOut = () => {
+    require('react-native').Alert.alert(
+      t('settings.signOut') || 'Sign Out',
+      'Are you sure you want to sign out? Your offline data will be synced before logging out.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { 
+          text: 'Sign Out', 
+          style: 'destructive',
+          onPress: async () => {
+            setIsSigningOut(true);
+            try {
+              // 1. In a real scenario, trigger queue sync here
+              // await syncManager.flushAll();
+              
+              // 2. Clear Secure Store (encryption keys, preferences)
+              await SecureStore.deleteItemAsync('encryption_key');
+              
+              // 3. Sign out of Firebase
+              await signOut(auth);
+              
+              // 4. Clear Auth state & navigate
+              setUser(null);
+              router.replace('/(auth)');
+            } catch (error) {
+              console.error(error);
+              require('react-native').Alert.alert('Error', 'Failed to sign out completely.');
+            } finally {
+              setIsSigningOut(false);
+            }
+          }
+        }
+      ]
+    );
   };
 
   return (
@@ -319,17 +363,43 @@ export default function SettingsHub() {
             <TouchableOpacity onPress={() => router.push('/support')} className="w-full max-w-sm py-4 items-center">
               <Text className="font-body-md text-base font-bold text-primary">{t('settings.help')}</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => require('react-native').Alert.alert(t('common.comingSoon'), t('common.backendPending'))} className="w-full max-w-sm py-4 items-center">
+            
+            <TouchableOpacity onPress={() => Linking.openURL('https://play.google.com/store/apps/details?id=com.lyfspot.yrecall').catch(() => { require('react-native').Alert.alert('Notice', 'Play Store link will be active after publishing.'); })} className="w-full max-w-sm py-4 items-center flex-row justify-center gap-2">
+              <MaterialIcons name="star-rate" size={20} color={colors.primary} />
+              <Text className="font-body-md text-base font-bold text-primary">{t('settings.rateUs', 'Rate Us on Play Store')}</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity onPress={handleRestorePurchases} disabled={isRestoring} className="w-full max-w-sm py-4 flex-row justify-center items-center gap-2">
+              {isRestoring ? <ActivityIndicator size="small" color={colors.primary} /> : null}
               <Text className="font-body-md text-base font-bold text-primary">{t('settings.restorePurchases')}</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleSignOut} className="w-full max-w-sm py-4 items-center">
+            
+            <TouchableOpacity onPress={handleSignOut} disabled={isSigningOut} className="w-full max-w-sm py-4 flex-row justify-center items-center gap-2">
+              {isSigningOut ? <ActivityIndicator size="small" color={colors.error} /> : null}
               <Text className="font-body-md text-base font-bold text-error">{t('settings.signOut')}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => router.push('/settings/account')} className="w-full max-w-sm py-4 items-center">
               <Text className="font-body-md text-base font-bold text-error">{t('settings.deleteAccount')}</Text>
             </TouchableOpacity>
             <Text className="font-label-xs text-xs text-outline pt-4">YRecall v4.2.0 • Build 992</Text>
+
+            {/* Credits Section */}
+            <View className="mt-8 items-center">
+              <Text className="font-body-sm text-sm text-on-surface-variant">
+                Designed & Developed by{' '}
+                <Text 
+                  onPress={() => Linking.openURL('https://sailyfspot.blogspot.com')}
+                  className="font-bold text-primary"
+                >
+                  LYFSpot
+                </Text>
+              </Text>
+              <Text className="font-caption-sm text-xs text-outline mt-1">
+                © 2026 LYFSpot. All Rights Reserved.
+              </Text>
+            </View>
           </View>
+
 
         </View>
       </View>

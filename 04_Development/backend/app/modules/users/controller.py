@@ -203,3 +203,34 @@ def update_experience_settings(
     db.commit()
     db.refresh(settings)
     return settings
+
+from .deletion_service import schedule_account_deletion, recover_account
+
+@router.post("/me/delete")
+async def delete_my_account(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Schedules the user's account for deletion (30-day grace period) 
+    and logs them out of all devices by revoking Firebase refresh tokens.
+    """
+    try:
+        user = await schedule_account_deletion(db, current_user)
+        return {"success": True, "message": "Account scheduled for deletion.", "deletion_scheduled_at": user.deletion_scheduled_at}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/me/recover")
+async def recover_my_account(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Cancels the pending deletion status, restoring full access.
+    """
+    try:
+        user = await recover_account(db, current_user)
+        return {"success": True, "message": "Account recovered successfully.", "account_status": user.account_status}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

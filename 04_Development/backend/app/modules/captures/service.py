@@ -11,7 +11,8 @@ from .tasks import (
     generate_and_store_embedding,
     process_url_capture,
     process_location_capture,
-    process_media_capture
+    process_media_capture,
+    process_text_capture
 )
 
 from ..notifications.service import create_notification
@@ -50,13 +51,13 @@ def create_text_capture(db: Session, user: User, capture_in: CaptureCreateText, 
         type="text",
         title=capture_in.title,
         content_text=capture_in.content_text,
-        status="completed"
+        status="processing"
     )
     db.add(new_capture)
     db.commit()
     db.refresh(new_capture)
     
-    background_tasks.add_task(generate_and_store_embedding, db, new_capture.id, new_capture.content_text)
+    background_tasks.add_task(process_text_capture, db, new_capture.id)
     background_tasks.add_task(async_extract_with_retry, str(new_capture.id), user.id)
     quota_service.increment_captures(db, user.id)
     _notify_capture_created(db, user, new_capture)
@@ -69,7 +70,7 @@ def create_note_capture(db: Session, user: User, capture_in: CaptureCreateNote, 
         type="note",
         title=capture_in.title,
         content_text=capture_in.content_text,
-        status="completed"
+        status="processing"
     )
     db.add(new_capture)
     db.flush()
@@ -83,7 +84,7 @@ def create_note_capture(db: Session, user: User, capture_in: CaptureCreateNote, 
     db.commit()
     db.refresh(new_capture)
     
-    background_tasks.add_task(generate_and_store_embedding, db, new_capture.id, new_capture.content_text)
+    background_tasks.add_task(process_text_capture, db, new_capture.id)
     background_tasks.add_task(async_extract_with_retry, str(new_capture.id), user.id)
     quota_service.increment_captures(db, user.id)
     _notify_capture_created(db, user, new_capture)
@@ -142,9 +143,20 @@ def create_location_capture(db: Session, user: User, capture_in: CaptureCreateLo
     _notify_capture_created(db, user, new_capture)
     return new_capture
 
-def create_media_capture(db: Session, user: User, file: UploadFile, type_str: str, background_tasks: BackgroundTasks) -> Capture:
+def create_media_capture(db: Session, user: User, file: UploadFile, type_str: str, background_tasks: BackgroundTasks, upload_id: Optional[str] = None) -> Capture:
     _check_capture_quota(db, user)
     
+    final_id = uuid.uuid4()
+    if upload_id:
+        try:
+            parsed_uuid = uuid.UUID(upload_id)
+            existing = db.query(Capture).filter(Capture.id == parsed_uuid, Capture.user_id == user.id).first()
+            if existing:
+                return existing
+            final_id = parsed_uuid
+        except ValueError:
+            pass
+            
     if not supabase:
         raise ValueError("Supabase client not initialized")
         
@@ -154,11 +166,7 @@ def create_media_capture(db: Session, user: User, file: UploadFile, type_str: st
     # Check storage quota before uploading
     usage = quota_service.get_usage(db, user.id)
     new_storage_size = usage.storage_used_bytes + file_size
-    if not entitlements.check_quota(db, user.id, "storage_bytes"):
-         # Wait, we need to check if the NEW size exceeds. Let's just check if it exceeds right now, and maybe a soft limit.
-         # For a stricter check:
-         pass
-         
+    
     # Stricter storage check:
     limit = entitlements.FREE_LIMITS.get("storage_bytes", 0)
     plan_id = entitlements.get_user_plan_id(db, user.id)
@@ -176,6 +184,7 @@ def create_media_capture(db: Session, user: User, file: UploadFile, type_str: st
     public_url = supabase.storage.from_("captures").get_public_url(file_name)
     
     new_capture = Capture(
+        id=final_id,
         user_id=user.id,
         type=type_str,
         file_url=public_url,
@@ -305,6 +314,16 @@ def get_capture(db: Session, user: User, capture_id: uuid.UUID) -> Optional[Capt
         Capture.user_id == user.id, 
         Capture.deleted_at == None
     ).first()
+
+def update_capture_title(db: Session, user: User, capture_id: uuid.UUID, title: str) -> Optional[Capture]:
+    capture = get_capture(db, user, capture_id)
+    if not capture:
+        return None
+    
+    capture.title = title
+    db.commit()
+    db.refresh(capture)
+    return capture
 
 def delete_capture(db: Session, user: User, capture_id: uuid.UUID) -> bool:
     from datetime import datetime

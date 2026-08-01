@@ -6,8 +6,7 @@ from .models import UserBehavior
 from ..users.models import User
 from ...core.config import settings
 
-client = genai.Client(api_key=settings.GEMINI_API_KEY)
-MODEL_NAME = "gemini-2.5-flash"
+from ...core.ai.router import ai_router
 
 def update_behavior_from_capture(db: Session, user_id: str, capture_type: str, title: str):
     """
@@ -50,16 +49,11 @@ def update_behavior_from_capture(db: Session, user_id: str, capture_type: str, t
     """
     
     try:
-        response = client.models.generate_content(
-            model=MODEL_NAME,
-            contents=prompt
+        data = ai_router.generate_json(
+            task="background",
+            prompt=prompt
         )
         
-        text = response.text
-        if "```json" in text:
-            text = text.split("```json")[1].split("```")[0].strip()
-            
-        data = json.loads(text)
         if "data" in data:
             behavior.data = data["data"]
             db.commit()

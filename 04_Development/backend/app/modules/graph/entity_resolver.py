@@ -1,14 +1,11 @@
 import json
 import asyncio
 from sqlalchemy.orm import Session
-from google import genai
+from ...core.ai.router import ai_router
 
 from ...core.config import settings
 from ..captures.models import Capture
 from .models import Entity, Relationship
-
-client = genai.Client(api_key=settings.GEMINI_API_KEY)
-MODEL_NAME = "gemini-2.5-flash"
 
 def resolve_entities_and_relationships(db: Session, capture_id: str, user_id: str):
     """
@@ -46,18 +43,13 @@ def resolve_entities_and_relationships(db: Session, capture_id: str, user_id: st
     {content}
     """
     
-    prompt = build_system_prompt(db, user, task_context)
+    system_prompt = build_system_prompt(db, user, "")
     
-    response = client.models.generate_content(
-        model=MODEL_NAME,
-        contents=prompt
+    data = ai_router.generate_json(
+        task="graph",
+        prompt=task_context,
+        system_prompt=system_prompt
     )
-    
-    text = response.text
-    if "```json" in text:
-        text = text.split("```json")[1].split("```")[0].strip()
-        
-    data = json.loads(text)
     
     # 1. Process Entities
     entity_map = {} # name -> Entity.id
@@ -151,9 +143,8 @@ async def async_extract_with_retry(capture_id: str, user_id: str, max_retries: i
                         
                 await run_in_threadpool(run_sync)
                 
-                # To guarantee we never exceed 15 requests/min (which is 1 request every 4 seconds)
-                # we force a 4.5 second cooldown before releasing the lock for the next task.
-                await asyncio.sleep(4.5)
+                # We can lower the cooldown since OpenRouter models allow higher RPM.
+                await asyncio.sleep(0.5)
                 
             break
         except Exception as e:

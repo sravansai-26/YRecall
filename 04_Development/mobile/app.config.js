@@ -44,6 +44,14 @@ module.exports = {
     "expo-font",
     "@react-native-google-signin/google-signin",
     "expo-audio",
+    "expo-video",
+    [
+      "expo-media-library",
+      {
+        "photosPermission": "Allow YRecall to save memory downloads to your photos.",
+        "savePhotosPermission": "Allow YRecall to save memory downloads to your photos."
+      }
+    ],
     [
       "expo-local-authentication",
       {

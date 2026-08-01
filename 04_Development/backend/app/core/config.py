@@ -6,6 +6,20 @@ class Settings(BaseSettings):
     SUPABASE_SERVICE_KEY: str
     FIREBASE_SERVICE_ACCOUNT_PATH: str
     GEMINI_API_KEY: str
+    OPENROUTER_API_KEY: str = ""
+    GROQ_API_KEY: str = ""
+    
+    # AI Architecture settings
+    ASK_AI_PROVIDER: str = "gemini"
+    BACKGROUND_AI_PROVIDER: str = "groq"
+    
+    ASK_MODEL: str = "gemini-2.5-flash"
+    BACKGROUND_MODEL: str = "llama-3.3-70b-versatile"
+    SUMMARY_MODEL: str = "llama-3.1-8b-instant"
+    GRAPH_MODEL: str = "llama-3.3-70b-versatile"
+    NOTIFICATION_MODEL: str = "llama-3.1-8b-instant"
+    REFLECTION_MODEL: str = "llama-3.3-70b-versatile"
+
     PINECONE_INDEX_NAME: str = "yrecall-prod"
     RAZORPAY_KEY_ID: str
     RAZORPAY_KEY_SECRET: str

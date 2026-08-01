@@ -10,6 +10,10 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import { AudioPlayer } from '../../../src/shared/components/AudioPlayer';
 import Markdown from 'react-native-markdown-display';
 import { MemoryRenderer } from '../../../src/modules/timeline/components/previews';
+import { useDownloadStore } from '../../../src/modules/storage/downloadsStore';
+import { apiClient } from '../../../src/modules/captures/services/api';
+import { useQueryClient } from '@tanstack/react-query';
+import { TextInput } from 'react-native';
 
 import { useShareCaptureToWorkspace, useWorkspaces } from '../../../src/modules/workspaces/api';
 
@@ -21,9 +25,26 @@ export default function MemoryDetailScreen() {
  const deleteMutation = useDeleteCapture();
  const shareToWorkspaceMutation = useShareCaptureToWorkspace();
  const { data: workspaces } = useWorkspaces();
+ const { downloadCapture } = useDownloadStore();
+ const queryClient = useQueryClient();
+ 
+ const [isEditingTitle, setIsEditingTitle] = useState(false);
+ const [editedTitle, setEditedTitle] = useState('');
+ const [isSavingTitle, setIsSavingTitle] = useState(false);
  
  const [isFullscreenImage, setIsFullscreenImage] = useState(false);
  const [isWorkspaceModalVisible, setIsWorkspaceModalVisible] = useState(false);
+ const [isDownloading, setIsDownloading] = useState(false);
+
+ const handleDownload = async () => {
+    if (!capture || isDownloading) return;
+    setIsDownloading(true);
+    try {
+        await downloadCapture(capture);
+    } finally {
+        setIsDownloading(false);
+    }
+ };
 
  const handleShare = async () => {
  if (!capture) return;
@@ -77,6 +98,26 @@ export default function MemoryDetailScreen() {
  });
  };
 
+ const handleSaveTitle = async () => {
+   if (!capture) return;
+   if (!editedTitle.trim() || editedTitle.trim() === capture.title) {
+       setIsEditingTitle(false);
+       return;
+   }
+   
+   setIsSavingTitle(true);
+   try {
+       await apiClient.put(`/captures/${capture.id}/title`, { title: editedTitle.trim() });
+       queryClient.invalidateQueries({ queryKey: ['captures'] });
+       queryClient.invalidateQueries({ queryKey: ['capture', capture.id] });
+       setIsEditingTitle(false);
+   } catch (e) {
+       console.error("Failed to update title", e);
+   } finally {
+       setIsSavingTitle(false);
+   }
+ };
+
  if (isLoading) {
  return (
  <Screen scrollable={false}>
@@ -126,6 +167,13 @@ export default function MemoryDetailScreen() {
  <TouchableOpacity onPress={() => setIsWorkspaceModalVisible(true)} className="w-10 h-10 items-center justify-center rounded-full bg-surface-container">
  <MaterialIcons name="workspaces" size={20} color={colors.primary} />
  </TouchableOpacity>
+ <TouchableOpacity onPress={handleDownload} disabled={isDownloading} className="w-10 h-10 items-center justify-center rounded-full bg-surface-container">
+ {isDownloading ? (
+    <ActivityIndicator size="small" color={colors.primary} />
+ ) : (
+    <MaterialIcons name="file-download" size={20} color={colors.primary} />
+ )}
+ </TouchableOpacity>
  <TouchableOpacity onPress={handleShare} className="w-10 h-10 items-center justify-center rounded-full bg-surface-container">
  <MaterialIcons name="share" size={20} color={colors.primary} />
  </TouchableOpacity>
@@ -150,12 +198,37 @@ export default function MemoryDetailScreen() {
  <Text className="text-caption-sm text-on-surface-variant font-medium">{time}</Text>
  </View>
 
- <Text className="font-headline-md text-primary font-bold leading-tight mb-6 tracking-tight">
- {capture.title || (capture.type.charAt(0).toUpperCase() + capture.type.slice(1) + ' Capture')}
- </Text>
+ {isEditingTitle ? (
+   <View className="flex-row items-center mb-6 bg-surface-container-high rounded-xl px-3 py-1">
+     <TextInput
+       value={editedTitle}
+       onChangeText={setEditedTitle}
+       autoFocus
+       className="flex-1 font-headline-md text-primary font-bold py-1"
+       onSubmitEditing={handleSaveTitle}
+       editable={!isSavingTitle}
+     />
+     {isSavingTitle ? (
+       <ActivityIndicator size="small" color={colors.primary} className="ml-2" />
+     ) : (
+       <TouchableOpacity onPress={handleSaveTitle} className="p-2 ml-2">
+         <MaterialIcons name="check" size={24} color={colors.primary} />
+       </TouchableOpacity>
+     )}
+   </View>
+ ) : (
+   <View className="flex-row items-start justify-between mb-6">
+     <Text className="flex-1 font-headline-md text-primary font-bold leading-tight tracking-tight mr-2">
+       {capture.title || (capture.type.charAt(0).toUpperCase() + capture.type.slice(1) + ' Capture')}
+     </Text>
+     <TouchableOpacity onPress={() => { setEditedTitle(capture.title || ''); setIsEditingTitle(true); }} className="p-1 opacity-50 mt-1">
+       <MaterialIcons name="edit" size={20} color={colors.primary} />
+     </TouchableOpacity>
+   </View>
+ )}
 
  {/* Universal Preview Engine - Replaces all piecemeal rendering */}
- <MemoryRenderer capture={capture} variant="full" />
+ <MemoryRenderer capture={capture} variant="detail" />
 
  {/* Related Memories */}
  {relatedMemories.length > 0 && (

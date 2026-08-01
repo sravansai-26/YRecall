@@ -7,7 +7,8 @@ from .schemas import (
     CaptureCreateText,
     CaptureCreateNote,
     CaptureCreateURL,
-    CaptureCreateLocation
+    CaptureCreateLocation,
+    CaptureUpdateTitle
 )
 from . import service
 from ...core.database import get_db
@@ -76,6 +77,7 @@ def create_location_capture(
 def create_media_capture(
     type: str = Form(...),
     file: UploadFile = File(...),
+    upload_id: str = Form(None),
     background_tasks: BackgroundTasks = BackgroundTasks(),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
@@ -85,7 +87,7 @@ def create_media_capture(
         raise HTTPException(status_code=400, detail=f"Invalid media type. Must be one of: {valid_types}")
         
     try:
-        capture = service.create_media_capture(db, current_user, file, type, background_tasks)
+        capture = service.create_media_capture(db, current_user, file, type, background_tasks, upload_id)
         return {
             "success": True,
             "message": f"{type.capitalize()} capture created successfully.",
@@ -154,6 +156,23 @@ def get_capture(
     return {
         "success": True,
         "message": "Operation completed successfully.",
+        "data": CaptureResponse.model_validate(capture).model_dump()
+    }
+
+@router.put("/{id}/title", response_model=dict)
+def update_capture_title(
+    id: uuid.UUID,
+    payload: CaptureUpdateTitle,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    capture = service.update_capture_title(db, current_user, id, payload.title)
+    if not capture:
+        raise HTTPException(status_code=404, detail="Capture not found")
+        
+    return {
+        "success": True,
+        "message": "Title updated successfully.",
         "data": CaptureResponse.model_validate(capture).model_dump()
     }
 

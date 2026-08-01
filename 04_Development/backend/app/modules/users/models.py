@@ -1,9 +1,14 @@
 import uuid
-from sqlalchemy import Column, String, DateTime, Integer, ForeignKey, Boolean
+from sqlalchemy import Column, String, DateTime, Integer, ForeignKey, Boolean, Enum as SQLEnum
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.sql import func
 from ...core.database import Base
+import enum
+
+class AccountStatus(str, enum.Enum):
+    ACTIVE = "active"
+    PENDING_DELETION = "pending_deletion"
 
 class User(Base):
     __tablename__ = "users"
@@ -38,6 +43,9 @@ class User(Base):
     )
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    # Account Lifecycle
+    account_status = Column(SQLEnum(AccountStatus), default=AccountStatus.ACTIVE, nullable=False)
+    deletion_scheduled_at = Column(DateTime(timezone=True), nullable=True)
     
     # Relationships
     migration_jobs = relationship("MigrationJob", back_populates="user", cascade="all, delete-orphan")

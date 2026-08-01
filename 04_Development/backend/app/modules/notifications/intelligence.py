@@ -1,13 +1,9 @@
 import json
 from sqlalchemy.orm import Session
-from google import genai
 from .service import create_notification
 from ...core.config import settings
 from ..captures.models import Capture
-
-client = genai.Client(api_key=settings.GEMINI_API_KEY)
-# We use a fast, stable model for background generation
-MODEL_NAME = "gemini-2.5-flash" 
+from ...core.ai.router import ai_router 
 
 def evaluate_capture_for_notifications(db: Session, capture_id: str, user_id: str):
     """
@@ -60,19 +56,14 @@ def evaluate_capture_for_notifications(db: Session, capture_id: str, user_id: st
     }}
     """
     
-    prompt = build_system_prompt(db, user, task_context)
+    system_prompt = build_system_prompt(db, user, "")
     
     try:
-        response = client.models.generate_content(
-            model=MODEL_NAME,
-            contents=prompt
+        data = ai_router.generate_json(
+            task="notification",
+            prompt=task_context,
+            system_prompt=system_prompt
         )
-        
-        text = response.text
-        if "```json" in text:
-            text = text.split("```json")[1].split("```")[0].strip()
-            
-        data = json.loads(text)
         
         for notif_data in data.get("notifications", []):
             create_notification(

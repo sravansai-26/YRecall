@@ -1,41 +1,88 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, Pressable, Text, Image } from 'react-native';
-import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
-import { Stack as ExpoStack, useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import { View, StyleSheet, Pressable, Text, Image, ActivityIndicator, TextInput } from 'react-native';
+import { CameraView, CameraType, useCameraPermissions, useMicrophonePermissions } from 'expo-camera';
+import { Stack as ExpoStack, useRouter, useLocalSearchParams } from 'expo-router';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { capturesApi } from '../../../src/modules/captures/services/api';
 import { colors } from '../../../src/shared/theme/colors';
+import { useVideoPlayer, VideoView } from 'expo-video';
 
 export default function CameraCaptureScreen() {
  const router = useRouter();
+ const params = useLocalSearchParams();
  const insets = useSafeAreaInsets();
  
- const [permission, requestPermission] = useCameraPermissions();
+ const [cameraPermission, requestCameraPermission] = useCameraPermissions();
+ const [micPermission, requestMicPermission] = useMicrophonePermissions();
+ 
  const [facing, setFacing] = useState<CameraType>('back');
  const [flash, setFlash] = useState<'on' | 'off' | 'auto'>('off');
  const [isCapturing, setIsCapturing] = useState(false);
+ const [isRecording, setIsRecording] = useState(false);
+ const [recordingTime, setRecordingTime] = useState(0);
+ 
  const [previewUri, setPreviewUri] = useState<string | null>(null);
+ const [captureType, setCaptureType] = useState<'image' | 'video'>('image');
  const [isUploading, setIsUploading] = useState(false);
+ const [captureTitle, setCaptureTitle] = useState('');
+ 
+ // The current active mode (picture or video)
+ const [mode, setMode] = useState<'picture' | 'video'>(params.mode === 'video' ? 'video' : 'picture');
  
  const cameraRef = useRef<any>(null);
+ const timerRef = useRef<NodeJS.Timeout | null>(null);
+ const uploadIdRef = useRef<string | null>(null);
+
+ const generateUUID = () => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+ };
+
+ // Player for video preview
+ const player = useVideoPlayer(previewUri || '', player => {
+    player.loop = true;
+    player.play();
+ });
 
  useEffect(() => {
- if (!permission?.granted) {
- requestPermission();
- }
- }, [permission]);
+ if (!cameraPermission?.granted) requestCameraPermission();
+ if (!micPermission?.granted) requestMicPermission();
+ }, [cameraPermission, micPermission]);
 
- if (!permission) {
+ useEffect(() => {
+    if (isRecording) {
+        setRecordingTime(0);
+        timerRef.current = setInterval(() => {
+            setRecordingTime(prev => prev + 1);
+        }, 1000);
+    } else {
+        if (timerRef.current) clearInterval(timerRef.current);
+    }
+    return () => {
+        if (timerRef.current) clearInterval(timerRef.current);
+    };
+ }, [isRecording]);
+
+ const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+ };
+
+ if (!cameraPermission || !micPermission) {
  return <View style={styles.container} />;
  }
 
- if (!permission.granted) {
+ if (!cameraPermission.granted || !micPermission.granted) {
  return (
  <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
- <Text style={{ color: 'white', marginBottom: 20 }}>We need your permission to show the camera</Text>
- <Pressable onPress={requestPermission} style={styles.permissionBtn}>
- <Text style={{ color: 'white' }}>Grant Permission</Text>
+ <Text style={{ color: 'white', marginBottom: 20 }}>We need camera and microphone permissions</Text>
+ <Pressable onPress={() => { requestCameraPermission(); requestMicPermission(); }} style={styles.primaryBtn}>
+ <Text style={{ color: 'white' }}>Grant Permissions</Text>
  </Pressable>
  </View>
  );
@@ -62,13 +109,43 @@ export default function CameraCaptureScreen() {
  exif: true,
  base64: false,
  });
+ setCaptureType('image');
  setPreviewUri(photo.uri);
+ uploadIdRef.current = generateUUID();
  } catch (e) {
  console.error(e);
  } finally {
  setIsCapturing(false);
  }
  }
+ };
+
+ const toggleRecording = async () => {
+    if (!cameraRef.current) return;
+
+    if (isRecording) {
+        cameraRef.current.stopRecording();
+        setIsRecording(false);
+    } else {
+        setIsRecording(true);
+        try {
+            const video = await cameraRef.current.recordAsync();
+            setCaptureType('video');
+            setPreviewUri(video.uri);
+            uploadIdRef.current = generateUUID();
+        } catch (e) {
+            console.error("Recording failed", e);
+            setIsRecording(false);
+        }
+    }
+ };
+
+ const handleCaptureAction = () => {
+     if (mode === 'video') {
+         toggleRecording();
+     } else {
+         takePicture();
+     }
  };
 
  const handleRetake = () => {
@@ -79,29 +156,37 @@ export default function CameraCaptureScreen() {
  if (!previewUri) return;
  
  setIsUploading(true);
+
  try {
- const filename = previewUri.split('/').pop() || 'photo.jpg';
- const match = /\.(\w+)$/.exec(filename);
- const type = match ? `image/${match[1]}` : `image/jpeg`;
- 
- const file = {
- uri: previewUri,
- name: filename,
- type,
- };
- 
- await capturesApi.createMedia({
- type: 'image',
- file: file,
- });
- console.log('Upload successful');
- require('react-native').ToastAndroid?.show('Photo uploaded successfully', require('react-native').ToastAndroid.SHORT);
- router.back();
+     const filename = previewUri.split('/').pop() || (captureType === 'video' ? 'video.mp4' : 'photo.jpg');
+     const match = /\.(\w+)$/.exec(filename);
+     let type = match ? `${captureType}/${match[1]}` : (captureType === 'video' ? 'video/mp4' : 'image/jpeg');
+     
+     const file = {
+         uri: previewUri,
+         name: filename,
+         type,
+     };
+     
+     await capturesApi.createMedia({
+         type: captureType,
+         file: file as any,
+         upload_id: uploadIdRef.current || undefined,
+         title: captureTitle.trim() || undefined
+     });
+     
+     require('react-native').ToastAndroid?.show(`${captureType === 'video' ? 'Video' : 'Photo'} uploaded successfully`, require('react-native').ToastAndroid.SHORT);
+     setIsUploading(false);
+     router.back();
  } catch (error) {
- console.error('Failed to upload photo:', error);
- require('react-native').ToastAndroid?.show('Failed to upload photo', require('react-native').ToastAndroid.LONG);
- } finally {
- setIsUploading(false);
+     console.error('Failed to upload media:', error);
+     import('react-native').then(({ Alert }) => {
+         Alert.alert(
+             'Upload Failed', 
+             'We could not upload your capture. Please check your connection and try again.'
+         );
+     });
+     setIsUploading(false);
  }
  };
 
@@ -109,14 +194,33 @@ export default function CameraCaptureScreen() {
  return (
  <View style={styles.container}>
  <ExpoStack.Screen options={{ headerShown: false }} />
- <Image source={{ uri: previewUri }} style={styles.preview} />
+ {captureType === 'image' ? (
+     <Image source={{ uri: previewUri }} style={styles.preview} />
+ ) : (
+     <VideoView style={styles.preview} player={player} allowsPictureInPicture />
+ )}
+ 
+ <View style={[styles.titleInputContainer, { top: insets.top + 20 }]}>
+     <TextInput
+         style={styles.titleInput}
+         placeholder="Add a title (Optional)"
+         placeholderTextColor="rgba(255,255,255,0.7)"
+         value={captureTitle}
+         onChangeText={setCaptureTitle}
+         editable={!isUploading}
+     />
+ </View>
  
  <View style={[styles.previewControls, { paddingBottom: insets.bottom + 20 }]}>
  <Pressable onPress={handleRetake} style={styles.iconBtn}>
  <Text style={styles.btnText}>Retake</Text>
  </Pressable>
  <Pressable onPress={handleUpload} style={styles.primaryBtn} disabled={isUploading}>
- <Text style={styles.btnText}>{isUploading ? 'Uploading...' : 'Use Photo'}</Text>
+ {isUploading ? (
+     <ActivityIndicator color="white" />
+ ) : (
+     <Text style={styles.btnText}>Use {captureType === 'video' ? 'Video' : 'Photo'}</Text>
+ )}
  </Pressable>
  </View>
  </View>
@@ -131,38 +235,61 @@ export default function CameraCaptureScreen() {
  style={styles.camera} 
  facing={facing} 
  enableTorch={flash === 'on'}
+ mode={mode}
  ref={cameraRef}
  />
  
  {/* Top Controls */}
  <View style={[styles.topControls, { paddingTop: insets.top + 10 }]} pointerEvents="box-none">
- <Pressable onPress={() => router.back()} style={styles.iconBtn}>
+ <Pressable onPress={() => router.back()} style={styles.iconBtn} disabled={isRecording}>
  <Ionicons name="close" size={28} color="white" />
  </Pressable>
- <Pressable onPress={toggleFlash} style={styles.iconBtn}>
- <Ionicons 
- name={flash === 'on' ? 'flash' : flash === 'auto' ? 'flash-outline' : 'flash-off'} 
- size={24} 
- color="white" 
- />
- </Pressable>
+ {isRecording ? (
+     <View style={styles.timerBadge}>
+         <View style={styles.redDot} />
+         <Text style={styles.timerText}>{formatTime(recordingTime)}</Text>
+     </View>
+ ) : (
+     <Pressable onPress={toggleFlash} style={styles.iconBtn}>
+     <Ionicons 
+     name={flash === 'on' ? 'flash' : flash === 'auto' ? 'flash-outline' : 'flash-off'} 
+     size={24} 
+     color="white" 
+     />
+     </Pressable>
+ )}
  </View>
 
  {/* Bottom Controls */}
- <View style={[styles.bottomControls, { paddingBottom: insets.bottom + 40 }]} pointerEvents="box-none">
- <View style={styles.placeholderBtn} />
- 
- <Pressable 
- onPress={takePicture} 
- style={[styles.captureBtn, isCapturing && { opacity: 0.5 }]}
- disabled={isCapturing}
- >
- <View style={styles.captureBtnInner} />
- </Pressable>
- 
- <Pressable onPress={toggleCameraFacing} style={styles.iconBtn}>
- <Ionicons name="camera-reverse-outline" size={32} color="white" />
- </Pressable>
+ <View style={[styles.bottomControlsContainer, { paddingBottom: insets.bottom + 20 }]} pointerEvents="box-none">
+     
+    {/* Mode Selector */}
+    {!isRecording && (
+        <View style={styles.modeSelector}>
+            <Pressable onPress={() => setMode('picture')}>
+                <Text style={[styles.modeText, mode === 'picture' && styles.modeTextActive]}>PHOTO</Text>
+            </Pressable>
+            <Pressable onPress={() => setMode('video')}>
+                <Text style={[styles.modeText, mode === 'video' && styles.modeTextActive]}>VIDEO</Text>
+            </Pressable>
+        </View>
+    )}
+
+    <View style={styles.bottomControls}>
+        <View style={styles.placeholderBtn} />
+        
+        <Pressable 
+        onPress={handleCaptureAction} 
+        style={[styles.captureBtn, isCapturing && { opacity: 0.5 }]}
+        disabled={isCapturing}
+        >
+        <View style={[styles.captureBtnInner, mode === 'video' && styles.captureBtnInnerVideo, isRecording && styles.captureBtnInnerRecording]} />
+        </Pressable>
+        
+        <Pressable onPress={toggleCameraFacing} style={styles.iconBtn} disabled={isRecording}>
+        <Ionicons name="camera-reverse-outline" size={32} color="white" />
+        </Pressable>
+    </View>
  </View>
  </View>
  );
@@ -181,12 +308,7 @@ const styles = StyleSheet.create({
  flex: 1,
  width: '100%',
  height: '100%',
- resizeMode: 'cover',
- },
- permissionBtn: {
- padding: 12,
- backgroundColor: colors.primary,
- borderRadius: 8,
+ resizeMode: 'contain',
  },
  topControls: {
  position: 'absolute',
@@ -198,16 +320,53 @@ const styles = StyleSheet.create({
  paddingHorizontal: 20,
  zIndex: 10,
  },
- bottomControls: {
+ titleInputContainer: {
+ position: 'absolute',
+ left: 20,
+ right: 20,
+ zIndex: 10,
+ },
+ titleInput: {
+ backgroundColor: 'rgba(0,0,0,0.5)',
+ color: 'white',
+ fontFamily: 'PublicSans_600SemiBold',
+ fontSize: 16,
+ paddingHorizontal: 16,
+ paddingVertical: 12,
+ borderRadius: 12,
+ },
+ bottomControlsContainer: {
  position: 'absolute',
  bottom: 0,
  left: 0,
  right: 0,
+ flexDirection: 'column',
+ alignItems: 'center',
+ zIndex: 10,
+ },
+ modeSelector: {
+    flexDirection: 'row',
+    gap: 20,
+    marginBottom: 20,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+ },
+ modeText: {
+    color: 'rgba(255,255,255,0.6)',
+    fontFamily: 'PublicSans_600SemiBold',
+    fontSize: 14,
+ },
+ modeTextActive: {
+    color: 'white',
+ },
+ bottomControls: {
  flexDirection: 'row',
  justifyContent: 'space-around',
  alignItems: 'center',
+ width: '100%',
  paddingHorizontal: 20,
- zIndex: 10,
  },
  previewControls: {
  position: 'absolute',
@@ -243,6 +402,14 @@ const styles = StyleSheet.create({
  borderRadius: 33,
  backgroundColor: 'white',
  },
+ captureBtnInnerVideo: {
+     backgroundColor: colors.error,
+ },
+ captureBtnInnerRecording: {
+     borderRadius: 10,
+     width: 32,
+     height: 32,
+ },
  primaryBtn: {
  paddingHorizontal: 24,
  paddingVertical: 12,
@@ -253,5 +420,24 @@ const styles = StyleSheet.create({
  color: 'white',
  fontFamily: 'PublicSans_600SemiBold',
  fontSize: 16,
+ },
+ timerBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    gap: 8,
+ },
+ redDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: colors.error,
+ },
+ timerText: {
+    color: 'white',
+    fontFamily: 'PublicSans_600SemiBold',
  }
 });

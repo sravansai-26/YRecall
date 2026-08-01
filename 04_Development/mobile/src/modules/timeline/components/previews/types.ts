@@ -1,6 +1,6 @@
 import { Capture } from '../../../../captures/services/api';
 
-export type PreviewVariant = 'compact' | 'full';
+export type PreviewVariant = 'timeline' | 'detail' | 'compact' | 'full';
 
 export interface PreviewProps {
   capture: Capture;

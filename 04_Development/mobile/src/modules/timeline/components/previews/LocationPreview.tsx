@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Linking, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, Linking, Platform, Image } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { colors } from '../../../../../src/shared/theme/colors';
 import { PreviewProps } from './types';
@@ -38,9 +38,15 @@ export const LocationPreview: React.ComponentType<PreviewProps> = ({ capture, va
         
         {/* Map Visual Placeholder (Abstracted) */}
         <View className={`w-full ${isCompact ? 'h-32' : 'h-48'} bg-tertiary-container/30 items-center justify-center relative overflow-hidden`}>
-           {/* In a fully productionized setup, this would be a Static Map Image URL (e.g. Mapbox, Google Maps Static API) */}
-           {/* For now, we render a highly polished placeholder to avoid vendor lock-in without an API key */}
-           <View className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
+           {lat && lng ? (
+             <Image 
+               source={{ uri: `https://static-maps.yandex.ru/1.x/?ll=${lng},${lat}&size=450,450&z=15&l=sat&pt=${lng},${lat},pm2rdm` }}
+               className="absolute inset-0 w-full h-full"
+               resizeMode="cover"
+             />
+           ) : (
+             <View className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
+           )}
            <View className="w-16 h-16 rounded-full bg-white shadow-sm items-center justify-center z-10">
               <MaterialIcons name="location-on" size={32} color={colors.tertiary} />
            </View>

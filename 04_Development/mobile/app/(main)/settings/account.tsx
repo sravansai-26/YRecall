@@ -4,6 +4,11 @@ import { Screen } from '../../../src/shared/components';
 import { colors } from '../../../src/shared/theme/colors';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
+import { deleteMyAccount } from '../../../src/modules/users/api';
+import { auth } from '../../../src/shared/lib/firebase';
+import { signOut } from 'firebase/auth';
+import { useAuthStore } from '../../../src/shared/store/useAuthStore';
+import * as SecureStore from 'expo-secure-store';
 
 export default function AccountSettings() {
  const router = useRouter();
@@ -11,8 +16,33 @@ export default function AccountSettings() {
  const [confirm1, setConfirm1] = useState(false);
  const [confirm2, setConfirm2] = useState(false);
  const [eraseText, setEraseText] = useState('');
+ const [isDeleting, setIsDeleting] = useState(false);
+ const { setUser } = useAuthStore();
 
- const isWipeEnabled = confirm1 && confirm2 && eraseText === 'ERASE PERMANENTLY';
+ const isWipeEnabled = confirm1 && confirm2 && eraseText === 'ERASE PERMANENTLY' && !isDeleting;
+
+ const handleWipeData = async () => {
+   if (!isWipeEnabled) return;
+   
+   setIsDeleting(true);
+   try {
+     await deleteMyAccount();
+     
+     // Success! Clear local state and log out
+     await SecureStore.deleteItemAsync('encryption_key');
+     await signOut(auth);
+     setUser(null);
+     
+     // Router will automatically redirect to /(auth) due to AuthGuard,
+     // or we can force it:
+     router.replace('/(auth)');
+   } catch (error) {
+     console.error(error);
+     require('react-native').Alert.alert('Error', 'Failed to schedule account deletion. Please try again or contact support.');
+     setIsDeleting(false);
+   }
+ };
+
 
  return (
  <Screen scrollable={true} className="pb-24">
@@ -154,11 +184,14 @@ export default function AccountSettings() {
  />
  </View>
 
- <TouchableOpacity onPress={() => require('react-native').Alert.alert('Coming Soon', 'Backend integration pending')} 
- disabled={!isWipeEnabled}
- className={`mt-2 w-full py-4 rounded-xl items-center justify-center transition-all ${isWipeEnabled ? 'bg-error' : 'bg-surface-variant'}`}
+ <TouchableOpacity 
+   onPress={handleWipeData} 
+   disabled={!isWipeEnabled}
+   className={`mt-2 w-full py-4 rounded-xl items-center justify-center transition-all ${isWipeEnabled ? 'bg-error' : 'bg-surface-variant'}`}
  >
- <Text className={`font-bold text-base tracking-widest uppercase ${isWipeEnabled ? 'text-white' : 'text-outline'}`}>Initiate Purge Protocol</Text>
+   <Text className={`font-bold text-base tracking-widest uppercase ${isWipeEnabled ? 'text-white' : 'text-outline'}`}>
+     {isDeleting ? 'Erasing Intelligence...' : 'Initiate Purge Protocol'}
+   </Text>
  </TouchableOpacity>
  </View>
 
