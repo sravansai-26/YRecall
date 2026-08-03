@@ -49,7 +49,7 @@ export const MemoryRenderer: React.FC<PreviewProps> = ({ capture, variant, onPre
   const timeAgo = timeAgoRaw ? `Captured ${timeAgoRaw} ago` : '';
   
   const title = capture.title || (capture.type.charAt(0).toUpperCase() + capture.type.slice(1) + ' Capture');
-  const summaryText = capture.summary || capture.content_text || capture.ocr_text || capture.transcript || '';
+  const summaryText = capture.outer_summary || capture.inner_summary || capture.summary || capture.content_text || capture.ocr_text || capture.transcript || '';
 
   const getIcon = () => {
     switch (capture.type) {
@@ -171,13 +171,29 @@ export const MemoryRenderer: React.FC<PreviewProps> = ({ capture, variant, onPre
     <View className="w-full">
       <SpecificRenderer capture={capture} variant="detail" onPress={onPress} />
 
-      {(capture.transcript || capture.ocr_text || capture.content_text) && (
+      {(capture.inner_summary || capture.outer_summary || capture.summary) && (
         <View className="bg-surface-container-lowest border border-surface-variant/60 p-6 rounded-[32px] mb-6 shadow-sm mt-4">
           <View className="flex-row items-center mb-5 border-b border-surface-variant/50 pb-4">
             <View className="w-10 h-10 rounded-full bg-primary/10 items-center justify-center mr-3">
               <MaterialIcons name="auto-awesome" size={20} color={colors.primary} />
             </View>
             <Text className="font-title-md font-extrabold text-primary tracking-tight">YRecall View</Text>
+          </View>
+          <View className="markdown-container">
+            <Markdown style={markdownStyles}>
+              {capture.inner_summary || capture.outer_summary || capture.summary || ''}
+            </Markdown>
+          </View>
+        </View>
+      )}
+
+      {(capture.type === 'text' || capture.type === 'note') && (capture.transcript || capture.ocr_text || capture.content_text) && (
+        <View className="bg-surface-container-lowest border border-surface-variant/60 p-6 rounded-[32px] mb-6 shadow-sm mt-4">
+          <View className="flex-row items-center mb-5 border-b border-surface-variant/50 pb-4">
+            <View className="w-10 h-10 rounded-full bg-secondary/10 items-center justify-center mr-3">
+              <MaterialIcons name="notes" size={20} color={colors.secondary} />
+            </View>
+            <Text className="font-title-md font-extrabold text-secondary tracking-tight">Original Note</Text>
           </View>
           <View className="markdown-container">
             <Markdown style={markdownStyles}>

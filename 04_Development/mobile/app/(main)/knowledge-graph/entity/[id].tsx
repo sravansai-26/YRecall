@@ -89,7 +89,7 @@ export default function EntityDetailScreen() {
 
  {entity.description && (
  <View className="bg-surface-container-lowest rounded-2xl p-5 shadow-sm mb-6">
- <Text className="font-label-sm text-xs text-on-surface-variant font-bold uppercase tracking-widest mb-2">AI Summary</Text>
+ <Text className="font-label-sm text-xs text-on-surface-variant font-bold uppercase tracking-widest mb-2">YRecall View</Text>
  <Text className="font-body-md text-on-surface">{entity.description}</Text>
  </View>
  )}

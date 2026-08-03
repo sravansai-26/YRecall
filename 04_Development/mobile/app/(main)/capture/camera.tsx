@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, Pressable, Text, Image, ActivityIndicator, TextInput } from 'react-native';
+import { View, StyleSheet, Pressable, Text, Image, ActivityIndicator, TextInput, BackHandler } from 'react-native';
 import { CameraView, CameraType, useCameraPermissions, useMicrophonePermissions } from 'expo-camera';
+import * as ImagePicker from 'expo-image-picker';
 import { Stack as ExpoStack, useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -23,12 +24,14 @@ export default function CameraCaptureScreen() {
  const [recordingTime, setRecordingTime] = useState(0);
  
  const [previewUri, setPreviewUri] = useState<string | null>(null);
- const [captureType, setCaptureType] = useState<'image' | 'video'>('image');
+ const [captureType, setCaptureType] = useState<'image' | 'video' | 'document'>('image');
  const [isUploading, setIsUploading] = useState(false);
  const [captureTitle, setCaptureTitle] = useState('');
  
- // The current active mode (picture or video)
- const [mode, setMode] = useState<'picture' | 'video'>(params.mode === 'video' ? 'video' : 'picture');
+ // The current active mode (picture, video, or scan)
+ const [mode, setMode] = useState<'picture' | 'video' | 'scan'>(
+    params.mode === 'video' ? 'video' : (params.mode === 'scan' ? 'scan' : 'picture')
+ );
  
  const cameraRef = useRef<any>(null);
  const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -66,6 +69,24 @@ export default function CameraCaptureScreen() {
         if (timerRef.current) clearInterval(timerRef.current);
     };
  }, [isRecording]);
+
+ useEffect(() => {
+    const onBackPress = () => {
+        if (previewUri) {
+            setPreviewUri(null);
+            return true; // Prevent default behavior (exiting screen)
+        }
+        if (isRecording) {
+            // Stop recording before exiting or just prevent exit
+            cameraRef.current?.stopRecording();
+            setIsRecording(false);
+            return true;
+        }
+        return false;
+    };
+    const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+    return () => subscription.remove();
+ }, [previewUri, isRecording]);
 
  const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60);
@@ -109,7 +130,7 @@ export default function CameraCaptureScreen() {
  exif: true,
  base64: false,
  });
- setCaptureType('image');
+ setCaptureType(mode === 'scan' ? 'document' : 'image');
  setPreviewUri(photo.uri);
  uploadIdRef.current = generateUUID();
  } catch (e) {
@@ -146,6 +167,26 @@ export default function CameraCaptureScreen() {
      } else {
          takePicture();
      }
+ };
+
+ const pickFromGallery = async () => {
+    try {
+      const mediaTypes = mode === 'video' ? ImagePicker.MediaTypeOptions.Videos : ImagePicker.MediaTypeOptions.Images;
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes,
+        allowsEditing: false,
+        quality: 1,
+      });
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        const asset = result.assets[0];
+        setCaptureType(asset.type === 'video' ? 'video' : (mode === 'scan' ? 'document' : 'image'));
+        setPreviewUri(asset.uri);
+        uploadIdRef.current = generateUUID();
+      }
+    } catch (e) {
+      console.error('Gallery error:', e);
+    }
  };
 
  const handleRetake = () => {
@@ -194,7 +235,7 @@ export default function CameraCaptureScreen() {
  return (
  <View style={styles.container}>
  <ExpoStack.Screen options={{ headerShown: false }} />
- {captureType === 'image' ? (
+ {captureType === 'image' || captureType === 'document' ? (
      <Image source={{ uri: previewUri }} style={styles.preview} />
  ) : (
      <VideoView style={styles.preview} player={player} allowsPictureInPicture />
@@ -219,7 +260,7 @@ export default function CameraCaptureScreen() {
  {isUploading ? (
      <ActivityIndicator color="white" />
  ) : (
-     <Text style={styles.btnText}>Use {captureType === 'video' ? 'Video' : 'Photo'}</Text>
+     <Text style={styles.btnText}>Use {captureType === 'video' ? 'Video' : captureType === 'document' ? 'Scan' : 'Photo'}</Text>
  )}
  </Pressable>
  </View>
@@ -235,7 +276,7 @@ export default function CameraCaptureScreen() {
  style={styles.camera} 
  facing={facing} 
  enableTorch={flash === 'on'}
- mode={mode}
+ mode={mode === 'scan' ? 'picture' : mode}
  ref={cameraRef}
  />
  
@@ -266,6 +307,9 @@ export default function CameraCaptureScreen() {
     {/* Mode Selector */}
     {!isRecording && (
         <View style={styles.modeSelector}>
+            <Pressable onPress={() => setMode('scan')}>
+                <Text style={[styles.modeText, mode === 'scan' && styles.modeTextActive]}>SCAN</Text>
+            </Pressable>
             <Pressable onPress={() => setMode('picture')}>
                 <Text style={[styles.modeText, mode === 'picture' && styles.modeTextActive]}>PHOTO</Text>
             </Pressable>
@@ -276,7 +320,9 @@ export default function CameraCaptureScreen() {
     )}
 
     <View style={styles.bottomControls}>
-        <View style={styles.placeholderBtn} />
+        <Pressable onPress={pickFromGallery} style={styles.iconBtn} disabled={isRecording}>
+          <Ionicons name="images-outline" size={28} color="white" />
+        </Pressable>
         
         <Pressable 
         onPress={handleCaptureAction} 

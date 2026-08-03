@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { View, Keyboard, BackHandler, ToastAndroid } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -52,32 +53,36 @@ function RootNavigationHandler() {
 
  const inAuthGroup = segments[0] === '(auth)';
  const inOnboardingGroup = segments[0] === '(onboarding)';
- const isRoot = (segments as string[]).length === 0;
+ const isRoot = segments.length === 0;
 
+ // ONLY navigate if the user is completely in the wrong area, 
+ // do NOT blindly replace when navigating naturally.
  const navigate = () => {
- if (!hasCompletedOnboarding) {
- if (!inOnboardingGroup) {
- router.replace('/(onboarding)/intro-1');
- }
- return;
- }
+   if (!hasCompletedOnboarding) {
+     if (!inOnboardingGroup) {
+       router.replace('/(onboarding)/intro-1');
+     }
+     return;
+   }
 
- if (!user) {
- if (!inAuthGroup) {
- router.replace('/(auth)');
- }
- return;
- }
+   if (!user) {
+     if (!inAuthGroup) {
+       router.replace('/(auth)');
+     }
+     return;
+   }
 
- if (inAuthGroup || inOnboardingGroup || isRoot) {
- router.replace('/(main)/(tabs)');
- }
+   // If user is logged in and onboarding is complete, they shouldn't be in auth, onboarding, or stranded at absolute root.
+   if (inAuthGroup || inOnboardingGroup || isRoot) {
+     router.replace('/(main)/(tabs)');
+   }
  };
 
  const timeoutId = setTimeout(navigate, 0);
  return () => clearTimeout(timeoutId);
- }, [user, isLoading, hasCompletedOnboarding, segments]);
+ }, [user, isLoading, hasCompletedOnboarding]); // Removed 'segments' from dependencies to stop destroying navigation history on every screen change!
 
+ // The global BackHandler hack has been removed to allow Expo Router to natively handle the stack history and predictive back gestures.
  return <Stack screenOptions={{ headerShown: false }} />;
 }
 

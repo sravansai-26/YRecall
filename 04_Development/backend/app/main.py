@@ -22,6 +22,7 @@ from app.modules.support.controller import router as support_router
 from contextlib import asynccontextmanager
 from .core.database import SessionLocal
 from .modules.billing import subscription_service
+from app.core.ai.worker import ai_worker
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -31,8 +32,14 @@ async def lifespan(app: FastAPI):
         subscription_service.seed_default_plans(db)
     finally:
         db.close()
+        
+    # Start the background AI worker
+    await ai_worker.start()
+    
     yield
+    
     # Shutdown logic
+    await ai_worker.stop()
 
 app = FastAPI(
     title="YRecall API",

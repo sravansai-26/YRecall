@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Column, String, DateTime, ForeignKey, Text, Boolean
+from sqlalchemy import Column, String, DateTime, ForeignKey, Text, Boolean, Integer
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.sql import func
 from pgvector.sqlalchemy import Vector
@@ -43,3 +43,23 @@ class AIEmbedding(Base):
     embedding = Column(Vector(3072), nullable=False)
     
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class AIJob(Base):
+    __tablename__ = "ai_jobs"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    capture_id = Column(UUID(as_uuid=True), ForeignKey("captures.id", ondelete="CASCADE"), nullable=True, index=True)
+    job_type = Column(String, nullable=False, index=True) # e.g., 'enrichment', 'graph_reconciliation'
+    status = Column(String, default="QUEUED", nullable=False, index=True) # QUEUED, RUNNING, RETRYING, WAITING_RATE_LIMIT, FAILED, COMPLETED, CANCELLED
+    
+    attempt_count = Column(Integer, default=0, nullable=False)
+    max_attempts = Column(Integer, default=3, nullable=False)
+    next_retry_at = Column(DateTime(timezone=True), nullable=True, index=True)
+    
+    provider_used = Column(String, nullable=True)
+    model_used = Column(String, nullable=True)
+    execution_duration_ms = Column(Integer, nullable=True)
+    error_detail = Column(Text, nullable=True)
+    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())

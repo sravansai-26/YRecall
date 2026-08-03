@@ -1,20 +1,15 @@
 import uuid
 from typing import Optional
 from sqlalchemy.orm import Session
-from fastapi import UploadFile, BackgroundTasks
+from fastapi import UploadFile
 from supabase import create_client, Client
 from .models import Capture, CaptureNote, CaptureURL, CaptureLocation, CaptureMedia
 from .schemas import CaptureCreateText, CaptureCreateNote, CaptureCreateURL, CaptureCreateLocation
 from ...core.config import settings
 from ...modules.users.models import User
-from .tasks import (
-    generate_and_store_embedding,
-    process_url_capture,
-    process_location_capture,
-    process_media_capture,
-    process_text_capture
-)
+from .tasks import generate_and_store_embedding
 
+from app.core.ai.queue import enqueue_job
 from ..notifications.service import create_notification
 
 # Initialize Supabase client
@@ -44,7 +39,7 @@ def _notify_capture_created(db: Session, user: User, capture: Capture):
     except Exception:
         pass
 
-def create_text_capture(db: Session, user: User, capture_in: CaptureCreateText, background_tasks: BackgroundTasks) -> Capture:
+def create_text_capture(db: Session, user: User, capture_in: CaptureCreateText) -> Capture:
     _check_capture_quota(db, user)
     new_capture = Capture(
         user_id=user.id,
@@ -57,13 +52,13 @@ def create_text_capture(db: Session, user: User, capture_in: CaptureCreateText, 
     db.commit()
     db.refresh(new_capture)
     
-    background_tasks.add_task(process_text_capture, db, new_capture.id)
-    background_tasks.add_task(async_extract_with_retry, str(new_capture.id), user.id)
+    enqueue_job(db, new_capture.id, "enrichment")
+    
     quota_service.increment_captures(db, user.id)
     _notify_capture_created(db, user, new_capture)
     return new_capture
 
-def create_note_capture(db: Session, user: User, capture_in: CaptureCreateNote, background_tasks: BackgroundTasks) -> Capture:
+def create_note_capture(db: Session, user: User, capture_in: CaptureCreateNote) -> Capture:
     _check_capture_quota(db, user)
     new_capture = Capture(
         user_id=user.id,
@@ -84,13 +79,13 @@ def create_note_capture(db: Session, user: User, capture_in: CaptureCreateNote, 
     db.commit()
     db.refresh(new_capture)
     
-    background_tasks.add_task(process_text_capture, db, new_capture.id)
-    background_tasks.add_task(async_extract_with_retry, str(new_capture.id), user.id)
+    enqueue_job(db, new_capture.id, "enrichment")
+    
     quota_service.increment_captures(db, user.id)
     _notify_capture_created(db, user, new_capture)
     return new_capture
 
-def create_url_capture(db: Session, user: User, capture_in: CaptureCreateURL, background_tasks: BackgroundTasks) -> Capture:
+def create_url_capture(db: Session, user: User, capture_in: CaptureCreateURL) -> Capture:
     _check_capture_quota(db, user)
     new_capture = Capture(
         user_id=user.id,
@@ -108,14 +103,14 @@ def create_url_capture(db: Session, user: User, capture_in: CaptureCreateURL, ba
     db.commit()
     db.refresh(new_capture)
     
-    # Background task to fetch OG tags, markdown, and then embed
-    background_tasks.add_task(process_url_capture, db, new_capture.id)
-    background_tasks.add_task(async_extract_with_retry, str(new_capture.id), user.id)
+    # Queue job to fetch OG tags, markdown, and then embed/summarize
+    enqueue_job(db, new_capture.id, "enrichment")
+    
     quota_service.increment_captures(db, user.id)
     _notify_capture_created(db, user, new_capture)
     return new_capture
 
-def create_location_capture(db: Session, user: User, capture_in: CaptureCreateLocation, background_tasks: BackgroundTasks) -> Capture:
+def create_location_capture(db: Session, user: User, capture_in: CaptureCreateLocation) -> Capture:
     _check_capture_quota(db, user)
     new_capture = Capture(
         user_id=user.id,
@@ -136,14 +131,14 @@ def create_location_capture(db: Session, user: User, capture_in: CaptureCreateLo
     db.commit()
     db.refresh(new_capture)
     
-    # Background task for reverse geocoding and embeddings
-    background_tasks.add_task(process_location_capture, db, new_capture.id)
-    background_tasks.add_task(async_extract_with_retry, str(new_capture.id), user.id)
+    # Queue job for reverse geocoding and embeddings
+    enqueue_job(db, new_capture.id, "enrichment")
+    
     quota_service.increment_captures(db, user.id)
     _notify_capture_created(db, user, new_capture)
     return new_capture
 
-def create_media_capture(db: Session, user: User, file: UploadFile, type_str: str, background_tasks: BackgroundTasks, upload_id: Optional[str] = None) -> Capture:
+def create_media_capture(db: Session, user: User, file: UploadFile, type_str: str, upload_id: Optional[str] = None, title: Optional[str] = None) -> Capture:
     _check_capture_quota(db, user)
     
     final_id = uuid.uuid4()
@@ -187,6 +182,7 @@ def create_media_capture(db: Session, user: User, file: UploadFile, type_str: st
         id=final_id,
         user_id=user.id,
         type=type_str,
+        title=title,
         file_url=public_url,
         storage_path=file_name,
         mime_type=file.content_type,
@@ -204,9 +200,8 @@ def create_media_capture(db: Session, user: User, file: UploadFile, type_str: st
     db.refresh(new_capture)
     
     
-    # Background task for processing (OCR/Transcript/Summary/Embedding)
-    background_tasks.add_task(process_media_capture, db, new_capture.id)
-    background_tasks.add_task(async_extract_with_retry, str(new_capture.id), user.id)
+    # Queue job for processing (OCR/Transcript/Summary/Embedding)
+    enqueue_job(db, new_capture.id, "enrichment")
     
     quota_service.increment_captures(db, user.id)
     quota_service.add_storage(db, user.id, file_size)

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Image, Linking, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, Linking, ActivityIndicator } from 'react-native';
+import { Image } from 'expo-image';
 import { MaterialIcons } from '@expo/vector-icons';
 import { colors } from '../../../../../src/shared/theme/colors';
 import { PreviewProps } from './types';
@@ -29,29 +30,58 @@ export const URLPreview: React.ComponentType<PreviewProps> = ({ capture, variant
         
         const html = await response.text();
         
+        let foundImage = null;
+        let foundTitle = null;
+
         if (!ogImage) {
-          const ogImageMatch = html.match(/<meta property="og:image" content="([^"]+)"/i) || html.match(/<meta name="twitter:image" content="([^"]+)"/i);
-          if (ogImageMatch && ogImageMatch[1]) setOgImage(ogImageMatch[1]);
+          const ogImg1 = html.match(/property=["']og:image["']\s+content=["']([^"']+)["']/i);
+          const ogImg2 = html.match(/content=["']([^"']+)["']\s+property=["']og:image["']/i);
+          const twImg1 = html.match(/name=["']twitter:image["']\s+content=["']([^"']+)["']/i);
+          const twImg2 = html.match(/content=["']([^"']+)["']\s+name=["']twitter:image["']/i);
+          foundImage = (ogImg1 && ogImg1[1]) || (ogImg2 && ogImg2[1]) || (twImg1 && twImg1[1]) || (twImg2 && twImg2[1]);
+          
+          if (foundImage) {
+            if (foundImage.startsWith('/')) {
+                foundImage = new URL(foundImage, url).href;
+            }
+            setOgImage(foundImage);
+          }
         }
         
         if (!title) {
-          const ogTitleMatch = html.match(/<meta property="og:title" content="([^"]+)"/i) || html.match(/<title>([^<]+)<\/title>/i);
-          if (ogTitleMatch && ogTitleMatch[1]) setTitle(ogTitleMatch[1]);
+          const ogTitle1 = html.match(/property=["']og:title["']\s+content=["']([^"']+)["']/i);
+          const ogTitle2 = html.match(/content=["']([^"']+)["']\s+property=["']og:title["']/i);
+          const titleTag = html.match(/<title[^>]*>([^<]+)<\/title>/i);
+          foundTitle = (ogTitle1 && ogTitle1[1]) || (ogTitle2 && ogTitle2[1]) || (titleTag && titleTag[1]);
+          if (foundTitle) setTitle(foundTitle);
         }
 
-        if (!domain) {
+        let currentDomain = domain;
+        if (!currentDomain) {
           try {
             const urlObj = new URL(url);
-            setDomain(urlObj.hostname);
+            currentDomain = urlObj.hostname;
+            setDomain(currentDomain);
           } catch (e) {}
         }
+        
+        // Favicon Fallback if absolutely no image was found
+        if (!ogImage && !foundImage && currentDomain) {
+           setOgImage(`https://www.google.com/s2/favicons?domain=${currentDomain}&sz=256`);
+        }
+        
       } catch (error) {
-        // Fallback silently
-        if (!domain) {
+        // Fallback silently to domain and favicon
+        let fallbackDomain = domain;
+        if (!fallbackDomain) {
           try {
             const urlObj = new URL(url);
-            setDomain(urlObj.hostname);
+            fallbackDomain = urlObj.hostname;
+            setDomain(fallbackDomain);
           } catch (e) {}
+        }
+        if (!ogImage && fallbackDomain) {
+           setOgImage(`https://www.google.com/s2/favicons?domain=${fallbackDomain}&sz=256`);
         }
       } finally {
         setIsLoading(false);
@@ -78,7 +108,8 @@ export const URLPreview: React.ComponentType<PreviewProps> = ({ capture, variant
           <Image 
             source={{ uri: ogImage }} 
             className="w-full h-48 bg-surface-variant"
-            resizeMode="cover"
+            contentFit={ogImage.includes('favicons') ? "contain" : "cover"}
+            transition={200}
           />
         ) : (
           <View className="w-full h-48 bg-surface-variant items-center justify-center">
@@ -102,7 +133,8 @@ export const URLPreview: React.ComponentType<PreviewProps> = ({ capture, variant
           <Image 
             source={{ uri: ogImage }} 
             className={`w-full ${isCompact ? 'h-32' : 'h-48'} bg-surface-variant`}
-            resizeMode="cover"
+            contentFit={ogImage.includes('favicons') ? "contain" : "cover"}
+            transition={200}
           />
         ) : (
           <View className={`w-full ${isCompact ? 'h-32' : 'h-48'} bg-surface-variant items-center justify-center`}>

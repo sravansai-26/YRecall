@@ -60,7 +60,30 @@ def chat_with_rag(db: Session, user: User, chat_req: ChatRequest) -> tuple[AICon
         else:
             query = query.filter(Capture.user_id == user.id)
             
-        results = query.order_by("distance").limit(10 if (filter_settings and filter_settings.show_important_first) else 5).all()
+        semantic_results = query.order_by("distance").limit(10 if (filter_settings and filter_settings.show_important_first) else 5).all()
+        
+        # 2.1 Fetch most recent captures (real-time awareness regardless of semantic match)
+        recent_query = db.query(Capture).filter(Capture.deleted_at == None)
+        if chat_req.workspace_id:
+            recent_query = recent_query.join(SharedCapture, SharedCapture.capture_id == Capture.id).filter(
+                SharedCapture.workspace_id == chat_req.workspace_id
+            )
+        else:
+            recent_query = recent_query.filter(Capture.user_id == user.id)
+            
+        recent_captures = recent_query.order_by(Capture.created_at.desc()).limit(5).all()
+        
+        # Merge semantic and recent, avoiding duplicates
+        seen_ids = set()
+        for cap, emb, dist in semantic_results:
+            results.append((cap, emb, dist))
+            seen_ids.add(cap.id)
+            
+        for cap in recent_captures:
+            if cap.id not in seen_ids:
+                results.append((cap, None, 1.0)) # 1.0 distance means it's just appended as recent
+                seen_ids.add(cap.id)
+
     
     citations = []
     context_texts = []

@@ -1,5 +1,5 @@
 import uuid
-from fastapi import APIRouter, Depends, BackgroundTasks, UploadFile, File, HTTPException, status, Form
+from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, status, Form
 from sqlalchemy.orm import Session
 from .schemas import (
     CaptureResponse, 
@@ -20,11 +20,10 @@ router = APIRouter()
 @router.post("/text", response_model=dict, status_code=status.HTTP_201_CREATED)
 def create_text_capture(
     capture_in: CaptureCreateText,
-    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    capture = service.create_text_capture(db, current_user, capture_in, background_tasks)
+    capture = service.create_text_capture(db, current_user, capture_in)
     return {
         "success": True,
         "message": "Text capture created successfully.",
@@ -34,11 +33,10 @@ def create_text_capture(
 @router.post("/note", response_model=dict, status_code=status.HTTP_201_CREATED)
 def create_note_capture(
     capture_in: CaptureCreateNote,
-    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    capture = service.create_note_capture(db, current_user, capture_in, background_tasks)
+    capture = service.create_note_capture(db, current_user, capture_in)
     return {
         "success": True,
         "message": "Note capture created successfully.",
@@ -48,11 +46,10 @@ def create_note_capture(
 @router.post("/url", response_model=dict, status_code=status.HTTP_201_CREATED)
 def create_url_capture(
     capture_in: CaptureCreateURL,
-    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    capture = service.create_url_capture(db, current_user, capture_in, background_tasks)
+    capture = service.create_url_capture(db, current_user, capture_in)
     return {
         "success": True,
         "message": "URL capture created successfully.",
@@ -62,11 +59,10 @@ def create_url_capture(
 @router.post("/location", response_model=dict, status_code=status.HTTP_201_CREATED)
 def create_location_capture(
     capture_in: CaptureCreateLocation,
-    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    capture = service.create_location_capture(db, current_user, capture_in, background_tasks)
+    capture = service.create_location_capture(db, current_user, capture_in)
     return {
         "success": True,
         "message": "Location capture created successfully.",
@@ -78,7 +74,7 @@ def create_media_capture(
     type: str = Form(...),
     file: UploadFile = File(...),
     upload_id: str = Form(None),
-    background_tasks: BackgroundTasks = BackgroundTasks(),
+    title: str = Form(None),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -87,7 +83,7 @@ def create_media_capture(
         raise HTTPException(status_code=400, detail=f"Invalid media type. Must be one of: {valid_types}")
         
     try:
-        capture = service.create_media_capture(db, current_user, file, type, background_tasks, upload_id)
+        capture = service.create_media_capture(db, current_user, file, type, upload_id, title)
         return {
             "success": True,
             "message": f"{type.capitalize()} capture created successfully.",

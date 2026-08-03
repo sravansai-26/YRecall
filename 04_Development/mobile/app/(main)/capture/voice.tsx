@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, Pressable, Text, Animated } from 'react-native';
+import { View, StyleSheet, Pressable, Text, Animated, BackHandler } from 'react-native';
 import { useAudioRecorder, useAudioPlayer, RecordingPresets, requestRecordingPermissionsAsync, AudioModule } from 'expo-audio';
 import { Stack as ExpoStack, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -26,10 +26,27 @@ export default function VoiceCaptureScreen() {
  const player = useAudioPlayer(audioUri);
 
  useEffect(() => {
- return () => {
- if (timerRef.current) clearInterval(timerRef.current);
- };
- }, []);
+    const onBackPress = () => {
+        if (audioUri) {
+            deleteRecording();
+            return true; // Prevent default behavior (exiting screen)
+        }
+        if (isRecording) {
+            // Stop recording before exiting
+            stopRecording();
+            // We can decide to stay on screen, or just let it be deleted. For safety, let's keep them on screen.
+            return true;
+        }
+        return false;
+    };
+    
+    const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+  return () => {
+  if (timerRef.current) clearInterval(timerRef.current);
+  subscription.remove();
+  };
+ }, [audioUri, isRecording]);
 
  const formatTime = (seconds: number) => {
  const m = Math.floor(seconds / 60).toString().padStart(2, '0');

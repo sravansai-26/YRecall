@@ -6,6 +6,8 @@ export interface Capture {
  status: string;
  title?: string;
  content_text?: string;
+ outer_summary?: string;
+ inner_summary?: string;
  summary?: string;
  ocr_text?: string;
  transcript?: string;

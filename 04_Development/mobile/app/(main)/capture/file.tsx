@@ -42,11 +42,27 @@ export default function FileCaptureScreen() {
 
  const pickFile = async () => {
  try {
- const result = await DocumentPicker.getDocumentAsync({
- type: '*/*',
- copyToCacheDirectory: true,
- multiple: true,
- });
+      const result = await DocumentPicker.getDocumentAsync({
+        type: [
+          'application/pdf',
+          'application/msword',
+          'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // docx
+          'application/vnd.ms-excel',
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // xlsx
+          'application/vnd.ms-powerpoint',
+          'application/vnd.openxmlformats-officedocument.presentationml.presentation', // pptx
+          'text/plain',
+          'text/csv',
+          'text/markdown',
+          'application/rtf',
+          'application/vnd.oasis.opendocument.text', // odt
+          'application/vnd.oasis.opendocument.spreadsheet', // ods
+          'application/vnd.oasis.opendocument.presentation', // odp
+          'application/json'
+        ],
+        copyToCacheDirectory: true,
+        multiple: true,
+      });
 
  if (!result.canceled && result.assets) {
  const newFiles: SelectedFile[] = result.assets.map(asset => ({

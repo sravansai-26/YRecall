@@ -34,6 +34,7 @@ export default function TabsLayout() {
  screenOptions={{
  headerShown: false,
  }}
+ backBehavior="history"
  tabBar={({ state }) => {
  const routeName = state.routes[state.index]?.name || '';
  

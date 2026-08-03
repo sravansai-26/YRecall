@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, Modal } from 'react-native';
+import { Image } from 'expo-image';
 import { MaterialIcons } from '@expo/vector-icons';
 import { colors } from '../../../../../src/shared/theme/colors';
 import { AudioPlayer } from '../../../../shared/components/AudioPlayer';
@@ -11,9 +12,19 @@ export const MediaPreview: React.ComponentType<PreviewProps> = ({ capture, varia
   const isTimeline = variant === 'timeline';
   const [isFullscreenImage, setIsFullscreenImage] = useState(false);
 
-  const player = useVideoPlayer(capture.type === 'video' ? (capture.file_url || null) : null, player => {
-    player.loop = true;
-    player.pause();
+  // CRITICAL FIX: Only pass the URL to useVideoPlayer if we are NOT in the timeline view.
+  // If we pass the URL in the timeline, 10+ video players will eagerly try to buffer simultaneously,
+  // completely choking the network and causing the details screen to take 20 seconds to load.
+  const videoSource = (capture.type === 'video' && capture.file_url && !isTimeline && !isCompact) 
+    ? capture.file_url 
+    : null;
+
+  const player = useVideoPlayer(videoSource, player => {
+    player.loop = false;
+    player.muted = false;
+    if (videoSource) {
+      player.play();
+    }
   });
 
   if (capture.type === 'image' || capture.type === 'video' || capture.type === 'location') {
@@ -23,14 +34,14 @@ export const MediaPreview: React.ComponentType<PreviewProps> = ({ capture, varia
           isCompact || isTimeline ? (
             <View className={isTimeline ? "w-full h-56 bg-surface-variant relative" : "w-full h-56 rounded-2xl bg-surface-variant mb-3 relative"}>
               {capture.type === 'video' ? (
-                <View className="w-full h-full" pointerEvents="none">
-                  <VideoView 
-                    style={{ width: '100%', height: '100%' }} 
-                    player={player} 
-                    nativeControls={false}
+                <View className="w-full h-full relative" pointerEvents="none">
+                  <Image 
+                    source={{ uri: capture.thumbnail_path || capture.file_url }}
+                    style={{ width: '100%', height: '100%' }}
                     contentFit="cover"
+                    transition={200}
                   />
-                  <View className="absolute inset-0 items-center justify-center bg-black/10">
+                  <View className="absolute inset-0 items-center justify-center">
                     <View className="w-12 h-12 rounded-full bg-white/30 items-center justify-center backdrop-blur-md">
                       <MaterialIcons name="play-arrow" size={24} color={colors.white} />
                     </View>
@@ -39,8 +50,9 @@ export const MediaPreview: React.ComponentType<PreviewProps> = ({ capture, varia
               ) : (
                 <Image 
                   source={{ uri: capture.file_url }} 
-                  className="w-full h-full"
-                  resizeMode="cover"
+                  style={{ width: '100%', height: '100%' }}
+                  contentFit="cover"
+                  transition={200}
                 />
               )}
             </View>
@@ -48,11 +60,13 @@ export const MediaPreview: React.ComponentType<PreviewProps> = ({ capture, varia
             <>
               {capture.type === 'video' ? (
                 <View className="rounded-[28px] overflow-hidden bg-surface-container-low mb-6">
-                  <View className="w-full relative rounded-[28px] overflow-hidden" style={{ aspectRatio: 16/9 }}>
+                  <View className="w-full relative rounded-[28px] overflow-hidden bg-black" style={{ aspectRatio: 16/9 }}>
                     <VideoView 
                       style={{ width: '100%', height: '100%', backgroundColor: 'black' }} 
                       player={player} 
-                      allowsPictureInPicture 
+                      allowsPictureInPicture={true}
+                      allowsFullscreen={true}
+                      nativeControls={true}
                     />
                   </View>
                 </View>
@@ -61,9 +75,9 @@ export const MediaPreview: React.ComponentType<PreviewProps> = ({ capture, varia
                   <View className="rounded-[28px] overflow-hidden bg-surface-container-low mb-6">
                     <Image 
                       source={{ uri: capture.file_url }}
-                      className="w-full"
-                      style={{ aspectRatio: 4/3 }}
-                      resizeMode="cover"
+                      style={{ width: '100%', aspectRatio: 4/3 }}
+                      contentFit="cover"
+                      transition={200}
                     />
                     <View className="absolute bottom-4 right-4 bg-black/50 w-8 h-8 rounded-full items-center justify-center backdrop-blur-md">
                       <MaterialIcons name="fullscreen" size={20} color={colors.white} />
@@ -82,8 +96,9 @@ export const MediaPreview: React.ComponentType<PreviewProps> = ({ capture, varia
                   </TouchableOpacity>
                   <Image 
                     source={{ uri: capture.file_url }}
-                    className="w-full h-full"
-                    resizeMode="contain"
+                    style={{ width: '100%', height: '100%' }}
+                    contentFit="contain"
+                    transition={200}
                   />
                 </View>
               </Modal>

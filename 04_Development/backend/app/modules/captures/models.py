@@ -16,7 +16,11 @@ class Capture(Base):
     
     title = Column(String, nullable=True)
     content_text = Column(Text, nullable=True) # extracted or raw text
-    summary = Column(Text, nullable=True) # AI summary
+    summary = Column(Text, nullable=True) # Legacy outer summary, keep for backward compatibility or replace
+    outer_summary = Column(Text, nullable=True)
+    inner_summary = Column(Text, nullable=True)
+    ai_tags = Column(JSONB, nullable=True)
+    ai_entities = Column(JSONB, nullable=True)
     ocr_text = Column(Text, nullable=True)
     transcript = Column(Text, nullable=True)
     

@@ -59,24 +59,6 @@ export default function HomeDashboard() {
 
  const unreadCount = notificationsData?.meta?.unread_count || 0;
 
- useFocusEffect(
- useCallback(() => {
- const onBackPress = () => {
- if (backPressCount === 0) {
- setBackPressCount(1);
- require('react-native').ToastAndroid?.show(t('home.pressBack', 'Press back again to exit'), require('react-native').ToastAndroid.SHORT);
- setTimeout(() => setBackPressCount(0), 2000);
- return true;
- } else {
- require('react-native').BackHandler.exitApp();
- return true;
- }
- };
- const subscription = require('react-native').BackHandler.addEventListener('hardwareBackPress', onBackPress);
- return () => subscription.remove();
- }, [backPressCount])
- );
-
  return (
  <Screen scrollable={false}>
  {/* Top Header */}
@@ -179,7 +161,7 @@ export default function HomeDashboard() {
  <MaterialIcons name="chat-bubble" size={20} color={colors['on-primary']} />
  <Text className="font-label-xs text-[14px] text-on-primary">{t('home.ask', 'Ask Anything')}</Text>
  </TouchableOpacity>
- <TouchableOpacity onPress={() => router.push('/(main)/capture/camera')} className="flex-row items-center gap-2 px-lg py-3 bg-surface-container-low rounded-full">
+ <TouchableOpacity onPress={() => router.push('/(main)/capture/camera?mode=scan')} className="flex-row items-center gap-2 px-lg py-3 bg-surface-container-low rounded-full">
  <MaterialIcons name="document-scanner" size={20} color={colors['on-surface']} />
  <Text className="font-label-xs text-[14px] text-on-surface">{t('home.scan', 'Scan Doc')}</Text>
  </TouchableOpacity>

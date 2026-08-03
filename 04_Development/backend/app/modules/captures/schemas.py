@@ -63,6 +63,10 @@ class CaptureResponse(BaseModel):
     title: Optional[str] = None
     content_text: Optional[str] = None
     summary: Optional[str] = None
+    outer_summary: Optional[str] = None
+    inner_summary: Optional[str] = None
+    ai_tags: Optional[list] = None
+    ai_entities: Optional[list] = None
     ocr_text: Optional[str] = None
     transcript: Optional[str] = None
     storage_path: Optional[str] = None
