@@ -86,10 +86,8 @@ export const MemoryRenderer: React.FC<PreviewProps> = ({ capture, variant, onPre
   };
 
   if (isTimeline) {
-    const isLink = capture.type === 'url' || capture.type === 'link';
-    
-    // Media, Links, and Documents get a custom graphical layout
-    if (capture.type === 'image' || capture.type === 'video' || capture.type === 'location' || capture.type === 'voice' || capture.type === 'audio' || isLink || capture.type === 'document') {
+    // Media and Documents get a custom graphical layout
+    if (capture.type === 'image' || capture.type === 'video' || capture.type === 'location' || capture.type === 'voice' || capture.type === 'audio' || capture.type === 'document' || capture.type === 'url' || capture.type === 'link') {
       return (
         <View className="mb-4">
           <TouchableOpacity 
@@ -146,11 +144,13 @@ export const MemoryRenderer: React.FC<PreviewProps> = ({ capture, variant, onPre
             <MaterialIcons name={getIcon()} size={20} color={getIconColor()} />
           </View>
           <View className="flex-1">
-            <View className="flex-row items-center gap-2 mb-1">
-              {isLink && <MaterialIcons name="link" size={14} color={colors.outline} />}
-              <Text className="text-[10px] uppercase font-extrabold text-outline tracking-widest">
-                {isLink ? 'ARTICLE SUMMARY' : `${capture.type.toUpperCase()} SUMMARY`}
-              </Text>
+            <View className="flex-row items-center justify-between mb-1">
+              <View className="flex-row items-center gap-2">
+                <Text className="text-[10px] uppercase font-extrabold text-outline tracking-widest">
+                  {`${capture.type.toUpperCase()} SUMMARY`}
+                </Text>
+              </View>
+              <Text className="text-[10px] font-bold text-outline">{timeAgoRaw}</Text>
             </View>
             <View className="flex-row items-center justify-between mb-2">
                 <View className="flex-row items-center flex-1 mr-2">
