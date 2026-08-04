@@ -16,7 +16,7 @@ module.exports = {
   
   android: {
     adaptiveIcon: {
-      backgroundColor: "transparent",
+      backgroundColor: "#FFFFFF",
       foregroundImage: "./assets/images/android-icon-foreground.png",
       backgroundImage: "./assets/images/android-icon-background.png",
       monochromeImage: "./assets/images/android-icon-monochrome.png",
@@ -32,7 +32,7 @@ module.exports = {
     },
     notification: {
       icon: "./assets/images/notification-icon.png",
-      color: "transparent"
+      color: "#FFFFFF"
     }
   },
   
