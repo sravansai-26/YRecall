@@ -5,7 +5,7 @@ import { useRouter } from 'expo-router';
 import { Screen } from '../../../src/shared/components';
 import { colors } from '../../../src/shared/theme/colors';
 import { apiClient } from '../../../src/services/api/client';
-import { Picker } from '@react-native-picker/picker'; // You might need to install this if not present, but for now we'll use a styled fallback or require it. Wait, I'll just use a native Picker or a custom dropdown if Picker isn't installed. I will use a simple state toggle for a custom dropdown to be safe.
+
 
 export default function ReachUs() {
     const router = useRouter();

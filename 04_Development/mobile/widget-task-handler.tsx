@@ -8,8 +8,10 @@ import { QuickCaptureWidget } from './src/modules/widgets/components/QuickCaptur
 import { SearchWidget } from './src/modules/widgets/components/SearchWidget';
 import { DailyBriefWidget } from './src/modules/widgets/components/DailyBriefWidget';
 import { TimelineWidget } from './src/modules/widgets/components/TimelineWidget';
-import { apiClient } from './src/services/api/client';
+import { setupApiInterceptors } from './src/services/api/interceptors'; // Import the setup function
 import { formatDistanceToNow } from 'date-fns';
+
+setupApiInterceptors(); // Execute to ensure auth tokens are attached in headless mode
 
 export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
     const widgetInfo = props.widgetInfo;

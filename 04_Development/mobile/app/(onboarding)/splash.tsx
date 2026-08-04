@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useVideoPlayer, VideoView } from 'expo-video';
-import { Screen } from '../../src/shared/components';
 import { colors } from '../../src/shared/theme/colors';
 import { useAuthStore } from '../../src/shared/store/useAuthStore';
 
@@ -11,8 +10,8 @@ export default function SplashScreenComponent() {
   const { isLoading, hasCompletedOnboarding, user } = useAuthStore();
   const [minTimePassed, setMinTimePassed] = React.useState(false);
 
-  // Use the exact webm video provided by the user
-  const assetId = require('../../assets/animations/oboarding-video-org-final.webm');
+  // Use the exact mp4 video provided by the user
+  const assetId = require('../../src/assets/splash-intro-video.mp4');
   
   const player = useVideoPlayer(assetId, player => {
     player.loop = false;
@@ -42,16 +41,14 @@ export default function SplashScreenComponent() {
   }, [minTimePassed, isLoading, hasCompletedOnboarding, user, router]);
 
   return (
-    <Screen preset="fixed" backgroundColor={colors.surface}>
-      <View style={styles.container}>
-        <VideoView
-          player={player}
-          style={styles.video}
-          contentFit="cover"
-          nativeControls={false}
-        />
-      </View>
-    </Screen>
+    <View style={[styles.container, { backgroundColor: '#CAC3AF' }]}>
+      <VideoView
+        player={player}
+        style={styles.video}
+        contentFit="contain"
+        nativeControls={false}
+      />
+    </View>
   );
 }
 
@@ -63,7 +60,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   video: {
-    width: '120%', 
-    height: '120%',
+    width: '100%', 
+    height: '100%',
   },
 });

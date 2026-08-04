@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Image, DimensionValue } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Screen } from '../../../src/shared/components';
@@ -109,7 +109,7 @@ export default function GuideScreen() {
                 <View className="flex-col gap-2">
                     <Text className="font-headline-md text-3xl font-bold text-primary">{guide.title}</Text>
                     <View className="w-full h-2 bg-surface-variant rounded-full mt-4 overflow-hidden">
-                        <View className="h-full bg-primary" style={{ width: guide.progress }} />
+                        <View className="h-full bg-primary" style={{ width: guide.progress as DimensionValue }} />
                     </View>
                     <Text className="text-xs text-outline mt-1 font-medium">{guide.progress} completed</Text>
                 </View>

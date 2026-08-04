@@ -122,7 +122,8 @@ def get_base_html(content: str) -> str:
     <body>
         <div class="container">
             <div class="header">
-                <h1>{settings.APP_NAME}</h1>
+                <img src="https://raw.githubusercontent.com/sravansai-26/YRecall/main/04_Development/mobile/assets/logos/yr-logo.png" alt="YRecall Logo" width="36" height="36" style="vertical-align: middle; margin-right: 12px; background-color: #ffffff; border-radius: 50%; padding: 4px; border: none; outline: none;">
+                <h1 style="display: inline-block; vertical-align: middle;">{settings.APP_NAME}</h1>
             </div>
             <div class="content">
                 {content}
