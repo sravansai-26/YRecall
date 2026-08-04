@@ -128,9 +128,9 @@ export default function WorkspacesScreen() {
  onPress={() => handleSelect(item.id)}
  className={`p-4 rounded-xl mb-2 flex-row justify-between items-center ${activeWorkspaceId === item.id ? 'bg-primary/10 border-primary' : 'bg-surface-container'}`}
  >
- <View className="flex-row items-center gap-3">
+ <View className="flex-row items-center gap-3 flex-1 pr-4">
  <MaterialIcons name={item.id ? 'work' : 'person'} size={24} color={activeWorkspaceId === item.id ? colors.primary : colors.secondary} />
- <Text className={`font-title-sm ${activeWorkspaceId === item.id ? 'text-primary' : 'text-on-surface'}`}>
+ <Text className={`font-title-sm flex-shrink ${activeWorkspaceId === item.id ? 'text-primary' : 'text-on-surface'}`} numberOfLines={1} adjustsFontSizeToFit>
  {item.name}
  </Text>
  </View>

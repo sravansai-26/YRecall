@@ -32,14 +32,14 @@ export default function HomeDashboard() {
  timeZone: 'Asia/Kolkata',
  });
  const hour = parseInt(formatter.format(new Date()), 10);
- if (hour < 12) return t('home.morning', 'Good Morning,');
- if (hour < 17) return t('home.afternoon', 'Good Afternoon,');
- return t('home.evening', 'Good Evening,');
+ if (hour < 12) return 'Good Morning,';
+ if (hour < 17) return 'Good Afternoon,';
+ return 'Good Evening,';
  } catch (e) {
  const hour = new Date().getHours();
- if (hour < 12) return t('home.morning', 'Good Morning,');
- if (hour < 17) return t('home.afternoon', 'Good Afternoon,');
- return t('home.evening', 'Good Evening,');
+ if (hour < 12) return 'Good Morning,';
+ if (hour < 17) return 'Good Afternoon,';
+ return 'Good Evening,';
  }
  };
 
@@ -157,21 +157,21 @@ export default function HomeDashboard() {
 
  {/* Quick Actions */}
  <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-xl -mx-margin-mobile px-margin-mobile" contentContainerStyle={{ gap: 8, paddingRight: 40 }}>
- <TouchableOpacity onPress={() => router.push('/(main)/(tabs)/ask')} className="flex-row items-center gap-2 px-lg py-3 bg-primary rounded-full">
+ <TouchableOpacity onPress={() => router.push('/(main)/(tabs)/ask')} className="flex-row items-center gap-2 px-lg py-3 bg-primary rounded-full min-w-[120px] justify-center">
  <MaterialIcons name="chat-bubble" size={20} color={colors['on-primary']} />
- <Text className="font-label-xs text-[14px] text-on-primary">{t('home.ask', 'Ask Anything')}</Text>
+ <Text className="font-label-md text-on-primary flex-shrink" numberOfLines={1} adjustsFontSizeToFit>{t('home.ask', 'Ask Anything')}</Text>
  </TouchableOpacity>
- <TouchableOpacity onPress={() => router.push('/(main)/capture/camera?mode=scan')} className="flex-row items-center gap-2 px-lg py-3 bg-surface-container-low rounded-full">
+ <TouchableOpacity onPress={() => router.push('/(main)/capture/camera?mode=scan')} className="flex-row items-center gap-2 px-lg py-3 bg-surface-container-low rounded-full min-w-[120px] justify-center">
  <MaterialIcons name="document-scanner" size={20} color={colors['on-surface']} />
- <Text className="font-label-xs text-[14px] text-on-surface">{t('home.scan', 'Scan Doc')}</Text>
+ <Text className="font-label-md text-on-surface flex-shrink" numberOfLines={1} adjustsFontSizeToFit>{t('home.scan', 'Scan Doc')}</Text>
  </TouchableOpacity>
- <TouchableOpacity onPress={() => router.push('/(main)/capture/voice')} className="flex-row items-center gap-2 px-lg py-3 bg-surface-container-low rounded-full">
+ <TouchableOpacity onPress={() => router.push('/(main)/capture/voice')} className="flex-row items-center gap-2 px-lg py-3 bg-surface-container-low rounded-full min-w-[120px] justify-center">
  <MaterialIcons name="mic" size={20} color={colors['on-surface']} />
- <Text className="font-label-xs text-[14px] text-on-surface">{t('home.voice', 'Voice Note')}</Text>
+ <Text className="font-label-md text-on-surface flex-shrink" numberOfLines={1} adjustsFontSizeToFit>{t('home.voice', 'Voice Note')}</Text>
  </TouchableOpacity>
- <TouchableOpacity onPress={() => router.push('/(main)/capture/camera')} className="flex-row items-center gap-2 px-lg py-3 bg-surface-container-low rounded-full">
+ <TouchableOpacity onPress={() => router.push('/(main)/capture/camera')} className="flex-row items-center gap-2 px-lg py-3 bg-surface-container-low rounded-full min-w-[120px] justify-center">
  <MaterialIcons name="photo-camera" size={20} color={colors['on-surface']} />
- <Text className="font-label-xs text-[14px] text-on-surface">{t('home.snap', 'Snap Photo')}</Text>
+ <Text className="font-label-md text-on-surface flex-shrink" numberOfLines={1} adjustsFontSizeToFit>{t('home.snap', 'Snap Photo')}</Text>
  </TouchableOpacity>
  </ScrollView>
 

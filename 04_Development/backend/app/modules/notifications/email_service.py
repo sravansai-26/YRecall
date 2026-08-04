@@ -78,6 +78,7 @@ def generate_notification_email_html(title: str, message: str, action_type: str 
     <body>
         <div class="container">
             <div class="header">
+                <img src="https://raw.githubusercontent.com/sravansai-26/YRecall/main/04_Development/mobile/assets/logos/yr-logo.png" alt="YRecall Logo" width="60" height="60" style="display: block; margin: 0 auto; margin-bottom: 16px; border: none; outline: none; background: transparent;">
                 <h1>YRecall</h1>
             </div>
             <div class="content">

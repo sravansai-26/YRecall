@@ -1,6 +1,7 @@
 import { View, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Image } from 'expo-image';
 import { Button, Screen } from '../../src/shared/components';
 import { colors } from '../../src/shared/theme/colors';
 
@@ -11,7 +12,7 @@ export default function OnboardingIntro3() {
  <Screen scrollable={false}>
  <View className="flex-row items-center justify-between px-margin-mobile py-base">
  <View className="flex-row items-center gap-2">
- <MaterialIcons name="auto-awesome" size={24} color={colors.primary} />
+ <Image source={require('../../assets/logos/yr-logo.svg')} style={{ width: 24, height: 24 }} contentFit="contain" />
  <Text className="font-headline-md font-bold text-primary">YRecall</Text>
  </View>
  <Text
@@ -25,7 +26,7 @@ export default function OnboardingIntro3() {
  <View className="flex-1 items-center justify-between px-margin-mobile pb-xxl">
  <View className="flex-1 w-full items-center justify-center pt-xl">
  <View className="w-full max-w-md aspect-square items-center justify-center">
- <View className="w-full h-full rounded-[40px] bg-white shadow-sm overflow-hidden items-center justify-center">
+ <View className="w-full h-full rounded-[40px] bg-transparent items-center justify-center">
  <MaterialIcons name="lock" size={120} color={colors.primary} />
  </View>
  </View>

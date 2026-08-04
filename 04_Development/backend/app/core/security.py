@@ -83,26 +83,36 @@ def get_current_user(
         else:
             # Handle login alerts
             auth_time = decoded_token.get("auth_time")
-            last_login_ts = user.last_login.timestamp() if user.last_login else 0
-            
-            if auth_time and auth_time > (last_login_ts + 300):
+            if auth_time:
                 from datetime import datetime, timezone
-                user.last_login = datetime.fromtimestamp(auth_time, tz=timezone.utc)
-                db.commit()
+                auth_datetime = datetime.fromtimestamp(auth_time, tz=timezone.utc)
                 
-                try:
-                    from ..modules.notifications.service import create_notification
-                    create_notification(
-                        db=db,
-                        user_id=str(user.id),
-                        title="New Login Detected",
-                        content=f"Hi {user.display_name or 'there'},\n\nWe detected a new login to your YRecall account. If this was you, you can safely ignore this email.",
-                        type="security",
-                        category="Account",
-                        is_critical=True
-                    )
-                except Exception:
-                    pass
+                # Compare in python first to avoid unnecessary DB hits if already updated
+                if not user.last_login or user.last_login < auth_datetime:
+                    from sqlalchemy import update
+                    stmt = update(User).where(
+                        User.id == user.id,
+                        (User.last_login == None) | (User.last_login < auth_datetime)
+                    ).values(last_login=auth_datetime)
+                    
+                    result = db.execute(stmt)
+                    db.commit()
+                    
+                    if result.rowcount > 0:
+                        try:
+                            from ..modules.notifications.service import create_notification
+                            create_notification(
+                                db=db,
+                                user_id=str(user.id),
+                                title="New Login Detected",
+                                content=f"Hi {user.display_name or 'there'},\n\nWe detected a new login to your YRecall account. If this was you, you can safely ignore this email.",
+                                type="security",
+                                category="Account",
+                                is_critical=True
+                            )
+                        except Exception:
+                            pass
+                        db.refresh(user)
 
         return user
     except Exception as e:

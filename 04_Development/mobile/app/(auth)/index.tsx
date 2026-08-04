@@ -3,6 +3,7 @@ import { View, Text, Alert, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { Button, Screen } from '../../src/shared/components';
+import { Image } from 'expo-image';
 import { colors } from '../../src/shared/theme/colors';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { auth } from '../../src/shared/lib/firebase';
@@ -43,20 +44,28 @@ export default function AuthIndex() {
 
  return (
  <Screen scrollable>
- <View className="w-full flex-row items-center px-margin-mobile py-base h-16">
- <MaterialIcons name="auto-awesome" size={24} color={colors.primary} />
- <Text className="ml-2 font-headline-md text-[24px] font-bold text-primary tracking-tight">
- YRecall
- </Text>
- </View>
+  <View className="w-full flex-row items-center px-margin-mobile py-base h-16">
+  <Image 
+      source={require('../../assets/logos/yr-logo.svg')}
+      style={{ width: 32, height: 32 }}
+      contentFit="contain"
+  />
+  <Text className="ml-3 font-headline-md text-[24px] font-bold text-primary tracking-tight">
+  YRecall
+  </Text>
+  </View>
 
  <View className="flex-1 items-center justify-center px-margin-mobile py-xl md:px-margin-desktop">
  <View className="w-full max-w-md items-center space-y-xl text-center">
- <View className="items-center">
- <View className="mb-gutter w-24 h-24 rounded-3xl bg-surface-container-lowest items-center justify-center shadow-lg overflow-hidden ">
- <MaterialIcons name="all-inclusive" size={48} color={colors.primary} />
- </View>
- <Text className="font-display-lg text-primary text-center mb-sm">
+  <View className="items-center">
+  <View className="mb-gutter w-24 h-24 rounded-3xl bg-transparent items-center justify-center overflow-hidden ">
+      <Image 
+          source={require('../../assets/logos/yr-logo.svg')}
+          style={{ width: 56, height: 56 }}
+          contentFit="contain"
+      />
+  </View>
+  <Text className="font-display-lg text-primary text-center mb-sm">
  {t('auth.beginJourney', 'Begin your journey')}
  </Text>
  <Text className="font-body-md text-on-surface-variant text-center max-w-xs mx-auto">
@@ -70,7 +79,7 @@ export default function AuthIndex() {
  onPress={handleGoogleSignIn}
  >
  <FontAwesome name="google" size={20} color="#ffffff" />
- <Text className="font-label-xs text-[14px] text-white ml-3">
+ <Text className="font-label-lg text-white ml-3 flex-shrink" numberOfLines={1} adjustsFontSizeToFit>
  {t('auth.continueGoogle', 'Continue with Google')}
  </Text>
  </TouchableOpacity>

@@ -100,16 +100,16 @@ export default function SettingsHub() {
                   )}
                 </View>
               </View>
-                <View className="flex-col">
-                  <Text className="font-headline-md text-3xl font-bold text-primary leading-tight mb-1">{user?.displayName || 'User'}</Text>
-                  <View className="flex-row items-center gap-2 mb-1">
-                    <Text className="font-body-md text-base text-on-surface-variant">{user?.email || 'No email'}</Text>
-                    <View className="-mt-1">
-                      <MaterialIcons name="edit" size={16} color={colors.outline} />
-                    </View>
+              <View className="flex-col flex-1 pr-4">
+                <Text className="font-headline-md text-3xl font-bold text-primary leading-tight mb-1" numberOfLines={1} adjustsFontSizeToFit>{user?.displayName || 'User'}</Text>
+                <View className="flex-row items-center gap-2 mb-1">
+                  <Text className="font-body-md text-base text-on-surface-variant flex-shrink" numberOfLines={1}>{user?.email || 'No email'}</Text>
+                  <View className="-mt-1">
+                    <MaterialIcons name="edit" size={16} color={colors.outline} />
                   </View>
-                  <TouchableOpacity onPress={() => router.push('/settings/billing')} className="mt-1">
-                  <Text className="font-body-sm text-sm text-secondary font-medium underline">
+                </View>
+                <TouchableOpacity onPress={() => router.push('/settings/billing')} className="mt-1">
+                  <Text className="font-body-sm text-sm text-secondary font-medium underline flex-shrink" numberOfLines={1}>
                     {isPremium ? t('settings.premiumMember') : t('settings.basicUser')}
                   </Text>
                 </TouchableOpacity>
@@ -384,8 +384,8 @@ export default function SettingsHub() {
             <Text className="font-label-xs text-xs text-outline pt-4">YRecall v4.2.0 • Build 992</Text>
 
             {/* Credits Section */}
-            <View className="mt-8 items-center">
-              <Text className="font-body-sm text-sm text-on-surface-variant">
+            <View className="mt-8 items-center w-full">
+              <Text className="font-body-sm text-sm text-on-surface-variant text-center">
                 Designed & Developed by{' '}
                 <Text 
                   onPress={() => Linking.openURL('https://sailyfspot.blogspot.com')}
@@ -394,7 +394,7 @@ export default function SettingsHub() {
                   LYFSpot
                 </Text>
               </Text>
-              <Text className="font-caption-sm text-xs text-outline mt-1">
+              <Text className="font-caption-sm text-xs text-outline mt-1 text-center">
                 © 2026 LYFSpot. All Rights Reserved.
               </Text>
             </View>

@@ -59,9 +59,9 @@ function RootNavigationHandler() {
  // do NOT blindly replace when navigating naturally.
  const navigate = () => {
    if (!hasCompletedOnboarding) {
-     if (!inOnboardingGroup) {
-       router.replace('/(onboarding)/intro-1');
-     }
+      if (!inOnboardingGroup) {
+        router.replace('/(onboarding)/splash');
+      }
      return;
    }
 
