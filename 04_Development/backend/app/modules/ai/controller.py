@@ -123,9 +123,12 @@ def chat_endpoint(
             }
         }
     except Exception as e:
+        import traceback
+        err_msg = traceback.format_exc()
+        print(err_msg)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(e)
+            detail=str(e) + "\n" + err_msg
         )
 
 from pydantic import BaseModel

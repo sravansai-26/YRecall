@@ -3,9 +3,10 @@ import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'reac
 import { MaterialIcons } from '@expo/vector-icons';
 import { Screen } from '../../../src/shared/components';
 import { colors } from '../../../src/shared/theme/colors';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useAuthStore } from '../../../src/shared/store/useAuthStore';
-import { Image } from 'react-native';
+import { Image, Animated } from 'react-native';
+import { useAudioRecorder, RecordingPresets, requestRecordingPermissionsAsync, AudioModule } from 'expo-audio';
 import { useTranslation } from 'react-i18next';
 import { FlashList } from '@shopify/flash-list';
 import { capturesApi, Capture } from '../../../src/modules/captures/services/api';
@@ -13,6 +14,7 @@ import { TimelineCard } from '../../../src/modules/timeline/components/TimelineC
 
 export default function SearchIndex() {
     const router = useRouter();
+    const params = useLocalSearchParams();
     const { user } = useAuthStore();
     const { t } = useTranslation();
 
@@ -25,6 +27,12 @@ export default function SearchIndex() {
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
 
+    const [isVoiceSearchActive, setIsVoiceSearchActive] = useState(false);
+    const [isTranscribing, setIsTranscribing] = useState(false);
+    
+    const recorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
+    const pulseAnim = useRef(new Animated.Value(1)).current;
+
     // Custom debounce
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -32,6 +40,85 @@ export default function SearchIndex() {
         }, 300);
         return () => clearTimeout(timer);
     }, [query]);
+
+    useEffect(() => {
+        if (params.mode === 'voice') {
+            startVoiceSearch();
+        }
+    }, [params.mode]);
+
+    const startVoiceSearch = async () => {
+        if (isVoiceSearchActive) return;
+        
+        try {
+            const { granted } = await requestRecordingPermissionsAsync();
+            if (!granted) return;
+
+            await AudioModule.setAudioModeAsync({
+                allowsRecording: true,
+                playsInSilentMode: true,
+            });
+
+            try {
+                await recorder.prepareToRecordAsync();
+            } catch (e: any) {
+                if (e?.message?.includes("already been prepared")) {
+                    // Safe to ignore, it's already prepared
+                } else {
+                    throw e;
+                }
+            }
+            
+            recorder.record();
+            
+            setIsVoiceSearchActive(true);
+            
+            Animated.loop(
+                Animated.sequence([
+                    Animated.timing(pulseAnim, { toValue: 1.2, duration: 800, useNativeDriver: true }),
+                    Animated.timing(pulseAnim, { toValue: 1, duration: 800, useNativeDriver: true })
+                ])
+            ).start();
+        } catch (err) {
+            console.error('Failed to start recording', err);
+        }
+    };
+
+    const stopVoiceSearch = async (cancel = false) => {
+        try {
+            pulseAnim.stopAnimation();
+            recorder.stop();
+            setIsVoiceSearchActive(false);
+
+            if (cancel) return;
+
+            const uri = recorder.uri;
+            if (!uri) return;
+
+            setIsTranscribing(true);
+            
+            const filename = uri.split('/').pop() || 'search.m4a';
+            const match = /\.(\w+)$/.exec(filename);
+            const type = match ? `audio/${match[1]}` : `audio/m4a`;
+
+            const res = await capturesApi.transcribeMedia({
+                file: {
+                    uri,
+                    name: filename,
+                    type,
+                }
+            });
+            
+            if (res?.data?.text) {
+                setQuery(res.data.text);
+            }
+        } catch (err) {
+            console.error('Failed to transcribe', err);
+            require('react-native').ToastAndroid?.show('Failed to recognize speech', require('react-native').ToastAndroid.LONG);
+        } finally {
+            setIsTranscribing(false);
+        }
+    };
 
     // Fetch initial results when debounced query changes
     useEffect(() => {
@@ -128,14 +215,45 @@ export default function SearchIndex() {
                         onChangeText={setQuery}
                         autoFocus
                     />
-                    {query.length > 0 && (
-                        <View className="absolute inset-y-0 right-0 pr-md justify-center z-10">
-                            <TouchableOpacity onPress={() => setQuery('')}>
+                    <View className="absolute inset-y-0 right-0 pr-md justify-center z-10 flex-row items-center gap-2">
+                        {query.length > 0 && (
+                            <TouchableOpacity onPress={() => setQuery('')} className="p-1">
                                 <MaterialIcons name="close" size={24} color={colors.primary} />
                             </TouchableOpacity>
-                        </View>
-                    )}
+                        )}
+                        {!isVoiceSearchActive && !isTranscribing && (
+                            <TouchableOpacity onPress={startVoiceSearch} className="p-1">
+                                <MaterialIcons name="mic" size={24} color={colors.primary} />
+                            </TouchableOpacity>
+                        )}
+                    </View>
                 </View>
+
+                {isVoiceSearchActive && (
+                    <View className="bg-surface-container-high rounded-xl p-4 mb-4 flex-row items-center justify-between">
+                        <View className="flex-row items-center">
+                            <Animated.View style={{ transform: [{ scale: pulseAnim }] }} className="w-10 h-10 rounded-full bg-error items-center justify-center mr-4">
+                                <MaterialIcons name="mic" size={24} color="white" />
+                            </Animated.View>
+                            <Text className="font-body-lg text-on-surface">Listening...</Text>
+                        </View>
+                        <View className="flex-row items-center gap-4">
+                            <TouchableOpacity onPress={() => stopVoiceSearch(true)}>
+                                <Text className="font-body-md text-error">Cancel</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => stopVoiceSearch(false)} className="bg-primary px-4 py-2 rounded-full">
+                                <Text className="font-title-sm text-on-primary">Search</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                )}
+                
+                {isTranscribing && (
+                    <View className="bg-surface-container-high rounded-xl p-4 mb-4 flex-row items-center justify-center gap-4">
+                        <ActivityIndicator color={colors.primary} />
+                        <Text className="font-body-lg text-on-surface">Transcribing...</Text>
+                    </View>
+                )}
 
                 {/* Content */}
                 <View className="flex-1 mt-4">

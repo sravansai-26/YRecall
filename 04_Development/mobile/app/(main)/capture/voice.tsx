@@ -66,7 +66,15 @@ export default function VoiceCaptureScreen() {
  playsInSilentMode: true,
  });
 
- await recorder.prepareToRecordAsync();
+ try {
+    await recorder.prepareToRecordAsync();
+ } catch (e: any) {
+    if (e?.message?.includes("already been prepared")) {
+        // Safe to ignore
+    } else {
+        throw e;
+    }
+ }
  recorder.record();
  
  setIsRecording(true);

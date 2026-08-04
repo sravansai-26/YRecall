@@ -227,10 +227,15 @@ def transcribe_audio_sync(db: Session, user: User, file: UploadFile) -> str:
             model='gemini-2.5-flash',
             contents=[
                 types.Part.from_bytes(data=file_bytes, mime_type=file.content_type),
-                'Please provide a full transcript of this audio. Output ONLY the raw text without any summary or formatting.'
+                'Please provide a full transcript of this audio in the language spoken. Output ONLY the raw text without any summary or formatting. If the audio is completely silent or contains only background noise without clear speech, output exactly "[silence]".'
             ]
         )
-        return response.text
+        
+        text = response.text.strip()
+        if text.lower() == "[silence]":
+            return ""
+            
+        return text
     except Exception as e:
         print(f"Gemini processing error: {e}")
         raise ValueError("Failed to transcribe audio")

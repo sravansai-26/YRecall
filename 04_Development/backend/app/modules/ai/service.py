@@ -103,7 +103,8 @@ def chat_with_rag(db: Session, user: User, chat_req: ChatRequest) -> tuple[AICon
             
         attached_captures = query.all()
         for capture in attached_captures:
-            context_texts.append(f"[ATTACHED FILE] Date: {capture.created_at.isoformat()}\nContent: {capture.content_text}")
+            safe_content = capture.content_text or ""
+            context_texts.append(f"[ATTACHED FILE] Date: {capture.created_at.isoformat()}\nContent: {safe_content}")
 
     for capture, embedding, distance in results:
         # Skip if already attached
@@ -111,12 +112,13 @@ def chat_with_rag(db: Session, user: User, chat_req: ChatRequest) -> tuple[AICon
             continue
             
         similarity_score = 1 - distance # Cosine similarity = 1 - Cosine distance
+        safe_content = capture.content_text or ""
         citations.append(Citation(
             capture_id=capture.id,
-            content=capture.content_text,
+            content=safe_content,
             similarity_score=similarity_score
         ))
-        context_texts.append(f"Date: {capture.created_at.isoformat()}\nContent: {capture.content_text}")
+        context_texts.append(f"Date: {capture.created_at.isoformat()}\nContent: {safe_content}")
     
     context_str = "\n\n".join(context_texts) if context_texts else "No specific past context found."
     
@@ -174,10 +176,17 @@ def chat_with_rag(db: Session, user: User, chat_req: ChatRequest) -> tuple[AICon
         conversation = db.query(AIConversation).filter(AIConversation.id == conversation_id, AIConversation.user_id == user.id).first()
         if not conversation:
             raise ValueError("Conversation not found")
-        # Fetch history
-        past_msgs = db.query(AIMessage).filter(AIMessage.conversation_id == conversation_id).order_by(asc(AIMessage.created_at)).all()
+        from sqlalchemy import case
+        past_msgs = db.query(AIMessage).filter(AIMessage.conversation_id == conversation_id).order_by(
+            asc(AIMessage.created_at),
+            asc(case(
+                (AIMessage.role == 'user', 1),
+                (AIMessage.role == 'assistant', 2),
+                else_=3
+            ))
+        ).all()
         for msg in past_msgs:
-            role = "user" if msg.role == "user" else "model"
+            role = "user" if msg.role == "user" else "assistant"
             past_messages.append({"role": role, "parts": [{"text": msg.content}]})
             
     # 4. Construct prompt using Centralized Persona Engine
@@ -203,20 +212,25 @@ ALWAYS cite the memories if you use them.
         system_prompt=system_instruction
     )
     
+    from datetime import datetime, timezone, timedelta
+    now = datetime.now(timezone.utc)
+    
     # 6. Store messages
     user_msg = AIMessage(
         conversation_id=conversation_id,
         role="user",
         content=chat_req.message,
         attachments=[str(aid) for aid in chat_req.attached_capture_ids] if chat_req.attached_capture_ids else None,
-        status="completed"
+        status="completed",
+        created_at=now
     )
     db.add(user_msg)
     
     assistant_msg = AIMessage(
         conversation_id=conversation_id,
         role="assistant",
-        content=assistant_reply
+        content=assistant_reply,
+        created_at=now + timedelta(milliseconds=10)
     )
     db.add(assistant_msg)
     db.commit()

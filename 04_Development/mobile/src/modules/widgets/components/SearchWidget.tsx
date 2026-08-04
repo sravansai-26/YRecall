@@ -16,7 +16,7 @@ export function SearchWidget({ widgetInfo }: { widgetInfo: any }) {
                 <TextWidget text="Search your memory..." style={{ fontSize: 14, color: '#44474E', marginLeft: 4 }} />
             </FlexWidget>
 
-            <FlexWidget style={{ flexDirection: 'row', alignItems: 'center' }} clickAction="OPEN_URI" clickActionData={{ uri: 'yrecall://capture?type=voice' }} >
+            <FlexWidget style={{ flexDirection: 'row', alignItems: 'center' }} clickAction="OPEN_URI" clickActionData={{ uri: 'yrecall://search?mode=voice' }} >
                 <SvgWidget svg={MIC_SVG} style={{ width: 20, height: 20, marginRight: 12 }} />
                 <ImageWidget image={require('../../../../assets/logos/yr-logo-widget.png')} imageWidth={22} imageHeight={22} style={{ width: 22, height: 22, marginRight: 4 }} />
             </FlexWidget>
