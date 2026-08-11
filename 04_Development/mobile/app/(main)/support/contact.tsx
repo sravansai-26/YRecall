@@ -11,19 +11,24 @@ export default function ContactDesk() {
 
     const emails = [
         {
-            title: "Professional Contact Desk",
-            email: "contact@buildwithsravan.dev",
-            description: "For professional inquiries, partnerships, and business discussions."
+            title: "Technical Support",
+            email: "support@yrecall.app",
+            description: "For technical assistance, account issues, and general platform help."
         },
         {
-            title: "LYFSpot Corporate Desk",
-            email: "lyfspot@zohomail.in",
-            description: "For corporate billing, enterprise support, and official communications."
+            title: "Bug Reports",
+            email: "report@yrecall.app",
+            description: "To report bugs, glitches, or unexpected behavior in the application."
         },
         {
-            title: "LYFSpot Inbound Desk",
-            email: "lyfspot26@gmail.com",
-            description: "General support, feedback, and inbound inquiries."
+            title: "General Contact & Partnerships",
+            email: "contact@yrecall.app",
+            description: "For business discussions, press inquiries, and partnerships."
+        },
+        {
+            title: "Billing & Subscriptions",
+            email: "billing@yrecall.app",
+            description: "For payment issues, subscription management, and invoice requests."
         }
     ];
 

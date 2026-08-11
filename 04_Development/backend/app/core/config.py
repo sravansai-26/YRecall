@@ -33,16 +33,21 @@ class Settings(BaseSettings):
     SMTP_USE_TLS: bool = True
     EMAIL_FROM: str = "YRecall <lyfspot@zohomail.in>"
 
-    # Resend Email Config
+    # Resend Email Config & Official Email Identities
     RESEND_API_KEY: str = ""
-    FROM_EMAIL: str = "contact@buildwithsravan.dev"
-    FROM_NAME: str = "YRecall Support"
-    SUPPORT_EMAIL: str = "lyfspot@zohomail.in"
-    REPLY_TO_EMAIL: str = "contact@buildwithsravan.dev"
+    EMAIL_HELLO: str = "hello@yrecall.app"
+    EMAIL_CONTACT: str = "contact@yrecall.app"
+    EMAIL_SUPPORT: str = "support@yrecall.app"
+    EMAIL_REPORT: str = "report@yrecall.app"
+    EMAIL_BILLING: str = "billing@yrecall.app"
+    EMAIL_CAREERS: str = "careers@yrecall.app"
+    EMAIL_PRIVACY: str = "privacy@yrecall.app"
+    
+    FROM_NAME: str = "YRecall"
     APP_NAME: str = "YRecall"
     COMPANY_NAME: str = "LYFSpot"
-    APP_URL: str = "https://yrecall.com"
+    APP_URL: str = "https://yrecall.app"
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
 settings = Settings()

@@ -1,46 +1,34 @@
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+import resend
 from fastapi import BackgroundTasks
 import logging
 from ...core.config import settings
 
 logger = logging.getLogger(__name__)
 
+# Initialize Resend
+if settings.RESEND_API_KEY:
+    resend.api_key = settings.RESEND_API_KEY
+
 def send_email_sync(to_email: str, subject: str, html_content: str):
     """
-    Synchronously send an email using the SMTP settings configured in .env.
+    Synchronously send an email using Resend.
     This should be called within a background task to prevent blocking the API.
     """
-    # If SMTP_PASSWORD is not set, log and skip (prevents crash on dev machines without creds)
-    if not settings.SMTP_PASSWORD:
-        logger.warning(f"SMTP_PASSWORD not set. Skipping email to {to_email} with subject '{subject}'.")
+    if not settings.RESEND_API_KEY:
+        logger.warning(f"RESEND_API_KEY not set. Skipping email to {to_email} with subject '{subject}'.")
         return
 
-    msg = MIMEMultipart("alternative")
-    msg["Subject"] = subject
-    msg["From"] = settings.EMAIL_FROM
-    msg["To"] = to_email
-
-    # Attach HTML content
-    part = MIMEText(html_content, "html")
-    msg.attach(part)
-
     try:
-        if settings.SMTP_PORT == 465:
-            # SSL
-            server = smtplib.SMTP_SSL(settings.SMTP_HOST, settings.SMTP_PORT)
-        else:
-            # TLS
-            server = smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT)
-            server.starttls()
-            
-        server.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
-        server.sendmail(settings.EMAIL_FROM, to_email, msg.as_string())
-        server.quit()
-        logger.info(f"Successfully sent email to {to_email}: '{subject}'")
+        params = {
+            "from": f"{settings.FROM_NAME} <{settings.EMAIL_HELLO}>",
+            "to": [to_email],
+            "subject": subject,
+            "html": html_content,
+        }
+        response = resend.Emails.send(params)
+        logger.info(f"Successfully sent notification email to {to_email}: '{subject}'")
     except Exception as e:
-        logger.error(f"Failed to send email to {to_email}: {str(e)}")
+        logger.error(f"Failed to send notification email to {to_email}: {str(e)}")
 
 def send_email_background(background_tasks: BackgroundTasks, to_email: str, subject: str, html_content: str):
     """

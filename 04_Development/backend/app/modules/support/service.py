@@ -123,11 +123,11 @@ def get_faqs():
 
 def get_resources():
     return [
-        {"title": "Documentation", "url": "https://docs.buildwithsravan.dev"},
-        {"title": "Release Notes", "url": "https://changelog.buildwithsravan.dev"},
-        {"title": "Privacy Policy", "url": "https://buildwithsravan.dev/privacy"},
-        {"title": "Terms of Service", "url": "https://buildwithsravan.dev/terms"},
-        {"title": "Licenses", "url": "https://buildwithsravan.dev/licenses"},
+        {"title": "Documentation", "url": "https://yrecall.app/documentation"},
+        {"title": "Release Notes", "url": "https://yrecall.app/release-notes"},
+        {"title": "Privacy Policy", "url": "https://yrecall.app/legal/privacy"},
+        {"title": "Terms of Service", "url": "https://yrecall.app/legal/terms"},
+        {"title": "Licenses", "url": "https://yrecall.app/licenses"},
     ]
 
 def get_system_status():

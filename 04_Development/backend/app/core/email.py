@@ -27,7 +27,7 @@ def log_email_attempt(
     try:
         log_entry = EmailLog(
             to_email=to_email,
-            from_email=settings.FROM_EMAIL,
+            from_email=settings.EMAIL_HELLO, # Default fallback for logs
             subject=subject,
             template_name=template_name,
             status=status,
@@ -137,16 +137,19 @@ def get_base_html(content: str) -> str:
     </html>
     """
 
-async def _send_email_core(db: Session, to_email: str, subject: str, html: str, template_name: str, reply_to: str = None) -> bool:
+async def _send_email_core(db: Session, to_email: str, subject: str, html: str, template_name: str, reply_to: str = None, from_email: str = None, from_name: str = None) -> bool:
     """Core function to dispatch email via Resend and log it."""
     if not settings.RESEND_API_KEY:
         logger.warning(f"RESEND_API_KEY missing. Mock send to {to_email}: {subject}")
         log_email_attempt(db, to_email, subject, template_name, EmailStatus.DELIVERED, "mock-id-123")
         return True
 
+    actual_from_email = from_email or settings.EMAIL_HELLO
+    actual_from_name = from_name or settings.FROM_NAME
+
     try:
         params = {
-            "from": f"{settings.FROM_NAME} <{settings.FROM_EMAIL}>",
+            "from": f"{actual_from_name} <{actual_from_email}>",
             "to": [to_email],
             "subject": subject,
             "html": html,
@@ -177,10 +180,10 @@ async def _send_email_core(db: Session, to_email: str, subject: str, html: str, 
 # REUSABLE EMAIL SERVICE METHODS
 # ====================================================
 
-async def send_email(db: Session, to_email: str, subject: str, html: str, template_name: str, reply_to: str = None) -> bool:
+async def send_email(db: Session, to_email: str, subject: str, html: str, template_name: str, reply_to: str = None, from_email: str = None, from_name: str = None) -> bool:
     """Public wrapper to dispatch a generic HTML email."""
     html_with_base = get_base_html(html) if "<html" not in html.lower() else html
-    return await _send_email_core(db, to_email, subject, html_with_base, template_name, reply_to)
+    return await _send_email_core(db, to_email, subject, html_with_base, template_name, reply_to, from_email, from_name)
 
 async def send_auto_reply(db: Session, to_email: str, name: str, ticket_id: str, subject: str):
     """Sends an automatic acknowledgement to the user for Support/Contact forms."""
@@ -198,10 +201,10 @@ async def send_auto_reply(db: Session, to_email: str, name: str, ticket_id: str,
         
         <p>You can reply directly to this email with any additional information or attachments that might help us resolve your inquiry faster.</p>
         <br>
-        <p>Best regards,<br><strong>{settings.FROM_NAME}</strong></p>
+        <p>Best regards,<br><strong>{settings.FROM_NAME} Support</strong></p>
     """
     html = get_base_html(content)
-    return await _send_email_core(db, to_email, f"Received: {subject} [#{ticket_id}]", html, "support_auto_reply", settings.SUPPORT_EMAIL)
+    return await _send_email_core(db, to_email, f"Received: {subject} [#{ticket_id}]", html, "support_auto_reply", settings.EMAIL_SUPPORT, settings.EMAIL_SUPPORT, f"{settings.FROM_NAME} Support")
 
 async def send_support_email_to_admin(db: Session, ticket_id: str, name: str, email: str, subject: str, message: str, meta: dict):
     """Forwards the user's contact request to the internal Support Email (e.g. Zendesk/Zoho)."""
@@ -217,7 +220,7 @@ async def send_support_email_to_admin(db: Session, ticket_id: str, name: str, em
         <p style="white-space: pre-wrap; background: #f8f9fa; padding: 15px; border-radius: 6px;">{message}</p>
     """
     html = get_base_html(content)
-    return await _send_email_core(db, settings.SUPPORT_EMAIL, f"New Ticket [#{ticket_id}]: {subject}", html, "admin_support_alert", reply_to=email)
+    return await _send_email_core(db, settings.EMAIL_SUPPORT, f"New Ticket [#{ticket_id}]: {subject}", html, "admin_support_alert", reply_to=email, from_email=settings.EMAIL_SUPPORT)
 
 
 async def send_bug_report_auto_reply(db: Session, to_email: str, bug_id: str, title: str):
@@ -237,7 +240,7 @@ async def send_bug_report_auto_reply(db: Session, to_email: str, bug_id: str, ti
         <p>Best regards,<br><strong>{settings.APP_NAME} Engineering</strong></p>
     """
     html = get_base_html(content)
-    return await _send_email_core(db, to_email, f"Bug Logged: {title} [#{bug_id}]", html, "bug_auto_reply", settings.SUPPORT_EMAIL)
+    return await _send_email_core(db, to_email, f"Bug Logged: {title} [#{bug_id}]", html, "bug_auto_reply", settings.EMAIL_REPORT, settings.EMAIL_REPORT, f"{settings.FROM_NAME} Bug Reports")
 
 async def send_bug_report_to_admin(db: Session, bug_id: str, title: str, description: str, category: str, priority: str, meta: dict, user_email: str = None):
     """Forwards the bug report to the internal engineering/support email."""
@@ -255,7 +258,7 @@ async def send_bug_report_to_admin(db: Session, bug_id: str, title: str, descrip
     """
     html = get_base_html(content)
     reply_to = user_email if user_email else None
-    return await _send_email_core(db, settings.SUPPORT_EMAIL, f"[{priority.upper()}] Bug [#{bug_id}]: {title}", html, "admin_bug_alert", reply_to=reply_to)
+    return await _send_email_core(db, settings.EMAIL_REPORT, f"[{priority.upper()}] Bug [#{bug_id}]: {title}", html, "admin_bug_alert", reply_to=reply_to, from_email=settings.EMAIL_REPORT)
 
 
 # ====================================================
