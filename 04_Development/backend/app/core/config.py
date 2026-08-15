@@ -15,9 +15,9 @@ class Settings(BaseSettings):
     
     ASK_MODEL: str = "gemini-2.5-flash"
     BACKGROUND_MODEL: str = "llama-3.3-70b-versatile"
-    SUMMARY_MODEL: str = "llama-3.1-8b-instant"
+    SUMMARY_MODEL: str = "gpt-oss-20b"
     GRAPH_MODEL: str = "llama-3.3-70b-versatile"
-    NOTIFICATION_MODEL: str = "llama-3.1-8b-instant"
+    NOTIFICATION_MODEL: str = "gpt-oss-20b"
     REFLECTION_MODEL: str = "llama-3.3-70b-versatile"
 
     PINECONE_INDEX_NAME: str = "yrecall-prod"

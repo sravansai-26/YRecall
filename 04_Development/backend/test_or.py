@@ -11,7 +11,7 @@ headers = {
     "Content-Type": "application/json"
 }
 payload = {
-    "model": "google/gemini-2.5-flash:free",
+    "model": "google/gemini-2.5-flash",
     "messages": [{"role": "user", "content": "Hello"}]
 }
 r = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=payload)

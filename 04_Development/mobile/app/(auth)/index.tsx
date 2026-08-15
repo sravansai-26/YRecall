@@ -107,7 +107,15 @@ export default function AuthIndex() {
  <View className="w-full py-xl px-margin-mobile mt-auto">
  <View className="max-w-md mx-auto items-center">
  <Text className="font-caption-sm text-outline px-gutter text-center leading-relaxed">
- {t('auth.termsAgree', "By continuing, you agree to YRecall's Terms of Service and Privacy Policy. We use your data to personalize your intelligence layer.")}
+ {t('auth.termsAgreePrefix', 'By continuing, you agree to YRecall\'s ')}
+ <Text className="text-primary font-bold underline" onPress={() => router.push('/(legal)/terms')}>
+ {t('auth.termsOfService', 'Terms of Service')}
+ </Text>
+ {t('auth.termsAgreeMiddle', ' and ')}
+ <Text className="text-primary font-bold underline" onPress={() => router.push('/(legal)/privacy')}>
+ {t('auth.privacyPolicy', 'Privacy Policy')}
+ </Text>
+ {t('auth.termsAgreeSuffix', '.')}
  </Text>
  </View>
  </View>

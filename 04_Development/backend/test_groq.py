@@ -23,7 +23,7 @@ try:
 except Exception as e:
     pass
 
-payload["model"] = "llama-3.1-8b-instant"
+payload["model"] = "gpt-oss-20b"
 try:
     r = requests.post(f"{base_url}/chat/completions", headers=headers, json=payload)
     print("3.1-8b Status:", r.status_code)

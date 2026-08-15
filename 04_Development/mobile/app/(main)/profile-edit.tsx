@@ -15,6 +15,7 @@ import { useWorkspaceStore } from '../../src/modules/workspaces/store';
 import * as ImagePicker from 'expo-image-picker';
 import { uploadProfilePhoto } from '../../src/modules/users/api';
 import { useAskStore } from '../../src/shared/store/useAskStore';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 export default function ProfileSettings() {
  const router = useRouter();
@@ -125,6 +126,13 @@ export default function ProfileSettings() {
  style: 'destructive',
  onPress: async () => {
  try {
+ // Sign out of Google (forces account picker next time)
+ try {
+ await GoogleSignin.signOut();
+ } catch (e) {
+ // Ignore if not signed in with Google
+ }
+
  await signOut(auth);
     // Clear local state and cache securely
     useWorkspaceStore.getState().setActiveWorkspaceId(null);

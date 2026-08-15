@@ -9,6 +9,7 @@ import { auth } from '../../../src/shared/lib/firebase';
 import { signOut } from 'firebase/auth';
 import { useAuthStore } from '../../../src/shared/store/useAuthStore';
 import * as SecureStore from 'expo-secure-store';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 export default function AccountSettings() {
  const router = useRouter();
@@ -30,6 +31,14 @@ export default function AccountSettings() {
      
      // Success! Clear local state and log out
      await SecureStore.deleteItemAsync('encryption_key');
+
+     // Sign out of Google (forces account picker next time)
+     try {
+       await GoogleSignin.signOut();
+     } catch (e) {
+       // Ignore if not signed in with Google
+     }
+
      await signOut(auth);
      setUser(null);
      

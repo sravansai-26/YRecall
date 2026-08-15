@@ -15,6 +15,7 @@ export default function AuthEmail() {
  const [isLogin, setIsLogin] = useState(true);
  const [email, setEmail] = useState('');
  const [password, setPassword] = useState('');
+ const [showPassword, setShowPassword] = useState(false);
  const { t } = useTranslation();
 
  const handleAuth = async () => {
@@ -87,19 +88,39 @@ export default function AuthEmail() {
  keyboardType="email-address"
  autoCapitalize="none"
  placeholder="alex@example.com"
+ placeholderTextColor={colors.outline}
  className="w-full h-14 px-4 bg-surface-container-low rounded-xl font-body-md text-base text-on-surface"
  />
  </View>
 
  <View className="flex-col gap-2">
  <Text className="font-title-sm text-on-surface font-bold">{t('auth.password', 'Password')}</Text>
+ <View className="w-full h-14 bg-surface-container-low rounded-xl flex-row items-center pr-4">
  <TextInput
  value={password}
  onChangeText={setPassword}
- secureTextEntry
+ secureTextEntry={!showPassword}
  placeholder="••••••••"
- className="w-full h-14 px-4 bg-surface-container-low rounded-xl font-body-md text-base text-on-surface"
+ placeholderTextColor={colors.outline}
+ className="flex-1 h-full px-4 font-body-md text-base text-on-surface"
  />
+ <MaterialIcons 
+ name={showPassword ? 'visibility' : 'visibility-off'} 
+ size={24} 
+ color={colors['on-surface-variant']} 
+ onPress={() => setShowPassword(!showPassword)}
+ />
+ </View>
+ {isLogin && (
+ <View className="w-full flex-row justify-end mt-1">
+ <Text 
+ className="font-label-md text-primary font-bold py-2"
+ onPress={() => router.push('/(auth)/forgot-password')}
+ >
+ {t('auth.forgotPassword', 'Forgot password?')}
+ </Text>
+ </View>
+ )}
  </View>
  </View>
 
@@ -110,6 +131,22 @@ export default function AuthEmail() {
  onPress={handleAuth}
  />
  </View>
+
+ {!isLogin && (
+ <View className="mt-4 px-4 items-center">
+ <Text className="font-caption-sm text-outline text-center leading-relaxed">
+ {t('auth.termsAgreePrefixSignup', 'By creating an account, you agree to YRecall\'s ')}
+ <Text className="text-primary font-bold underline" onPress={() => router.push('/(legal)/terms')}>
+ {t('auth.termsOfService', 'Terms of Service')}
+ </Text>
+ {t('auth.termsAgreeMiddle', ' and ')}
+ <Text className="text-primary font-bold underline" onPress={() => router.push('/(legal)/privacy')}>
+ {t('auth.privacyPolicy', 'Privacy Policy')}
+ </Text>
+ {t('auth.termsAgreeSuffix', '.')}
+ </Text>
+ </View>
+ )}
 
  <View className="mt-6 flex-row justify-center">
  <Text className="font-body-md text-on-surface-variant">

@@ -33,7 +33,8 @@ module.exports = {
     notification: {
       icon: "./assets/images/notification-icon.png",
       color: "#FFFFFF"
-    }
+    },
+    usesCleartextTraffic: true
   },
   
   web: {

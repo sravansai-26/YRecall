@@ -12,6 +12,7 @@ import { useRestorePurchases } from '../../../src/modules/billing/api';
 import { useTranslation } from 'react-i18next';
 import * as SecureStore from 'expo-secure-store';
 import { Linking, ActivityIndicator } from 'react-native';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 export default function SettingsHub() {
   const router = useRouter();
@@ -52,10 +53,17 @@ export default function SettingsHub() {
               // 2. Clear Secure Store (encryption keys, preferences)
               await SecureStore.deleteItemAsync('encryption_key');
               
-              // 3. Sign out of Firebase
+              // 3. Sign out of Google (forces account picker next time)
+              try {
+                await GoogleSignin.signOut();
+              } catch (e) {
+                // Ignore if not signed in with Google
+              }
+
+              // 4. Sign out of Firebase
               await signOut(auth);
               
-              // 4. Clear Auth state & navigate
+              // 5. Clear Auth state & navigate
               setUser(null);
               router.replace('/(auth)');
             } catch (error) {
