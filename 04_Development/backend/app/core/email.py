@@ -265,6 +265,75 @@ async def send_bug_report_to_admin(db: Session, bug_id: str, title: str, descrip
 # PLACEHOLDERS FOR FUTURE REUSABILITY
 # ====================================================
 
+async def send_password_reset_otp_email(db: Session, to_email: str, otp: str):
+    """Sends the 6-digit OTP for password reset."""
+    content = f"""
+        <h2>Password Reset Request</h2>
+        <p>Hi,</p>
+        <p>We received a request to reset the password for your {settings.APP_NAME} account.</p>
+        <p>Enter the following 6-digit verification code in the app to continue:</p>
+        
+        <div style="text-align: center; margin: 30px 0;">
+            <div style="display: inline-block; background-color: #f6f8fa; padding: 15px 30px; border-radius: 8px; font-size: 32px; font-weight: bold; letter-spacing: 4px; color: #006e6e; border: 1px solid #eaecef;">
+                {otp}
+            </div>
+        </div>
+        
+        <p>This code will expire in 10 minutes.</p>
+        <div class="meta-box">
+            <strong style="color: #d73a49;">Security Warning:</strong><br>
+            If you did not request a password reset, please ignore this email. Your password will not be changed unless you enter this code and create a new password.
+        </div>
+        <p>Best regards,<br><strong>The {settings.APP_NAME} Team</strong></p>
+    """
+    html = get_base_html(content)
+    return await _send_email_core(db, to_email, "Your Password Reset Code", html, "password_reset_otp")
+
+
+async def send_password_changed_email(db: Session, to_email: str):
+    """Sends a confirmation that the password was changed successfully."""
+    content = f"""
+        <h2>Password Changed Successfully</h2>
+        <p>Hi,</p>
+        <p>The password for your {settings.APP_NAME} account was recently changed.</p>
+        
+        <div class="meta-box">
+            <strong style="color: #d73a49;">Security Warning:</strong><br>
+            If you did not make this change, please contact our support team immediately by replying to this email or visiting our <a href="{settings.APP_URL}/support" style="color: #006e6e;">Support Center</a>.
+        </div>
+        <p>Best regards,<br><strong>The {settings.APP_NAME} Team</strong></p>
+    """
+    html = get_base_html(content)
+    return await _send_email_core(db, to_email, "Your password was changed", html, "password_changed_success")
+
+async def send_email_verification_otp_email(db: Session, to_email: str, otp: str):
+    """Sends the 6-digit OTP for email verification."""
+    content = f"""
+        <h2>Verify Your Email</h2>
+        <p>Hi,</p>
+        <p>Welcome to {settings.APP_NAME}! Please verify your email address to activate your account.</p>
+        <p>Enter the following 6-digit verification code in the app to continue:</p>
+        
+        <div style="text-align: center; margin: 30px 0;">
+            <div style="display: inline-block; background-color: #f6f8fa; padding: 15px 30px; border-radius: 8px; font-size: 32px; font-weight: bold; letter-spacing: 4px; color: #006e6e; border: 1px solid #eaecef;">
+                {otp}
+            </div>
+        </div>
+        
+        <p>This code will expire in 10 minutes.</p>
+        <div class="meta-box">
+            <strong style="color: #d73a49;">Security Warning:</strong><br>
+            If you did not sign up for an account, please ignore this email.
+        </div>
+        <p>Best regards,<br><strong>The {settings.APP_NAME} Team</strong></p>
+    """
+    html = get_base_html(content)
+    return await _send_email_core(db, to_email, "Verify your YRecall email", html, "email_verification_otp")
+
+# ====================================================
+# PLACEHOLDERS FOR FUTURE REUSABILITY
+# ====================================================
+
 async def send_welcome_email(db: Session, to_email: str, name: str):
     pass
 
@@ -279,3 +348,4 @@ async def send_team_invitation(db: Session, to_email: str, inviter_name: str, wo
 
 async def send_account_deletion_confirmation(db: Session, to_email: str):
     pass
+

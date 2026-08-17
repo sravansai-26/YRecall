@@ -40,24 +40,10 @@ export const useDownloadStore = create<DownloadsState>()(
                     let localUri = '';
                     let size_bytes = 0;
                     
-                    if (capture.type === 'text' || capture.type === 'note' || capture.type === 'link' || capture.type === 'location') {
-                        // Generate .txt file
-                        const filename = `YRecall_Note_${capture.id.substring(0,6)}.txt`;
-                        localUri = FileSystem.documentDirectory + filename;
-                        const content = capture.content || '';
-                        await FileSystem.writeAsStringAsync(localUri, content);
-                        const info = await FileSystem.getInfoAsync(localUri);
-                        if (info.exists && !info.isDirectory) size_bytes = info.size;
-                        
-                        // Share/Save to Files
-                        const canShare = await Sharing.isAvailableAsync();
-                        if (canShare) {
-                            await Sharing.shareAsync(localUri);
-                        }
-                    } else if (capture.file_url) {
+                    if (capture.file_url) {
                         // Download media
                         const ext = capture.file_url.split('.').pop() || 'tmp';
-                        const filename = `YRecall_Media_${capture.id.substring(0,6)}.${ext}`;
+                        const filename = `YRecall_${capture.type || 'Media'}_${capture.id.substring(0,6)}.${ext}`;
                         localUri = FileSystem.documentDirectory + filename;
                         
                         // Show toast that download started
@@ -85,6 +71,20 @@ export const useDownloadStore = create<DownloadsState>()(
                             if (await Sharing.isAvailableAsync()) {
                                 await Sharing.shareAsync(localUri);
                             }
+                        }
+                    } else if (capture.content_text || capture.content || capture.summary) {
+                        // Generate .txt file for text-based captures
+                        const filename = `YRecall_${capture.type || 'Note'}_${capture.id.substring(0,6)}.txt`;
+                        localUri = FileSystem.documentDirectory + filename;
+                        const content = capture.content_text || capture.content || capture.summary || '';
+                        await FileSystem.writeAsStringAsync(localUri, content);
+                        const info = await FileSystem.getInfoAsync(localUri);
+                        if (info.exists && !info.isDirectory) size_bytes = info.size;
+                        
+                        // Share/Save to Files
+                        const canShare = await Sharing.isAvailableAsync();
+                        if (canShare) {
+                            await Sharing.shareAsync(localUri);
                         }
                     } else {
                         throw new Error("Nothing to download");

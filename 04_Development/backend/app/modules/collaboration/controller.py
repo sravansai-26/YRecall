@@ -94,6 +94,17 @@ def get_workspace_members(
     require_role(db, workspace_id, current_user, WorkspaceRole.VIEWER)
     return workspace_service.get_workspace_members(db, workspace_id)
 
+from ...modules.captures.schemas import CaptureResponse
+
+@router.get("/workspaces/{workspace_id}/captures", response_model=List[CaptureResponse])
+def get_workspace_captures(
+    workspace_id: UUID,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    require_role(db, workspace_id, current_user, WorkspaceRole.VIEWER)
+    return workspace_service.get_workspace_captures(db, workspace_id)
+
 @router.delete("/workspaces/{workspace_id}/members/{target_user_id}")
 def remove_workspace_member(
     workspace_id: UUID,
@@ -128,3 +139,52 @@ async def share_capture_to_workspace(
     })
     
     return {"success": True, "data": schemas.SharedCaptureResponse.model_validate(shared_capture)}
+
+@router.delete("/workspaces/{workspace_id}")
+def delete_workspace(
+    workspace_id: UUID,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    require_role(db, workspace_id, current_user, WorkspaceRole.OWNER)
+    success = workspace_service.delete_workspace(db, current_user, workspace_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Workspace not found or could not be deleted")
+    return {"success": True, "message": "Workspace deleted."}
+
+@router.delete("/workspaces/{workspace_id}/leave")
+def leave_workspace(
+    workspace_id: UUID,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    # Any member can leave, but owner cannot (checked in service)
+    try:
+        success = workspace_service.leave_workspace(db, current_user, workspace_id)
+        if not success:
+            raise HTTPException(status_code=404, detail="Not a member of this workspace")
+        return {"success": True, "message": "Left workspace."}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@router.get("/workspaces/{workspace_id}/invitations", response_model=List[schemas.InvitationResponse])
+def get_workspace_invitations(
+    workspace_id: UUID,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    require_role(db, workspace_id, current_user, WorkspaceRole.ADMIN)
+    return workspace_service.get_invitations(db, workspace_id)
+
+@router.delete("/workspaces/{workspace_id}/invitations/{invitation_id}")
+def revoke_invitation(
+    workspace_id: UUID,
+    invitation_id: UUID,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    require_role(db, workspace_id, current_user, WorkspaceRole.ADMIN)
+    success = workspace_service.revoke_invitation(db, current_user, workspace_id, invitation_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Invitation not found or already processed")
+    return {"success": True, "message": "Invitation revoked."}

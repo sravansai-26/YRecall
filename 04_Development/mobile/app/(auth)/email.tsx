@@ -27,9 +27,23 @@ export default function AuthEmail() {
  try {
  setLoading(true);
  if (isLogin) {
- await signInWithEmailAndPassword(auth, email, password);
+ const userCred = await signInWithEmailAndPassword(auth, email, password);
+ if (!userCred.user.emailVerified) {
+     try {
+         const { apiClient } = require('../../src/services/api');
+         await apiClient.post('/auth/email-verification/request', { email: email.trim() });
+     } catch (e) {
+         console.error('Failed to send verification email on login', e);
+     }
+ }
  } else {
  await createUserWithEmailAndPassword(auth, email, password);
+ try {
+     const { apiClient } = require('../../src/services/api');
+     await apiClient.post('/auth/email-verification/request', { email: email.trim() });
+ } catch (e) {
+     console.error('Failed to send initial verification email', e);
+ }
  }
  // Routing handled by _layout.tsx based on auth state
  } catch (error: any) {
@@ -89,13 +103,14 @@ export default function AuthEmail() {
  autoCapitalize="none"
  placeholder="alex@example.com"
  placeholderTextColor={colors.outline}
- className="w-full h-14 px-4 bg-surface-container-low rounded-xl font-body-md text-base text-on-surface"
+ className="w-full h-14 px-4 bg-surface-container-lowest rounded-xl font-body-md text-base text-on-surface border border-surface-variant shadow-sm"
+ style={{ elevation: 1 }}
  />
  </View>
 
  <View className="flex-col gap-2">
  <Text className="font-title-sm text-on-surface font-bold">{t('auth.password', 'Password')}</Text>
- <View className="w-full h-14 bg-surface-container-low rounded-xl flex-row items-center pr-4">
+ <View className="w-full h-14 bg-surface-container-lowest rounded-xl flex-row items-center pr-4 border border-surface-variant shadow-sm" style={{ elevation: 1 }}>
  <TextInput
  value={password}
  onChangeText={setPassword}

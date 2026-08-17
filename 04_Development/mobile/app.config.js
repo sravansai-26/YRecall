@@ -22,7 +22,7 @@ module.exports = {
       monochromeImage: "./assets/images/android-icon-monochrome.png",
     },
     package: "com.lyfspot.yrecall",
-    predictiveBackGestureEnabled: true,
+    predictiveBackGestureEnabled: false,
     googleServicesFile: "./google-services.json",
     softwareKeyboardLayoutMode: "pan", 
     // Force native properties injection directly through the android platform scope
@@ -34,7 +34,19 @@ module.exports = {
       icon: "./assets/images/notification-icon.png",
       color: "#FFFFFF"
     },
-    usesCleartextTraffic: true
+    usesCleartextTraffic: true,
+    intentFilters: [
+
+      {
+        action: "VIEW",
+        data: [
+          {
+            scheme: "yrecall"
+          }
+        ],
+        category: ["BROWSABLE", "DEFAULT"]
+      }
+    ]
   },
   
   web: {

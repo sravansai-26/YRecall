@@ -10,7 +10,14 @@ export default function TeamsStartWorkspace() {
 
  return (
  <Screen scrollable={true}>
- <View className="px-margin-mobile pt-6 pb-32 flex-col gap-xl">
+ {/* Header Section */}
+ <View className="px-margin-mobile pt-4 flex-row items-center">
+   <TouchableOpacity onPress={() => router.back()} className="w-10 h-10 items-center justify-center rounded-full bg-surface-container-low">
+     <MaterialIcons name="arrow-back" size={24} color={colors.primary} />
+   </TouchableOpacity>
+ </View>
+
+ <View className="px-margin-mobile pt-2 pb-32 flex-col gap-xl">
  
  {/* Value Proposition */}
  <View className="flex-col gap-6 items-start mt-4">
@@ -28,30 +35,11 @@ export default function TeamsStartWorkspace() {
  </Text>
 
  <View className="flex-row gap-4 mt-2">
- <Button variant="primary" label="Start Your Team" icon="arrow-forward" />
- <Button variant="outline" label="Watch Demo" />
+ <Button variant="primary" label="Start Your Team" icon="arrow-forward" onPress={() => router.push('/(teams)/identity')} />
  </View>
  </View>
 
- {/* Interactive Illustration */}
- <View className="w-full aspect-square relative items-center justify-center mt-4">
- <View className="absolute inset-0 bg-secondary-container/20 rounded-full blur-3xl" />
- 
- <View className="relative w-full h-full items-center justify-center z-10">
- <View className="bg-white/80 p-8 rounded-[48px] shadow-sm flex items-center justify-center w-full">
- <Image source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCT1wBDdjFYF9xzI259703Ys3JK7PiBbRy-b9tvr-014lt1v4wla1DV6bCcz3TSkbcuZD2QPAACjXIvgS9RPxWESeSpw7Ll493Zg9qKMQ_9dUwyDVuuz2QFBvi_kMPosgK9gs6azkfBGKIrKaIuw5COfLHMyPeQH7-eJ5FSmP6N8vQy_V1qC4a-xeRtVY7mowdEzFQyC5zIucl68OYDnq5F03Y9_OPbRKn_xcGturWmxzAuTn7wUVcwc7sC6cojwHPmbc5oh1d06v4' }} className="w-full h-64 object-contain" />
- </View>
 
- {/* Floating Nodes */}
- <View className="absolute top-4 left-4 w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center -rotate-12 ">
- <MaterialIcons name="share" size={32} color={colors.secondary} />
- </View>
-
- <View className="absolute bottom-12 right-2 w-20 h-20 bg-primary-container rounded-3xl shadow-sm flex items-center justify-center rotate-6">
- <MaterialIcons name="account-tree" size={40} color={colors['on-primary-container']} />
- </View>
- </View>
- </View>
 
  {/* Workspace Selection Bento Grid */}
  <View className="mt-8 flex-col gap-6">
@@ -63,7 +51,7 @@ export default function TeamsStartWorkspace() {
  <View className="flex-col gap-4 md:flex-row">
  
  {/* Personal Workspace */}
- <TouchableOpacity onPress={() => require('react-native').Alert.alert('Coming Soon', 'Backend integration pending')} className="flex-1 bg-white p-6 rounded-[24px] shadow-sm ">
+ <TouchableOpacity onPress={() => router.push('/(main)/workspaces' as any)} className="flex-1 bg-white p-6 rounded-[24px] shadow-sm ">
  <View className="flex-row items-start justify-between mb-6">
  <View className="w-14 h-14 rounded-2xl bg-surface-container-low flex items-center justify-center">
  <MaterialIcons name="person" size={32} color={colors.primary} />
@@ -122,10 +110,6 @@ export default function TeamsStartWorkspace() {
  </View>
  </View>
 
- <View className="pt-4 border-t flex-row items-center justify-between">
- <Text className="font-bold text-primary text-[14px]">Try for 14 days</Text>
- <MaterialIcons name="chevron-right" size={24} color={colors.primary} />
- </View>
  </TouchableOpacity>
 
  </View>

@@ -13,7 +13,7 @@ import { useWorkspaceStore } from '../../workspaces/store';
 export type CaptureHubRef = BottomSheetModal;
 
 const captureOptions = [
- { id: 'text', title: 'Text', icon: 'playlist-edit', family: 'MaterialCommunityIcons', route: '/(main)/capture/note' },
+ { id: 'text', title: 'Notes', icon: 'playlist-edit', family: 'MaterialCommunityIcons', route: '/(main)/capture/note' },
  { id: 'voice', title: 'Voice', icon: 'mic-outline', family: 'Ionicons', route: '/(main)/capture/voice' },
  { id: 'photo', title: 'Photo', icon: 'camera-outline', family: 'Ionicons', route: '/(main)/capture/camera' },
  { id: 'video', title: 'Video', icon: 'videocam-outline', family: 'Ionicons', route: '/(main)/capture/camera?mode=video' },
@@ -53,13 +53,14 @@ export const CaptureHub = forwardRef<CaptureHubRef>((props, ref) => {
  );
 
  const handleOptionPress = (optionRoute: string) => {
- Keyboard.dismiss();
- if (ref && 'current' in ref && ref.current) {
- ref.current.dismiss();
- }
- setTimeout(() => {
- router.push(optionRoute as any);
- }, 150);
+  Keyboard.dismiss();
+  // Route first so the new Fragment claims native window focus and attaches the back handler
+  router.push(optionRoute as any);
+  
+  // Then dismiss the modal behind the transition
+  if (ref && 'current' in ref && ref.current) {
+    ref.current.dismiss();
+  }
  };
 
  const handleClose = () => {

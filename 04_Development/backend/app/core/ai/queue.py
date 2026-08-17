@@ -99,6 +99,14 @@ def mark_job_failed(db: Session, job: AIJob, error_message: str, is_rate_limit: 
     if job.attempt_count >= job.max_attempts:
         job.status = JobStatus.FAILED
         logger.error(f"Job {job.id} FAILED permanently after {job.attempt_count} attempts. Error: {error_message}")
+        
+        # Ensure capture is not permanently stuck
+        if job.capture_id:
+            from app.modules.captures.models import Capture
+            capture = db.query(Capture).filter(Capture.id == job.capture_id).first()
+            if capture:
+                capture.status = "failed_ai"
+                
     else:
         # Calculate exponential backoff
         if is_rate_limit:

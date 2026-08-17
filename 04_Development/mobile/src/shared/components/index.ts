@@ -9,3 +9,4 @@ export { default as AttributionLink } from './AttributionLink';
 export { default as Screen } from './Screen';
 export { TimelineFeedItem } from './TimelineFeedItem';
 export { default as AIBentoCard } from './AIBentoCard';
+export { OTPInput } from './OTPInput';

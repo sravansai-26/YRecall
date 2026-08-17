@@ -101,6 +101,10 @@ export const capturesApi = {
  const response = await apiClient.delete(`/captures/${id}`);
  return response.data;
  },
+ getWorkspaceCaptures: async (workspaceId: string) => {
+ const response = await apiClient.get(`/collaboration/workspaces/${workspaceId}/captures`);
+ return response.data;
+ },
  searchCaptures: async (q: string, skip: number = 0, limit: number = 20) => {
  const response = await apiClient.get('/captures/search', {
      params: { q, skip, limit }

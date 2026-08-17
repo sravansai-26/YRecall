@@ -145,15 +145,15 @@ def process_ai_enrichment_job(db: Session, job: AIJob):
             
         else:
             prompt = f"""
-            Analyze the following captured text.
+            Analyze the following captured text, which may contain markdown formatting or hyperlinks (e.g. [text](url) or raw URLs).
             Provide a JSON object with the following structure:
             {{
                 "title": "A short, descriptive 3-6 word title",
                 "outer_summary": "A brief 1-2 sentence summary of the main subject",
-                "inner_summary": "A comprehensive, detailed paragraph describing the content",
+                "inner_summary": "A comprehensive, detailed paragraph describing the content. If the text contains any hyperlinks or URLs, you MUST briefly explain what those links represent based on the context.",
                 "keywords": ["list", "of", "keywords"],
                 "tags": ["list", "of", "tags"],
-                "entities": [{{"name": "entity name", "type": "person/organization/location/concept"}}]
+                "entities": [{{"name": "entity name", "type": "person/organization/location/concept/link"}}]
             }}
             
             TEXT:

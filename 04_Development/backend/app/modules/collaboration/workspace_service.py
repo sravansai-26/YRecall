@@ -22,13 +22,15 @@ from ..billing import entitlements, quota_service
 from fastapi import HTTPException
 
 def create_workspace(db: Session, user: User, workspace_in: WorkspaceCreate) -> Workspace:
-    # 1. Check if user has the feature entitlement
-    if not entitlements.has_entitlement(db, user.id, entitlements.FeatureEnum.CREATE_WORKSPACE):
-        raise HTTPException(status_code=403, detail="Your plan does not allow creating workspaces.")
-        
-    # 2. Check if user is within their workspace quota
-    if not entitlements.check_quota(db, user.id, "workspaces_count"):
-        raise HTTPException(status_code=403, detail="Workspace limit reached. Please upgrade to create more.")
+    # Temporary limit: users can own up to 6 active workspaces until billing is fully implemented.
+    active_owned_count = db.query(Workspace).join(WorkspaceMember).filter(
+        WorkspaceMember.user_id == user.id,
+        WorkspaceMember.role == WorkspaceRole.OWNER,
+        Workspace.deleted_at == None
+    ).count()
+
+    if active_owned_count >= 6:
+        raise HTTPException(status_code=403, detail="Workspace limit reached. You can only own up to 6 active workspaces. Delete one to create another.")
 
     workspace = Workspace(
         name=workspace_in.name,
@@ -92,6 +94,14 @@ def update_workspace(db: Session, user: User, workspace: Workspace, workspace_in
 
 def get_workspace_members(db: Session, workspace_id: UUID) -> List[WorkspaceMember]:
     return db.query(WorkspaceMember).filter(WorkspaceMember.workspace_id == workspace_id).all()
+
+from ...modules.captures.models import Capture
+
+def get_workspace_captures(db: Session, workspace_id: UUID) -> List[Capture]:
+    return db.query(Capture).join(SharedCapture, Capture.id == SharedCapture.capture_id).filter(
+        SharedCapture.workspace_id == workspace_id,
+        Capture.deleted_at == None
+    ).order_by(Capture.created_at.desc()).all()
 
 def remove_workspace_member(db: Session, user: User, workspace_id: UUID, target_user_id: UUID):
     member = db.query(WorkspaceMember).filter(
@@ -169,13 +179,47 @@ def create_invitation(db: Session, user: User, workspace_id: UUID, invitation_in
     return invitation
 
 def accept_invitation(db: Session, user: User, token: str) -> Workspace:
+    # First try to match an 8-character workspace ID invite code
+    if len(token) == 8:
+        workspace = db.query(Workspace).filter(
+            Workspace.id.cast(str).ilike(f"{token}%"),
+            Workspace.deleted_at == None
+        ).first()
+        if workspace:
+            # Check if already a member
+            existing = db.query(WorkspaceMember).filter(
+                WorkspaceMember.workspace_id == workspace.id,
+                WorkspaceMember.user_id == user.id
+            ).first()
+            if existing:
+                return workspace # Already in, just return it
+                
+            # Add as contributor by default for invite codes
+            member = WorkspaceMember(
+                workspace_id=workspace.id,
+                user_id=user.id,
+                role=WorkspaceRole.CONTRIBUTOR
+            )
+            db.add(member)
+            activity = WorkspaceActivity(
+                workspace_id=workspace.id,
+                actor_id=user.id,
+                action="joined_workspace_via_code",
+                entity_type="user",
+                entity_id=str(user.id)
+            )
+            db.add(activity)
+            db.commit()
+            return workspace
+
+    # Fallback to standard email token invitations
     invitation = db.query(WorkspaceInvitation).filter(
         WorkspaceInvitation.token == token,
         WorkspaceInvitation.status == "pending"
     ).first()
     
     if not invitation:
-        raise ValueError("Invalid or expired invitation token.")
+        raise ValueError("Invalid invite code.")
         
     if invitation.expires_at and invitation.expires_at < datetime.now(invitation.expires_at.tzinfo):
         invitation.status = "expired"
@@ -205,3 +249,78 @@ def accept_invitation(db: Session, user: User, token: str) -> Workspace:
     
     db.commit()
     return get_workspace(db, invitation.workspace_id)
+
+def get_invitations(db: Session, workspace_id: UUID) -> List[WorkspaceInvitation]:
+    return db.query(WorkspaceInvitation).filter(
+        WorkspaceInvitation.workspace_id == workspace_id,
+        WorkspaceInvitation.status == "pending"
+    ).all()
+
+def revoke_invitation(db: Session, user: User, workspace_id: UUID, invitation_id: UUID) -> bool:
+    invitation = db.query(WorkspaceInvitation).filter(
+        WorkspaceInvitation.id == invitation_id,
+        WorkspaceInvitation.workspace_id == workspace_id
+    ).first()
+    
+    if invitation and invitation.status == "pending":
+        invitation.status = "revoked"
+        
+        activity = WorkspaceActivity(
+            workspace_id=workspace_id,
+            actor_id=user.id,
+            action="revoked_invitation",
+            entity_type="invitation",
+            entity_id=str(invitation_id)
+        )
+        db.add(activity)
+        db.commit()
+        return True
+    return False
+
+def delete_workspace(db: Session, user: User, workspace_id: UUID) -> bool:
+    workspace = db.query(Workspace).filter(Workspace.id == workspace_id).first()
+    if not workspace:
+        return False
+        
+    workspace.deleted_at = datetime.now()
+    
+    # Soft delete all members
+    members = db.query(WorkspaceMember).filter(WorkspaceMember.workspace_id == workspace_id).all()
+    for member in members:
+        db.delete(member)
+        
+    activity = WorkspaceActivity(
+        workspace_id=workspace.id,
+        actor_id=user.id,
+        action="deleted_workspace",
+        entity_type="workspace",
+        entity_id=str(workspace.id)
+    )
+    db.add(activity)
+    db.commit()
+    return True
+
+def leave_workspace(db: Session, user: User, workspace_id: UUID) -> bool:
+    member = db.query(WorkspaceMember).filter(
+        WorkspaceMember.workspace_id == workspace_id,
+        WorkspaceMember.user_id == user.id
+    ).first()
+    
+    if not member:
+        return False
+        
+    if member.role == WorkspaceRole.OWNER:
+        raise ValueError("Owners cannot leave the workspace. You must delete the workspace instead.")
+        
+    db.delete(member)
+    
+    activity = WorkspaceActivity(
+        workspace_id=workspace_id,
+        actor_id=user.id,
+        action="left_workspace",
+        entity_type="user",
+        entity_id=str(user.id)
+    )
+    db.add(activity)
+    db.commit()
+    return True

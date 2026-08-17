@@ -1,110 +1,139 @@
-import { View, Text, ScrollView, Image } from 'react-native';
+import { View, Text, ScrollView, Image, TextInput, Alert, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Screen, Button } from '../../src/shared/components';
 import { colors } from '../../src/shared/theme/colors';
-import { useRouter } from 'expo-router';
-import React from 'react';
+import { useRouter, useLocalSearchParams } from 'expo-router';
+import React, { useState } from 'react';
+import { useAcceptInvitation } from '../../src/modules/workspaces/api';
+import { useWorkspaceStore } from '../../src/modules/workspaces/store';
 
 export default function TeamsJoin() {
- const router = useRouter();
+  const router = useRouter();
+  const { token: urlToken } = useLocalSearchParams<{ token?: string }>();
+  const [token, setToken] = useState(urlToken || '');
+  const acceptMutation = useAcceptInvitation();
+  const { setActiveWorkspaceId } = useWorkspaceStore();
 
- return (
- <Screen scrollable={true}>
- <View className="px-margin-mobile pt-16 pb-32 flex-col gap-xl">
- 
- {/* Background Blobs (Simulated with absolute positioning) */}
- <View className="absolute top-0 right-0 w-64 h-64 bg-secondary-fixed-dim/20 rounded-full blur-3xl -z-10" />
- <View className="absolute bottom-40 left-0 w-64 h-64 bg-primary-fixed-dim/20 rounded-full blur-3xl -z-10" />
+  const handleJoin = () => {
+    if (!token.trim()) {
+      Alert.alert('Error', 'Please enter a valid Invite Code.');
+      return;
+    }
+    
+    acceptMutation.mutate(token.trim(), {
+      onSuccess: (data) => {
+        setActiveWorkspaceId(data.id);
+        router.replace('/(teams)/team-space');
+      },
+      onError: (err: any) => {
+        Alert.alert('Access Denied', err.response?.data?.detail || 'Invalid invite code.');
+      }
+    });
+  };
 
- {/* Hero Section */}
- <View className="items-center text-center gap-4 mb-8">
- <View className="bg-secondary-container px-4 py-2 rounded-full">
- <Text className="text-on-secondary-container font-label-xs uppercase font-bold tracking-widest">Mission Update</Text>
- </View>
- 
- <Text className="font-display-lg text-[44px] text-primary font-bold text-center leading-tight">
- Welcome to <Text className="text-secondary italic">Project Nova</Text> Team
- </Text>
- 
- <Text className="text-body-md text-on-surface-variant text-center max-w-sm mx-auto">
- You've been invited to the core engineering workspace. Here, we coordinate high-frequency deployments and manage the AI Life OS ecosystem.
- </Text>
- </View>
+  return (
+    <Screen scrollable={true} avoidKeyboard={true}>
+      
+      {/* Dynamic Graphic Hero - Edge to Edge */}
+      <View className="w-full h-64 relative bg-surface-container-highest">
+        <Image 
+          source={{ uri: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop' }} 
+          className="w-full h-full object-cover" 
+        />
+        {/* Back Button Overlay */}
+        <View className="absolute top-4 left-4 z-40">
+          <TouchableOpacity onPress={() => router.back()} className="w-10 h-10 items-center justify-center rounded-full bg-white shadow-sm">
+            <MaterialIcons name="arrow-back" size={24} color={colors.primary} />
+          </TouchableOpacity>
+        </View>
+      </View>
 
- {/* Bento Grid */}
- <View className="flex-col md:flex-row flex-wrap gap-6">
- 
- {/* Card 1: Role Definition */}
- <View className="flex-col md:flex-1 bg-white p-6 rounded-[24px] shadow-sm flex-1">
- <View className="w-12 h-12 bg-primary-container items-center justify-center rounded-xl mb-4">
- <MaterialIcons name="shield" size={24} color={colors['on-primary-container']} />
- </View>
- <Text className="font-headline-md text-2xl font-bold text-primary mb-2">Your Role: Architect</Text>
- <Text className="text-body-md text-on-surface-variant mb-6">
- As a core member of Project Nova, you have full write access to the neural logic pathways and priority access to the global GPU clusters.
- </Text>
- <View className="flex-row flex-wrap gap-2">
- <View className="bg-surface-container-high px-3 py-1 rounded-full"><Text className="text-caption-sm text-on-surface-variant">Admin Controls</Text></View>
- <View className="bg-surface-container-high px-3 py-1 rounded-full"><Text className="text-caption-sm text-on-surface-variant">Deploy Access</Text></View>
- <View className="bg-surface-container-high px-3 py-1 rounded-full"><Text className="text-caption-sm text-on-surface-variant">SLA Manager</Text></View>
- </View>
- </View>
+      {/* Main Content Area */}
+      <View className="px-margin-mobile flex-col gap-8 pb-32">
+        
+        {/* Introduction Text Block */}
+        <View className="mt-8 items-center">
+          <View className="bg-primary/10 w-16 h-16 rounded-full items-center justify-center mb-4">
+            <MaterialIcons name="vpn-key" size={32} color={colors.primary} />
+          </View>
+          <Text className="font-display-md text-4xl text-primary font-bold text-center leading-tight">
+            Unlock your Team.
+          </Text>
+          <Text className="text-body-lg text-on-surface-variant text-center mt-3 max-w-sm px-4">
+            Enter your secure access code to connect with your team's collective intelligence.
+          </Text>
+        </View>
 
- {/* Card 2: Interactive AI Signal */}
- <View className="flex-col md:flex-1 bg-primary rounded-[24px] overflow-hidden justify-end h-64 md:h-auto min-h-[250px]">
- <View className="p-6 bg-gradient-to-t from-black/60 to-transparent absolute inset-0 justify-end">
- <Text className="font-title-sm text-lg font-bold text-white">System Pulse</Text>
- <Text className="text-label-xs text-white/80">Real-time health monitoring of Project Nova's infrastructure.</Text>
- </View>
- </View>
+        {/* The Join Action Box */}
+        <View className="bg-white rounded-[32px] p-8 shadow-sm border border-surface-container-highest items-center mt-2">
+          <Text className="font-title-lg font-bold text-primary mb-2 text-center">Have an Invite Code?</Text>
+          <Text className="text-body-md text-on-surface-variant text-center mb-6">
+            Ask your workspace owner for their 8-character access code.
+          </Text>
+          
+          <View className="w-full max-w-sm gap-4 flex-col items-center">
+            <TextInput 
+              className="w-full h-16 rounded-2xl bg-surface-container-lowest px-4 text-headline-md text-primary border-2 border-primary/20 text-center font-bold tracking-[0.2em] uppercase"
+              placeholder="A1B2C3D4"
+              placeholderTextColor={colors['on-surface-variant']}
+              value={token}
+              onChangeText={setToken}
+              maxLength={8}
+              autoCapitalize="characters"
+            />
+            <View className="mt-2 w-full">
+              <Button 
+                variant="primary" 
+                label={acceptMutation.isPending ? "Authenticating..." : "Join Workspace"} 
+                icon="arrow-forward"
+                onPress={handleJoin} 
+                disabled={acceptMutation.isPending || token.length < 4}
+              />
+            </View>
+          </View>
+        </View>
 
- {/* Card 3: Communication Guidelines */}
- <View className="flex-col md:w-[40%] bg-white p-6 rounded-[24px] shadow-sm">
- <View className="flex-row items-center gap-2 mb-4">
- <MaterialIcons name="chat-bubble" size={24} color={colors.secondary} />
- <Text className="font-title-sm text-lg font-bold text-primary">Guidelines</Text>
- </View>
- <View className="flex-col gap-3">
- <View className="flex-row items-start gap-2">
- <MaterialIcons name="check-circle" size={18} color={colors.secondary} />
- <Text className="text-body-md text-on-surface-variant">Asynchronous first for deep work.</Text>
- </View>
- <View className="flex-row items-start gap-2">
- <MaterialIcons name="check-circle" size={18} color={colors.secondary} />
- <Text className="text-body-md text-on-surface-variant">Daily sync at 09:00 UTC.</Text>
- </View>
- </View>
- </View>
+        {/* Value Props / Advertising Content */}
+        <View className="flex-col gap-4 mt-6">
+           <Text className="font-label-md uppercase tracking-widest text-secondary font-bold text-center mb-2">Why Join a Workspace?</Text>
+           
+           <View className="flex-col gap-4">
+              <View className="flex-row bg-white p-6 rounded-3xl border border-surface-container-highest items-center shadow-sm">
+                 <View className="w-14 h-14 bg-primary/10 rounded-2xl items-center justify-center mr-4">
+                    <MaterialIcons name="hub" size={28} color={colors.primary} />
+                 </View>
+                 <View className="flex-1">
+                    <Text className="font-title-sm font-bold text-primary">Shared Memory</Text>
+                    <Text className="text-body-sm text-on-surface-variant mt-1">Access the collective knowledge and captures of your entire team instantly.</Text>
+                 </View>
+              </View>
+              <View className="flex-row bg-white p-6 rounded-3xl border border-surface-container-highest items-center shadow-sm">
+                 <View className="w-14 h-14 bg-secondary/10 rounded-2xl items-center justify-center mr-4">
+                    <MaterialIcons name="auto-awesome" size={28} color={colors.secondary} />
+                 </View>
+                 <View className="flex-1">
+                    <Text className="font-title-sm font-bold text-primary">AI Synthesis</Text>
+                    <Text className="text-body-sm text-on-surface-variant mt-1">Let our OS summarize cross-team discussions and surface hidden insights.</Text>
+                 </View>
+              </View>
+           </View>
+        </View>
 
- {/* Card 4: Team DNA */}
- <View className="flex-col md:flex-1 bg-white rounded-[24px] shadow-sm overflow-hidden flex-row">
- <View className="flex-1 p-6 justify-center">
- <Text className="font-headline-md text-2xl font-bold text-primary mb-2">Team DNA</Text>
- <Text className="text-body-md text-on-surface-variant">
- We value radical transparency and high-fidelity feedback. Project Nova isn't just a workspace; it's a living intelligence.
- </Text>
- </View>
- <View className="flex-1 min-h-[200px] bg-surface-container-highest">
- <Image source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBjGnN63aem47L-DiCtrvlxi30CIzc9imeSVypxjCZW-nlonpIa4oUQ7g2D8xx9cd9i_MJtXOF36UF529mNbbZvbACFiCJFVBJ8hNvfWoH42EX4TJPBhgYxoNMV-MnMEbzLyIO13IUG9Vo0wmMZFkSv_XHYN2TRqob-dsSK6zD70-qpW7zPFQjLCzmkZfInykJ4VkWHTAw67ljPOpLMB91zfa4a_3FSMODvS0__CYzVUD9iQNKEeBx0sJlzFFG4vLV9Bdmp0jx6czg' }} className="w-full h-full object-cover" />
- </View>
- </View>
+        {/* Create Workspace Upsell Block */}
+        <View className="bg-primary p-8 rounded-[32px] flex-col items-center justify-center mt-8 shadow-sm">
+            <View className="w-16 h-16 bg-white/20 rounded-full items-center justify-center mb-6">
+              <MaterialIcons name="rocket-launch" size={32} color="white" />
+            </View>
+            <Text className="font-title-lg font-bold text-white text-center">Don't have a team yet?</Text>
+            <Text className="text-body-md text-white/90 text-center mt-3 mb-8">
+              Start your own workspace, invite others, and elevate your workflow.
+            </Text>
+            <TouchableOpacity onPress={() => router.replace('/(teams)/start')} className="bg-white px-8 py-4 rounded-full shadow-sm w-full items-center">
+               <Text className="font-bold text-primary text-title-sm">Create Workspace</Text>
+            </TouchableOpacity>
+        </View>
 
- </View>
-
- {/* Footer Actions */}
- <View className="mt-12 items-center gap-6">
- <Button 
- variant="primary" 
- label="Get Started" 
- icon="arrow-forward"
- onPress={() => router.push('/(teams)/shared')} 
- />
- <Text className="text-caption-sm text-on-surface-variant text-center">
- By entering, you agree to the Nova Workspace Protocol 2.4.
- </Text>
- </View>
-
- </View>
- </Screen>
- );
+      </View>
+    </Screen>
+  );
 }

@@ -18,9 +18,9 @@ export default function SearchModal() {
         <TouchableOpacity 
             className="flex-row items-center p-4 border-b border-outline-variant/30 bg-surface-container-lowest active:bg-surface-container-low"
             onPress={() => {
-                router.dismiss();
                 // @ts-ignore
                 router.push(item.route);
+                router.dismiss();
             }}
         >
             <View className="w-10 h-10 rounded-full bg-primary/10 items-center justify-center mr-4">

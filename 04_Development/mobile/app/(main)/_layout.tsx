@@ -7,6 +7,10 @@ function GlobalHooks() {
  return null;
 }
 
+export const unstable_settings = {
+  initialRouteName: '(tabs)',
+};
+
 export default function MainLayout() {
  return (
  <>

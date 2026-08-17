@@ -41,51 +41,6 @@ SplashScreen.preventAutoHideAsync();
 
 import { usePushNotifications } from '../src/shared/hooks/usePushNotifications';
 
-function RootNavigationHandler() {
- const { user, isLoading, hasCompletedOnboarding } = useAuthStore();
- const segments = useSegments();
- const router = useRouter();
-
- const { expoPushToken } = usePushNotifications();
-
- useEffect(() => {
- if (isLoading) return;
-
- const inAuthGroup = segments[0] === '(auth)';
- const inOnboardingGroup = segments[0] === '(onboarding)';
- const isRoot = segments.length === 0;
-
- // ONLY navigate if the user is completely in the wrong area, 
- // do NOT blindly replace when navigating naturally.
- const navigate = () => {
-   if (!hasCompletedOnboarding) {
-      if (!inOnboardingGroup) {
-        router.replace('/(onboarding)/splash');
-      }
-     return;
-   }
-
-   if (!user) {
-     if (!inAuthGroup) {
-       router.replace('/(auth)');
-     }
-     return;
-   }
-
-   // If user is logged in and onboarding is complete, they shouldn't be in auth, onboarding, or stranded at absolute root.
-   if (inAuthGroup || inOnboardingGroup || isRoot) {
-     router.replace('/(main)/(tabs)');
-   }
- };
-
- const timeoutId = setTimeout(navigate, 0);
- return () => clearTimeout(timeoutId);
- }, [user, isLoading, hasCompletedOnboarding]); // Removed 'segments' from dependencies to stop destroying navigation history on every screen change!
-
- // The global BackHandler hack has been removed to allow Expo Router to natively handle the stack history and predictive back gestures.
- return <Stack screenOptions={{ headerShown: false }} />;
-}
-
 import { QueryProvider } from '../src/providers/QueryProvider';
 import { setupApiInterceptors } from '../src/services/api/interceptors';
 import { StatusBar } from 'expo-status-bar';
@@ -93,39 +48,94 @@ import { ExperienceProvider } from '../src/shared/providers/ExperienceProvider';
 
 setupApiInterceptors();
 
+function useAuthRouting() {
+  const { user, isLoading, hasCompletedOnboarding } = useAuthStore();
+  const segments = useSegments();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isLoading) return;
+
+    const inAuthGroup = segments[0] === '(auth)';
+    const inOnboardingGroup = segments[0] === '(onboarding)';
+    const isRoot = (segments.length as number) === 0;
+
+    const navigate = () => {
+      if (!hasCompletedOnboarding) {
+        if (!inOnboardingGroup) {
+          router.replace('/(onboarding)/splash');
+        }
+        return;
+      }
+
+      if (!user) {
+        if (!inAuthGroup) {
+          router.replace('/(auth)');
+        }
+        return;
+      }
+
+      if (user) {
+        const isPasswordProvider = user.providerData?.some(p => p.providerId === 'password');
+        if (isPasswordProvider && !user.emailVerified) {
+          if (segments.join('/') !== '(auth)/verify-email') {
+             router.replace(`/(auth)/verify-email?email=${encodeURIComponent(user.email || '')}`);
+          }
+          return;
+        }
+      }
+
+      if (inAuthGroup || inOnboardingGroup || isRoot) {
+        router.replace('/(main)/(tabs)');
+      }
+    };
+
+    const timeoutId = setTimeout(navigate, 0);
+    return () => clearTimeout(timeoutId);
+  }, [user, isLoading, hasCompletedOnboarding, segments]);
+}
+
+export const unstable_settings = {
+  // Ensure that reloading on `/` keeps a back button present.
+  initialRouteName: '(main)',
+};
+
 export default function RootLayout() {
- const [loaded, error] = useFonts({
- PublicSans_400Regular,
- PublicSans_500Medium,
- PublicSans_600SemiBold,
- PublicSans_700Bold,
- Pacifico_400Regular,
- });
+  const [loaded, error] = useFonts({
+    PublicSans_400Regular,
+    PublicSans_500Medium,
+    PublicSans_600SemiBold,
+    PublicSans_700Bold,
+    Pacifico_400Regular,
+  });
 
- useEffect(() => {
- if (loaded || error) {
- SplashScreen.hideAsync();
- }
- }, [loaded, error]);
+  usePushNotifications();
+  useAuthRouting();
 
- if (!loaded && !error) {
- return null;
- }
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, error]);
 
- return (
- <QueryProvider>
- <AuthProvider>
- <ExperienceProvider>
- <GestureHandlerRootView style={{ flex: 1 }}>
- <BottomSheetModalProvider>
- <SafeAreaProvider>
- <RootNavigationHandler />
- <StatusBar style="dark" />
- </SafeAreaProvider>
- </BottomSheetModalProvider>
- </GestureHandlerRootView>
- </ExperienceProvider>
- </AuthProvider>
- </QueryProvider>
- );
+  if (!loaded && !error) {
+    return null;
+  }
+
+  return (
+    <QueryProvider>
+      <AuthProvider>
+        <ExperienceProvider>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <BottomSheetModalProvider>
+              <SafeAreaProvider>
+                <Stack screenOptions={{ headerShown: false }} />
+                <StatusBar style="dark" />
+              </SafeAreaProvider>
+            </BottomSheetModalProvider>
+          </GestureHandlerRootView>
+        </ExperienceProvider>
+      </AuthProvider>
+    </QueryProvider>
+  );
 }

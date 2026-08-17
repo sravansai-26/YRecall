@@ -1,14 +1,39 @@
-import { View, Text, ScrollView, TouchableOpacity, TextInput, Switch } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, Switch, ActivityIndicator } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Screen, Button } from '../../src/shared/components';
 import { colors } from '../../src/shared/theme/colors';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
+import { useCreateInvitation, useWorkspaceInvitations, useRevokeInvitation } from '../../src/modules/workspaces/api';
+import { useWorkspaceStore } from '../../src/modules/workspaces/store';
 
 export default function TeamsInvite() {
  const router = useRouter();
+ const { activeWorkspaceId } = useWorkspaceStore();
  const [emails, setEmails] = useState('');
  const [linkExpToggle, setLinkExpToggle] = useState(true);
+
+ const createMutation = useCreateInvitation();
+ const revokeMutation = useRevokeInvitation();
+ const { data: pendingInvitations, isLoading: isLoadingInvites } = useWorkspaceInvitations(activeWorkspaceId);
+
+ const handleSendInvitations = () => {
+   if (!emails.trim() || !activeWorkspaceId) return;
+   const emailList = emails.split(',').map(e => e.trim()).filter(e => e.length > 0);
+   
+   emailList.forEach(email => {
+     createMutation.mutate({
+       workspaceId: activeWorkspaceId,
+       data: { email, role: 'editor' }
+     }, {
+       onError: (err: any) => {
+          require('react-native').Alert.alert('Invite Error', err.response?.data?.detail || 'Failed to send invite');
+       }
+     });
+   });
+   setEmails('');
+ };
+
 
  return (
  <Screen scrollable={true}>
@@ -69,9 +94,10 @@ export default function TeamsInvite() {
  
  <Button 
  variant="primary" 
- label="Send Invitations" 
+ label={createMutation.isPending ? "Sending..." : "Send Invitations"} 
  icon="send"
- onPress={() => router.push('/(teams)/join')} 
+ onPress={handleSendInvitations} 
+ disabled={createMutation.isPending || !emails.trim()}
  />
  </View>
  </View>
@@ -82,90 +108,38 @@ export default function TeamsInvite() {
  <View className="flex-row justify-between items-center mb-6">
  <Text className="font-title-sm font-bold text-primary">Pending Invitations</Text>
  <View className="bg-secondary-container px-3 py-1 rounded-full">
- <Text className="text-label-xs font-bold text-secondary">2 Pending</Text>
+ <Text className="text-label-xs font-bold text-secondary">{pendingInvitations?.length || 0} Pending</Text>
  </View>
  </View>
 
  <View className="flex-col gap-2">
- <View className="flex-row items-center justify-between p-4 rounded-xl ">
- <View className="flex-row items-center gap-4">
- <View className="w-10 h-10 rounded-full bg-surface-container-high items-center justify-center">
- <Text className="font-bold text-primary">M</Text>
- </View>
- <View>
- <Text className="font-body-md font-semibold text-on-surface">marcus.v@future.tech</Text>
- <Text className="text-caption-sm text-on-surface-variant">Editor • Sent 2h ago</Text>
- </View>
- </View>
- <TouchableOpacity onPress={() => require('react-native').Alert.alert('Coming Soon', 'Backend integration pending')}>
- <Text className="text-label-xs font-bold text-primary ">Resend</Text>
- </TouchableOpacity>
- </View>
-
- <View className="flex-row items-center justify-between p-4 rounded-xl ">
- <View className="flex-row items-center gap-4">
- <View className="w-10 h-10 rounded-full bg-surface-container-high items-center justify-center">
- <Text className="font-bold text-primary">J</Text>
- </View>
- <View>
- <Text className="font-body-md font-semibold text-on-surface">julia.chen@design.io</Text>
- <Text className="text-caption-sm text-on-surface-variant">Viewer • Sent 5h ago</Text>
- </View>
- </View>
- <TouchableOpacity onPress={() => require('react-native').Alert.alert('Coming Soon', 'Backend integration pending')}>
- <Text className="text-label-xs font-bold text-primary ">Resend</Text>
- </TouchableOpacity>
- </View>
+ {isLoadingInvites ? (
+   <ActivityIndicator color={colors.primary} />
+ ) : pendingInvitations?.length === 0 ? (
+   <Text className="text-on-surface-variant text-sm">No pending invitations.</Text>
+ ) : (
+   pendingInvitations?.map((invite: any) => (
+     <View key={invite.id} className="flex-row items-center justify-between p-4 rounded-xl border border-surface-container-highest mb-2">
+       <View className="flex-row items-center gap-4">
+         <View className="w-10 h-10 rounded-full bg-surface-container-high items-center justify-center">
+           <Text className="font-bold text-primary">{invite.email.charAt(0).toUpperCase()}</Text>
+         </View>
+         <View>
+           <Text className="font-body-md font-semibold text-on-surface">{invite.email}</Text>
+           <Text className="text-caption-sm text-on-surface-variant">{invite.role}</Text>
+         </View>
+       </View>
+       <TouchableOpacity onPress={() => revokeMutation.mutate({ workspaceId: activeWorkspaceId!, invitationId: invite.id })}>
+         <Text className="text-label-xs font-bold text-error">Revoke</Text>
+       </TouchableOpacity>
+     </View>
+   ))
+ )}
  </View>
  </View>
  </View>
 
- {/* Right Section: Share Link & QR */}
- <View className="flex-col md:w-80 gap-6">
- 
- {/* Quick Invite Link */}
- <View className="bg-surface-container-lowest p-6 rounded-[24px] shadow-sm border-surface-container-high overflow-hidden relative">
- <View className="absolute top-0 right-0 w-24 h-24 bg-secondary/10 rounded-full -mr-12 -mt-12 blur-xl" />
- 
- <View className="flex-row items-center gap-2 mb-4">
- <MaterialIcons name="link" size={20} color={colors.primary} />
- <Text className="font-title-sm font-bold text-primary">Quick Invite Link</Text>
- </View>
-
- <View className="flex-col gap-4">
- <View className="flex-row items-center justify-between p-2 bg-surface-container-low rounded-lg ">
- <Text className="text-caption-sm text-on-surface-variant flex-1 px-2" numberOfLines={1}>workspace.ai/join/v4r-8k...</Text>
- <TouchableOpacity onPress={() => require('react-native').Alert.alert('Coming Soon', 'Backend integration pending')} className="p-2 bg-primary rounded-md">
- <MaterialIcons name="content-copy" size={18} color="#ffffff" />
- </TouchableOpacity>
- </View>
-
- <View className="flex-row items-center justify-between py-2 border-t mt-2">
- <View className="flex-col">
- <Text className="font-label-xs font-bold uppercase tracking-wider text-on-surface">Link Expiration</Text>
- <Text className="text-caption-sm text-on-surface-variant">Expires in 7 days</Text>
- </View>
- <Switch 
- value={linkExpToggle} 
- onValueChange={setLinkExpToggle}
- trackColor={{ false: colors['surface-container-highest'], true: colors.secondary }}
- thumbColor="#ffffff"
- />
- </View>
- </View>
- </View>
-
- {/* In-Person QR */}
- <View className="bg-surface-container-lowest p-6 rounded-[24px] shadow-sm border-surface-container-high flex-col items-center">
- <Text className="font-title-sm font-bold text-primary mb-2">In-Person Join</Text>
- <Text className="text-caption-sm text-on-surface-variant text-center mb-6">Ask your team to scan this code to join immediately.</Text>
- 
- <View className="p-4 bg-white rounded-2xl shadow-sm items-center justify-center w-full aspect-square">
- <MaterialIcons name="qr-code-2" size={160} color={colors.primary} />
- </View>
- </View>
-
- </View>
+ {/* Right Section Removed (Mocked UI) */}
 
  </View>
  </Screen>

@@ -26,8 +26,10 @@ export default function OnboardingIntro2() {
  <View className="flex-1 items-center justify-between px-margin-mobile pb-xxl">
  <View className="flex-1 w-full items-center justify-center pt-xl">
  <View className="w-full max-w-md aspect-square items-center justify-center">
- <View className="w-full h-full rounded-[40px] bg-transparent items-center justify-center">
- <MaterialIcons name="share" size={120} color={colors.primary} />
+ <View className="w-full h-full rounded-[40px] bg-surface-container-lowest items-center justify-center border border-surface-variant shadow-sm" style={{ elevation: 2 }}>
+ <View className="w-48 h-48 rounded-full bg-secondary-fixed items-center justify-center">
+ <MaterialIcons name="share" size={96} color={colors['on-secondary-fixed']} />
+ </View>
  </View>
  </View>
  </View>

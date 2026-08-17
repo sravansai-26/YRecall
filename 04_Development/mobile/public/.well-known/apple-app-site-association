@@ -1,0 +1,14 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "<YOUR_APPLE_TEAM_ID>.com.lyfspot.yrecall",
+        "paths": [
+          "/reset-password",
+          "/(auth)/reset-password"
+        ]
+      }
+    ]
+  }
+}
