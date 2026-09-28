@@ -22,6 +22,7 @@ from app.modules.auth.controller import router as auth_router
 
 from contextlib import asynccontextmanager
 from .core.database import SessionLocal
+from .core.config import settings
 from .modules.billing import subscription_service
 from app.core.ai.worker import ai_worker
 
@@ -50,9 +51,11 @@ app = FastAPI(
 )
 
 # CORS Setup
+origins = [origin.strip() for origin in settings.ALLOWED_ORIGINS.split(",") if origin.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Should be restricted in production
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -80,4 +83,8 @@ app.include_router(auth_router, prefix="/api/v1/auth", tags=["Auth"])
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
+
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to YRecall API", "status": "online"}
 app.include_router(support_router, prefix="/api/v1", tags=["Support"])
