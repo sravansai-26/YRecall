@@ -15,8 +15,8 @@ engine = create_engine(
     db_url, 
     pool_pre_ping=True,
     pool_recycle=1800,  # recycle connections every 30 minutes
-    pool_size=10,       # standard pool size
-    max_overflow=20,    # max connections beyond pool_size
+    pool_size=settings.DB_POOL_SIZE,
+    max_overflow=settings.DB_MAX_OVERFLOW,
     connect_args={
         "keepalives": 1,
         "keepalives_idle": 30,

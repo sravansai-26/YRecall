@@ -4,10 +4,15 @@ class Settings(BaseSettings):
     DATABASE_URL: str
     SUPABASE_URL: str
     SUPABASE_SERVICE_KEY: str
-    FIREBASE_SERVICE_ACCOUNT_PATH: str
+    FIREBASE_SERVICE_ACCOUNT_PATH: str = ""
+    FIREBASE_SERVICE_ACCOUNT_JSON: str = ""
     GEMINI_API_KEY: str
     OPENROUTER_API_KEY: str = ""
     GROQ_API_KEY: str = ""
+    
+    ALLOWED_ORIGINS: str = "http://localhost:8081,https://yrecall.app"
+    DB_POOL_SIZE: int = 10
+    DB_MAX_OVERFLOW: int = 20
     
     # AI Architecture settings
     ASK_AI_PROVIDER: str = "gemini"

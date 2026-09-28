@@ -8,19 +8,69 @@ from .database import get_db
 from .config import settings
 from ..modules.users.models import User
 
-# Initialize Firebase Admin
-if settings.FIREBASE_SERVICE_ACCOUNT_PATH and os.path.exists(settings.FIREBASE_SERVICE_ACCOUNT_PATH):
-    cred = credentials.Certificate(settings.FIREBASE_SERVICE_ACCOUNT_PATH)
-    firebase_admin.initialize_app(cred)
-else:
-    # Initialize with default app if credentials aren't found locally (e.g. deployed environments)
-    # or print a warning
-    print(f"WARNING: Firebase service account path not found at {settings.FIREBASE_SERVICE_ACCOUNT_PATH}. Auth will fail.")
+import json
+
+import logging
+logger = logging.getLogger(__name__)
+
+# Initialize Firebase Admin at module load
+def init_firebase():
+    if not firebase_admin._apps:
+        try:
+            if settings.FIREBASE_SERVICE_ACCOUNT_JSON:
+                # Load from JSON string (production approach)
+                # Azure sometimes wraps the secret value in outer single-quotes: '{"type":...}'
+                raw = settings.FIREBASE_SERVICE_ACCOUNT_JSON.strip()
+                if raw.startswith("'") and raw.endswith("'"):
+                    raw = raw[1:-1]
+                try:
+                    cert_dict = json.loads(raw)
+                except json.JSONDecodeError:
+                    # Fallback: unescape unicode escape sequences (e.g. \\n -> \n in private_key)
+                    json_str = raw.encode('utf-8').decode('unicode_escape')
+                    cert_dict = json.loads(json_str)
+                
+                cred = credentials.Certificate(cert_dict)
+                firebase_admin.initialize_app(cred)
+                logger.info("Firebase Admin initialized via JSON string.")
+                print("FIREBASE INIT SUCCESS: Firebase Admin initialized via JSON string.", flush=True)
+            elif settings.FIREBASE_SERVICE_ACCOUNT_PATH and os.path.exists(settings.FIREBASE_SERVICE_ACCOUNT_PATH):
+                # Load from local file (development approach)
+                cred = credentials.Certificate(settings.FIREBASE_SERVICE_ACCOUNT_PATH)
+                firebase_admin.initialize_app(cred)
+                logger.info("Firebase Admin initialized via JSON file path.")
+                print("FIREBASE INIT SUCCESS: Firebase Admin initialized via JSON file path.", flush=True)
+            else:
+                logger.warning("Neither FIREBASE_SERVICE_ACCOUNT_JSON nor a valid FIREBASE_SERVICE_ACCOUNT_PATH was provided. Auth will fail.")
+                print("FIREBASE INIT WARNING: Neither JSON nor PATH provided.", flush=True)
+        except Exception as e:
+            logger.error(f"Failed to initialize Firebase Admin: {e}", exc_info=True)
+            print(f"FIREBASE INIT ERROR: {repr(e)}", flush=True)
+            import traceback
+            traceback.print_exc()
+            # DO NOT swallow the exception silently. Let it be known!
+            raise RuntimeError(f"Firebase Admin Initialization Error: {str(e)}")
+
+# Attempt initialization
+init_firebase()
 
 security = HTTPBearer()
 
 def verify_firebase_token(credentials: HTTPAuthorizationCredentials = Depends(security)) -> dict:
     """Verifies the Firebase JWT token and returns the decoded token."""
+    if not firebase_admin._apps:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail={
+                "success": False,
+                "error": {
+                    "code": "INTERNAL_SERVER_ERROR",
+                    "message": "Firebase Admin SDK is not initialized correctly on the server.",
+                    "details": ["The default Firebase app does not exist."]
+                }
+            }
+        )
+    
     try:
         token = credentials.credentials
         decoded_token = auth.verify_id_token(token)

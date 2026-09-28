@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional, Any, Dict
 from datetime import datetime
 from uuid import UUID
@@ -26,8 +26,7 @@ class MigrationJobResponse(BaseModel):
     completed_at: Optional[datetime] = None
     created_at: datetime
     
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class ExportRequest(BaseModel):
     categories: List[str] = Field(..., description="e.g. ['memories', 'timeline', 'settings']")
