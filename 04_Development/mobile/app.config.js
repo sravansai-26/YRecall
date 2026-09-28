@@ -22,6 +22,7 @@ module.exports = {
       monochromeImage: "./assets/images/android-icon-monochrome.png",
     },
     package: "com.lyfspot.yrecall",
+    versionCode: 1,
     predictiveBackGestureEnabled: false,
     googleServicesFile: "./google-services.json",
     softwareKeyboardLayoutMode: "pan", 
