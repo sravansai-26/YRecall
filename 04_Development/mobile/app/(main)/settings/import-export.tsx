@@ -193,7 +193,7 @@ export default function MigrationHub() {
                         disabled={createExport.isPending}
                         className={`h-14 rounded-xl items-center justify-center flex-row gap-2 ${createExport.isPending ? 'bg-surface-variant' : 'bg-primary'}`}
                     >
-                        {createExport.isPending ? <ActivityIndicator color={colors.on_surface_variant} /> : <MaterialIcons name="file-download" size={20} color="#fff" />}
+                        {createExport.isPending ? <ActivityIndicator color={colors['on-surface-variant']} /> : <MaterialIcons name="file-download" size={20} color="#fff" />}
                         <Text className={`font-medium text-base ${createExport.isPending ? 'text-on-surface-variant' : 'text-white'}`}>
                             {createExport.isPending ? 'Generating...' : 'Start Full Account Export'}
                         </Text>
@@ -226,7 +226,7 @@ export default function MigrationHub() {
                                     <View key={job.id} className="bg-white p-4 rounded-2xl shadow-sm border border-outline/10 flex-col sm:flex-row justify-between sm:items-center gap-4">
                                         <View className="flex-row items-center gap-4">
                                             <View className={`w-12 h-12 rounded-full items-center justify-center ${job.job_type === 'export' ? 'bg-secondary-container' : 'bg-primary-container'}`}>
-                                                <MaterialIcons name={job.job_type === 'export' ? 'file-download' : 'file-upload'} size={24} color={job.job_type === 'export' ? colors.on_secondary_container : colors.on_primary_container} />
+                                                <MaterialIcons name={job.job_type === 'export' ? 'file-download' : 'file-upload'} size={24} color={job.job_type === 'export' ? colors['on-secondary-container'] : colors['on-primary-container']} />
                                             </View>
                                             <View className="flex-col">
                                                 <Text className="font-bold text-base text-on-surface capitalize">{job.job_type} ({job.archive_format || 'N/A'})</Text>
@@ -246,7 +246,7 @@ export default function MigrationHub() {
                                                 </View>
                                             )}
                                             <TouchableOpacity onPress={() => deleteJob.mutate(job.id)} className="w-10 h-10 bg-surface-container-high rounded-full items-center justify-center active:bg-surface-variant">
-                                                <MaterialIcons name="close" size={20} color={colors.on_surface_variant} />
+                                                <MaterialIcons name="close" size={20} color={colors['on-surface-variant']} />
                                             </TouchableOpacity>
                                         </View>
                                     </View>
