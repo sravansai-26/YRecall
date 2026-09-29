@@ -108,10 +108,6 @@ export default function GuideScreen() {
 
                 <View className="flex-col gap-2">
                     <Text className="font-headline-md text-3xl font-bold text-primary">{guide.title}</Text>
-                    <View className="w-full h-2 bg-surface-variant rounded-full mt-4 overflow-hidden">
-                        <View className="h-full bg-primary" style={{ width: guide.progress as DimensionValue }} />
-                    </View>
-                    <Text className="text-xs text-outline mt-1 font-medium">{guide.progress} completed</Text>
                 </View>
 
                 {/* Content */}
@@ -128,15 +124,6 @@ export default function GuideScreen() {
                         </View>
                     ))}
                 </View>
-
-                <TouchableOpacity 
-                    onPress={() => router.back()}
-                    className="w-full h-14 bg-primary rounded-xl flex-row items-center justify-center gap-2 mt-8"
-                >
-                    <MaterialIcons name="check" size={20} color="#ffffff" />
-                    <Text className="font-bold text-white text-base">Complete Guide</Text>
-                </TouchableOpacity>
-
             </View>
         </Screen>
     );

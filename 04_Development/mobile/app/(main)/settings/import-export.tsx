@@ -112,9 +112,7 @@ export default function MigrationHub() {
                     {/* Google Drive (Connected) */}
                     <TouchableOpacity onPress={handleDriveSync} className="w-full md:flex-1 bg-white p-6 rounded-[24px] shadow-sm flex-col justify-between active:scale-[0.98]">
                         <View className="flex-row justify-between items-start mb-12">
-                            <View className="w-14 h-14 bg-surface-container rounded-2xl items-center justify-center shadow-sm">
-                                <Image source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDgoQm63QZuRY1Q_JtsRvrGnbow1A2Lky-cP3AJUZzxNrQokvUxKZ0J6__CA1uSFTodZ-5sk83KOkgrlVRnWz2gOzY6lZfmAXBOiBy8p2lemlKAaftVhkYt5dmnR9CoqMBNPsAE3slRjITAuYz8T_V9p-PdxtxSyLtaSafiOULaoT8D4t1Jf-9P9MeGXpf00opsgZG5v-XSQjViqGaECW1fxcRtIsbqKPViTOQ8dhumYHblfVNUPq1Cx7NA_i9QWXX6T2aSn7pplLA' }} className="w-8 h-8" resizeMode="contain" />
-                            </View>
+                            <Image source={require('../../../../assets/logos/gdrive.png')} className="w-10 h-10" resizeMode="contain" />
                             <View className="bg-tertiary-fixed px-3 py-1 rounded-full">
                                 <Text className="text-on-tertiary-fixed font-label-xs text-xs font-bold">Connected (Real-time)</Text>
                             </View>
@@ -129,9 +127,7 @@ export default function MigrationHub() {
                     {Platform.OS === 'ios' && (
                         <View className="w-full md:flex-1 bg-white p-6 rounded-[24px] shadow-sm flex-col justify-between">
                             <View className="flex-row justify-between items-start mb-12">
-                                <View className="w-14 h-14 bg-surface-container rounded-2xl items-center justify-center shadow-sm">
-                                    <Image source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB36Fs_77JX8QxM3CwseP2kqiIm4AANaF_YQboGyqSh2Dv_IFrhGzefDM7CM0FyIew5hmDx3vuy6YP-GZ7biXjnjDH0keh4dPNutEuCIGAYw8kjhjH8oiNqbUIP1zmZplQASvZvvU9akewq5DXPUKFaOmulQlK3OZ8dtwxPLpQi4OEgr5IEaDvGCbVwfyaI6F_FjaH25RI47o0fR34SBcLLLppkYCu96fxf_zYJqfkFDaSlw_k38LO6Smj0MCuZYOTzDI1YmJaYcuo' }} className="w-8 h-8" resizeMode="contain" />
-                                </View>
+                                <Image source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB36Fs_77JX8QxM3CwseP2kqiIm4AANaF_YQboGyqSh2Dv_IFrhGzefDM7CM0FyIew5hmDx3vuy6YP-GZ7biXjnjDH0keh4dPNutEuCIGAYw8kjhjH8oiNqbUIP1zmZplQASvZvvU9akewq5DXPUKFaOmulQlK3OZ8dtwxPLpQi4OEgr5IEaDvGCbVwfyaI6F_FjaH25RI47o0fR34SBcLLLppkYCu96fxf_zYJqfkFDaSlw_k38LO6Smj0MCuZYOTzDI1YmJaYcuo' }} className="w-10 h-10" resizeMode="contain" />
                                 <View className="flex-row items-center gap-1 bg-secondary-container px-3 py-1 rounded-full">
                                     <MaterialIcons name="sync" size={14} color={colors['on-secondary-container']} />
                                     <Text className="text-on-secondary-container font-label-xs text-xs font-bold">Syncing 85%</Text>
@@ -147,9 +143,7 @@ export default function MigrationHub() {
                     {/* Notion (Action Required) */}
                     <View className="w-full md:flex-1 bg-white p-6 rounded-[24px] shadow-sm border-error/20 flex-col justify-between">
                         <View className="flex-row justify-between items-start mb-12">
-                            <View className="w-14 h-14 bg-surface-container rounded-2xl items-center justify-center shadow-sm">
-                                <Image source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDI3dDMI3RJ1Sg-K3rs9_sqsv3AnGG6pVXdm0t6TeKoK2UHVB2IwuyjVzXuzAycqPvK0ST1gBAhxk-zEIP6fFMkUtNODclKLWhpJbGspk66l7XYhWRasEr4jXHeIhLHAka0ciEZNDHH7kSvallJDdLJF-ys16ugGiyJJy4zz04VIXYS3DrQgfjk8Txjz0PbO4cXT3OkzcTA5Mfl9WDXWnRgMTVtkLCHoYMwFIZLxhQEVuWlERTbMa9vc9botIKryeOiK1J-HiCXEJM' }} className="w-8 h-8" resizeMode="contain" />
-                            </View>
+                            <Image source={require('../../../../assets/logos/notion.png')} className="w-10 h-10" resizeMode="contain" />
                             <View className="bg-surface-variant px-3 py-1 rounded-full">
                                 <Text className="text-on-surface-variant font-label-xs text-xs font-bold">Coming Soon</Text>
                             </View>
@@ -163,9 +157,7 @@ export default function MigrationHub() {
                     {/* Obsidian (Not Connected - Large Feature Card) */}
                     <View className="w-full md:flex-1 bg-white p-6 rounded-[24px] shadow-sm flex-col justify-between">
                         <View className="flex-row justify-between items-start mb-12">
-                            <View className="w-14 h-14 bg-surface-container rounded-2xl items-center justify-center shadow-sm">
-                                <Image source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCkD4Fxq6T5Tq5ez-sXJt6-8jFYK16o7mgC1H6CvnYkcjUUWvh3H9aho1l1F2eM-k4Hy2gMSpQuxcF5JMp1v-2j5vF1zDsDZ19Ur59Gcc4fW5rS6ugmTxny0M0ozztQY2xnoNUZjhbTTe-8hA6PzmZQdGMXCBjfh4dOm-iIHSTOvQYydb2rI3I70dy_0BG0WWG70FFhMcPCAtXL_2Zh_-HCHAJm108HAzqN1WUozoSye1g5nbV_RTQ0lwy7Vh2m4pMYxhXoyuONFOo' }} className="w-8 h-8" resizeMode="contain" />
-                            </View>
+                            <Image source={require('../../../../assets/logos/obsidian.png')} className="w-10 h-10" resizeMode="contain" />
                             <View className="bg-surface-variant px-3 py-1 rounded-full">
                                 <Text className="text-on-surface-variant font-label-xs text-xs font-bold">Coming Soon</Text>
                             </View>

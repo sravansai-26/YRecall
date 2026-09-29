@@ -1,231 +1,214 @@
-import { View, Text, ScrollView, TouchableOpacity, Switch } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, Alert, Image } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Screen } from '../../../src/shared/components';
 import { colors } from '../../../src/shared/theme/colors';
 import { useRouter } from 'expo-router';
 import React, { useState, useEffect } from 'react';
 import { useWidgetPreferences, useUpdateWidgetPreferences } from '../../../src/modules/widgets/api';
-import { ActivityIndicator, Alert } from 'react-native';
 
- export default function WidgetSettings() {
- const router = useRouter();
- 
- const { data: preferences, isLoading } = useWidgetPreferences();
- const updatePreferences = useUpdateWidgetPreferences();
+export default function WidgetSettings() {
+    const router = useRouter();
+    
+    const { data: preferences, isLoading } = useWidgetPreferences();
+    const updatePreferences = useUpdateWidgetPreferences();
 
- const [widgetStyle, setWidgetStyle] = useState('compact');
- const [mainAction, setMainAction] = useState('quick');
- const [showAiInsights, setShowAiInsights] = useState(true);
- const [privacyMasking, setPrivacyMasking] = useState(false);
+    const [selectedWidget, setSelectedWidget] = useState('search');
 
- useEffect(() => {
-     if (preferences?.global_config) {
-         setWidgetStyle(preferences.global_config.style || 'compact');
-         setMainAction(preferences.global_config.main_action || 'quick');
-         setShowAiInsights(preferences.global_config.show_ai_insights ?? true);
-         setPrivacyMasking(preferences.global_config.privacy_masking ?? false);
-     }
- }, [preferences]);
+    useEffect(() => {
+        if (preferences?.global_config?.selected_widget) {
+            setSelectedWidget(preferences.global_config.selected_widget);
+        }
+    }, [preferences]);
 
- const handleSave = async () => {
-     try {
-         await updatePreferences.mutateAsync({
-             style: widgetStyle,
-             main_action: mainAction,
-             show_ai_insights: showAiInsights,
-             privacy_masking: privacyMasking
-         });
-         Alert.alert('Saved', 'Widget configuration saved to the engine. Active widgets will refresh on their next cycle.');
-     } catch (e) {
-         Alert.alert('Error', 'Failed to save configuration');
-     }
- };
+    const handleSave = async () => {
+        try {
+            await updatePreferences.mutateAsync({
+                selected_widget: selectedWidget
+            });
+            Alert.alert('Saved', 'Widget configuration saved to the engine. Active widgets will refresh on their next cycle.');
+        } catch (e) {
+            Alert.alert('Error', 'Failed to save configuration');
+        }
+    };
 
- const actions = {
- 'quick': { icon: 'bolt', title: 'Quick Capture', desc: 'Instant text entry with AI auto-tagging' },
- 'voice': { icon: 'mic', title: 'Voice Memo', desc: 'Record and transcribe instantly' },
- 'photo': { icon: 'camera-enhance', title: 'Photo Scan', desc: 'OCR and image intelligence capture' },
- 'smart': { icon: 'subject', title: 'Smart Text', desc: 'Analyze clipboard content automatically' },
- } as const;
+    const WIDGETS = [
+        { id: 'search', title: 'YRecall Search', desc: 'Instantly search your memories and knowledge base from your home screen.', icon: 'search' },
+        { id: 'capture', title: 'YRecall Quick Capture', desc: 'One-tap access to voice, text, or photo capture.', icon: 'bolt' },
+        { id: 'brief', title: 'YRecall Daily Brief', desc: 'Your personalized AI summary of the day, updated every morning.', icon: 'auto-awesome' },
+        { id: 'timeline', title: 'YRecall Timeline', desc: 'Glance at your most recent captured memories and events.', icon: 'history' },
+    ];
 
- if (isLoading) {
-     return (
-         <Screen scrollable={false} className="items-center justify-center">
-             <ActivityIndicator size="large" color={colors.primary} />
-         </Screen>
-     );
- }
+    if (isLoading) {
+        return (
+            <Screen scrollable={false} className="items-center justify-center">
+                <ActivityIndicator size="large" color={colors.primary} />
+            </Screen>
+        );
+    }
 
- return (
- <Screen scrollable={true} className="pb-24">
- {/* TopAppBar */}
- <View className="w-full sticky top-0 z-50 bg-surface flex-row items-center justify-between px-margin-mobile md:px-margin-desktop h-16">
- <View className="flex-row items-center gap-4">
- <TouchableOpacity onPress={() => router.back()} className="p-2 -ml-2 rounded-full ">
- <MaterialIcons name="arrow-back" size={24} color={colors.primary} />
- </TouchableOpacity>
- <Text className="font-headline-md text-2xl text-primary font-bold">Widget Settings</Text>
- </View>
- </View>
+    const renderWidgetPreview = () => {
+        switch (selectedWidget) {
+            case 'search':
+                return (
+                    <View className="bg-white/80 rounded-[20px] p-4 shadow-xl w-full border border-white/50">
+                        <View className="flex-row items-center gap-3 bg-surface-container rounded-full px-4 py-3">
+                            <MaterialIcons name="search" size={20} color={colors.primary} />
+                            <Text className="text-on-surface-variant text-sm font-medium">Search YRecall...</Text>
+                        </View>
+                        <View className="flex-row justify-around mt-4">
+                            <MaterialIcons name="mic" size={24} color={colors.primary} />
+                            <MaterialIcons name="camera-alt" size={24} color={colors.primary} />
+                            <MaterialIcons name="edit" size={24} color={colors.primary} />
+                        </View>
+                    </View>
+                );
+            case 'capture':
+                return (
+                    <View className="bg-primary rounded-[24px] p-4 shadow-xl w-full flex-row items-center justify-between">
+                        <View className="flex-col">
+                            <Text className="text-white font-bold text-base">Quick Capture</Text>
+                            <Text className="text-white/80 text-xs">Tap to record</Text>
+                        </View>
+                        <View className="w-12 h-12 rounded-full bg-white/20 items-center justify-center">
+                            <MaterialIcons name="bolt" size={28} color="#ffffff" />
+                        </View>
+                    </View>
+                );
+            case 'brief':
+                return (
+                    <View className="bg-white/90 rounded-[24px] p-5 shadow-xl w-full border border-white/50">
+                        <View className="flex-row items-center justify-between mb-3">
+                            <Text className="font-bold text-on-surface text-base">Daily Brief</Text>
+                            <MaterialIcons name="auto-awesome" size={20} color={colors.secondary} />
+                        </View>
+                        <Text className="text-on-surface-variant text-sm leading-relaxed">
+                            "You have a meeting with Sarah at 3 PM, and 3 ideas saved for your new project."
+                        </Text>
+                    </View>
+                );
+            case 'timeline':
+                return (
+                    <View className="bg-white/90 rounded-[24px] p-4 shadow-xl w-full border border-white/50">
+                        <View className="flex-row items-center mb-3">
+                            <MaterialIcons name="history" size={18} color={colors.primary} className="mr-2" />
+                            <Text className="font-bold text-on-surface text-sm">Recent Memories</Text>
+                        </View>
+                        <View className="flex-col gap-3">
+                            <View className="flex-row items-center gap-3">
+                                <View className="w-10 h-10 rounded-lg bg-surface-container items-center justify-center">
+                                    <MaterialIcons name="image" size={18} color={colors.primary} />
+                                </View>
+                                <View>
+                                    <Text className="text-sm font-bold text-on-surface">Whiteboard Photo</Text>
+                                    <Text className="text-xs text-on-surface-variant">10 mins ago</Text>
+                                </View>
+                            </View>
+                            <View className="flex-row items-center gap-3">
+                                <View className="w-10 h-10 rounded-lg bg-surface-container items-center justify-center">
+                                    <MaterialIcons name="mic" size={18} color={colors.primary} />
+                                </View>
+                                <View>
+                                    <Text className="text-sm font-bold text-on-surface">Voice Note</Text>
+                                    <Text className="text-xs text-on-surface-variant">2 hours ago</Text>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+                );
+            default:
+                return null;
+        }
+    };
 
- <View className="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-desktop py-6 flex-col md:flex-row gap-8 w-full">
- 
- {/* Selection & Customization Column */}
- <View className="flex-col gap-8 flex-1 w-full md:w-[60%]">
- 
- {/* Section: Widget Type */}
- <View className="flex-col">
- <Text className="font-title-sm text-xl font-bold text-on-surface mb-4">Widget Style</Text>
- <View className="flex-row gap-4">
- <TouchableOpacity 
- onPress={() => setWidgetStyle('compact')}
- className={`flex-1 flex-col items-center justify-center p-6 rounded-xl border-2 transition-all ${widgetStyle === 'compact' ? 'border-primary bg-surface-container' : 'border-transparent bg-surface-container-low '}`}
- >
- <MaterialIcons name="view-compact" size={36} color={widgetStyle === 'compact' ? colors.primary : colors['on-surface-variant']} />
- <Text className={`font-body-md text-base mt-2 ${widgetStyle === 'compact' ? 'font-semibold text-primary' : 'text-on-surface-variant'}`}>Compact</Text>
- </TouchableOpacity>
- <TouchableOpacity 
- onPress={() => setWidgetStyle('expanded')}
- className={`flex-1 flex-col items-center justify-center p-6 rounded-xl border-2 transition-all ${widgetStyle === 'expanded' ? 'border-primary bg-surface-container' : 'border-transparent bg-surface-container-low '}`}
- >
- <MaterialIcons name="view-quilt" size={36} color={widgetStyle === 'expanded' ? colors.primary : colors['on-surface-variant']} />
- <Text className={`font-body-md text-base mt-2 ${widgetStyle === 'expanded' ? 'font-semibold text-primary' : 'text-on-surface-variant'}`}>Expanded</Text>
- </TouchableOpacity>
- </View>
- </View>
+    return (
+        <Screen scrollable={true} className="pb-24">
+            {/* TopAppBar */}
+            <View className="w-full sticky top-0 z-50 bg-surface flex-row items-center justify-between px-margin-mobile md:px-margin-desktop h-16">
+                <View className="flex-row items-center gap-4">
+                    <TouchableOpacity onPress={() => router.back()} className="p-2 -ml-2 rounded-full ">
+                        <MaterialIcons name="arrow-back" size={24} color={colors.primary} />
+                    </TouchableOpacity>
+                    <Text className="font-headline-md text-2xl text-primary font-bold">Widget Settings</Text>
+                </View>
+            </View>
 
- {/* Section: Action Customization */}
- <View className="flex-col">
- <View className="flex-row items-center justify-between mb-4">
- <Text className="font-title-sm text-xl font-bold text-on-surface">Action Customization</Text>
- <View className="px-3 py-1 bg-secondary-container rounded-full">
- <Text className="text-on-secondary-container text-[10px] uppercase font-bold tracking-wider">Main Button</Text>
- </View>
- </View>
- <View className="bg-white rounded-[24px] p-2 shadow-sm flex-col gap-1">
- {(Object.keys(actions) as Array<keyof typeof actions>).map((key) => {
- const action = actions[key];
- return (
- <TouchableOpacity 
- key={key}
- onPress={() => setMainAction(key)}
- className="flex-row items-center justify-between p-4 rounded-xl"
- >
- <View className="flex-row items-center gap-4">
- <View className={`w-12 h-12 rounded-full flex items-center justify-center ${mainAction === key ? 'bg-primary-container' : 'bg-surface-container'}`}>
- <MaterialIcons name={action.icon as any} size={24} color={mainAction === key ? colors['on-primary-container'] : colors.primary} />
- </View>
- <View className="flex-col">
- <Text className="font-body-md text-base font-semibold text-on-surface">{action.title}</Text>
- <Text className="font-caption-sm text-xs text-on-surface-variant">{action.desc}</Text>
- </View>
- </View>
- <MaterialIcons name={mainAction === key ? "radio-button-checked" : "radio-button-unchecked"} size={24} color={mainAction === key ? colors.primary : colors['outline-variant']} />
- </TouchableOpacity>
- );
- })}
- </View>
- </View>
+            <View className="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-desktop py-6 flex-col md:flex-row gap-8 w-full">
+                
+                {/* Selection & Customization Column */}
+                <View className="flex-col gap-8 flex-1 w-full md:w-[60%]">
+                    
+                    {/* Guide Section */}
+                    <View className="bg-primary/10 rounded-[24px] p-6">
+                        <View className="flex-row items-center gap-3 mb-3">
+                            <MaterialIcons name="info-outline" size={24} color={colors.primary} />
+                            <Text className="font-bold text-primary text-lg">Using Widgets</Text>
+                        </View>
+                        <Text className="text-on-surface-variant text-sm leading-relaxed">
+                            Widgets allow you to access YRecall instantly from your device's home screen. Long-press on an empty space on your home screen to add a widget, then select YRecall from the list. Choose one of the active widgets below to configure what appears.
+                        </Text>
+                    </View>
 
- {/* Section: Intelligence & Privacy */}
- <View className="bg-white rounded-[24px] p-6 shadow-md relative">
- <View className="flex-row items-center gap-2 mb-6">
- <MaterialIcons name="auto-awesome" size={24} color={colors.secondary} />
- <Text className="font-title-sm text-xl font-bold text-secondary">AI Intelligence Layer</Text>
- </View>
- 
- <View className="flex-col gap-6">
- <View className="flex-row items-center justify-between">
- <View className="flex-col">
- <Text className="font-body-md text-base font-semibold text-on-surface">Show AI Insights</Text>
- <Text className="font-caption-sm text-xs text-on-surface-variant">Display contextual summaries in the widget</Text>
- </View>
- <Switch 
- value={showAiInsights}
- onValueChange={setShowAiInsights}
- trackColor={{ false: colors['surface-container-highest'], true: colors.secondary }}
- thumbColor="#ffffff"
- />
- </View>
- 
- <View className="flex-row items-center justify-between">
- <View className="flex-col">
- <Text className="font-body-md text-base font-semibold text-on-surface">Privacy Masking</Text>
- <Text className="font-caption-sm text-xs text-on-surface-variant">Hide sensitive content on lockscreen</Text>
- </View>
- <Switch 
- value={privacyMasking}
- onValueChange={setPrivacyMasking}
- trackColor={{ false: colors['surface-container-highest'], true: colors.secondary }}
- thumbColor="#ffffff"
- />
- </View>
- </View>
- </View>
- 
- <TouchableOpacity onPress={handleSave} disabled={updatePreferences.isPending} className={`w-full mt-4 h-14 rounded-2xl flex-row items-center justify-center gap-2 shadow-md ${updatePreferences.isPending ? 'bg-surface-variant' : 'bg-primary'}`}>
- {updatePreferences.isPending ? <ActivityIndicator color={colors['on-surface-variant']} /> : <Text className={`font-bold text-base ${updatePreferences.isPending ? 'text-on-surface-variant' : 'text-white'}`}>Apply Widget Configuration</Text>}
- </TouchableOpacity>
+                    {/* Widget Selection */}
+                    <View className="flex-col">
+                        <Text className="font-title-sm text-xl font-bold text-on-surface mb-4">Select Active Widget</Text>
+                        <View className="bg-white rounded-[24px] p-2 shadow-sm flex-col gap-1">
+                            {WIDGETS.map((widget) => (
+                                <TouchableOpacity 
+                                    key={widget.id}
+                                    onPress={() => setSelectedWidget(widget.id)}
+                                    className="flex-row items-center justify-between p-4 rounded-xl active:bg-surface-container"
+                                >
+                                    <View className="flex-row items-center gap-4 flex-1 pr-4">
+                                        <View className={`w-12 h-12 rounded-full flex items-center justify-center ${selectedWidget === widget.id ? 'bg-primary-container' : 'bg-surface-container'}`}>
+                                            <MaterialIcons name={widget.icon as any} size={24} color={selectedWidget === widget.id ? colors['on-primary-container'] : colors.primary} />
+                                        </View>
+                                        <View className="flex-col flex-1">
+                                            <Text className="font-body-md text-base font-semibold text-on-surface">{widget.title}</Text>
+                                            <Text className="font-caption-sm text-xs text-on-surface-variant leading-snug mt-0.5">{widget.desc}</Text>
+                                        </View>
+                                    </View>
+                                    <MaterialIcons name={selectedWidget === widget.id ? "radio-button-checked" : "radio-button-unchecked"} size={24} color={selectedWidget === widget.id ? colors.primary : colors['outline-variant']} />
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    </View>
+                    
+                    <TouchableOpacity onPress={handleSave} disabled={updatePreferences.isPending} className={`w-full mt-4 h-14 rounded-2xl flex-row items-center justify-center gap-2 shadow-md ${updatePreferences.isPending ? 'bg-surface-variant' : 'bg-primary'}`}>
+                        {updatePreferences.isPending ? <ActivityIndicator color={colors['on-surface-variant']} /> : <Text className={`font-bold text-base ${updatePreferences.isPending ? 'text-on-surface-variant' : 'text-white'}`}>Save Widget Preference</Text>}
+                    </TouchableOpacity>
 
- </View>
+                </View>
 
- {/* Preview Area Column */}
- <View className="flex-col w-full md:w-[40%] sticky top-20">
- <Text className="font-title-sm text-xl font-bold text-on-surface mb-4">Live Preview</Text>
- 
- <View className="relative bg-surface-dim rounded-[48px] p-6 border-[8px] border-on-surface aspect-[9/19] shadow-2xl flex-col justify-start overflow-hidden">
- {/* Phone Notch Mockup */}
- <View className="absolute top-0 left-1/2 -ml-16 w-32 h-6 bg-on-surface rounded-b-2xl" />
- 
- <View className="mt-8 flex-col items-center">
- <Text className="text-4xl font-bold text-on-surface opacity-80">09:41</Text>
- <Text className="text-sm font-medium text-on-surface opacity-60">Tuesday, Oct 24</Text>
- </View>
+                {/* Preview Area Column */}
+                <View className="flex-col w-full md:w-[40%] sticky top-20">
+                    <Text className="font-title-sm text-xl font-bold text-on-surface mb-4">Live Preview</Text>
+                    
+                    <View className="relative bg-surface-dim rounded-[48px] p-6 border-[8px] border-on-surface aspect-[9/19] shadow-2xl flex-col justify-start overflow-hidden">
+                        {/* Phone Notch Mockup */}
+                        <View className="absolute top-0 left-1/2 -ml-16 w-32 h-6 bg-on-surface rounded-b-2xl z-10" />
+                        
+                        <View className="mt-8 flex-col items-center">
+                            <Text className="text-4xl font-bold text-on-surface opacity-80">09:41</Text>
+                            <Text className="text-sm font-medium text-on-surface opacity-60">Tuesday, Oct 24</Text>
+                        </View>
 
- {/* Widget Preview */}
- <View className="mt-12 bg-white/70 rounded-[24px] p-4 shadow-xl border-white/40">
- <View className="flex-row items-center justify-between mb-4">
- <View className="flex-row items-center gap-2">
- <View className="w-8 h-8 rounded-lg bg-primary-container items-center justify-center">
- <MaterialIcons name="history" size={16} color="#ffffff" />
- </View>
- <Text className="text-xs font-bold text-primary">YRecall</Text>
- </View>
- <Text className="text-[10px] font-medium text-on-surface-variant opacity-60 uppercase">Widget</Text>
- </View>
- 
- <View className="flex-col gap-2">
- <View className="w-full h-12 bg-primary rounded-xl flex-row items-center justify-center gap-2 shadow-sm">
- <MaterialIcons name={actions[mainAction as keyof typeof actions].icon as any} size={20} color="#ffffff" />
- <Text className="font-semibold text-white text-sm">{actions[mainAction as keyof typeof actions].title}</Text>
- </View>
+                        {/* Widget Preview Container */}
+                        <View className="mt-12 w-full flex-row justify-center">
+                            {renderWidgetPreview()}
+                        </View>
+                        
+                        {/* Mock bottom icons */}
+                        <View className="absolute bottom-8 left-6 right-6 flex-row justify-between opacity-40">
+                            <View className="w-12 h-12 rounded-2xl bg-on-surface-variant" />
+                            <View className="w-12 h-12 rounded-2xl bg-on-surface-variant" />
+                            <View className="w-12 h-12 rounded-2xl bg-on-surface-variant" />
+                            <View className="w-12 h-12 rounded-2xl bg-on-surface-variant" />
+                        </View>
+                        <View className="absolute bottom-2 left-1/2 -ml-16 w-32 h-1 bg-on-surface rounded-full opacity-20" />
+                    </View>
+                </View>
 
- {showAiInsights && (
- <View className="p-3 bg-secondary/10 rounded-lg border-secondary/20 mt-2">
- <View className="flex-row items-center gap-1 mb-1">
- <MaterialIcons name="auto-awesome" size={12} color={colors.secondary} />
- <Text className="text-[10px] font-bold text-secondary uppercase tracking-tight">AI Insight</Text>
- </View>
- <Text className="text-xs text-on-surface opacity-80 leading-snug">
- {privacyMasking ? "Content hidden due to privacy settings." : "\"You mentioned a meeting with Sarah today at 3 PM.\""}
- </Text>
- </View>
- )}
- </View>
- </View>
- 
- {/* Mock bottom icons */}
- <View className="absolute bottom-6 left-6 right-6 flex-row justify-around opacity-40">
- <View className="w-12 h-12 rounded-xl bg-on-surface-variant" />
- <View className="w-12 h-12 rounded-xl bg-on-surface-variant" />
- <View className="w-12 h-12 rounded-xl bg-on-surface-variant" />
- <View className="w-12 h-12 rounded-xl bg-on-surface-variant" />
- </View>
- <View className="absolute bottom-2 left-1/2 -ml-16 w-32 h-1 bg-on-surface rounded-full opacity-20" />
- </View>
- </View>
-
- </View>
- </Screen>
- );
+            </View>
+        </Screen>
+    );
 }

@@ -188,19 +188,6 @@ export default function ExperienceCenter() {
  value={form.theme} 
  onSelect={(v: string) => updateField('theme', v)} 
  />
- <View className="h-[1px] bg-outline-variant/20 mb-4" />
- <Text className="font-label-sm text-xs text-on-surface-variant font-bold mb-3 ml-1">{t('theme.accent')}</Text>
- <View className="flex-row flex-wrap gap-4 mb-2 ml-1">
- {['default', 'blue', 'green', 'purple', 'orange'].map(color => (
- <TouchableOpacity 
- key={color}
- onPress={() => updateField('accent_color', color)}
- className={`w-10 h-10 rounded-full border-2 items-center justify-center ${form.accent_color === color ? 'border-primary' : 'border-transparent'}`}
- >
- <View className={`w-8 h-8 rounded-full ${color === 'default' ? 'bg-[#5e5853]' : color === 'blue' ? 'bg-[#1a73e8]' : color === 'green' ? 'bg-[#1e8e3e]' : color === 'purple' ? 'bg-[#8430ce]' : 'bg-[#e37400]'}`} />
- </TouchableOpacity>
- ))}
- </View>
  </View>
 
  {/* 4. Typography & Display */}

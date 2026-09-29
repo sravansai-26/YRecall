@@ -161,19 +161,6 @@ export default function VoiceIntelligenceCenter() {
  <ToggleSetting label="Knowledge Graph Linking" description="Connect voice entities to your graph." value={form.auto_kg_linking ?? true} onToggle={(v: boolean) => updateField('auto_kg_linking', v)} />
  </View>
 
- {/* 5. Ask AI Voice */}
- <SectionTitle title="Ask AI Voice" icon="record-voice-over" />
- <View className="bg-surface-container-lowest rounded-2xl p-5 shadow-sm">
- <ChoiceSelector 
- label="Response Voice" 
- options={['nova', 'alloy', 'echo', 'fable', 'onyx', 'shimmer']} 
- value={form.response_voice || 'nova'} 
- onSelect={(v: string) => updateField('response_voice', v)} 
- />
- <ToggleSetting label="Continuous Listening" description="Keep mic open during conversations." value={form.continuous_listening ?? false} onToggle={(v: boolean) => updateField('continuous_listening', v)} />
- <ToggleSetting label="Push-to-Talk" description="Hold to speak during AI chats." value={form.push_to_talk ?? true} onToggle={(v: boolean) => updateField('push_to_talk', v)} />
- <ToggleSetting label="Voice Feedback" description="AI speaks responses aloud." value={form.voice_feedback ?? true} onToggle={(v: boolean) => updateField('voice_feedback', v)} />
- </View>
 
  {/* 7. Voice Memory Behaviour & 8. Search */}
  <SectionTitle title="Data & Search" icon="storage" />

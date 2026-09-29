@@ -174,6 +174,11 @@ export default function BillingScreen() {
  </View>
 
  <ScrollView style={styles.scrollContainer}>
+ <View style={{ backgroundColor: 'rgba(59, 130, 246, 0.1)', padding: 16, borderRadius: 16, marginBottom: 24 }}>
+ <Text style={{ fontSize: 14, color: colors.primary, lineHeight: 20 }}>
+ No subscription plans or usage limits are currently active. You can use all app services freely. Paid plans and usage limits will be introduced soon — at that point you'll be able to choose a plan that fits your needs.
+ </Text>
+ </View>
  <View style={styles.currentPlanCard}>
  <Text style={styles.sectionLabel}>CURRENT PLAN</Text>
  <View style={styles.currentPlanRow}>
