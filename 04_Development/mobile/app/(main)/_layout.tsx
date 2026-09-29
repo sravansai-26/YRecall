@@ -1,5 +1,6 @@
 import { Stack } from 'expo-router';
 import { useSubscription, useUsage } from '../../src/modules/billing/api';
+import { BiometricGate } from '../../src/shared/components';
 
 function GlobalHooks() {
  useSubscription();
@@ -12,10 +13,10 @@ export const unstable_settings = {
 };
 
 export default function MainLayout() {
- return (
- <>
- <GlobalHooks />
- <Stack screenOptions={{ headerShown: false }} />
- </>
- );
+  return (
+    <BiometricGate>
+      <GlobalHooks />
+      <Stack screenOptions={{ headerShown: false }} />
+    </BiometricGate>
+  );
 }

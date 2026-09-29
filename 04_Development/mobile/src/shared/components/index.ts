@@ -10,3 +10,4 @@ export { default as Screen } from './Screen';
 export { TimelineFeedItem } from './TimelineFeedItem';
 export { default as AIBentoCard } from './AIBentoCard';
 export { OTPInput } from './OTPInput';
+export { BiometricGate } from './BiometricGate';

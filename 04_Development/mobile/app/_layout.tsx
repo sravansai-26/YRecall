@@ -112,11 +112,13 @@ export default function RootLayout() {
   usePushNotifications();
   useAuthRouting();
 
+  const { isLoading } = useAuthStore();
+
   useEffect(() => {
-    if (loaded || error) {
+    if ((loaded || error) && !isLoading) {
       SplashScreen.hideAsync();
     }
-  }, [loaded, error]);
+  }, [loaded, error, isLoading]);
 
   if (!loaded && !error) {
     return null;

@@ -83,15 +83,22 @@ def upload_profile_photo(
         file_name = f"profiles/{current_user.id}_{int(datetime.now().timestamp())}.{file_ext}"
         file_bytes = file.file.read()
         
-        # We can reuse the captures bucket, or assume a profiles bucket exists.
-        # Captures bucket is guaranteed to exist. We'll use a profiles/ folder inside it.
-        supabase.storage.from_("captures").upload(
+        # Use a dedicated public bucket for profile photos since captures will be private
+        try:
+            supabase.storage.get_bucket("profiles")
+        except Exception:
+            try:
+                supabase.storage.create_bucket("profiles", options={"public": True})
+            except Exception:
+                pass
+
+        supabase.storage.from_("profiles").upload(
             file_name, 
             file_bytes,
             file_options={"content-type": file.content_type}
         )
         
-        public_url = supabase.storage.from_("captures").get_public_url(file_name)
+        public_url = supabase.storage.from_("profiles").get_public_url(file_name)
         
         # Update user
         current_user.photo_url = public_url

@@ -9,9 +9,45 @@ from .config import settings
 from ..modules.users.models import User
 
 import json
+import hmac
+import hashlib
+import time
 
 import logging
 logger = logging.getLogger(__name__)
+
+def generate_signed_url_token(capture_id: str, expires_in: int = 3600) -> str:
+    expires = int(time.time()) + expires_in
+    data = f"{capture_id}:{expires}"
+    sig = hmac.new(
+        settings.SUPABASE_SERVICE_KEY.encode('utf-8'),
+        data.encode('utf-8'),
+        hashlib.sha256
+    ).hexdigest()
+    return f"{data}:{sig}"
+
+def verify_signed_url_token(capture_id: str, token: str) -> bool:
+    try:
+        parts = token.split(":")
+        if len(parts) != 3:
+            return False
+        cid, expires_str, sig = parts
+        if cid != capture_id:
+            return False
+        if int(time.time()) > int(expires_str):
+            return False
+        
+        expected_data = f"{cid}:{expires_str}"
+        expected_sig = hmac.new(
+            settings.SUPABASE_SERVICE_KEY.encode('utf-8'),
+            expected_data.encode('utf-8'),
+            hashlib.sha256
+        ).hexdigest()
+        
+        return hmac.compare_digest(expected_sig, sig)
+    except Exception:
+        return False
+
 
 # Initialize Firebase Admin at module load
 def init_firebase():
@@ -82,8 +118,7 @@ def verify_firebase_token(credentials: HTTPAuthorizationCredentials = Depends(se
                 "success": False,
                 "error": {
                     "code": "UNAUTHORIZED",
-                    "message": "Invalid or expired token.",
-                    "details": [str(e)]
+                    "message": "Invalid or expired token."
                 }
             }
         )

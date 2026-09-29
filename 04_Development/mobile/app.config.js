@@ -7,6 +7,12 @@ module.exports = {
   userInterfaceStyle: "automatic",
   scheme: "yrecall",
   newArchEnabled: true,
+  updates: {
+    url: "https://u.expo.dev/a7181c21-2faf-4311-af67-aa7d0c981afa"
+  },
+  runtimeVersion: {
+    policy: "appVersion"
+  },
   
   ios: {
     supportsTablet: true,
@@ -53,6 +59,12 @@ module.exports = {
   web: {
     favicon: "./assets/images/favicon.png",
     bundler: "metro",
+  },
+  
+  splash: {
+    image: "./assets/logos/yr-logo.png",
+    resizeMode: "contain",
+    backgroundColor: "#121212"
   },
   
   plugins: [
