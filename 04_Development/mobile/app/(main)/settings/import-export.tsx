@@ -112,7 +112,7 @@ export default function MigrationHub() {
                     {/* Google Drive (Connected) */}
                     <TouchableOpacity onPress={handleDriveSync} className="w-full md:flex-1 bg-white p-6 rounded-[24px] shadow-sm flex-col justify-between active:scale-[0.98]">
                         <View className="flex-row justify-between items-start mb-12">
-                            <Image source={require('../../../../assets/logos/gdrive.png')} className="w-10 h-10" resizeMode="contain" />
+                            <Image source={require('../../../assets/logos/gdrive.png')} className="w-10 h-10" resizeMode="contain" />
                             <View className="bg-tertiary-fixed px-3 py-1 rounded-full">
                                 <Text className="text-on-tertiary-fixed font-label-xs text-xs font-bold">Connected (Real-time)</Text>
                             </View>
@@ -143,7 +143,7 @@ export default function MigrationHub() {
                     {/* Notion (Action Required) */}
                     <View className="w-full md:flex-1 bg-white p-6 rounded-[24px] shadow-sm border-error/20 flex-col justify-between">
                         <View className="flex-row justify-between items-start mb-12">
-                            <Image source={require('../../../../assets/logos/notion.png')} className="w-10 h-10" resizeMode="contain" />
+                            <Image source={require('../../../assets/logos/notion.png')} className="w-10 h-10" resizeMode="contain" />
                             <View className="bg-surface-variant px-3 py-1 rounded-full">
                                 <Text className="text-on-surface-variant font-label-xs text-xs font-bold">Coming Soon</Text>
                             </View>
@@ -157,7 +157,7 @@ export default function MigrationHub() {
                     {/* Obsidian (Not Connected - Large Feature Card) */}
                     <View className="w-full md:flex-1 bg-white p-6 rounded-[24px] shadow-sm flex-col justify-between">
                         <View className="flex-row justify-between items-start mb-12">
-                            <Image source={require('../../../../assets/logos/obsidian.png')} className="w-10 h-10" resizeMode="contain" />
+                            <Image source={require('../../../assets/logos/obsidian.png')} className="w-10 h-10" resizeMode="contain" />
                             <View className="bg-surface-variant px-3 py-1 rounded-full">
                                 <Text className="text-on-surface-variant font-label-xs text-xs font-bold">Coming Soon</Text>
                             </View>
