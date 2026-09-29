@@ -96,8 +96,22 @@ async def execute_permanent_deletion(db: Session, user: User):
             filename = user.photo_url.split("/")[-1]
             supabase.storage.from_("captures").remove([f"profiles/{filename}"])
             
-        # Optional: query all captures/files by this user and delete them from bucket
-        # In a real app you'd get the list of capture URLs from the DB and remove them.
+        # Query all captures by this user that have a storage_path
+        from ..captures.models import Capture
+        captures_with_files = db.query(Capture).filter(
+            Capture.user_id == user.id,
+            Capture.storage_path != None
+        ).all()
+        
+        paths_to_delete = [cap.storage_path for cap in captures_with_files if cap.storage_path]
+        if paths_to_delete:
+            # Supabase remove takes a list of paths
+            # Chunking might be needed if there are thousands, but we'll try in one go or batches of 100
+            for i in range(0, len(paths_to_delete), 100):
+                batch = paths_to_delete[i:i+100]
+                supabase.storage.from_("captures").remove(batch)
+                logger.info(f"Deleted {len(batch)} storage files for user {user.id}")
+
     except Exception as e:
         logger.error(f"Error deleting Supabase storage for {user.id}: {e}")
 

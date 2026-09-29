@@ -32,3 +32,15 @@ build/
 
 # Misc
 coverage/
+
+# Secrets & credentials (never commit)
+secrets/
+*firebase-adminsdk*.json
+*service-account*.json
+containerapp.yaml
+generate_yaml.py
+
+# Artifacts & Local Scripts
+*.apk
+extract_i18n.py
+translate_locales.py
