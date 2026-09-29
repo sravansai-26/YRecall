@@ -15,7 +15,7 @@ export default function MigrationHub() {
     const { data: jobs, isLoading: isLoadingJobs } = useMigrationJobs();
     const createExport = useCreateExport();
     const deleteJob = useDeleteMigrationJob();
-    
+
     const [exportFormat, setExportFormat] = useState('ZIP');
 
     const handleCreateExport = () => {
@@ -43,16 +43,16 @@ export default function MigrationHub() {
     const handleDownload = async (fileUrl: string, format: string) => {
         try {
             if (!fileUrl) throw new Error('File URL is missing.');
-            
+
             // In dev mode with local files, fileUrl might be something like file:///...
             // In prod it will be https://...
             // We can download it using expo-file-system
-            
+
             const filename = `yrecall_export_${Date.now()}.${format.toLowerCase()}`;
             const destPath = `${FileSystem.documentDirectory}${filename}`;
-            
+
             let downloadUrl = fileUrl;
-            
+
             // Handle legacy backend paths (e.g. file:///tmp/yrecall_exports/export_xxx.json)
             if (fileUrl.startsWith('file://')) {
                 const parts = fileUrl.split(/[\/\\]/);
@@ -71,7 +71,7 @@ export default function MigrationHub() {
                 }
             });
             if (result.status !== 200) throw new Error('Download failed. Make sure you are authenticated.');
-            
+
             // Share or Save
             const canShare = await Sharing.isAvailableAsync();
             if (canShare) {
@@ -97,7 +97,7 @@ export default function MigrationHub() {
             </View>
 
             <View className="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-desktop py-6">
-                
+
                 {/* Welcome Header */}
                 <View className="mb-8">
                     <Text className="font-display-lg-mobile md:font-display-lg text-4xl font-bold text-primary mb-4">Bring your world to YRecall</Text>
@@ -108,7 +108,7 @@ export default function MigrationHub() {
 
                 {/* Sources Bento Grid (Preserved) */}
                 <View className="flex-col md:flex-row md:flex-wrap gap-4 md:gap-6">
-                    
+
                     {/* Google Drive (Connected) */}
                     <TouchableOpacity onPress={handleDriveSync} className="w-full md:flex-1 bg-white p-6 rounded-[24px] shadow-sm flex-col justify-between active:scale-[0.98]">
                         <View className="flex-row justify-between items-start mb-12">
@@ -175,10 +175,10 @@ export default function MigrationHub() {
                     <Text className="font-body-md text-base text-on-surface-variant mb-6">
                         Securely package your memories, timeline, and settings into portable formats.
                     </Text>
-                    
+
                     <View className="flex-col gap-4 mb-6">
                         {['ZIP', 'JSON', 'CSV'].map((format) => (
-                            <TouchableOpacity 
+                            <TouchableOpacity
                                 key={format}
                                 onPress={() => setExportFormat(format)}
                                 className={`w-full p-4 rounded-xl border ${exportFormat === format ? 'border-primary bg-primary-container' : 'border-outline/30 bg-surface-container-low'}`}
@@ -188,7 +188,7 @@ export default function MigrationHub() {
                         ))}
                     </View>
 
-                    <TouchableOpacity 
+                    <TouchableOpacity
                         onPress={handleCreateExport}
                         disabled={createExport.isPending}
                         className={`h-14 rounded-xl items-center justify-center flex-row gap-2 ${createExport.isPending ? 'bg-surface-variant' : 'bg-primary'}`}

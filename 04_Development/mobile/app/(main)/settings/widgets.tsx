@@ -57,7 +57,7 @@ export default function WidgetSettings() {
                         </View>
                         <View className="flex-row items-center gap-4 pr-1">
                             <MaterialIcons name="mic-none" size={26} color="#003D0B" />
-                            <Image source={require('../../../../assets/logos/yr-logo-widget.png')} style={{ width: 22, height: 22 }} />
+                            <Image source={require('../../../assets/logos/yr-logo-widget.png')} style={{ width: 22, height: 22 }} />
                         </View>
                     </View>
                 );
@@ -66,7 +66,7 @@ export default function WidgetSettings() {
                     <View className="bg-[#FFF8F1] rounded-3xl p-5 shadow-xl w-[90%] border border-black/5">
                         <View className="flex-row items-center justify-between mb-8">
                             <Text className="text-[#1A1C1E] font-bold text-base">Capture</Text>
-                            <Image source={require('../../../../assets/logos/yr-logo-widget.png')} style={{ width: 18, height: 18 }} />
+                            <Image source={require('../../../assets/logos/yr-logo-widget.png')} style={{ width: 18, height: 18 }} />
                         </View>
                         <View className="flex-row justify-between px-2">
                             <View className="items-center">
@@ -99,7 +99,7 @@ export default function WidgetSettings() {
                                     <MaterialIcons name="lightbulb-outline" size={20} color="#003D0B" />
                                     <Text className="font-bold text-[#1A1C1E] text-base">Morning Brief</Text>
                                 </View>
-                                <Image source={require('../../../../assets/logos/yr-logo-widget.png')} style={{ width: 18, height: 18 }} />
+                                <Image source={require('../../../assets/logos/yr-logo-widget.png')} style={{ width: 18, height: 18 }} />
                             </View>
                             <Text className="text-[#1A1C1E] text-[15px] leading-[22px] font-normal">
                                 You have captured 1 memories. Your AI companion is analyzing your latest thoughts.
@@ -117,7 +117,7 @@ export default function WidgetSettings() {
                                     <MaterialIcons name="access-time" size={20} color="#003D0B" />
                                     <Text className="font-bold text-[#1A1C1E] text-base">Recent Memories</Text>
                                 </View>
-                                <Image source={require('../../../../assets/logos/yr-logo-widget.png')} style={{ width: 18, height: 18 }} />
+                                <Image source={require('../../../assets/logos/yr-logo-widget.png')} style={{ width: 18, height: 18 }} />
                             </View>
                             
                             <View className="flex-col gap-5 px-1">
