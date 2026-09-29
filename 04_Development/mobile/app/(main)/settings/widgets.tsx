@@ -50,69 +50,92 @@ export default function WidgetSettings() {
         switch (selectedWidget) {
             case 'search':
                 return (
-                    <View className="bg-white/80 rounded-[20px] p-4 shadow-xl w-full border border-white/50">
-                        <View className="flex-row items-center gap-3 bg-surface-container rounded-full px-4 py-3">
-                            <MaterialIcons name="search" size={20} color={colors.primary} />
-                            <Text className="text-on-surface-variant text-sm font-medium">Search YRecall...</Text>
+                    <View className="bg-[#FFF8F1] rounded-[32px] p-4 shadow-xl w-[90%] flex-row items-center justify-between border border-black/5">
+                        <View className="flex-row items-center gap-2 flex-1 pl-2">
+                            <MaterialIcons name="search" size={24} color="#44474E" />
+                            <Text className="text-[#44474E] text-base ml-1">Search your memory...</Text>
                         </View>
-                        <View className="flex-row justify-around mt-4">
-                            <MaterialIcons name="mic" size={24} color={colors.primary} />
-                            <MaterialIcons name="camera-alt" size={24} color={colors.primary} />
-                            <MaterialIcons name="edit" size={24} color={colors.primary} />
+                        <View className="flex-row items-center gap-4 pr-1">
+                            <MaterialIcons name="mic-none" size={26} color="#003D0B" />
+                            <Image source={require('../../../../assets/logos/yr-logo-widget.png')} style={{ width: 22, height: 22 }} />
                         </View>
                     </View>
                 );
             case 'capture':
                 return (
-                    <View className="bg-primary rounded-[24px] p-4 shadow-xl w-full flex-row items-center justify-between">
-                        <View className="flex-col">
-                            <Text className="text-white font-bold text-base">Quick Capture</Text>
-                            <Text className="text-white/80 text-xs">Tap to record</Text>
+                    <View className="bg-[#FFF8F1] rounded-3xl p-5 shadow-xl w-[90%] border border-black/5">
+                        <View className="flex-row items-center justify-between mb-8">
+                            <Text className="text-[#1A1C1E] font-bold text-base">Capture</Text>
+                            <Image source={require('../../../../assets/logos/yr-logo-widget.png')} style={{ width: 18, height: 18 }} />
                         </View>
-                        <View className="w-12 h-12 rounded-full bg-white/20 items-center justify-center">
-                            <MaterialIcons name="bolt" size={28} color="#ffffff" />
+                        <View className="flex-row justify-between px-2">
+                            <View className="items-center">
+                                <View className="w-14 h-14 rounded-full bg-[#E8E1DA] items-center justify-center mb-2 shadow-sm">
+                                    <MaterialIcons name="edit" size={24} color="#003D0B" />
+                                </View>
+                                <Text className="text-[12px] font-medium text-[#44474E]">Note</Text>
+                            </View>
+                            <View className="items-center">
+                                <View className="w-14 h-14 rounded-full bg-[#E8E1DA] items-center justify-center mb-2 shadow-sm">
+                                    <MaterialIcons name="mic-none" size={24} color="#003D0B" />
+                                </View>
+                                <Text className="text-[12px] font-medium text-[#44474E]">Voice</Text>
+                            </View>
+                            <View className="items-center">
+                                <View className="w-14 h-14 rounded-full bg-[#E8E1DA] items-center justify-center mb-2 shadow-sm">
+                                    <MaterialIcons name="camera-alt" size={24} color="#003D0B" />
+                                </View>
+                                <Text className="text-[12px] font-medium text-[#44474E]">Camera</Text>
+                            </View>
                         </View>
                     </View>
                 );
             case 'brief':
                 return (
-                    <View className="bg-white/90 rounded-[24px] p-5 shadow-xl w-full border border-white/50">
-                        <View className="flex-row items-center justify-between mb-3">
-                            <Text className="font-bold text-on-surface text-base">Daily Brief</Text>
-                            <MaterialIcons name="auto-awesome" size={20} color={colors.secondary} />
+                    <View className="bg-[#FFF8F1] rounded-[28px] p-5 shadow-xl w-[90%] h-64 border border-black/5 flex-col justify-between">
+                        <View className="flex-col">
+                            <View className="flex-row items-center justify-between mb-8">
+                                <View className="flex-row items-center gap-2">
+                                    <MaterialIcons name="lightbulb-outline" size={20} color="#003D0B" />
+                                    <Text className="font-bold text-[#1A1C1E] text-base">Morning Brief</Text>
+                                </View>
+                                <Image source={require('../../../../assets/logos/yr-logo-widget.png')} style={{ width: 18, height: 18 }} />
+                            </View>
+                            <Text className="text-[#1A1C1E] text-[15px] leading-[22px] font-normal">
+                                You have captured 1 memories. Your AI companion is analyzing your latest thoughts.
+                            </Text>
                         </View>
-                        <Text className="text-on-surface-variant text-sm leading-relaxed">
-                            "You have a meeting with Sarah at 3 PM, and 3 ideas saved for your new project."
-                        </Text>
+                        <Text className="text-[#44474E] text-[11px]">Updated about 22 hours ago</Text>
                     </View>
                 );
             case 'timeline':
                 return (
-                    <View className="bg-white/90 rounded-[24px] p-4 shadow-xl w-full border border-white/50">
-                        <View className="flex-row items-center mb-3">
-                            <MaterialIcons name="history" size={18} color={colors.primary} className="mr-2" />
-                            <Text className="font-bold text-on-surface text-sm">Recent Memories</Text>
-                        </View>
-                        <View className="flex-col gap-3">
-                            <View className="flex-row items-center gap-3">
-                                <View className="w-10 h-10 rounded-lg bg-surface-container items-center justify-center">
-                                    <MaterialIcons name="image" size={18} color={colors.primary} />
+                    <View className="bg-[#FFF8F1] rounded-[28px] p-5 shadow-xl w-[90%] h-72 border border-black/5 flex-col justify-between">
+                        <View className="flex-col">
+                            <View className="flex-row items-center justify-between mb-8">
+                                <View className="flex-row items-center gap-2">
+                                    <MaterialIcons name="access-time" size={20} color="#003D0B" />
+                                    <Text className="font-bold text-[#1A1C1E] text-base">Recent Memories</Text>
                                 </View>
-                                <View>
-                                    <Text className="text-sm font-bold text-on-surface">Whiteboard Photo</Text>
-                                    <Text className="text-xs text-on-surface-variant">10 mins ago</Text>
+                                <Image source={require('../../../../assets/logos/yr-logo-widget.png')} style={{ width: 18, height: 18 }} />
+                            </View>
+                            
+                            <View className="flex-col gap-5 px-1">
+                                <View className="flex-row items-center gap-4">
+                                    <View className="w-2.5 h-2.5 rounded-full bg-[#003D0B]" />
+                                    <Text className="text-[#1A1C1E] text-[15px]">Backend Deployment</Text>
+                                </View>
+                                <View className="flex-row items-center gap-4">
+                                    <View className="w-2.5 h-2.5 rounded-full bg-[#E8E1DA]" />
+                                    <Text className="text-[#44474E] text-[15px]">Testing Notes 2</Text>
+                                </View>
+                                <View className="flex-row items-center gap-4">
+                                    <View className="w-2.5 h-2.5 rounded-full bg-[#E8E1DA]" />
+                                    <Text className="text-[#44474E] text-[15px]">Testing Notes</Text>
                                 </View>
                             </View>
-                            <View className="flex-row items-center gap-3">
-                                <View className="w-10 h-10 rounded-lg bg-surface-container items-center justify-center">
-                                    <MaterialIcons name="mic" size={18} color={colors.primary} />
-                                </View>
-                                <View>
-                                    <Text className="text-sm font-bold text-on-surface">Voice Note</Text>
-                                    <Text className="text-xs text-on-surface-variant">2 hours ago</Text>
-                                </View>
-                            </View>
                         </View>
+                        <Text className="text-[#44474E] text-[11px]">Syncing...</Text>
                     </View>
                 );
             default:

@@ -112,7 +112,7 @@ export default function MigrationHub() {
                     {/* Google Drive (Connected) */}
                     <TouchableOpacity onPress={handleDriveSync} className="w-full md:flex-1 bg-white p-6 rounded-[24px] shadow-sm flex-col justify-between active:scale-[0.98]">
                         <View className="flex-row justify-between items-start mb-12">
-                            <Image source={require('../../../assets/logos/gdrive.png')} className="w-10 h-10" resizeMode="contain" />
+                            <Image source={require('../../../assets/logos/google-drive.png')} className="w-12 h-12" resizeMode="contain" />
                             <View className="bg-tertiary-fixed px-3 py-1 rounded-full">
                                 <Text className="text-on-tertiary-fixed font-label-xs text-xs font-bold">Connected (Real-time)</Text>
                             </View>
@@ -127,7 +127,7 @@ export default function MigrationHub() {
                     {Platform.OS === 'ios' && (
                         <View className="w-full md:flex-1 bg-white p-6 rounded-[24px] shadow-sm flex-col justify-between">
                             <View className="flex-row justify-between items-start mb-12">
-                                <Image source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB36Fs_77JX8QxM3CwseP2kqiIm4AANaF_YQboGyqSh2Dv_IFrhGzefDM7CM0FyIew5hmDx3vuy6YP-GZ7biXjnjDH0keh4dPNutEuCIGAYw8kjhjH8oiNqbUIP1zmZplQASvZvvU9akewq5DXPUKFaOmulQlK3OZ8dtwxPLpQi4OEgr5IEaDvGCbVwfyaI6F_FjaH25RI47o0fR34SBcLLLppkYCu96fxf_zYJqfkFDaSlw_k38LO6Smj0MCuZYOTzDI1YmJaYcuo' }} className="w-10 h-10" resizeMode="contain" />
+                                <Image source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB36Fs_77JX8QxM3CwseP2kqiIm4AANaF_YQboGyqSh2Dv_IFrhGzefDM7CM0FyIew5hmDx3vuy6YP-GZ7biXjnjDH0keh4dPNutEuCIGAYw8kjhjH8oiNqbUIP1zmZplQASvZvvU9akewq5DXPUKFaOmulQlK3OZ8dtwxPLpQi4OEgr5IEaDvGCbVwfyaI6F_FjaH25RI47o0fR34SBcLLLppkYCu96fxf_zYJqfkFDaSlw_k38LO6Smj0MCuZYOTzDI1YmJaYcuo' }} className="w-12 h-12" resizeMode="contain" />
                                 <View className="flex-row items-center gap-1 bg-secondary-container px-3 py-1 rounded-full">
                                     <MaterialIcons name="sync" size={14} color={colors['on-secondary-container']} />
                                     <Text className="text-on-secondary-container font-label-xs text-xs font-bold">Syncing 85%</Text>
@@ -143,7 +143,7 @@ export default function MigrationHub() {
                     {/* Notion (Action Required) */}
                     <View className="w-full md:flex-1 bg-white p-6 rounded-[24px] shadow-sm border-error/20 flex-col justify-between">
                         <View className="flex-row justify-between items-start mb-12">
-                            <Image source={require('../../../assets/logos/notion.png')} className="w-10 h-10" resizeMode="contain" />
+                            <Image source={require('../../../assets/logos/notion-light.png')} className="w-12 h-12" resizeMode="contain" />
                             <View className="bg-surface-variant px-3 py-1 rounded-full">
                                 <Text className="text-on-surface-variant font-label-xs text-xs font-bold">Coming Soon</Text>
                             </View>
@@ -157,7 +157,7 @@ export default function MigrationHub() {
                     {/* Obsidian (Not Connected - Large Feature Card) */}
                     <View className="w-full md:flex-1 bg-white p-6 rounded-[24px] shadow-sm flex-col justify-between">
                         <View className="flex-row justify-between items-start mb-12">
-                            <Image source={require('../../../assets/logos/obsidian.png')} className="w-10 h-10" resizeMode="contain" />
+                            <Image source={require('../../../assets/logos/obsidian.png')} className="w-12 h-12" resizeMode="contain" />
                             <View className="bg-surface-variant px-3 py-1 rounded-full">
                                 <Text className="text-on-surface-variant font-label-xs text-xs font-bold">Coming Soon</Text>
                             </View>
