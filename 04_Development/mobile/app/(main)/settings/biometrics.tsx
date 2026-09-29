@@ -164,7 +164,7 @@ export default function IdentitySecurityCenterScreen() {
  </View>
  <View className="flex-col pr-4 flex-1">
  <Text className="font-bold text-base text-on-surface">Require Biometrics</Text>
- <Text className="text-sm text-on-surface-variant">Use FaceID/TouchID to verify identity</Text>
+ <Text className="text-sm text-on-surface-variant">Use Biometrics to verify identity</Text>
  </View>
  </View>
  <Switch 
