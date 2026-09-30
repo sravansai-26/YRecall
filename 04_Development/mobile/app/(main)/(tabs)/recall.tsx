@@ -54,7 +54,7 @@ export default function RecallScreen() {
         return f;
     }, [activeSegment, searchQuery, selectedDate, activeWorkspaceId]);
 
-    const [calendarDisplayDate, setCalendarDisplayDate] = useState(new Date().toISOString().split('T')[0]);
+    const [calendarDisplayDate, setCalendarDisplayDate] = useState<string>(new Date().toISOString().split('T')[0] as string);
     const [isMonthPickerOpen, setIsMonthPickerOpen] = useState(false);
     const [isYearPickerOpen, setIsYearPickerOpen] = useState(false);
 
@@ -279,7 +279,7 @@ export default function RecallScreen() {
                                     onPress={() => { setIsMonthPickerOpen(!isMonthPickerOpen); setIsYearPickerOpen(false); }}
                                     className="flex-row justify-between items-center bg-surface-container-low p-3 rounded-xl border border-outline-variant/50"
                                 >
-                                    <Text className="text-on-surface font-medium">{months[new Date(calendarDisplayDate).getMonth()]}</Text>
+                                    <Text className="text-on-surface font-medium">{months[new Date(calendarDisplayDate as string).getMonth()]}</Text>
                                     <MaterialIcons name="arrow-drop-down" size={20} color={colors['on-surface-variant']} />
                                 </TouchableOpacity>
                                 {isMonthPickerOpen && (
@@ -289,7 +289,7 @@ export default function RecallScreen() {
                                                 <TouchableOpacity 
                                                     key={m} 
                                                     onPress={() => {
-                                                        const d = new Date(calendarDisplayDate);
+                                                        const d = new Date(calendarDisplayDate as string);
                                                         d.setMonth(i);
                                                         setCalendarDisplayDate(d.toISOString().split('T')[0]);
                                                         setIsMonthPickerOpen(false);
@@ -308,7 +308,7 @@ export default function RecallScreen() {
                                     onPress={() => { setIsYearPickerOpen(!isYearPickerOpen); setIsMonthPickerOpen(false); }}
                                     className="flex-row justify-between items-center bg-surface-container-low p-3 rounded-xl border border-outline-variant/50"
                                 >
-                                    <Text className="text-on-surface font-medium">{new Date(calendarDisplayDate).getFullYear()}</Text>
+                                    <Text className="text-on-surface font-medium">{new Date(calendarDisplayDate as string).getFullYear()}</Text>
                                     <MaterialIcons name="arrow-drop-down" size={20} color={colors['on-surface-variant']} />
                                 </TouchableOpacity>
                                 {isYearPickerOpen && (
@@ -318,7 +318,7 @@ export default function RecallScreen() {
                                                 <TouchableOpacity 
                                                     key={y} 
                                                     onPress={() => {
-                                                        const d = new Date(calendarDisplayDate);
+                                                        const d = new Date(calendarDisplayDate as string);
                                                         d.setFullYear(y);
                                                         setCalendarDisplayDate(d.toISOString().split('T')[0]);
                                                         setIsYearPickerOpen(false);
