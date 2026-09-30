@@ -291,7 +291,7 @@ export default function RecallScreen() {
                                                     onPress={() => {
                                                         const d = new Date(calendarDisplayDate as string);
                                                         d.setMonth(i);
-                                                        setCalendarDisplayDate(d.toISOString().split('T')[0]);
+                                                        setCalendarDisplayDate(d.toISOString().split('T')[0] as string);
                                                         setIsMonthPickerOpen(false);
                                                     }}
                                                     className="p-3 border-b border-outline-variant/10"
@@ -320,7 +320,7 @@ export default function RecallScreen() {
                                                     onPress={() => {
                                                         const d = new Date(calendarDisplayDate as string);
                                                         d.setFullYear(y);
-                                                        setCalendarDisplayDate(d.toISOString().split('T')[0]);
+                                                        setCalendarDisplayDate(d.toISOString().split('T')[0] as string);
                                                         setIsYearPickerOpen(false);
                                                     }}
                                                     className="p-3 border-b border-outline-variant/10"
