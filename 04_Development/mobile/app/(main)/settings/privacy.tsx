@@ -250,7 +250,6 @@ export default function SecurityPrivacyDashboard() {
  </View>
 
             </View>
-        </View>
  </Screen>
  );
 }
