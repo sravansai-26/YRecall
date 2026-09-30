@@ -116,18 +116,22 @@ export default function SettingsHub() {
                     <MaterialIcons name="edit" size={16} color={colors.outline} />
                   </View>
                 </View>
-                <TouchableOpacity onPress={() => router.push('/settings/billing')} className="mt-1">
+                <View className="mt-1">
                   {isPremium ? (
-                    <Text className="font-body-sm text-sm text-secondary font-medium flex-shrink" numberOfLines={1}>
-                      {t('settings.premiumMember')}
-                    </Text>
+                    <TouchableOpacity onPress={() => router.push('/settings/billing')}>
+                      <Text className="font-body-sm text-sm text-secondary font-medium flex-shrink" numberOfLines={1}>
+                        {t('settings.premiumMember')}
+                      </Text>
+                    </TouchableOpacity>
                   ) : (
                     <View className="flex-row items-center flex-wrap">
-                      <Text className="font-body-sm text-sm text-on-surface-variant font-medium flex-shrink">Basic • </Text>
-                      <Text className="font-body-sm text-sm text-secondary font-medium underline flex-shrink">Upgrade to Premium/Pro Plans</Text>
+                      <Text className="font-body-sm text-sm text-on-surface-variant font-medium flex-shrink mr-1">Basic •</Text>
+                      <TouchableOpacity onPress={() => router.push('/settings/billing')}>
+                        <Text className="font-body-sm text-sm text-secondary font-medium underline flex-shrink">Upgrade to Premium/Pro Plans</Text>
+                      </TouchableOpacity>
                     </View>
                   )}
-                </TouchableOpacity>
+                </View>
               </View>
             </View>
           </TouchableOpacity>

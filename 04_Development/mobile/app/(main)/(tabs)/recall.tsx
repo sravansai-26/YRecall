@@ -54,6 +54,16 @@ export default function RecallScreen() {
         return f;
     }, [activeSegment, searchQuery, selectedDate, activeWorkspaceId]);
 
+    const [calendarDisplayDate, setCalendarDisplayDate] = useState(new Date().toISOString().split('T')[0]);
+    const [isMonthPickerOpen, setIsMonthPickerOpen] = useState(false);
+    const [isYearPickerOpen, setIsYearPickerOpen] = useState(false);
+
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const currentYear = new Date().getFullYear();
+    const startYear = 2026;
+    const endYear = Math.max(currentYear + 10, 2036);
+    const years = Array.from({length: endYear - startYear + 1}, (_, i) => startYear + i);
+
     const {
         data,
         fetchNextPage,
@@ -261,8 +271,75 @@ export default function RecallScreen() {
                                 <MaterialIcons name="close" size={24} color={colors['on-surface-variant']} />
                             </TouchableOpacity>
                         </View>
+                        
+                        {/* Month / Year Dropdowns */}
+                        <View className="flex-row gap-2 mb-4 px-2 z-50">
+                            <View className="flex-1 relative z-50">
+                                <TouchableOpacity 
+                                    onPress={() => { setIsMonthPickerOpen(!isMonthPickerOpen); setIsYearPickerOpen(false); }}
+                                    className="flex-row justify-between items-center bg-surface-container-low p-3 rounded-xl border border-outline-variant/50"
+                                >
+                                    <Text className="text-on-surface font-medium">{months[new Date(calendarDisplayDate).getMonth()]}</Text>
+                                    <MaterialIcons name="arrow-drop-down" size={20} color={colors['on-surface-variant']} />
+                                </TouchableOpacity>
+                                {isMonthPickerOpen && (
+                                    <View className="absolute top-[105%] left-0 right-0 bg-surface-container-high rounded-xl shadow-lg border border-outline-variant/30 max-h-40 overflow-hidden z-50">
+                                        <ScrollView nestedScrollEnabled>
+                                            {months.map((m, i) => (
+                                                <TouchableOpacity 
+                                                    key={m} 
+                                                    onPress={() => {
+                                                        const d = new Date(calendarDisplayDate);
+                                                        d.setMonth(i);
+                                                        setCalendarDisplayDate(d.toISOString().split('T')[0]);
+                                                        setIsMonthPickerOpen(false);
+                                                    }}
+                                                    className="p-3 border-b border-outline-variant/10"
+                                                >
+                                                    <Text className="text-on-surface">{m}</Text>
+                                                </TouchableOpacity>
+                                            ))}
+                                        </ScrollView>
+                                    </View>
+                                )}
+                            </View>
+                            <View className="flex-1 relative z-50">
+                                <TouchableOpacity 
+                                    onPress={() => { setIsYearPickerOpen(!isYearPickerOpen); setIsMonthPickerOpen(false); }}
+                                    className="flex-row justify-between items-center bg-surface-container-low p-3 rounded-xl border border-outline-variant/50"
+                                >
+                                    <Text className="text-on-surface font-medium">{new Date(calendarDisplayDate).getFullYear()}</Text>
+                                    <MaterialIcons name="arrow-drop-down" size={20} color={colors['on-surface-variant']} />
+                                </TouchableOpacity>
+                                {isYearPickerOpen && (
+                                    <View className="absolute top-[105%] left-0 right-0 bg-surface-container-high rounded-xl shadow-lg border border-outline-variant/30 max-h-40 overflow-hidden z-50">
+                                        <ScrollView nestedScrollEnabled>
+                                            {years.map((y) => (
+                                                <TouchableOpacity 
+                                                    key={y} 
+                                                    onPress={() => {
+                                                        const d = new Date(calendarDisplayDate);
+                                                        d.setFullYear(y);
+                                                        setCalendarDisplayDate(d.toISOString().split('T')[0]);
+                                                        setIsYearPickerOpen(false);
+                                                    }}
+                                                    className="p-3 border-b border-outline-variant/10"
+                                                >
+                                                    <Text className="text-on-surface">{y}</Text>
+                                                </TouchableOpacity>
+                                            ))}
+                                        </ScrollView>
+                                    </View>
+                                )}
+                            </View>
+                        </View>
+
+                        <View className="z-10 relative">
                         <Calendar
-                            current={selectedDate ? selectedDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}
+                            current={calendarDisplayDate}
+                            onMonthChange={(month: any) => {
+                                setCalendarDisplayDate(month.dateString);
+                            }}
                             onDayPress={(day: any) => {
                                 // Add timezone offset so the date parses locally
                                 const offset = new Date().getTimezoneOffset() * 60000;
@@ -292,7 +369,8 @@ export default function RecallScreen() {
                                 monthTextColor: colors['on-surface'],
                             }}
                         />
-                        <View className="mt-4 flex-row justify-end gap-2 px-2">
+                        </View>
+                        <View className="mt-4 flex-row justify-end gap-2 px-2 z-10">
                             {selectedDate && (
                                 <TouchableOpacity 
                                     onPress={() => {

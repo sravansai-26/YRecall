@@ -241,7 +241,9 @@ export default function LocationCaptureScreen() {
                         <View style={styles.mapContainer}>
                             <WebView 
                                 source={{ uri: `https://www.openstreetmap.org/export/embed.html?bbox=${location.coords.longitude-0.005},${location.coords.latitude-0.005},${location.coords.longitude+0.005},${location.coords.latitude+0.005}&layer=mapnik&marker=${location.coords.latitude},${location.coords.longitude}` }}
-                                style={styles.mapImage} 
+                                style={{ width: '100%', height: '100%', backgroundColor: 'transparent' }} 
+                                javaScriptEnabled={true}
+                                domStorageEnabled={true}
                                 scrollEnabled={false}
                                 pointerEvents="none"
                             />
@@ -367,8 +369,6 @@ const styles = StyleSheet.create({
     mapImage: {
         width: '100%',
         height: '100%',
-        position: 'absolute',
-        opacity: 0.8,
     },
     mapPin: {
         width: 48,

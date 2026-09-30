@@ -17,22 +17,21 @@ export default function SecurityPrivacyDashboard() {
  };
 
  return (
- <Screen scrollable={false} className="bg-surface">
- {/* TopAppBar */}
- <View className="w-full bg-surface/90 flex-row items-center justify-between px-margin-mobile h-16 md:px-margin-desktop z-50">
- <View className="flex-row items-center gap-4">
- <TouchableOpacity onPress={() => router.back()} className="p-2 -ml-2 rounded-full ">
- <MaterialIcons name="arrow-back" size={24} color={colors.primary} />
- </TouchableOpacity>
- <Text className="font-title-sm text-xl text-primary font-bold">Security & Privacy</Text>
- </View>
- <TouchableOpacity onPress={handleSave} className="bg-primary px-4 py-1.5 rounded-full">
- <Text className="text-white font-bold text-sm">Save</Text>
- </TouchableOpacity>
- </View>
+    <Screen scrollable={true} className="bg-surface">
+        {/* TopAppBar */}
+        <View className="w-full sticky top-0 z-40 bg-surface flex-row items-center justify-between px-margin-mobile h-16 md:px-margin-desktop">
+            <View className="flex-row items-center gap-4">
+                <TouchableOpacity onPress={() => router.back()} className="p-2 -ml-2 rounded-full ">
+                    <MaterialIcons name="arrow-back" size={24} color={colors.primary} />
+                </TouchableOpacity>
+                <Text className="font-title-sm text-xl text-primary font-bold">Data Protection</Text>
+            </View>
+            <TouchableOpacity onPress={handleSave} className="bg-primary px-4 py-1.5 rounded-full">
+                <Text className="text-white font-bold text-sm">Save</Text>
+            </TouchableOpacity>
+        </View>
 
- <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 120 }}>
- <View className="max-w-6xl mx-auto px-margin-mobile md:px-margin-desktop py-6 flex-col gap-8 w-full">
+        <View className="flex-1 w-full max-w-6xl mx-auto px-margin-mobile md:px-margin-desktop py-6 flex-col gap-8">
  
  {/* Hero: Vault Status */}
  <View className="overflow-hidden rounded-[24px] bg-primary p-6 md:p-12 flex-col md:flex-row items-center justify-between gap-6">
@@ -250,8 +249,8 @@ export default function SecurityPrivacyDashboard() {
  </View>
  </View>
 
- </View>
- </ScrollView>
+            </View>
+        </View>
  </Screen>
  );
 }
