@@ -272,65 +272,78 @@ export default function RecallScreen() {
                             </TouchableOpacity>
                         </View>
                         
-                        {/* Month / Year Dropdowns */}
-                        <View className="flex-row gap-2 mb-4 px-2" style={{ zIndex: 50, elevation: 50 }}>
-                            <View className="flex-1 relative z-50">
+                        {/* Month / Year Dropdowns (Replaced with robust native-style Dialogs) */}
+                        <View className="flex-row gap-2 mb-4 px-2">
+                            <View className="flex-1">
                                 <TouchableOpacity 
-                                    onPress={() => { setIsMonthPickerOpen(!isMonthPickerOpen); setIsYearPickerOpen(false); }}
+                                    onPress={() => setIsMonthPickerOpen(true)}
                                     className="flex-row justify-between items-center bg-surface-container-low p-3 rounded-xl border border-outline-variant/50"
                                 >
                                     <Text className="text-on-surface font-medium">{months[new Date(calendarDisplayDate as string).getMonth()]}</Text>
                                     <MaterialIcons name="arrow-drop-down" size={20} color={colors['on-surface-variant']} />
                                 </TouchableOpacity>
-                                {isMonthPickerOpen && (
-                                    <View className="absolute top-[105%] left-0 right-0 bg-surface-container-high rounded-xl shadow-lg border border-outline-variant/30 max-h-40 overflow-hidden" style={{ zIndex: 100, elevation: 100 }}>
-                                        <ScrollView nestedScrollEnabled>
-                                            {months.map((m, i) => (
-                                                <TouchableOpacity 
-                                                    key={m} 
-                                                    onPress={() => {
-                                                        const d = new Date(calendarDisplayDate as string);
-                                                        d.setMonth(i);
-                                                        setCalendarDisplayDate(d.toISOString().split('T')[0] as string);
-                                                        setIsMonthPickerOpen(false);
-                                                    }}
-                                                    className="p-3 border-b border-outline-variant/10"
-                                                >
-                                                    <Text className="text-on-surface">{m}</Text>
-                                                </TouchableOpacity>
-                                            ))}
-                                        </ScrollView>
-                                    </View>
-                                )}
+                                
+                                <Modal visible={isMonthPickerOpen} transparent animationType="fade">
+                                    <Pressable className="flex-1 justify-center items-center bg-black/40" onPress={() => setIsMonthPickerOpen(false)}>
+                                        <View className="bg-surface-container-high rounded-2xl shadow-xl w-[80%] max-h-[60%] overflow-hidden">
+                                            <View className="p-4 bg-surface border-b border-outline-variant/20">
+                                                <Text className="font-title-md text-on-surface text-center">Select Month</Text>
+                                            </View>
+                                            <ScrollView bounces={false}>
+                                                {months.map((m, i) => (
+                                                    <TouchableOpacity 
+                                                        key={m} 
+                                                        onPress={() => {
+                                                            const d = new Date(calendarDisplayDate as string);
+                                                            d.setMonth(i);
+                                                            setCalendarDisplayDate(d.toISOString().split('T')[0] as string);
+                                                            setIsMonthPickerOpen(false);
+                                                        }}
+                                                        className="p-4 border-b border-outline-variant/10 items-center active:bg-surface"
+                                                    >
+                                                        <Text className="text-on-surface font-body-lg">{m}</Text>
+                                                    </TouchableOpacity>
+                                                ))}
+                                            </ScrollView>
+                                        </View>
+                                    </Pressable>
+                                </Modal>
                             </View>
-                            <View className="flex-1 relative z-50">
+                            
+                            <View className="flex-1">
                                 <TouchableOpacity 
-                                    onPress={() => { setIsYearPickerOpen(!isYearPickerOpen); setIsMonthPickerOpen(false); }}
+                                    onPress={() => setIsYearPickerOpen(true)}
                                     className="flex-row justify-between items-center bg-surface-container-low p-3 rounded-xl border border-outline-variant/50"
                                 >
                                     <Text className="text-on-surface font-medium">{new Date(calendarDisplayDate as string).getFullYear()}</Text>
                                     <MaterialIcons name="arrow-drop-down" size={20} color={colors['on-surface-variant']} />
                                 </TouchableOpacity>
-                                {isYearPickerOpen && (
-                                    <View className="absolute top-[105%] left-0 right-0 bg-surface-container-high rounded-xl shadow-lg border border-outline-variant/30 max-h-40 overflow-hidden" style={{ zIndex: 100, elevation: 100 }}>
-                                        <ScrollView nestedScrollEnabled>
-                                            {years.map((y) => (
-                                                <TouchableOpacity 
-                                                    key={y} 
-                                                    onPress={() => {
-                                                        const d = new Date(calendarDisplayDate as string);
-                                                        d.setFullYear(y);
-                                                        setCalendarDisplayDate(d.toISOString().split('T')[0] as string);
-                                                        setIsYearPickerOpen(false);
-                                                    }}
-                                                    className="p-3 border-b border-outline-variant/10"
-                                                >
-                                                    <Text className="text-on-surface">{y}</Text>
-                                                </TouchableOpacity>
-                                            ))}
-                                        </ScrollView>
-                                    </View>
-                                )}
+                                
+                                <Modal visible={isYearPickerOpen} transparent animationType="fade">
+                                    <Pressable className="flex-1 justify-center items-center bg-black/40" onPress={() => setIsYearPickerOpen(false)}>
+                                        <View className="bg-surface-container-high rounded-2xl shadow-xl w-[80%] max-h-[60%] overflow-hidden">
+                                            <View className="p-4 bg-surface border-b border-outline-variant/20">
+                                                <Text className="font-title-md text-on-surface text-center">Select Year</Text>
+                                            </View>
+                                            <ScrollView bounces={false}>
+                                                {years.map((y) => (
+                                                    <TouchableOpacity 
+                                                        key={y} 
+                                                        onPress={() => {
+                                                            const d = new Date(calendarDisplayDate as string);
+                                                            d.setFullYear(y);
+                                                            setCalendarDisplayDate(d.toISOString().split('T')[0] as string);
+                                                            setIsYearPickerOpen(false);
+                                                        }}
+                                                        className="p-4 border-b border-outline-variant/10 items-center active:bg-surface"
+                                                    >
+                                                        <Text className="text-on-surface font-body-lg">{y}</Text>
+                                                    </TouchableOpacity>
+                                                ))}
+                                            </ScrollView>
+                                        </View>
+                                    </Pressable>
+                                </Modal>
                             </View>
                         </View>
 
