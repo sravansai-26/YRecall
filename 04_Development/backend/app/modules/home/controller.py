@@ -7,6 +7,9 @@ from ...core.security import get_current_user
 from ...core.rate_limit import RateLimiter
 from ..users.models import User
 from .service import get_dashboard_data, get_analytics_data
+import logging
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -47,7 +50,5 @@ def refresh_daily_brief(
         data = generate_daily_brief(db, str(current_user.id))
         return {"success": True, "message": "Daily brief generated successfully", "data": data}
     except Exception as e:
-        import logging
-        logging.error(f"Error generating daily brief: {str(e)}")
-        from fastapi import HTTPException
-        raise HTTPException(status_code=500, detail="Failed to generate daily brief. Please try again later.")
+        logger.error(f"Error generating daily brief: {str(e)}")
+        return {"success": False, "message": "Failed to generate daily brief. Please try again later."}

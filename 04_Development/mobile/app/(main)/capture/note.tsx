@@ -38,7 +38,13 @@ export default function NoteCaptureScreen() {
         let md = html;
         
         // Links: <a href="url">text</a> -> [text](url)
-        md = md.replace(/<a\s+(?:[^>]*?\s+)?href=["']([^"']*)["'][^>]*>(.*?)<\/a>/gi, '[$2]($1)');
+        md = md.replace(/<a\s+(?:[^>]*?\s+)?href=["']([^"']*)["'][^>]*>(.*?)<\/a>/gi, (match, url, text) => {
+            const cleanUrl = url.trim();
+            if (cleanUrl.toLowerCase().startsWith('javascript:') || cleanUrl.toLowerCase().startsWith('data:')) {
+                return text;
+            }
+            return `[${text}](${cleanUrl})`;
+        });
         
         // Bold: <b>text</b> or <strong>text</strong> -> **text**
         md = md.replace(/<(b|strong)[^>]*>(.*?)<\/\1>/gi, '**$2**');
