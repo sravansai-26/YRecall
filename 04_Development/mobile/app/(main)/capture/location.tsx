@@ -242,11 +242,61 @@ export default function LocationCaptureScreen() {
                         {/* Map Preview */}
                         <View style={styles.mapContainer}>
                             <WebView 
-                                source={{ uri: `https://maps.google.com/maps?q=${location.coords.latitude},${location.coords.longitude}&hl=en&z=15&output=embed` }}
+                                source={{ html: `
+                                    <!DOCTYPE html>
+                                    <html>
+                                    <head>
+                                        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+                                        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+                                        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+                                        <style>
+                                            body { padding: 0; margin: 0; }
+                                            html, body, #map { height: 100%; width: 100%; }
+                                            .leaflet-control-attribution { display: none; }
+                                        </style>
+                                    </head>
+                                    <body>
+                                        <div id="map"></div>
+                                        <script>
+                                            var map = L.map('map', { zoomControl: false }).setView([${location.coords.latitude}, ${location.coords.longitude}], 15);
+                                            L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                                                maxZoom: 20
+                                            }).addTo(map);
+                                            var marker = L.marker([${location.coords.latitude}, ${location.coords.longitude}]).addTo(map);
+                                            
+                                            // Handle map clicks
+                                            map.on('click', function(e) {
+                                                var lat = e.latlng.lat;
+                                                var lng = e.latlng.lng;
+                                                marker.setLatLng(e.latlng);
+                                                window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'location_selected', lat: lat, lon: lng }));
+                                            });
+                                        </script>
+                                    </body>
+                                    </html>
+                                ` }}
+                                onMessage={(event) => {
+                                    try {
+                                        const data = JSON.parse(event.nativeEvent.data);
+                                        if (data.type === 'location_selected') {
+                                            // Update location state based on tap
+                                            setLocation(prev => prev ? {
+                                                ...prev,
+                                                coords: { ...prev.coords, latitude: data.lat, longitude: data.lon }
+                                            } : null);
+                                            
+                                            // Reverse geocode the new tapped location
+                                            Location.reverseGeocodeAsync({ latitude: data.lat, longitude: data.lon })
+                                                .then(res => {
+                                                    if(res && res.length > 0) setAddress(res[0] as any);
+                                                }).catch(() => {});
+                                        }
+                                    } catch(e) {}
+                                }}
                                 style={{ width: '100%', height: '100%', backgroundColor: 'transparent' }} 
                                 javaScriptEnabled={true}
                                 domStorageEnabled={true}
-                                scrollEnabled={true}
+                                scrollEnabled={false}
                             />
                         </View>
 
