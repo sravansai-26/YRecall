@@ -33,7 +33,9 @@ async def request_email_verification(
         raise HTTPException(status_code=400, detail="Email is already verified.")
         
     providers = [provider.provider_id for provider in user_record.provider_data]
-    if 'google.com' in providers and 'password' not in providers:
+    has_google = any(p == 'google.com' for p in providers)
+    has_password = any(p == 'password' for p in providers)
+    if has_google and not has_password:
         raise HTTPException(status_code=400, detail="This account is managed by Google.")
 
     # Invalidate previous active OTPs for this email and purpose
@@ -124,7 +126,9 @@ async def request_password_reset(
     # Check if this user is a Google-only user
     # A Google-only user has 'google.com' in provider_data and NO 'password' provider
     providers = [provider.provider_id for provider in user_record.provider_data]
-    if 'google.com' in providers and 'password' not in providers:
+    has_google = any(p == 'google.com' for p in providers)
+    has_password = any(p == 'password' for p in providers)
+    if has_google and not has_password:
         # Silently ignore the request for Google-only users to prevent enumeration,
         # but the mobile app will try to warn the user using fetchSignInMethodsForEmail anyway.
         return PasswordResetResponse(success=True, message=generic_message)

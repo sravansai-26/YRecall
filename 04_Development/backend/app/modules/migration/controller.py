@@ -76,12 +76,34 @@ from fastapi.responses import FileResponse
 import os
 
 @router.get("/download/{filename}")
-async def download_export_file(filename: str, current_user: User = Depends(get_current_user)):
+async def download_export_file(
+    filename: str, 
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
     """Downloads an export file from the local storage."""
-    file_path = os.path.join("/tmp/yrecall_exports", filename)
-    if not os.path.exists(file_path):
+    from pathlib import Path
+    import re
+    
+    base_dir = Path("/tmp/yrecall_exports").resolve()
+    requested_path = (base_dir / filename).resolve()
+    
+    try:
+        requested_path.relative_to(base_dir)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid file path")
+        
+    if not requested_path.is_file():
         raise HTTPException(status_code=404, detail="File not found")
-    return FileResponse(file_path, filename=filename)
+        
+    match = re.search(r"export_([a-fA-F0-9\-]+)\.", filename)
+    if match:
+        job_id = match.group(1)
+        job = db.query(MigrationJob).filter(MigrationJob.id == job_id).first()
+        if not job or str(job.user_id) != str(current_user.id):
+            raise HTTPException(status_code=403, detail="Unauthorized access to this file")
+            
+    return FileResponse(str(requested_path), filename=filename)
 
 @router.get("/jobs", response_model=List[MigrationJobResponse])
 def list_jobs(

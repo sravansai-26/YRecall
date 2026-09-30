@@ -38,7 +38,13 @@ export default function NoteCaptureScreen() {
         let md = html;
         
         // Links: <a href="url">text</a> -> [text](url)
-        md = md.replace(/<a\s+(?:[^>]*?\s+)?href=["']([^"']*)["'][^>]*>(.*?)<\/a>/gi, '[$2]($1)');
+        md = md.replace(/<a\s+(?:[^>]*?\s+)?href=["']([^"']*)["'][^>]*>(.*?)<\/a>/gi, (match, url, text) => {
+            const cleanUrl = url.trim();
+            if (cleanUrl.toLowerCase().startsWith('javascript:') || cleanUrl.toLowerCase().startsWith('data:')) {
+                return text;
+            }
+            return `[${text}](${cleanUrl})`;
+        });
         
         // Bold: <b>text</b> or <strong>text</strong> -> **text**
         md = md.replace(/<(b|strong)[^>]*>(.*?)<\/\1>/gi, '**$2**');
@@ -58,8 +64,12 @@ export default function NoteCaptureScreen() {
         // Line breaks -> Newlines
         md = md.replace(/<br\s*\/?>/gi, '\n');
         
-        // Strip remaining HTML tags
-        md = md.replace(/<[^>]*>?/gm, '');
+        // Strip remaining HTML tags safely to prevent nested tag bypass
+        let prevMd;
+        do {
+            prevMd = md;
+            md = md.replace(/<[^>]+>/gm, '');
+        } while (md !== prevMd);
         
         // Unescape common HTML entities
         md = md.replace(/&nbsp;/g, ' ').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
