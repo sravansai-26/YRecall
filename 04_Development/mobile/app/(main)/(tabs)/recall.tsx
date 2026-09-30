@@ -273,7 +273,7 @@ export default function RecallScreen() {
                         </View>
                         
                         {/* Month / Year Dropdowns */}
-                        <View className="flex-row gap-2 mb-4 px-2 z-50">
+                        <View className="flex-row gap-2 mb-4 px-2" style={{ zIndex: 50, elevation: 50 }}>
                             <View className="flex-1 relative z-50">
                                 <TouchableOpacity 
                                     onPress={() => { setIsMonthPickerOpen(!isMonthPickerOpen); setIsYearPickerOpen(false); }}
@@ -283,7 +283,7 @@ export default function RecallScreen() {
                                     <MaterialIcons name="arrow-drop-down" size={20} color={colors['on-surface-variant']} />
                                 </TouchableOpacity>
                                 {isMonthPickerOpen && (
-                                    <View className="absolute top-[105%] left-0 right-0 bg-surface-container-high rounded-xl shadow-lg border border-outline-variant/30 max-h-40 overflow-hidden z-50">
+                                    <View className="absolute top-[105%] left-0 right-0 bg-surface-container-high rounded-xl shadow-lg border border-outline-variant/30 max-h-40 overflow-hidden" style={{ zIndex: 100, elevation: 100 }}>
                                         <ScrollView nestedScrollEnabled>
                                             {months.map((m, i) => (
                                                 <TouchableOpacity 
@@ -312,7 +312,7 @@ export default function RecallScreen() {
                                     <MaterialIcons name="arrow-drop-down" size={20} color={colors['on-surface-variant']} />
                                 </TouchableOpacity>
                                 {isYearPickerOpen && (
-                                    <View className="absolute top-[105%] left-0 right-0 bg-surface-container-high rounded-xl shadow-lg border border-outline-variant/30 max-h-40 overflow-hidden z-50">
+                                    <View className="absolute top-[105%] left-0 right-0 bg-surface-container-high rounded-xl shadow-lg border border-outline-variant/30 max-h-40 overflow-hidden" style={{ zIndex: 100, elevation: 100 }}>
                                         <ScrollView nestedScrollEnabled>
                                             {years.map((y) => (
                                                 <TouchableOpacity 
@@ -334,7 +334,7 @@ export default function RecallScreen() {
                             </View>
                         </View>
 
-                        <View className="z-10 relative">
+                        <View style={{ zIndex: 1, elevation: 1, position: 'relative' }}>
                         <Calendar
                             current={calendarDisplayDate}
                             onMonthChange={(month: any) => {

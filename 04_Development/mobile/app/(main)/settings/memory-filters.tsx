@@ -111,7 +111,7 @@ export default function MemoryFiltersSettings() {
 
  return (
  <Screen scrollable={false} className="bg-surface">
- <View className="w-full bg-surface/90 flex-row items-center justify-between px-margin-mobile h-16 z-50">
+ <View className="w-full sticky top-0 bg-surface/90 flex-row items-center justify-between px-margin-mobile h-16 z-50">
  <View className="flex-row items-center gap-4">
  <TouchableOpacity onPress={() => router.back()} className="p-2 -ml-2 rounded-full ">
  <MaterialIcons name="arrow-back" size={24} color={colors.primary} />

@@ -31,7 +31,9 @@ export default function LocationCaptureScreen() {
         const delayDebounceFn = setTimeout(async () => {
             setIsSearching(true);
             try {
-                const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchQuery)}&format=json&addressdetails=1&limit=5`);
+                const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchQuery)}&format=json&addressdetails=1&limit=5`, {
+                    headers: { 'User-Agent': 'YRecallApp/1.0 (contact@yrecall.com)' }
+                });
                 const data = await res.json();
                 setSuggestions(data);
             } catch (err) {
@@ -240,12 +242,11 @@ export default function LocationCaptureScreen() {
                         {/* Map Preview */}
                         <View style={styles.mapContainer}>
                             <WebView 
-                                source={{ uri: `https://www.openstreetmap.org/export/embed.html?bbox=${location.coords.longitude-0.005},${location.coords.latitude-0.005},${location.coords.longitude+0.005},${location.coords.latitude+0.005}&layer=mapnik&marker=${location.coords.latitude},${location.coords.longitude}` }}
+                                source={{ uri: `https://maps.google.com/maps?q=${location.coords.latitude},${location.coords.longitude}&hl=en&z=15&output=embed` }}
                                 style={{ width: '100%', height: '100%', backgroundColor: 'transparent' }} 
                                 javaScriptEnabled={true}
                                 domStorageEnabled={true}
-                                scrollEnabled={false}
-                                pointerEvents="none"
+                                scrollEnabled={true}
                             />
                         </View>
 
