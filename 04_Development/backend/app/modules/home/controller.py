@@ -47,4 +47,7 @@ def refresh_daily_brief(
         data = generate_daily_brief(db, str(current_user.id))
         return {"success": True, "message": "Daily brief generated successfully", "data": data}
     except Exception as e:
-        return {"success": False, "message": str(e)}
+        import logging
+        logging.error(f"Error generating daily brief: {str(e)}")
+        from fastapi import HTTPException
+        raise HTTPException(status_code=500, detail="Failed to generate daily brief. Please try again later.")

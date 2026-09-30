@@ -78,7 +78,10 @@ import os
 @router.get("/download/{filename}")
 async def download_export_file(filename: str, current_user: User = Depends(get_current_user)):
     """Downloads an export file from the local storage."""
-    file_path = os.path.join("/tmp/yrecall_exports", filename)
+    base_dir = os.path.abspath("/tmp/yrecall_exports")
+    file_path = os.path.abspath(os.path.join(base_dir, filename))
+    if not file_path.startswith(base_dir) or file_path == base_dir:
+        raise HTTPException(status_code=400, detail="Invalid file path")
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="File not found")
     return FileResponse(file_path, filename=filename)

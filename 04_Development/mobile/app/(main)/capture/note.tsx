@@ -58,8 +58,12 @@ export default function NoteCaptureScreen() {
         // Line breaks -> Newlines
         md = md.replace(/<br\s*\/?>/gi, '\n');
         
-        // Strip remaining HTML tags
-        md = md.replace(/<[^>]*>?/gm, '');
+        // Strip remaining HTML tags safely to prevent nested tag bypass
+        let prevMd;
+        do {
+            prevMd = md;
+            md = md.replace(/<[^>]+>/gm, '');
+        } while (md !== prevMd);
         
         // Unescape common HTML entities
         md = md.replace(/&nbsp;/g, ' ').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');

@@ -261,9 +261,10 @@
                 userMsg.className = 'flex flex-col items-end max-w-[85%] self-end animate-in fade-in slide-in-from-right-4 duration-300';
                 userMsg.innerHTML = `
                     <div class="bg-surface-container-high rounded-3xl rounded-tr-sm p-lg text-on-surface shadow-sm border border-outline-variant/30">
-                        <p class="font-body-md">${input.value}</p>
+                        <p class="font-body-md"></p>
                     </div>
                 `;
+                userMsg.querySelector('p').textContent = input.value;
                 container.appendChild(userMsg);
                 
                 const query = input.value;
@@ -279,10 +280,11 @@
                     aiMsg.innerHTML = `
                         <div class="bubble-gradient ai-inner-glow rounded-3xl rounded-tl-sm p-lg text-white shadow-xl">
                             <p class="font-body-md leading-relaxed">
-                                Let me search your memory for "${query}"... <span class="stream-cursor"></span>
+                                Let me search your memory for "<span class="query-text"></span>"... <span class="stream-cursor"></span>
                             </p>
                         </div>
                     `;
+                    aiMsg.querySelector('.query-text').textContent = query;
                     container.appendChild(aiMsg);
                     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
                 }, 1000);
