@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Screen } from '../../../src/shared/components';
 import { colors } from '../../../src/shared/theme/colors';
 import { useRouter } from 'expo-router';
@@ -117,9 +117,16 @@ export default function SettingsHub() {
                   </View>
                 </View>
                 <TouchableOpacity onPress={() => router.push('/settings/billing')} className="mt-1">
-                  <Text className="font-body-sm text-sm text-secondary font-medium underline flex-shrink" numberOfLines={1}>
-                    {isPremium ? t('settings.premiumMember') : t('settings.basicUser')}
-                  </Text>
+                  {isPremium ? (
+                    <Text className="font-body-sm text-sm text-secondary font-medium flex-shrink" numberOfLines={1}>
+                      {t('settings.premiumMember')}
+                    </Text>
+                  ) : (
+                    <View className="flex-row items-center flex-wrap">
+                      <Text className="font-body-sm text-sm text-on-surface-variant font-medium flex-shrink">Basic • </Text>
+                      <Text className="font-body-sm text-sm text-secondary font-medium underline flex-shrink">Upgrade to Premium/Pro Plans</Text>
+                    </View>
+                  )}
                 </TouchableOpacity>
               </View>
             </View>
@@ -373,8 +380,8 @@ export default function SettingsHub() {
             </TouchableOpacity>
             
             <TouchableOpacity onPress={() => Linking.openURL('https://play.google.com/store/apps/details?id=com.lyfspot.yrecall').catch(() => { require('react-native').Alert.alert('Notice', 'Play Store link will be active after publishing.'); })} className="w-full max-w-sm py-4 items-center flex-row justify-center gap-2">
-              <MaterialIcons name="star-rate" size={20} color={colors.primary} />
-              <Text className="font-body-md text-base font-bold text-primary">{t('settings.rateUs', 'Rate Us on Play Store')}</Text>
+              <MaterialCommunityIcons name="google-play" size={22} color={colors.primary} />
+              <Text className="font-body-md text-base font-bold text-primary">Rate us</Text>
             </TouchableOpacity>
             
             <TouchableOpacity onPress={handleRestorePurchases} disabled={isRestoring} className="w-full max-w-sm py-4 flex-row justify-center items-center gap-2">

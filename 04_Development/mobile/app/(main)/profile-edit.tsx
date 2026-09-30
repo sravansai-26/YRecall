@@ -224,12 +224,7 @@ export default function ProfileSettings() {
  <View className="flex-col flex-1 justify-center py-2 gap-2">
  <View className="flex-row flex-wrap items-center gap-3">
  <Text className="font-headline-md text-3xl md:text-4xl font-bold text-on-surface">{formData.display_name}</Text>
- {dbUser?.email && (
- <View className="bg-green-500/10 px-2 py-1 rounded-full flex-row items-center gap-1">
- <MaterialIcons name="verified" size={14} color="#22c55e" />
- <Text className="text-[#22c55e] text-[10px] font-bold uppercase tracking-wider">Verified</Text>
- </View>
- )}
+ 
  {isPremium && (
  <View className="bg-[#FFD700]/10 border-[#FFD700]/30 px-2 py-1 rounded-full flex-row items-center gap-1 shadow-sm">
  <MaterialIcons name="stars" size={14} color="#D4AF37" />
@@ -361,36 +356,15 @@ export default function ProfileSettings() {
  </View>
  
  <View className="flex-row flex-wrap gap-4">
- <View className="flex-[1] min-w-[150px] bg-surface-container-lowest p-5 rounded-[20px]">
- <View className="flex-row items-center justify-between mb-2">
- <Text className="font-label-sm text-outline font-bold uppercase tracking-widest">Memories</Text>
- <MaterialIcons name="history" size={18} color={colors.secondary} />
+ <View className="w-full bg-primary/5 p-6 rounded-[32px] border border-primary/20 items-center justify-center shadow-sm">
+ <View className="flex-row items-center justify-between mb-2 w-full">
+ <Text className="font-title-md text-primary font-bold uppercase tracking-widest">Total Captures</Text>
+ <View className="bg-primary p-3 rounded-2xl shadow-sm">
+ <MaterialIcons name="camera" size={24} color="#fff" />
  </View>
- <Text className="font-headline-md text-2xl font-bold text-on-surface">{stats?.timeline_memories || 0}</Text>
  </View>
- 
- <View className="flex-[1] min-w-[150px] bg-surface-container-lowest p-5 rounded-[20px]">
- <View className="flex-row items-center justify-between mb-2">
- <Text className="font-label-sm text-outline font-bold uppercase tracking-widest">Captures</Text>
- <MaterialIcons name="camera" size={18} color={colors.primary} />
- </View>
- <Text className="font-headline-md text-2xl font-bold text-on-surface">{stats?.captures_total || 0}</Text>
- </View>
- 
- <View className="flex-[1] min-w-[150px] bg-surface-container-lowest p-5 rounded-[20px]">
- <View className="flex-row items-center justify-between mb-2">
- <Text className="font-label-sm text-outline font-bold uppercase tracking-widest">KG Entities</Text>
- <MaterialIcons name="hub" size={18} color={colors['on-surface-variant']} />
- </View>
- <Text className="font-headline-md text-2xl font-bold text-on-surface">{stats?.knowledge_graph_entities || 0}</Text>
- </View>
- 
- <View className="flex-[1] min-w-[150px] bg-surface-container-lowest p-5 rounded-[20px]">
- <View className="flex-row items-center justify-between mb-2">
- <Text className="font-label-sm text-outline font-bold uppercase tracking-widest">Streak</Text>
- <MaterialIcons name="local-fire-department" size={18} color="#f97316" />
- </View>
- <Text className="font-headline-md text-2xl font-bold text-on-surface">{dbUser?.current_streak || 0}</Text>
+ <Text className="text-6xl font-black text-primary mt-4 tracking-tighter">{stats?.captures_total || 0}</Text>
+ <Text className="text-on-surface-variant text-sm mt-2 font-medium">Moments preserved in your digital brain</Text>
  </View>
  </View>
  </View>
@@ -435,7 +409,7 @@ export default function ProfileSettings() {
  </View>
  <View className="flex-1">
  <Text className="text-xs text-outline font-medium">Website</Text>
- <Text className="text-primary font-bold text-base text-blue-500 underline" numberOfLines={1}>{formData.website}</Text>
+ <Text className="text-primary font-bold text-base underline" numberOfLines={1}>{formData.website}</Text>
  </View>
  </TouchableOpacity>
  )}
@@ -449,7 +423,7 @@ export default function ProfileSettings() {
  </View>
  <View className="flex-1">
  <Text className="text-xs text-outline font-medium">Social Links</Text>
- <Text className="text-primary font-bold text-base text-blue-500 underline" numberOfLines={1}>{formData.social_links}</Text>
+ <Text className="text-primary font-bold text-base underline" numberOfLines={1}>{formData.social_links}</Text>
  </View>
  </TouchableOpacity>
  )}

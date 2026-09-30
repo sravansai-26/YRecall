@@ -12,21 +12,26 @@ export default function SecurityPrivacyDashboard() {
  const [stealthModeEnabled, setStealthModeEnabled] = useState(false);
  const [retentionPeriod, setRetentionPeriod] = useState('30days');
 
+ const handleSave = () => {
+ require('react-native').Alert.alert('Saved', 'Privacy and security settings updated successfully.');
+ };
+
  return (
- <Screen scrollable={true} className="pb-24">
+ <Screen scrollable={false} className="bg-surface">
  {/* TopAppBar */}
- <View className="w-full sticky top-0 z-40 bg-surface/80 flex-row items-center justify-between px-margin-mobile h-16 md:px-margin-desktop">
+ <View className="w-full bg-surface/90 flex-row items-center justify-between px-margin-mobile h-16 md:px-margin-desktop z-50">
  <View className="flex-row items-center gap-4">
  <TouchableOpacity onPress={() => router.back()} className="p-2 -ml-2 rounded-full ">
  <MaterialIcons name="arrow-back" size={24} color={colors.primary} />
  </TouchableOpacity>
  <Text className="font-title-sm text-xl text-primary font-bold">Security & Privacy</Text>
  </View>
- <TouchableOpacity onPress={() => router.push('/(modals)/search')} className="p-2 rounded-full ">
- <MaterialIcons name="search" size={24} color={colors.primary} />
+ <TouchableOpacity onPress={handleSave} className="bg-primary px-4 py-1.5 rounded-full">
+ <Text className="text-white font-bold text-sm">Save</Text>
  </TouchableOpacity>
  </View>
 
+ <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 120 }}>
  <View className="max-w-6xl mx-auto px-margin-mobile md:px-margin-desktop py-6 flex-col gap-8 w-full">
  
  {/* Hero: Vault Status */}
@@ -246,6 +251,7 @@ export default function SecurityPrivacyDashboard() {
  </View>
 
  </View>
+ </ScrollView>
  </Screen>
  );
 }

@@ -80,8 +80,8 @@ export default function AIPersonalization() {
  );
 
  return (
- <Screen scrollable={true} className="pb-32 bg-surface">
- <View className="w-full sticky top-0 z-50 bg-surface/90 flex-row items-center justify-between px-margin-mobile h-16 ">
+ <Screen scrollable={false} className="bg-surface">
+ <View className="w-full bg-surface/90 flex-row items-center justify-between px-margin-mobile h-16 z-50">
  <View className="flex-row items-center gap-4">
  <TouchableOpacity onPress={() => router.back()} className="p-2 -ml-2 rounded-full ">
  <MaterialIcons name="arrow-back" size={24} color={colors.primary} />
@@ -93,7 +93,8 @@ export default function AIPersonalization() {
  </TouchableOpacity>
  </View>
 
- <View className="max-w-2xl mx-auto px-margin-mobile w-full pb-20">
+ <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 120 }}>
+ <View className="max-w-2xl mx-auto px-margin-mobile w-full">
  
  {/* Intro */}
  <View className="mt-6 mb-2">
@@ -212,6 +213,7 @@ export default function AIPersonalization() {
  </View>
 
  </View>
+ </ScrollView>
  </Screen>
  );
 }
