@@ -110,8 +110,8 @@ export default function MemoryFiltersSettings() {
  );
 
  return (
- <Screen scrollable={true} className="pb-32 bg-surface">
- <View className="w-full sticky top-0 z-50 bg-surface/90 flex-row items-center justify-between px-margin-mobile h-16 ">
+ <Screen scrollable={false} className="bg-surface">
+ <View className="w-full bg-surface/90 flex-row items-center justify-between px-margin-mobile h-16 z-50">
  <View className="flex-row items-center gap-4">
  <TouchableOpacity onPress={() => router.back()} className="p-2 -ml-2 rounded-full ">
  <MaterialIcons name="arrow-back" size={24} color={colors.primary} />
@@ -123,7 +123,8 @@ export default function MemoryFiltersSettings() {
  </TouchableOpacity>
  </View>
 
- <View className="max-w-2xl mx-auto px-margin-mobile w-full pb-20 pt-4">
+ <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 120 }}>
+ <View className="max-w-2xl mx-auto px-margin-mobile w-full pt-4">
 
  {/* Live Preview / Active Preset Bar */}
  <View className="bg-secondary-container rounded-2xl p-4 mb-6 border border-secondary/20 flex-row items-center justify-between">
@@ -261,6 +262,7 @@ export default function MemoryFiltersSettings() {
  )}
 
  </View>
+ </ScrollView>
  </Screen>
  );
 }

@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Pressable, Text, ActivityIndicator, TextInput, Image, Linking, Platform } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, StyleSheet, Pressable, Text, ActivityIndicator, TextInput, Image, Linking, Platform, ScrollView } from 'react-native';
+import { WebView } from 'react-native-webview';
 import * as Location from 'expo-location';
 import { Stack as ExpoStack, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -14,9 +15,65 @@ export default function LocationCaptureScreen() {
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
     const [address, setAddress] = useState<Location.LocationGeocodedAddress | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const [suggestions, setSuggestions] = useState<any[]>([]);
     const [isFetching, setIsFetching] = useState(true);
+    const [isSearching, setIsSearching] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+    // Debounce for Nominatim search
+    useEffect(() => {
+        if (searchQuery.trim().length < 3) {
+            setSuggestions([]);
+            return;
+        }
+        
+        const delayDebounceFn = setTimeout(async () => {
+            setIsSearching(true);
+            try {
+                const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchQuery)}&format=json&addressdetails=1&limit=5`);
+                const data = await res.json();
+                setSuggestions(data);
+            } catch (err) {
+                console.warn('Nominatim error', err);
+            } finally {
+                setIsSearching(false);
+            }
+        }, 500);
+
+        return () => clearTimeout(delayDebounceFn);
+    }, [searchQuery]);
+
+    const handleSelectSuggestion = (suggestion: any) => {
+        const lat = parseFloat(suggestion.lat);
+        const lon = parseFloat(suggestion.lon);
+        setLocation({
+            coords: {
+                latitude: lat,
+                longitude: lon,
+                altitude: null,
+                accuracy: 10,
+                altitudeAccuracy: null,
+                heading: null,
+                speed: null
+            },
+            timestamp: Date.now()
+        });
+        setAddress({
+            name: suggestion.name || '',
+            street: suggestion.address?.road || '',
+            city: suggestion.address?.city || suggestion.address?.town || '',
+            region: suggestion.address?.state || '',
+            country: suggestion.address?.country || '',
+            postalCode: suggestion.address?.postcode || '',
+            isoCountryCode: suggestion.address?.country_code || '',
+            district: suggestion.address?.county || '',
+            subregion: suggestion.address?.state_district || '',
+            timezone: ''
+        } as any);
+        setSearchQuery('');
+        setSuggestions([]);
+    };
 
     const fetchLocation = async () => {
         setIsFetching(true);
@@ -71,7 +128,7 @@ export default function LocationCaptureScreen() {
                 altitude: location?.coords.altitude || undefined,
                 accuracy: location?.coords.accuracy || undefined,
                 address_override: searchQuery || undefined
-            });
+            } as any);
             console.log('Location saved successfully');
             router.back();
         } catch (err) {
@@ -133,15 +190,35 @@ export default function LocationCaptureScreen() {
             
             <View style={styles.content}>
                 {/* Manual Address Input */}
-                <View style={styles.searchContainer}>
-                    <Ionicons name="search" size={20} color={colors['on-surface-variant']} style={styles.searchIcon} />
-                    <TextInput
-                        style={styles.searchInput}
-                        placeholder="Search for a place..."
-                        placeholderTextColor={colors['on-surface-variant']}
-                        value={searchQuery}
-                        onChangeText={setSearchQuery}
-                    />
+                <View style={{ width: '100%', zIndex: 10 }}>
+                    <View style={[styles.searchContainer, suggestions.length > 0 && { borderBottomLeftRadius: 0, borderBottomRightRadius: 0, marginBottom: 0 }]}>
+                        <Ionicons name="search" size={20} color={colors['on-surface-variant']} style={styles.searchIcon} />
+                        <TextInput
+                            style={styles.searchInput}
+                            placeholder="Search for a place..."
+                            placeholderTextColor={colors['on-surface-variant']}
+                            value={searchQuery}
+                            onChangeText={setSearchQuery}
+                        />
+                        {isSearching && <ActivityIndicator size="small" color={colors.primary} />}
+                    </View>
+                    
+                    {suggestions.length > 0 && (
+                        <View style={styles.suggestionsContainer}>
+                            <ScrollView keyboardShouldPersistTaps="handled" style={{ maxHeight: 200 }}>
+                                {suggestions.map((item, index) => (
+                                    <Pressable 
+                                        key={index} 
+                                        style={styles.suggestionItem}
+                                        onPress={() => handleSelectSuggestion(item)}
+                                    >
+                                        <Ionicons name="location-outline" size={18} color={colors.primary} style={{ marginRight: 8, marginTop: 2 }} />
+                                        <Text style={styles.suggestionText} numberOfLines={2}>{item.display_name}</Text>
+                                    </Pressable>
+                                ))}
+                            </ScrollView>
+                        </View>
+                    )}
                 </View>
 
                 {isFetching ? (
@@ -162,13 +239,12 @@ export default function LocationCaptureScreen() {
                         
                         {/* Map Preview */}
                         <View style={styles.mapContainer}>
-                            <Image 
-                                source={{ uri: 'https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=800&auto=format&fit=crop' }} 
+                            <WebView 
+                                source={{ uri: `https://www.openstreetmap.org/export/embed.html?bbox=${location.coords.longitude-0.005},${location.coords.latitude-0.005},${location.coords.longitude+0.005},${location.coords.latitude+0.005}&layer=mapnik&marker=${location.coords.latitude},${location.coords.longitude}` }}
                                 style={styles.mapImage} 
+                                scrollEnabled={false}
+                                pointerEvents="none"
                             />
-                            <View style={styles.mapPin}>
-                                <Ionicons name="location" size={32} color={colors.error} />
-                            </View>
                         </View>
 
                         <Pressable onPress={handleOpenWithMaps} style={styles.openWithBtn}>
@@ -253,6 +329,29 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: colors['on-surface'],
         height: '100%',
+    },
+    suggestionsContainer: {
+        width: '100%',
+        backgroundColor: colors['surface-container'],
+        borderBottomLeftRadius: 16,
+        borderBottomRightRadius: 16,
+        borderWidth: 1,
+        borderTopWidth: 0,
+        borderColor: colors['outline-variant'],
+        marginBottom: 24,
+        overflow: 'hidden',
+    },
+    suggestionItem: {
+        flexDirection: 'row',
+        padding: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: colors['outline-variant'] + '40',
+    },
+    suggestionText: {
+        fontFamily: 'PublicSans_400Regular',
+        fontSize: 14,
+        color: colors['on-surface'],
+        flex: 1,
     },
     mapContainer: {
         width: '100%',

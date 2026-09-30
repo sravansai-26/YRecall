@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, Image, Modal } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Screen } from '../../../src/shared/components';
 import { colors } from '../../../src/shared/theme/colors';
@@ -15,6 +15,7 @@ import { Capture } from '../../../src/modules/captures/services/api';
 import { isToday, isYesterday, isThisWeek, isThisMonth } from 'date-fns';
 import { useWorkspaceStore } from '../../../src/modules/workspaces/store';
 import { useTranslation } from 'react-i18next';
+import { Calendar } from 'react-native-calendars';
 
 interface TimelineSection {
     type: 'header' | 'item';
@@ -32,6 +33,7 @@ export default function RecallScreen() {
     const [activeSegment, setActiveSegment] = useState('All');
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
     const filters = useMemo(() => {
         const f: any = {};
@@ -140,24 +142,45 @@ export default function RecallScreen() {
             </View>
 
             <View className="flex-1 w-full max-w-7xl mx-auto">
-                {/* Search Bar */}
+                {/* Search Bar & Calendar Picker */}
                 <View className="px-margin-mobile mb-2">
-                    <View className="flex-row items-center h-12 bg-surface-container-low rounded-2xl px-4">
-                        <MaterialIcons name="search" size={20} color={colors['on-surface-variant']} />
-                        <TextInput
-                            placeholder={t('timeline.searchPlaceholder', 'Search timeline...')}
-                            placeholderTextColor={colors['on-surface-variant']}
-                            className="flex-1 ml-2 font-body-lg text-on-surface"
-                            value={searchQuery}
-                            onChangeText={setSearchQuery}
-                        />
-                        {searchQuery.length > 0 && (
-                            <TouchableOpacity onPress={() => setSearchQuery('')}>
-                                <MaterialIcons name="close" size={20} color={colors['on-surface-variant']} />
-                            </TouchableOpacity>
-                        )}
+                    <View className="flex-row items-center gap-2">
+                        <View className="flex-1 flex-row items-center h-12 bg-surface-container-low rounded-2xl px-4">
+                            <MaterialIcons name="search" size={20} color={colors['on-surface-variant']} />
+                            <TextInput
+                                placeholder={t('timeline.searchPlaceholder', 'Search timeline...')}
+                                placeholderTextColor={colors['on-surface-variant']}
+                                className="flex-1 ml-2 font-body-lg text-on-surface"
+                                value={searchQuery}
+                                onChangeText={setSearchQuery}
+                            />
+                            {searchQuery.length > 0 && (
+                                <TouchableOpacity onPress={() => setSearchQuery('')}>
+                                    <MaterialIcons name="close" size={20} color={colors['on-surface-variant']} />
+                                </TouchableOpacity>
+                            )}
+                        </View>
+                        <TouchableOpacity 
+                            onPress={() => setIsCalendarOpen(true)}
+                            className="w-12 h-12 bg-surface-container-low rounded-2xl items-center justify-center border"
+                            style={{ borderColor: selectedDate ? colors.primary : 'transparent' }}
+                        >
+                            <MaterialIcons name="calendar-today" size={20} color={selectedDate ? colors.primary : colors['on-surface-variant']} />
+                        </TouchableOpacity>
                     </View>
                 </View>
+
+                {selectedDate && (
+                    <View className="px-margin-mobile mb-2 flex-row justify-end">
+                        <TouchableOpacity 
+                            onPress={() => setSelectedDate(null)} 
+                            className="flex-row items-center gap-1 bg-error/10 px-3 py-1.5 rounded-full"
+                        >
+                            <MaterialIcons name="clear" size={14} color={colors.error} />
+                            <Text className="font-label-sm text-error">Clear Date</Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
 
                 {/* Date Navigator */}
                 <HorizontalDateNavigator
@@ -227,6 +250,64 @@ export default function RecallScreen() {
                     )}
                 </View>
             </View>
+
+            {/* Calendar Modal */}
+            <Modal visible={isCalendarOpen} transparent animationType="fade">
+                <View className="flex-1 justify-center bg-black/50 px-4">
+                    <View className="bg-surface rounded-3xl overflow-hidden p-4 shadow-xl">
+                        <View className="flex-row justify-between items-center mb-4 px-2">
+                            <Text className="font-title-md text-on-surface">Select Date</Text>
+                            <TouchableOpacity onPress={() => setIsCalendarOpen(false)} className="p-1">
+                                <MaterialIcons name="close" size={24} color={colors['on-surface-variant']} />
+                            </TouchableOpacity>
+                        </View>
+                        <Calendar
+                            current={selectedDate ? selectedDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}
+                            onDayPress={(day: any) => {
+                                // Add timezone offset so the date parses locally
+                                const offset = new Date().getTimezoneOffset() * 60000;
+                                const localDate = new Date(day.timestamp + offset);
+                                setSelectedDate(localDate);
+                                setIsCalendarOpen(false);
+                            }}
+                            markedDates={
+                                selectedDate
+                                    ? {
+                                          [new Date(selectedDate.getTime() - selectedDate.getTimezoneOffset() * 60000).toISOString().split('T')[0] as string]: {
+                                              selected: true,
+                                              selectedColor: colors.primary,
+                                          },
+                                      }
+                                    : {}
+                            }
+                            theme={{
+                                calendarBackground: 'transparent',
+                                textSectionTitleColor: colors['on-surface-variant'],
+                                selectedDayBackgroundColor: colors.primary,
+                                selectedDayTextColor: colors['on-primary'],
+                                todayTextColor: colors.primary,
+                                dayTextColor: colors['on-surface'],
+                                textDisabledColor: colors['on-surface-variant'] + '50',
+                                arrowColor: colors.primary,
+                                monthTextColor: colors['on-surface'],
+                            }}
+                        />
+                        <View className="mt-4 flex-row justify-end gap-2 px-2">
+                            {selectedDate && (
+                                <TouchableOpacity 
+                                    onPress={() => {
+                                        setSelectedDate(null);
+                                        setIsCalendarOpen(false);
+                                    }}
+                                    className="p-3 bg-error/10 rounded-xl px-6"
+                                >
+                                    <Text className="text-error font-label-md">Clear</Text>
+                                </TouchableOpacity>
+                            )}
+                        </View>
+                    </View>
+                </View>
+            </Modal>
         </Screen>
     );
 }
