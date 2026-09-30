@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator, Image, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, Image, Modal, Pressable } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Screen } from '../../../src/shared/components';
 import { colors } from '../../../src/shared/theme/colors';
