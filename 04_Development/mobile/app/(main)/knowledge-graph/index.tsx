@@ -59,7 +59,7 @@ export default function KnowledgeGraphScreen() {
  <body>
  <div id="graph"></div>
  <script>
- const data = ${JSON.stringify(data || { nodes: [], links: [] })};
+ const data = JSON.parse(decodeURIComponent("${encodeURIComponent(JSON.stringify(data || { nodes: [], links: [] }))}"));
  
  const width = window.innerWidth;
  const height = window.innerHeight;

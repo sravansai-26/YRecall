@@ -25,6 +25,16 @@ def get_dashboard(
     current_user: User = Depends(dashboard_limiter)
 ):
     """Fetches the aggregated dashboard state."""
+    if workspace_id:
+        import uuid
+        from fastapi import HTTPException
+        from ..collaboration.permissions import require_role, WorkspaceRole
+        try:
+            ws_uuid = uuid.UUID(workspace_id)
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid workspace ID format")
+        require_role(db, ws_uuid, current_user, WorkspaceRole.VIEWER)
+
     data = get_dashboard_data(db, str(current_user.id), workspace_id)
     return {"success": True, "data": data}
 
